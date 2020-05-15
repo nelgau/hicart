@@ -1,0 +1,3 @@
+[submodule "hardware/lib/nelgau"]
+	path = hardware/lib/nelgau
+	url = git@github.com:nelgau/nelgau-kicad-libs.git

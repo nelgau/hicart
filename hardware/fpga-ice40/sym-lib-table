@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name ng_fpga_lattice)(type Legacy)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/symbols/ng_fpga_lattice.lib)(options "")(descr ""))
+)
