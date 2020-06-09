@@ -1,0 +1,15 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP ProgHeader_Flash_QSPI
+D QSPI Flash Programming Header
+K connector spi qspi flash
+F ~
+$ENDCMP
+#
+$CMP ProgHeader_iCE40
+D iCE40 Programming Header
+K connector ice40
+F ~
+$ENDCMP
+#
+#End Doc Library

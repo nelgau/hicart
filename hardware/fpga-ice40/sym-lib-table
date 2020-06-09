@@ -1,3 +1,7 @@
 (sym_lib_table
-  (lib (name ng_fpga_lattice)(type Legacy)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/symbols/ng_fpga_lattice.lib)(options "")(descr ""))
+  (lib (name ng_fpga_lattice_ice40)(type Legacy)(uri ${KIPRJMOD}/../lib/nelgau/symbols/ng_fpga_lattice_ice40.lib)(options "")(descr ""))
+  (lib (name ng_memory)(type Legacy)(uri ${KIPRJMOD}/../lib/nelgau/symbols/ng_memory.lib)(options "")(descr ""))
+  (lib (name local_conn)(type Legacy)(uri ${KIPRJMOD}/lib/symbols/local_conn.lib)(options "")(descr ""))
+  (lib (name ng_power)(type Legacy)(uri ${KIPRJMOD}/../lib/nelgau/symbols/ng_power.lib)(options "")(descr ""))
+  (lib (name ng_conn)(type Legacy)(uri ${KIPRJMOD}/../lib/nelgau/symbols/ng_conn.lib)(options "")(descr ""))
 )

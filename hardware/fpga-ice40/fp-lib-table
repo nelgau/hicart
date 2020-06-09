@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name ng_conn)(type KiCad)(uri ${KIPRJMOD}/../lib/nelgau/footprints/ng_conn.pretty)(options "")(descr ""))
+  (lib (name gkl_conn)(type KiCad)(uri /Users/nelsongauthier/Code/gregdavill/gsd-kicad-libs/gkl_conn.pretty)(options "")(descr ""))
+)
