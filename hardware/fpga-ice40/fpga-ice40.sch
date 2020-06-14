@@ -1009,9 +1009,9 @@ Text GLabel 6500 3100 2    50   Input ~ 0
 CONFIG_IO3
 NoConn ~ 6500 3300
 NoConn ~ 6500 3400
-Text GLabel 6500 2400 2    50   Input ~ 0
-FLASH_SSn
 Text GLabel 6500 2500 2    50   Input ~ 0
+FLASH_SSn
+Text GLabel 6500 2600 2    50   Input ~ 0
 FLASH_SCK
 Text GLabel 6500 2700 2    50   Input ~ 0
 FLASH_MOSI|IO0
@@ -1643,7 +1643,7 @@ U 1 1 5FB23855
 P 18500 10900
 F 0 "RN3" H 18688 10946 50  0000 L CNN
 F 1 "10k" H 18688 10855 50  0000 L CNN
-F 2 "" V 18775 10900 50  0001 C CNN
+F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 18775 10900 50  0001 C CNN
 F 3 "~" H 18500 10900 50  0001 C CNN
 	1    18500 10900
 	1    0    0    -1  
@@ -1726,7 +1726,7 @@ U 1 1 60448FC0
 P 16400 8500
 F 0 "RN2" H 16588 8546 50  0000 L CNN
 F 1 "10k" H 16588 8455 50  0000 L CNN
-F 2 "" V 16675 8500 50  0001 C CNN
+F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 16675 8500 50  0001 C CNN
 F 3 "~" H 16400 8500 50  0001 C CNN
 	1    16400 8500
 	1    0    0    -1  
@@ -1921,7 +1921,7 @@ $EndComp
 Wire Wire Line
 	2450 9600 2450 9700
 Text GLabel 2650 9200 2    50   UnSpc ~ 0
-P3V3_DRAM
+P3V3_FPGA
 $Comp
 L Connector:TestPoint TP1
 U 1 1 60AF4445
@@ -2148,7 +2148,7 @@ U 1 1 60658376
 P 16400 6400
 F 0 "RN1" H 16588 6446 50  0000 L CNN
 F 1 "10k" H 16588 6355 50  0000 L CNN
-F 2 "" V 16675 6400 50  0001 C CNN
+F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 16675 6400 50  0001 C CNN
 F 3 "~" H 16400 6400 50  0001 C CNN
 	1    16400 6400
 	1    0    0    -1  
@@ -2344,4 +2344,422 @@ Wire Wire Line
 Connection ~ 18850 8450
 Wire Wire Line
 	18850 8450 18850 8700
+Connection ~ 6800 14550
+NoConn ~ 6200 13650
+NoConn ~ 6200 14550
+Wire Wire Line
+	6000 13350 6200 13350
+Wire Wire Line
+	6000 14050 6200 14050
+Wire Wire Line
+	6000 14150 6200 14150
+Wire Wire Line
+	6000 14250 6200 14250
+Wire Wire Line
+	6000 14350 6200 14350
+Wire Wire Line
+	6000 14450 6200 14450
+Wire Wire Line
+	6000 14650 6200 14650
+Wire Wire Line
+	6000 14750 6200 14750
+Wire Wire Line
+	6000 14850 6200 14850
+Wire Wire Line
+	6000 14950 6200 14950
+Wire Wire Line
+	6000 15050 6200 15050
+Wire Wire Line
+	6700 13650 6800 13650
+Wire Wire Line
+	6700 13350 6900 13350
+Wire Wire Line
+	6700 14050 6900 14050
+Wire Wire Line
+	6700 14150 6900 14150
+Wire Wire Line
+	6700 14250 6900 14250
+Wire Wire Line
+	6700 14350 6900 14350
+Wire Wire Line
+	6700 14450 6900 14450
+Wire Wire Line
+	6700 14650 6900 14650
+Wire Wire Line
+	6700 14750 6900 14750
+Wire Wire Line
+	6700 14850 6900 14850
+Wire Wire Line
+	6700 14950 6900 14950
+Wire Wire Line
+	6700 15050 6900 15050
+Wire Wire Line
+	6800 13650 6800 13750
+Wire Wire Line
+	6800 14550 6700 14550
+Wire Wire Line
+	6800 14550 6800 15150
+$Comp
+L Connector_Generic:Conn_02x20_Odd_Even J4
+U 1 1 5EE8C74E
+P 6400 14050
+F 0 "J4" H 6450 15100 50  0000 C CNN
+F 1 "Conn_02x20_Odd_Even" H 6450 15075 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x20_P2.54mm_Horizontal" H 6400 14050 50  0001 C CNN
+F 3 "~" H 6400 14050 50  0001 C CNN
+	1    6400 14050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6700 13750 6800 13750
+Connection ~ 6800 13750
+Wire Wire Line
+	6800 13750 6800 13850
+Wire Wire Line
+	6700 13850 6800 13850
+Connection ~ 6800 13850
+Wire Wire Line
+	6800 13850 6800 13950
+Wire Wire Line
+	6700 13950 6800 13950
+Connection ~ 6800 13950
+Wire Wire Line
+	6800 13950 6800 14550
+Wire Wire Line
+	6200 13950 6100 13950
+Wire Wire Line
+	6100 13950 6100 13850
+Wire Wire Line
+	6100 13750 6200 13750
+Wire Wire Line
+	6200 13850 6100 13850
+Connection ~ 6100 13850
+Wire Wire Line
+	6100 13850 6100 13750
+Wire Wire Line
+	6100 13750 6000 13750
+Connection ~ 6100 13750
+NoConn ~ 6200 13150
+NoConn ~ 6200 13250
+NoConn ~ 6200 13450
+NoConn ~ 6200 13550
+NoConn ~ 6700 13150
+NoConn ~ 6700 13250
+NoConn ~ 6700 13450
+NoConn ~ 6700 13550
+Text GLabel 6000 13350 0    50   Input ~ 0
+N64_COLD_RESETn
+Text GLabel 6900 13350 2    50   Input ~ 0
+N64_OS_EVENTn
+$Comp
+L ng_power:GND #PWR0122
+U 1 1 5F768762
+P 6800 15150
+F 0 "#PWR0122" H 6800 14900 50  0001 C CNN
+F 1 "GND" H 6803 15024 50  0000 C CNN
+F 2 "" H 6700 14800 50  0001 C CNN
+F 3 "" H 6800 15150 50  0001 C CNN
+	1    6800 15150
+	1    0    0    -1  
+$EndComp
+Text GLabel 6000 14050 0    50   Input ~ 0
+N64_AD7
+Text GLabel 6000 14150 0    50   Input ~ 0
+N64_AD6
+Text GLabel 6000 14250 0    50   Input ~ 0
+N64_AD5
+Text GLabel 6000 14350 0    50   Input ~ 0
+N64_AD4
+Text GLabel 6000 14450 0    50   Input ~ 0
+N64_ALE_H
+Text GLabel 6000 14650 0    50   Input ~ 0
+N64_ALE_L
+Text GLabel 6000 14750 0    50   Input ~ 0
+N64_AD3
+Text GLabel 6000 14850 0    50   Input ~ 0
+N64_AD2
+Text GLabel 6000 14950 0    50   Input ~ 0
+N64_AD1
+Text GLabel 6000 15050 0    50   Input ~ 0
+N64_AD0
+Text GLabel 6900 14050 2    50   Input ~ 0
+N64_AD8
+Text GLabel 6900 14150 2    50   Input ~ 0
+N64_AD9
+Text GLabel 6900 14250 2    50   Input ~ 0
+N64_AD10
+Text GLabel 6900 14350 2    50   Input ~ 0
+N64_AD11
+Text GLabel 6900 14450 2    50   Input ~ 0
+N64_READn
+Text GLabel 6900 14650 2    50   Input ~ 0
+N64_WRITEn
+Text GLabel 6900 14750 2    50   Input ~ 0
+N64_AD12
+Text GLabel 6900 14850 2    50   Input ~ 0
+N64_AD13
+Text GLabel 6900 14950 2    50   Input ~ 0
+N64_AD14
+Text GLabel 6900 15050 2    50   Input ~ 0
+N64_AD15
+Text GLabel 6000 13750 0    50   UnSpc ~ 0
+N64_VCC
+$Comp
+L Device:R_Pack04 RN4
+U 1 1 5EFE3C58
+P 8800 13450
+F 0 "RN4" V 8383 13450 50  0000 C CNN
+F 1 "33R0" V 8474 13450 50  0000 C CNN
+F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 9075 13450 50  0001 C CNN
+F 3 "~" H 8800 13450 50  0001 C CNN
+	1    8800 13450
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Pack04 RN5
+U 1 1 5F01FED0
+P 8800 14150
+F 0 "RN5" V 8383 14150 50  0000 C CNN
+F 1 "33R0" V 8474 14150 50  0000 C CNN
+F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 9075 14150 50  0001 C CNN
+F 3 "~" H 8800 14150 50  0001 C CNN
+	1    8800 14150
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Pack04 RN6
+U 1 1 5F052F56
+P 8800 14850
+F 0 "RN6" V 8383 14850 50  0000 C CNN
+F 1 "33R0" V 8474 14850 50  0000 C CNN
+F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 9075 14850 50  0001 C CNN
+F 3 "~" H 8800 14850 50  0001 C CNN
+	1    8800 14850
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Pack04 RN7
+U 1 1 5F052F60
+P 10650 13450
+F 0 "RN7" V 10233 13450 50  0000 C CNN
+F 1 "33R0" V 10324 13450 50  0000 C CNN
+F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 10925 13450 50  0001 C CNN
+F 3 "~" H 10650 13450 50  0001 C CNN
+	1    10650 13450
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Pack04 RN8
+U 1 1 5F0BD86C
+P 10650 14150
+F 0 "RN8" V 10233 14150 50  0000 C CNN
+F 1 "33R0" V 10324 14150 50  0000 C CNN
+F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 10925 14150 50  0001 C CNN
+F 3 "~" H 10650 14150 50  0001 C CNN
+	1    10650 14150
+	0    1    1    0   
+$EndComp
+Text GLabel 8600 13350 0    50   Input ~ 0
+N64_AD0
+Text GLabel 8600 13250 0    50   Input ~ 0
+N64_AD15
+Text GLabel 8600 13450 0    50   Input ~ 0
+N64_AD14
+Text GLabel 8600 13550 0    50   Input ~ 0
+N64_AD1
+Text GLabel 8600 14050 0    50   Input ~ 0
+N64_AD2
+Text GLabel 8600 14250 0    50   Input ~ 0
+N64_AD3
+Text GLabel 8600 14750 0    50   Input ~ 0
+N64_ALE_L
+Text GLabel 8600 14950 0    50   Input ~ 0
+N64_ALE_H
+Text GLabel 8600 14650 0    50   Input ~ 0
+N64_WRITEn
+Text GLabel 8600 14850 0    50   Input ~ 0
+N64_READn
+Text GLabel 8600 13950 0    50   Input ~ 0
+N64_AD13
+Text GLabel 8600 14150 0    50   Input ~ 0
+N64_AD12
+Text GLabel 10450 13250 0    50   Input ~ 0
+N64_AD11
+Text GLabel 10450 13450 0    50   Input ~ 0
+N64_AD10
+Text GLabel 10450 13950 0    50   Input ~ 0
+N64_AD9
+Text GLabel 10450 14150 0    50   Input ~ 0
+N64_AD8
+$Comp
+L Device:R_Pack04 RN9
+U 1 1 5F160ABF
+P 10650 14850
+F 0 "RN9" V 10233 14850 50  0000 C CNN
+F 1 "33R0" V 10324 14850 50  0000 C CNN
+F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 10925 14850 50  0001 C CNN
+F 3 "~" H 10650 14850 50  0001 C CNN
+	1    10650 14850
+	0    1    1    0   
+$EndComp
+Text GLabel 10450 14650 0    50   Input ~ 0
+N64_COLD_RESETn
+Text GLabel 10450 14750 0    50   Input ~ 0
+N64_OS_EVENTn
+NoConn ~ 10450 14850
+NoConn ~ 10450 14950
+NoConn ~ 10850 14850
+NoConn ~ 10850 14950
+Text GLabel 10450 13350 0    50   Input ~ 0
+N64_AD4
+Text GLabel 10450 13550 0    50   Input ~ 0
+N64_AD5
+Text GLabel 10450 14050 0    50   Input ~ 0
+N64_AD6
+Text GLabel 10450 14250 0    50   Input ~ 0
+N64_AD7
+Text GLabel 9000 13350 2    50   Input ~ 0
+N64_AD0_IC
+Text GLabel 9000 13250 2    50   Input ~ 0
+N64_AD15_IC
+Text GLabel 9000 13450 2    50   Input ~ 0
+N64_AD14_IC
+Text GLabel 9000 13550 2    50   Input ~ 0
+N64_AD1_IC
+Text GLabel 9000 14050 2    50   Input ~ 0
+N64_AD2_IC
+Text GLabel 9000 14250 2    50   Input ~ 0
+N64_AD3_IC
+Text GLabel 9000 14750 2    50   Input ~ 0
+N64_ALE_L_IC
+Text GLabel 9000 14950 2    50   Input ~ 0
+N64_ALE_H_IC
+Text GLabel 9000 14650 2    50   Input ~ 0
+N64_WRITEn_IC
+Text GLabel 9000 14850 2    50   Input ~ 0
+N64_READn_IC
+Text GLabel 9000 13950 2    50   Input ~ 0
+N64_AD13_IC
+Text GLabel 9000 14150 2    50   Input ~ 0
+N64_AD12_IC
+Text GLabel 10850 13250 2    50   Input ~ 0
+N64_AD11_IC
+Text GLabel 10850 13450 2    50   Input ~ 0
+N64_AD10_IC
+Text GLabel 10850 13950 2    50   Input ~ 0
+N64_AD9_IC
+Text GLabel 10850 14150 2    50   Input ~ 0
+N64_AD8_IC
+Text GLabel 10850 14650 2    50   Input ~ 0
+N64_COLD_RESETn_IC
+Text GLabel 10850 14750 2    50   Input ~ 0
+N64_OS_EVENTn_IC
+Text GLabel 10850 13350 2    50   Input ~ 0
+N64_AD4_IC
+Text GLabel 10850 13550 2    50   Input ~ 0
+N64_AD5_IC
+Text GLabel 10850 14050 2    50   Input ~ 0
+N64_AD6_IC
+Text GLabel 10850 14250 2    50   Input ~ 0
+N64_AD7_IC
+Text GLabel 2500 1700 2    50   Input ~ 0
+N64_AD0_IC
+Text GLabel 2500 1600 2    50   Input ~ 0
+N64_AD15_IC
+Text GLabel 2500 1800 2    50   Input ~ 0
+N64_AD14_IC
+Text GLabel 2500 1900 2    50   Input ~ 0
+N64_AD1_IC
+Text GLabel 2500 2100 2    50   Input ~ 0
+N64_AD2_IC
+Text GLabel 2500 2300 2    50   Input ~ 0
+N64_AD3_IC
+Text GLabel 2500 2500 2    50   Input ~ 0
+N64_ALE_L_IC
+Text GLabel 2500 2700 2    50   Input ~ 0
+N64_ALE_H_IC
+Text GLabel 2500 2400 2    50   Input ~ 0
+N64_WRITEn_IC
+Text GLabel 2500 2600 2    50   Input ~ 0
+N64_READn_IC
+Text GLabel 2500 2000 2    50   Input ~ 0
+N64_AD13_IC
+Text GLabel 2500 2200 2    50   Input ~ 0
+N64_AD12_IC
+Text GLabel 2500 2800 2    50   Input ~ 0
+N64_AD11_IC
+Text GLabel 2500 3000 2    50   Input ~ 0
+N64_AD10_IC
+Text GLabel 2500 3200 2    50   Input ~ 0
+N64_AD9_IC
+Text GLabel 2500 3400 2    50   Input ~ 0
+N64_AD8_IC
+Text GLabel 2500 3600 2    50   Input ~ 0
+N64_COLD_RESETn_IC
+Text GLabel 2500 3700 2    50   Input ~ 0
+N64_OS_EVENTn_IC
+Text GLabel 2500 2900 2    50   Input ~ 0
+N64_AD4_IC
+Text GLabel 2500 3100 2    50   Input ~ 0
+N64_AD5_IC
+Text GLabel 2500 3300 2    50   Input ~ 0
+N64_AD6_IC
+Text GLabel 2500 3500 2    50   Input ~ 0
+N64_AD7_IC
+Text GLabel 8500 2700 2    50   Input ~ 0
+DRAM_DQ8
+Text GLabel 8500 2600 2    50   Input ~ 0
+DRAM_DQ9
+Text GLabel 8500 2500 2    50   Input ~ 0
+DRAM_DQ10
+Text GLabel 8500 2400 2    50   Input ~ 0
+DRAM_DQ11
+Text GLabel 8500 2300 2    50   Input ~ 0
+DRAM_DQ12
+Text GLabel 8500 2200 2    50   Input ~ 0
+DRAM_DQ13
+Text GLabel 8500 2100 2    50   Input ~ 0
+DRAM_DQ14
+Text GLabel 8500 2000 2    50   Input ~ 0
+DRAM_DQ15
+Text GLabel 8500 2800 2    50   Input ~ 0
+DRAM_UDQM
+Text GLabel 8500 2900 2    50   Input ~ 0
+DRAM_CLK
+Text GLabel 8500 3000 2    50   Input ~ 0
+DRAM_CKE
+Text GLabel 8500 3800 2    50   Input ~ 0
+DRAM_A4
+Text GLabel 8500 3700 2    50   Input ~ 0
+DRAM_A5
+Text GLabel 8500 3600 2    50   Input ~ 0
+DRAM_A6
+Text GLabel 8500 3500 2    50   Input ~ 0
+DRAM_A7
+Text GLabel 8500 3400 2    50   Input ~ 0
+DRAM_A8
+Text GLabel 8500 3300 2    50   Input ~ 0
+DRAM_A9
+Text GLabel 10200 1450 2    50   Input ~ 0
+DRAM_A10
+Text GLabel 8500 3200 2    50   Input ~ 0
+DRAM_A11
+Text GLabel 8500 3100 2    50   Input ~ 0
+DRAM_A12
+Text GLabel 2500 3900 2    50   Input ~ 0
+DRAM_DQ0
+Text GLabel 2500 4000 2    50   Input ~ 0
+DRAM_DQ1
+Text GLabel 2500 4100 2    50   Input ~ 0
+DRAM_DQ2
+Text GLabel 2500 4200 2    50   Input ~ 0
+DRAM_DQ3
+Text GLabel 8500 1600 2    50   Input ~ 0
+DRAM_DQ4
+Text GLabel 8500 1700 2    50   Input ~ 0
+DRAM_DQ5
+Text GLabel 8500 1800 2    50   Input ~ 0
+DRAM_DQ6
+Text GLabel 8500 1900 2    50   Input ~ 0
+DRAM_DQ7
 $EndSCHEMATC
