@@ -84,13 +84,13 @@ Connection ~ 18700 4750
 $Comp
 L ng_fpga_lattice_ice40:iCE40HX4K-TQ144 U1
 U 5 1 5ED8748E
-P 11250 2350
-F 0 "U1" H 12150 2600 60  0000 R CNN
-F 1 "iCE40HX4K-TQ144" H 12150 2500 60  0000 R CNN
-F 2 "Package_QFP:TQFP-144_20x20mm_P0.5mm" H 11450 2400 60  0001 L CNN
-F 3 "https://www.mouser.com/datasheet/2/225/FPGA-DS-02029-3-5-iCE40-LP-HX-Family-Data-Sheet-1022803.pdf" H 11450 2200 60  0001 L CNN
-F 4 "iCE40HX4K-TQ144" H 11450 2300 60  0001 L CNN "manf#"
-	5    11250 2350
+P 12350 2350
+F 0 "U1" H 13250 2600 60  0000 R CNN
+F 1 "iCE40HX4K-TQ144" H 13250 2500 60  0000 R CNN
+F 2 "Package_QFP:TQFP-144_20x20mm_P0.5mm" H 12550 2400 60  0001 L CNN
+F 3 "https://www.mouser.com/datasheet/2/225/FPGA-DS-02029-3-5-iCE40-LP-HX-Family-Data-Sheet-1022803.pdf" H 12550 2200 60  0001 L CNN
+F 4 "iCE40HX4K-TQ144" H 12550 2300 60  0001 L CNN "manf#"
+	5    12350 2350
 	-1   0    0    -1  
 $EndComp
 $Comp
@@ -744,13 +744,13 @@ Wire Wire Line
 $Comp
 L ng_fpga_lattice_ice40:iCE40HX4K-TQ144 U1
 U 8 1 5EDD4311
-P 11000 3650
-F 0 "U1" H 11400 3900 60  0000 R CNN
-F 1 "iCE40HX4K-TQ144" H 11400 3800 60  0000 R CNN
-F 2 "Package_QFP:TQFP-144_20x20mm_P0.5mm" H 11200 3700 60  0001 L CNN
-F 3 "https://www.mouser.com/datasheet/2/225/FPGA-DS-02029-3-5-iCE40-LP-HX-Family-Data-Sheet-1022803.pdf" H 11200 3500 60  0001 L CNN
-F 4 "iCE40HX4K-TQ144" H 11200 3600 60  0001 L CNN "manf#"
-	8    11000 3650
+P 12100 3650
+F 0 "U1" H 12500 3900 60  0000 R CNN
+F 1 "iCE40HX4K-TQ144" H 12500 3800 60  0000 R CNN
+F 2 "Package_QFP:TQFP-144_20x20mm_P0.5mm" H 12300 3700 60  0001 L CNN
+F 3 "https://www.mouser.com/datasheet/2/225/FPGA-DS-02029-3-5-iCE40-LP-HX-Family-Data-Sheet-1022803.pdf" H 12300 3500 60  0001 L CNN
+F 4 "iCE40HX4K-TQ144" H 12300 3600 60  0001 L CNN "manf#"
+	8    12100 3650
 	-1   0    0    -1  
 $EndComp
 Wire Wire Line
@@ -769,17 +769,17 @@ Wire Wire Line
 	21700 8750 21600 8750
 Wire Wire Line
 	21600 8750 21600 9450
-Text GLabel 11250 2650 2    50   Input ~ 0
+Text GLabel 12350 2650 2    50   Input ~ 0
 CONFIG_MOSI|IO0
-Text GLabel 11250 2750 2    50   Input ~ 0
+Text GLabel 12350 2750 2    50   Input ~ 0
 CONFIG_MISO|IO1
-Text GLabel 11250 2850 2    50   Input ~ 0
+Text GLabel 12350 2850 2    50   Input ~ 0
 CONFIG_SCK
-Text GLabel 11250 2950 2    50   Input ~ 0
+Text GLabel 12350 2950 2    50   Input ~ 0
 CONFIG_SSn
-Text GLabel 11550 2350 2    50   Input ~ 0
+Text GLabel 12650 2350 2    50   Input ~ 0
 FPGA_CDONE
-Text GLabel 11550 2450 2    50   Input ~ 0
+Text GLabel 12650 2450 2    50   Input ~ 0
 FPGA_CRESETn
 Text GLabel 16100 8800 0    50   Input ~ 0
 FLASH_SSn
@@ -840,36 +840,36 @@ F 3 "~" H 21900 6850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	11250 2450 11350 2450
+	12350 2450 12450 2450
 Wire Wire Line
-	11350 2150 11350 2450
-Connection ~ 11350 2450
+	12450 2150 12450 2450
+Connection ~ 12450 2450
 Wire Wire Line
-	11250 2350 11450 2350
+	12350 2350 12550 2350
 $Comp
 L Device:R R1
 U 1 1 60323966
-P 11350 2000
-F 0 "R1" V 11400 2150 50  0000 L CNN
-F 1 "10k" V 11400 1850 50  0000 R CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 11280 2000 50  0001 C CNN
-F 3 "~" H 11350 2000 50  0001 C CNN
-	1    11350 2000
+P 12450 2000
+F 0 "R1" V 12500 2150 50  0000 L CNN
+F 1 "10k" V 12500 1850 50  0000 R CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 12380 2000 50  0001 C CNN
+F 3 "~" H 12450 2000 50  0001 C CNN
+	1    12450 2000
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	11350 2450 11550 2450
+	12450 2450 12650 2450
 Wire Wire Line
-	11450 2350 11450 2150
-Connection ~ 11450 2350
+	12550 2350 12550 2150
+Connection ~ 12550 2350
 Wire Wire Line
-	11450 2350 11550 2350
+	12550 2350 12650 2350
 Wire Wire Line
-	11350 1850 11350 1650
+	12450 1850 12450 1650
 Wire Wire Line
-	11350 1650 11450 1650
+	12450 1650 12550 1650
 Wire Wire Line
-	11450 1650 11450 1850
+	12550 1650 12550 1850
 Text GLabel 18150 1750 0    50   Input ~ 0
 DRAM_A0
 Text GLabel 18150 1850 0    50   Input ~ 0
@@ -955,12 +955,12 @@ Wire Wire Line
 $Comp
 L Device:R R2
 U 1 1 60378072
-P 11450 2000
-F 0 "R2" V 11500 2150 50  0000 L CNN
-F 1 "10k" V 11500 1850 50  0000 R CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 11380 2000 50  0001 C CNN
-F 3 "~" H 11450 2000 50  0001 C CNN
-	1    11450 2000
+P 12550 2000
+F 0 "R2" V 12600 2150 50  0000 L CNN
+F 1 "10k" V 12600 1850 50  0000 R CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 12480 2000 50  0001 C CNN
+F 3 "~" H 12550 2000 50  0001 C CNN
+	1    12550 2000
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -2101,11 +2101,11 @@ F 3 "" H 21350 3950 50  0001 C CNN
 	1    21350 3950
 	1    0    0    -1  
 $EndComp
-Text GLabel 11250 1650 0    50   UnSpc ~ 0
+Text GLabel 12350 1650 0    50   UnSpc ~ 0
 P3V3
 Wire Wire Line
-	11250 1650 11350 1650
-Connection ~ 11350 1650
+	12350 1650 12450 1650
+Connection ~ 12450 1650
 Connection ~ 20150 6600
 Wire Wire Line
 	20050 6600 20150 6600
@@ -2662,49 +2662,49 @@ Text GLabel 17200 14000 2    50   Input ~ 0
 N64_AD6_IC
 Text GLabel 17200 14200 2    50   Input ~ 0
 N64_AD7_IC
-Text GLabel 2500 1700 2    50   Input ~ 0
+Text GLabel 4500 4150 2    50   Input ~ 0
 N64_AD0_IC
-Text GLabel 2500 1600 2    50   Input ~ 0
+Text GLabel 4500 4050 2    50   Input ~ 0
 N64_AD15_IC
-Text GLabel 2500 1800 2    50   Input ~ 0
+Text GLabel 4500 4250 2    50   Input ~ 0
 N64_AD14_IC
-Text GLabel 2500 1900 2    50   Input ~ 0
+Text GLabel 4500 4350 2    50   Input ~ 0
 N64_AD1_IC
-Text GLabel 2500 2100 2    50   Input ~ 0
+Text GLabel 2500 1700 2    50   Input ~ 0
 N64_AD2_IC
-Text GLabel 2500 2300 2    50   Input ~ 0
+Text GLabel 2500 1900 2    50   Input ~ 0
 N64_AD3_IC
-Text GLabel 2500 2500 2    50   Input ~ 0
+Text GLabel 2500 2100 2    50   Input ~ 0
 N64_ALE_L_IC
-Text GLabel 2500 2700 2    50   Input ~ 0
+Text GLabel 2500 2300 2    50   Input ~ 0
 N64_ALE_H_IC
-Text GLabel 2500 2400 2    50   Input ~ 0
-N64_WRITEn_IC
-Text GLabel 2500 2600 2    50   Input ~ 0
-N64_READn_IC
 Text GLabel 2500 2000 2    50   Input ~ 0
-N64_AD13_IC
+N64_WRITEn_IC
 Text GLabel 2500 2200 2    50   Input ~ 0
+N64_READn_IC
+Text GLabel 2500 1600 2    50   Input ~ 0
+N64_AD13_IC
+Text GLabel 2500 1800 2    50   Input ~ 0
 N64_AD12_IC
-Text GLabel 2500 2800 2    50   Input ~ 0
+Text GLabel 2500 2400 2    50   Input ~ 0
 N64_AD11_IC
-Text GLabel 2500 3000 2    50   Input ~ 0
+Text GLabel 2500 2600 2    50   Input ~ 0
 N64_AD10_IC
-Text GLabel 2500 3200 2    50   Input ~ 0
+Text GLabel 2500 2800 2    50   Input ~ 0
 N64_AD9_IC
-Text GLabel 2500 3400 2    50   Input ~ 0
+Text GLabel 2500 3000 2    50   Input ~ 0
 N64_AD8_IC
-Text GLabel 2500 3600 2    50   Input ~ 0
+Text GLabel 2500 3200 2    50   Input ~ 0
 N64_COLD_RESETn_IC
-Text GLabel 2500 3700 2    50   Input ~ 0
-N64_OS_EVENTn_IC
-Text GLabel 2500 2900 2    50   Input ~ 0
-N64_AD4_IC
-Text GLabel 2500 3100 2    50   Input ~ 0
-N64_AD5_IC
 Text GLabel 2500 3300 2    50   Input ~ 0
+N64_OS_EVENTn_IC
+Text GLabel 2500 2500 2    50   Input ~ 0
+N64_AD4_IC
+Text GLabel 2500 2700 2    50   Input ~ 0
+N64_AD5_IC
+Text GLabel 2500 2900 2    50   Input ~ 0
 N64_AD6_IC
-Text GLabel 2500 3500 2    50   Input ~ 0
+Text GLabel 2500 3100 2    50   Input ~ 0
 N64_AD7_IC
 Text GLabel 8500 2700 2    50   Input ~ 0
 DRAM_DQ8
@@ -2712,55 +2712,53 @@ Text GLabel 8500 2600 2    50   Input ~ 0
 DRAM_DQ9
 Text GLabel 8500 2500 2    50   Input ~ 0
 DRAM_DQ10
-Text GLabel 8500 2400 2    50   Input ~ 0
-DRAM_DQ11
-Text GLabel 8500 2300 2    50   Input ~ 0
-DRAM_DQ12
 Text GLabel 8500 2200 2    50   Input ~ 0
-DRAM_DQ13
-Text GLabel 8500 2100 2    50   Input ~ 0
-DRAM_DQ14
+DRAM_DQ11
 Text GLabel 8500 2000 2    50   Input ~ 0
-DRAM_DQ15
-Text GLabel 8500 2800 2    50   Input ~ 0
-DRAM_UDQM
-Text GLabel 8500 2900 2    50   Input ~ 0
-DRAM_CLK
-Text GLabel 8500 3000 2    50   Input ~ 0
-DRAM_CKE
-Text GLabel 8500 3800 2    50   Input ~ 0
-DRAM_A4
-Text GLabel 8500 3700 2    50   Input ~ 0
-DRAM_A5
-Text GLabel 8500 3600 2    50   Input ~ 0
-DRAM_A6
-Text GLabel 8500 3500 2    50   Input ~ 0
-DRAM_A7
-Text GLabel 8500 3400 2    50   Input ~ 0
-DRAM_A8
-Text GLabel 8500 3300 2    50   Input ~ 0
-DRAM_A9
-Text GLabel 10200 1450 2    50   Input ~ 0
-DRAM_A10
-Text GLabel 8500 3200 2    50   Input ~ 0
-DRAM_A11
-Text GLabel 8500 3100 2    50   Input ~ 0
-DRAM_A12
-Text GLabel 2500 3900 2    50   Input ~ 0
-DRAM_DQ0
-Text GLabel 2500 4000 2    50   Input ~ 0
-DRAM_DQ1
-Text GLabel 2500 4100 2    50   Input ~ 0
-DRAM_DQ2
-Text GLabel 2500 4200 2    50   Input ~ 0
-DRAM_DQ3
-Text GLabel 8500 1600 2    50   Input ~ 0
-DRAM_DQ4
-Text GLabel 8500 1700 2    50   Input ~ 0
-DRAM_DQ5
-Text GLabel 8500 1800 2    50   Input ~ 0
-DRAM_DQ6
+DRAM_DQ12
 Text GLabel 8500 1900 2    50   Input ~ 0
+DRAM_DQ13
+Text GLabel 8500 1800 2    50   Input ~ 0
+DRAM_DQ14
+Text GLabel 8500 1600 2    50   Input ~ 0
+DRAM_DQ15
+Text GLabel 10350 3200 2    50   Input ~ 0
+DRAM_UDQM
+Text GLabel 10350 3300 2    50   Input ~ 0
+DRAM_CLK
+Text GLabel 10350 3500 2    50   Input ~ 0
+DRAM_CKE
+Text GLabel 10550 5150 2    50   Input ~ 0
+DRAM_A4
+Text GLabel 10550 4950 2    50   Input ~ 0
+DRAM_A6
+Text GLabel 10550 4850 2    50   Input ~ 0
+DRAM_A7
+Text GLabel 10550 4750 2    50   Input ~ 0
+DRAM_A8
+Text GLabel 10550 4650 2    50   Input ~ 0
+DRAM_A9
+Text GLabel 9600 2000 2    50   Input ~ 0
+DRAM_A10
+Text GLabel 9600 2300 2    50   Input ~ 0
+DRAM_A11
+Text GLabel 10350 3600 2    50   Input ~ 0
+DRAM_A12
+Text GLabel 2500 4200 2    50   Input ~ 0
+DRAM_DQ0
+Text GLabel 2500 4100 2    50   Input ~ 0
+DRAM_DQ1
+Text GLabel 2500 4000 2    50   Input ~ 0
+DRAM_DQ2
+Text GLabel 8500 1700 2    50   Input ~ 0
+DRAM_DQ3
+Text GLabel 2500 3900 2    50   Input ~ 0
+DRAM_DQ4
+Text GLabel 2500 3800 2    50   Input ~ 0
+DRAM_DQ5
+Text GLabel 2500 3700 2    50   Input ~ 0
+DRAM_DQ6
+Text GLabel 9600 3100 2    50   Input ~ 0
 DRAM_DQ7
 $Comp
 L ng_ftdi:FT245RL U7
@@ -2834,7 +2832,123 @@ F 3 "~" H 6600 14850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text GLabel 6700 13600 0    50   Input ~ 0
-USB-
+USB_D-
 Text GLabel 6700 13700 0    50   Input ~ 0
-USB+
+USB_D+
+Text GLabel 8250 13300 2    50   Input ~ 0
+FIFO_D0
+Text GLabel 8250 13400 2    50   Input ~ 0
+FIFO_D1
+Text GLabel 8250 13500 2    50   Input ~ 0
+FIFO_D2
+Text GLabel 8250 13600 2    50   Input ~ 0
+FIFO_D3
+Text GLabel 8250 13700 2    50   Input ~ 0
+FIFO_D4
+Text GLabel 8250 13900 2    50   Input ~ 0
+FIFO_D6
+Text GLabel 8250 14000 2    50   Input ~ 0
+FIFO_D7
+Text GLabel 8250 13800 2    50   Input ~ 0
+FIFO_D5
+Text GLabel 8250 14200 2    50   Input ~ 0
+FIFO_RXFn
+Text GLabel 8250 14400 2    50   Input ~ 0
+FIFO_RDn
+Text GLabel 8250 14500 2    50   Input ~ 0
+FIFO_WR
+Text GLabel 8250 14300 2    50   Input ~ 0
+FIFO_TXEn
+$Comp
+L Device:R R9
+U 1 1 5EF04AA8
+P 8850 14450
+F 0 "R9" H 8920 14496 50  0000 L CNN
+F 1 "10k" H 8920 14405 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 8780 14450 50  0001 C CNN
+F 3 "~" H 8850 14450 50  0001 C CNN
+	1    8850 14450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8250 14700 8850 14700
+Wire Wire Line
+	8850 14700 8850 14600
+Wire Wire Line
+	8850 14300 8850 14200
+Text GLabel 6600 13400 0    50   UnSpc ~ 0
+P3V3
+Wire Wire Line
+	6600 13400 6700 13400
+Text GLabel 8950 14200 2    50   UnSpc ~ 0
+P3V3
+Wire Wire Line
+	8850 14200 8950 14200
+$Comp
+L ng_conn:USB_B_Micro J5
+U 1 1 5F29BE5B
+P 5100 13700
+F 0 "J5" H 5157 14167 50  0000 C CNN
+F 1 "USB_B_Micro" H 5157 14076 50  0000 C CNN
+F 2 "Connector_USB:USB_Micro-B_Wuerth_629105150521" H 5250 13700 50  0001 C CNN
+F 3 "~" H 5250 13700 50  0001 C CNN
+	1    5100 13700
+	1    0    0    -1  
+$EndComp
+NoConn ~ 5400 13800
+Wire Wire Line
+	5400 13900 5500 13900
+Wire Wire Line
+	5500 13900 5500 14000
+Wire Wire Line
+	5400 13500 5500 13500
+Wire Wire Line
+	5400 13600 5500 13600
+Wire Wire Line
+	5400 13700 5500 13700
+$Comp
+L ng_power:GND #PWR02
+U 1 1 5F3B0D7E
+P 5500 14000
+F 0 "#PWR02" H 5500 13750 50  0001 C CNN
+F 1 "GND" H 5503 13874 50  0000 C CNN
+F 2 "" H 5400 13650 50  0001 C CNN
+F 3 "" H 5500 14000 50  0001 C CNN
+	1    5500 14000
+	1    0    0    -1  
+$EndComp
+Text GLabel 5500 13500 2    50   UnSpc ~ 0
+USB_VBUS
+Text GLabel 5500 13600 2    50   Input ~ 0
+USB_D-
+Text GLabel 5500 13700 2    50   Input ~ 0
+USB_D+
+Text GLabel 6600 13300 0    50   UnSpc ~ 0
+USB_VBUS
+Wire Wire Line
+	6600 13300 6700 13300
+Text GLabel 9600 1900 2    50   Input ~ 0
+DRAM_A0
+Text GLabel 9600 1800 2    50   Input ~ 0
+DRAM_A1
+Text GLabel 9600 1700 2    50   Input ~ 0
+DRAM_A2
+Text GLabel 9600 1600 2    50   Input ~ 0
+DRAM_A3
+Text GLabel 9600 2800 2    50   Input ~ 0
+DRAM_LDQM
+Text GLabel 9600 2700 2    50   Input ~ 0
+DRAM_WEn
+Text GLabel 9600 2600 2    50   Input ~ 0
+DRAM_CASn
+Text GLabel 9600 2500 2    50   Input ~ 0
+DRAM_RASn
+Text GLabel 9600 2400 2    50   Input ~ 0
+DRAM_CSn
+Text GLabel 9600 2200 2    50   Input ~ 0
+DRAM_BA0
+Text GLabel 9600 2100 2    50   Input ~ 0
+DRAM_BA1
+Text GLabel 10550 5050 2    50   Input ~ 0
+DRAM_A5
 $EndSCHEMATC
