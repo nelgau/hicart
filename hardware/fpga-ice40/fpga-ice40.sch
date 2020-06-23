@@ -3248,9 +3248,9 @@ Wire Wire Line
 	14800 3400 14800 3300
 Text GLabel 15200 3000 2    50   Input ~ 0
 CLK_50MHZ
-Text GLabel 2500 3000 2    50   Input ~ 0
+Text GLabel 2500 3100 2    50   Input ~ 0
 CLK_50MHZ
-NoConn ~ 2500 3100
+NoConn ~ 2500 3000
 NoConn ~ 4500 2650
 NoConn ~ 4500 2750
 NoConn ~ 4500 2850
