@@ -1619,7 +1619,7 @@ U 1 1 5EE8C74E
 P 8900 14100
 F 0 "J4" H 8950 15150 50  0000 C CNN
 F 1 "Conn_02x20_Odd_Even" H 8950 15125 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_2x20_P2.54mm_Horizontal" H 8900 14100 50  0001 C CNN
+F 2 "local_conn:PinHeader_2x20_P2.54mm_Horizontal" H 8900 14100 50  0001 C CNN
 F 3 "~" H 8900 14100 50  0001 C CNN
 	1    8900 14100
 	1    0    0    -1  
