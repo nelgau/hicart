@@ -1884,9 +1884,9 @@ Text GLabel 2500 1700 2    50   Input ~ 0
 N64_AD14_IC
 Text GLabel 2500 1600 2    50   Input ~ 0
 N64_AD1_IC
-Text GLabel 2500 1900 2    50   Input ~ 0
+Text GLabel 2500 2000 2    50   Input ~ 0
 N64_AD2_IC
-Text GLabel 2500 2100 2    50   Input ~ 0
+Text GLabel 2500 1800 2    50   Input ~ 0
 N64_AD3_IC
 Text GLabel 2500 2500 2    50   Input ~ 0
 N64_ALE_L_IC
@@ -1896,9 +1896,9 @@ Text GLabel 2500 2400 2    50   Input ~ 0
 N64_WRITEn_IC
 Text GLabel 2500 2300 2    50   Input ~ 0
 N64_READn_IC
-Text GLabel 2500 1800 2    50   Input ~ 0
+Text GLabel 2500 2100 2    50   Input ~ 0
 N64_AD13_IC
-Text GLabel 2500 2000 2    50   Input ~ 0
+Text GLabel 2500 1900 2    50   Input ~ 0
 N64_AD12_IC
 Text GLabel 2500 2900 2    50   Input ~ 0
 N64_AD11_IC
