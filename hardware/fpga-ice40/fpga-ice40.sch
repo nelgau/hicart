@@ -670,10 +670,6 @@ Text GLabel 21300 9050 0    50   Input ~ 0
 FLASH_MOSI|IO0
 Text GLabel 21300 9150 0    50   Input ~ 0
 FLASH_MISO|IO1
-Text GLabel 21300 9250 0    50   Input ~ 0
-FLASH_IO2
-Text GLabel 21300 8950 0    50   Input ~ 0
-FLASH_IO3
 Wire Wire Line
 	12350 2450 12450 2450
 Wire Wire Line
@@ -1801,9 +1797,9 @@ Text GLabel 12950 13300 0    50   Input ~ 0
 N64_AD11
 Text GLabel 12950 13500 0    50   Input ~ 0
 N64_AD10
-Text GLabel 12950 14100 0    50   Input ~ 0
+Text GLabel 12950 14000 0    50   Input ~ 0
 N64_AD9
-Text GLabel 12950 14300 0    50   Input ~ 0
+Text GLabel 12950 14200 0    50   Input ~ 0
 N64_AD8
 $Comp
 L Device:R_Pack04 RN9
@@ -1828,9 +1824,9 @@ Text GLabel 12950 13400 0    50   Input ~ 0
 N64_AD4
 Text GLabel 12950 13600 0    50   Input ~ 0
 N64_AD5
-Text GLabel 12950 14000 0    50   Input ~ 0
+Text GLabel 12950 14100 0    50   Input ~ 0
 N64_AD6
-Text GLabel 12950 14200 0    50   Input ~ 0
+Text GLabel 12950 14300 0    50   Input ~ 0
 N64_AD7
 Text GLabel 11500 13400 2    50   Input ~ 0
 N64_AD0_IC
@@ -1860,9 +1856,9 @@ Text GLabel 13350 13300 2    50   Input ~ 0
 N64_AD11_IC
 Text GLabel 13350 13500 2    50   Input ~ 0
 N64_AD10_IC
-Text GLabel 13350 14100 2    50   Input ~ 0
+Text GLabel 13350 14000 2    50   Input ~ 0
 N64_AD9_IC
-Text GLabel 13350 14300 2    50   Input ~ 0
+Text GLabel 13350 14200 2    50   Input ~ 0
 N64_AD8_IC
 Text GLabel 13350 14800 2    50   Input ~ 0
 N64_COLD_RESETn_IC
@@ -1872,9 +1868,9 @@ Text GLabel 13350 13400 2    50   Input ~ 0
 N64_AD4_IC
 Text GLabel 13350 13600 2    50   Input ~ 0
 N64_AD5_IC
-Text GLabel 13350 14000 2    50   Input ~ 0
+Text GLabel 13350 14100 2    50   Input ~ 0
 N64_AD6_IC
-Text GLabel 13350 14200 2    50   Input ~ 0
+Text GLabel 13350 14300 2    50   Input ~ 0
 N64_AD7_IC
 Text GLabel 4500 4350 2    50   Input ~ 0
 N64_AD0_IC
@@ -1894,9 +1890,9 @@ Text GLabel 2500 2200 2    50   Input ~ 0
 N64_ALE_H_IC
 Text GLabel 2500 2400 2    50   Input ~ 0
 N64_WRITEn_IC
-Text GLabel 2500 2300 2    50   Input ~ 0
-N64_READn_IC
 Text GLabel 2500 2100 2    50   Input ~ 0
+N64_READn_IC
+Text GLabel 2500 2300 2    50   Input ~ 0
 N64_AD13_IC
 Text GLabel 2500 1900 2    50   Input ~ 0
 N64_AD12_IC
@@ -1904,9 +1900,9 @@ Text GLabel 2500 2900 2    50   Input ~ 0
 N64_AD11_IC
 Text GLabel 2500 2600 2    50   Input ~ 0
 N64_AD10_IC
-Text GLabel 2500 3300 2    50   Input ~ 0
+Text GLabel 2500 3200 2    50   Input ~ 0
 N64_AD9_IC
-Text GLabel 2500 3500 2    50   Input ~ 0
+Text GLabel 2500 3400 2    50   Input ~ 0
 N64_AD8_IC
 Text GLabel 2500 3700 2    50   Input ~ 0
 N64_COLD_RESETn_IC
@@ -1916,9 +1912,9 @@ Text GLabel 2500 2800 2    50   Input ~ 0
 N64_AD4_IC
 Text GLabel 2500 2700 2    50   Input ~ 0
 N64_AD5_IC
-Text GLabel 2500 3200 2    50   Input ~ 0
+Text GLabel 2500 3300 2    50   Input ~ 0
 N64_AD6_IC
-Text GLabel 2500 3400 2    50   Input ~ 0
+Text GLabel 2500 3500 2    50   Input ~ 0
 N64_AD7_IC
 Text GLabel 8500 2800 2    50   Input ~ 0
 DRAM_DQ8
@@ -2794,8 +2790,6 @@ Wire Wire Line
 	22100 8650 22100 9050
 NoConn ~ 21900 9150
 Wire Wire Line
-	21300 8950 21400 8950
-Wire Wire Line
 	21400 9250 21300 9250
 Wire Wire Line
 	18050 11950 18400 11950
@@ -3216,7 +3210,7 @@ U 1 1 61537653
 P 14800 3000
 F 0 "X1" H 14900 3250 50  0000 L CNN
 F 1 "ECS-2520MV-xxx-xx" H 14850 2750 50  0000 L CNN
-F 2 "Oscillator:Oscillator_SMD_ECS_2520MV-xxx-xx-4Pin_2.5x2.0mm" H 15250 2650 50  0001 C CNN
+F 2 "ng_time:Oscillator_2.5x2.0" H 15250 2650 50  0001 C CNN
 F 3 "https://www.ecsxtal.com/store/pdf/ECS-2520MV.pdf" H 14625 3125 50  0001 C CNN
 	1    14800 3000
 	1    0    0    -1  
@@ -3342,4 +3336,10 @@ F 3 "" H 4800 11500 50  0001 C CNN
 	1    4800 11500
 	1    0    0    -1  
 $EndComp
+Text GLabel 21300 9250 0    50   Input ~ 0
+FLASH_IO2
+Wire Wire Line
+	21300 8950 21400 8950
+Text GLabel 21300 8950 0    50   Input ~ 0
+FLASH_IO3
 $EndSCHEMATC

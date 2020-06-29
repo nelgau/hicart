@@ -2,4 +2,5 @@
   (lib (name ng_conn)(type KiCad)(uri ${KIPRJMOD}/../lib/nelgau/footprints/ng_conn.pretty)(options "")(descr ""))
   (lib (name local_hacks)(type KiCad)(uri ${KIPRJMOD}/lib/footprints/local_hacks.pretty)(options "")(descr ""))
   (lib (name local_conn)(type KiCad)(uri ${KIPRJMOD}/lib/footprints/local_conn.pretty)(options "")(descr ""))
+  (lib (name ng_time)(type KiCad)(uri ${KIPRJMOD}/../lib/nelgau/footprints/ng_time.pretty)(options "")(descr ""))
 )
