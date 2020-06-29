@@ -1,0 +1,313 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr USLetter 11000 8500
+encoding utf-8
+Sheet 5 12
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Regulator_Linear:AZ1117-1.2 U?
+U 1 1 5F820EB8
+P 3800 3400
+AR Path="/5F820EB8" Ref="U?"  Part="1" 
+AR Path="/5F7F68FE/5F820EB8" Ref="U8"  Part="1" 
+F 0 "U8" H 3800 3642 50  0000 C CNN
+F 1 "AZ1117-1.2" H 3800 3551 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-223-3_TabPin2" H 3800 3650 50  0001 C CIN
+F 3 "https://www.diodes.com/assets/Datasheets/AZ1117.pdf" H 3800 3400 50  0001 C CNN
+	1    3800 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5F820EBE
+P 3300 3650
+AR Path="/5F820EBE" Ref="C?"  Part="1" 
+AR Path="/5F7F68FE/5F820EBE" Ref="C34"  Part="1" 
+F 0 "C34" H 3350 3750 50  0000 L CNN
+F 1 "10u" H 3350 3550 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 3338 3500 50  0001 C CNN
+F 3 "~" H 3300 3650 50  0001 C CNN
+	1    3300 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5F820EC4
+P 4300 3650
+AR Path="/5F820EC4" Ref="C?"  Part="1" 
+AR Path="/5F7F68FE/5F820EC4" Ref="C35"  Part="1" 
+F 0 "C35" H 4350 3750 50  0000 L CNN
+F 1 "10u" H 4350 3550 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 4338 3500 50  0001 C CNN
+F 3 "~" H 4300 3650 50  0001 C CNN
+	1    4300 3650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3300 3500 3300 3400
+Connection ~ 3300 3400
+Wire Wire Line
+	3300 3400 3500 3400
+Wire Wire Line
+	4100 3400 4300 3400
+Wire Wire Line
+	4300 3500 4300 3400
+Connection ~ 4300 3400
+Wire Wire Line
+	4300 3400 4400 3400
+Wire Wire Line
+	3300 3800 3300 3900
+$Comp
+L ng_power:GND #PWR?
+U 1 1 5F820ED2
+P 3300 3900
+AR Path="/5F820ED2" Ref="#PWR?"  Part="1" 
+AR Path="/5F7F68FE/5F820ED2" Ref="#PWR0101"  Part="1" 
+F 0 "#PWR0101" H 3300 3650 50  0001 C CNN
+F 1 "GND" H 3303 3774 50  0000 C CNN
+F 2 "" H 3200 3550 50  0001 C CNN
+F 3 "" H 3300 3900 50  0001 C CNN
+	1    3300 3900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4300 3800 4300 3900
+$Comp
+L ng_power:GND #PWR?
+U 1 1 5F820ED9
+P 4300 3900
+AR Path="/5F820ED9" Ref="#PWR?"  Part="1" 
+AR Path="/5F7F68FE/5F820ED9" Ref="#PWR0102"  Part="1" 
+F 0 "#PWR0102" H 4300 3650 50  0001 C CNN
+F 1 "GND" H 4303 3774 50  0000 C CNN
+F 2 "" H 4200 3550 50  0001 C CNN
+F 3 "" H 4300 3900 50  0001 C CNN
+	1    4300 3900
+	1    0    0    -1  
+$EndComp
+$Comp
+L ng_power:GND #PWR?
+U 1 1 5F820EDF
+P 3800 3900
+AR Path="/5F820EDF" Ref="#PWR?"  Part="1" 
+AR Path="/5F7F68FE/5F820EDF" Ref="#PWR0103"  Part="1" 
+F 0 "#PWR0103" H 3800 3650 50  0001 C CNN
+F 1 "GND" H 3803 3774 50  0000 C CNN
+F 2 "" H 3700 3550 50  0001 C CNN
+F 3 "" H 3800 3900 50  0001 C CNN
+	1    3800 3900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3800 3900 3800 3700
+Wire Wire Line
+	3200 3400 3300 3400
+Text GLabel 4400 3400 2    50   UnSpc ~ 0
+USB_3V3
+$Comp
+L Regulator_Linear:AZ1117-1.2 U?
+U 1 1 5F820EE8
+P 3800 4600
+AR Path="/5F820EE8" Ref="U?"  Part="1" 
+AR Path="/5F7F68FE/5F820EE8" Ref="U9"  Part="1" 
+F 0 "U9" H 3800 4842 50  0000 C CNN
+F 1 "AZ1117-1.2" H 3800 4751 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-223-3_TabPin2" H 3800 4850 50  0001 C CIN
+F 3 "https://www.diodes.com/assets/Datasheets/AZ1117.pdf" H 3800 4600 50  0001 C CNN
+	1    3800 4600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5F820EEE
+P 3300 4850
+AR Path="/5F820EEE" Ref="C?"  Part="1" 
+AR Path="/5F7F68FE/5F820EEE" Ref="C37"  Part="1" 
+F 0 "C37" H 3350 4950 50  0000 L CNN
+F 1 "10u" H 3350 4750 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 3338 4700 50  0001 C CNN
+F 3 "~" H 3300 4850 50  0001 C CNN
+	1    3300 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C?
+U 1 1 5F820EF4
+P 4300 4850
+AR Path="/5F820EF4" Ref="C?"  Part="1" 
+AR Path="/5F7F68FE/5F820EF4" Ref="C38"  Part="1" 
+F 0 "C38" H 4350 4950 50  0000 L CNN
+F 1 "10u" H 4350 4750 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 4338 4700 50  0001 C CNN
+F 3 "~" H 4300 4850 50  0001 C CNN
+	1    4300 4850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3300 4700 3300 4600
+Connection ~ 3300 4600
+Wire Wire Line
+	3300 4600 3500 4600
+Wire Wire Line
+	4100 4600 4300 4600
+Wire Wire Line
+	4300 4700 4300 4600
+Connection ~ 4300 4600
+Wire Wire Line
+	4300 4600 4400 4600
+Wire Wire Line
+	3300 5000 3300 5100
+$Comp
+L ng_power:GND #PWR?
+U 1 1 5F820F02
+P 3300 5100
+AR Path="/5F820F02" Ref="#PWR?"  Part="1" 
+AR Path="/5F7F68FE/5F820F02" Ref="#PWR0104"  Part="1" 
+F 0 "#PWR0104" H 3300 4850 50  0001 C CNN
+F 1 "GND" H 3303 4974 50  0000 C CNN
+F 2 "" H 3200 4750 50  0001 C CNN
+F 3 "" H 3300 5100 50  0001 C CNN
+	1    3300 5100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4300 5000 4300 5100
+$Comp
+L ng_power:GND #PWR?
+U 1 1 5F820F09
+P 4300 5100
+AR Path="/5F820F09" Ref="#PWR?"  Part="1" 
+AR Path="/5F7F68FE/5F820F09" Ref="#PWR0105"  Part="1" 
+F 0 "#PWR0105" H 4300 4850 50  0001 C CNN
+F 1 "GND" H 4303 4974 50  0000 C CNN
+F 2 "" H 4200 4750 50  0001 C CNN
+F 3 "" H 4300 5100 50  0001 C CNN
+	1    4300 5100
+	1    0    0    -1  
+$EndComp
+$Comp
+L ng_power:GND #PWR?
+U 1 1 5F820F0F
+P 3800 5100
+AR Path="/5F820F0F" Ref="#PWR?"  Part="1" 
+AR Path="/5F7F68FE/5F820F0F" Ref="#PWR0106"  Part="1" 
+F 0 "#PWR0106" H 3800 4850 50  0001 C CNN
+F 1 "GND" H 3803 4974 50  0000 C CNN
+F 2 "" H 3700 4750 50  0001 C CNN
+F 3 "" H 3800 5100 50  0001 C CNN
+	1    3800 5100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3800 5100 3800 4900
+Wire Wire Line
+	3200 4600 3300 4600
+Text GLabel 3200 4600 0    50   UnSpc ~ 0
+P3V3
+Text GLabel 4400 4600 2    50   UnSpc ~ 0
+P1V2
+Text GLabel 6750 4600 2    50   UnSpc ~ 0
+N64_3V3
+Wire Wire Line
+	6750 4600 6650 4600
+Wire Wire Line
+	6650 4600 6650 4700
+$Comp
+L Device:C C?
+U 1 1 5F820F1C
+P 6650 4850
+AR Path="/5F820F1C" Ref="C?"  Part="1" 
+AR Path="/5F7F68FE/5F820F1C" Ref="C36"  Part="1" 
+F 0 "C36" H 6700 4950 50  0000 L CNN
+F 1 "10u" H 6700 4750 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 6688 4700 50  0001 C CNN
+F 3 "~" H 6650 4850 50  0001 C CNN
+	1    6650 4850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6650 5000 6650 5100
+$Comp
+L ng_power:GND #PWR?
+U 1 1 5F820F23
+P 6650 5100
+AR Path="/5F820F23" Ref="#PWR?"  Part="1" 
+AR Path="/5F7F68FE/5F820F23" Ref="#PWR0107"  Part="1" 
+F 0 "#PWR0107" H 6650 4850 50  0001 C CNN
+F 1 "GND" H 6653 4974 50  0000 C CNN
+F 2 "" H 6550 4750 50  0001 C CNN
+F 3 "" H 6650 5100 50  0001 C CNN
+	1    6650 5100
+	1    0    0    -1  
+$EndComp
+Text GLabel 3200 3400 0    50   UnSpc ~ 0
+USB_5V
+$Comp
+L Connector_Generic:Conn_01x03 J?
+U 1 1 5F820F2A
+P 6700 3500
+AR Path="/5F820F2A" Ref="J?"  Part="1" 
+AR Path="/5F7F68FE/5F820F2A" Ref="J2"  Part="1" 
+F 0 "J2" H 6700 3300 50  0000 C CNN
+F 1 "Conn_01x03" H 6618 3266 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 6700 3500 50  0001 C CNN
+F 3 "~" H 6700 3500 50  0001 C CNN
+	1    6700 3500
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	6900 3400 7000 3400
+Wire Wire Line
+	6900 3500 7550 3500
+Wire Wire Line
+	6900 3600 7000 3600
+Text GLabel 7000 3400 2    50   UnSpc ~ 0
+USB_3V3
+Text GLabel 7000 3600 2    50   UnSpc ~ 0
+N64_3V3
+Text GLabel 7550 3500 2    50   UnSpc ~ 0
+P3V3
+Text GLabel 7450 4600 2    50   UnSpc ~ 0
+USB_3V3
+Wire Wire Line
+	7450 4600 7350 4600
+Wire Wire Line
+	7350 4600 7350 4700
+$Comp
+L Device:C C?
+U 1 1 5F820F39
+P 7350 4850
+AR Path="/5F820F39" Ref="C?"  Part="1" 
+AR Path="/5F7F68FE/5F820F39" Ref="C44"  Part="1" 
+F 0 "C44" H 7400 4950 50  0000 L CNN
+F 1 "10u" H 7400 4750 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 7388 4700 50  0001 C CNN
+F 3 "~" H 7350 4850 50  0001 C CNN
+	1    7350 4850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7350 5000 7350 5100
+$Comp
+L ng_power:GND #PWR?
+U 1 1 5F820F40
+P 7350 5100
+AR Path="/5F820F40" Ref="#PWR?"  Part="1" 
+AR Path="/5F7F68FE/5F820F40" Ref="#PWR0108"  Part="1" 
+F 0 "#PWR0108" H 7350 4850 50  0001 C CNN
+F 1 "GND" H 7353 4974 50  0000 C CNN
+F 2 "" H 7250 4750 50  0001 C CNN
+F 3 "" H 7350 5100 50  0001 C CNN
+	1    7350 5100
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
