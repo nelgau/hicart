@@ -4,11 +4,11 @@ EELAYER END
 $Descr USLetter 11000 8500
 encoding utf-8
 Sheet 11 12
-Title ""
-Date ""
-Rev ""
-Comp ""
-Comment1 ""
+Title "Ferk-Cart iCE40 Devboard"
+Date "2020-06-29"
+Rev "r0.1"
+Comp "Designed by: Nelson Gauthier"
+Comment1 "Licensed under CERN OHL v.1.2"
 Comment2 ""
 Comment3 ""
 Comment4 ""

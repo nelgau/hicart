@@ -10,6 +10,14 @@
   )
 
   (page A4)
+  (title_block
+    (title "Ferk-Cart iCE40 Devboard")
+    (date 2020-06-29)
+    (rev r0.1)
+    (comment 1 "Designed by: Nelson Gauthier")
+    (comment 2 "Licensed under CERN OHL v.1.2")
+  )
+
   (layers
     (0 F.Cu signal)
     (1 "In1(GND).Cu" power hide)

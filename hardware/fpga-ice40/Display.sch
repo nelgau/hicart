@@ -4,11 +4,11 @@ EELAYER END
 $Descr USLetter 11000 8500
 encoding utf-8
 Sheet 12 12
-Title ""
-Date ""
-Rev ""
-Comp ""
-Comment1 ""
+Title "Ferk-Cart iCE40 Devboard"
+Date "2020-06-29"
+Rev "r0.1"
+Comp "Designed by: Nelson Gauthier"
+Comment1 "Licensed under CERN OHL v.1.2"
 Comment2 ""
 Comment3 ""
 Comment4 ""
@@ -28,23 +28,18 @@ Connection ~ 6400 5150
 Wire Wire Line
 	6200 5150 6400 5150
 Wire Wire Line
-	6400 5150 6500 5150
-Wire Wire Line
-	6500 5150 6600 5150
-Connection ~ 6500 5150
-Wire Wire Line
-	6500 5250 6500 5150
+	6200 5250 6200 5150
 $Comp
 L ng_power:GND #PWR?
 U 1 1 5F920840
-P 6500 5250
+P 6200 5250
 AR Path="/5F920840" Ref="#PWR?"  Part="1" 
 AR Path="/5F90C399/5F920840" Ref="#PWR0127"  Part="1" 
-F 0 "#PWR0127" H 6500 5000 50  0001 C CNN
-F 1 "GND" H 6503 5124 50  0000 C CNN
-F 2 "" H 6400 4900 50  0001 C CNN
-F 3 "" H 6500 5250 50  0001 C CNN
-	1    6500 5250
+F 0 "#PWR0127" H 6200 5000 50  0001 C CNN
+F 1 "GND" H 6203 5124 50  0000 C CNN
+F 2 "" H 6100 4900 50  0001 C CNN
+F 3 "" H 6200 5250 50  0001 C CNN
+	1    6200 5250
 	1    0    0    -1  
 $EndComp
 Text GLabel 6800 3950 1    50   Input ~ 0
@@ -243,4 +238,7 @@ F 3 "http://www.diodes.com/assets/Datasheets/2N7002H.pdf" H 4600 4800 50  0001 L
 	1    4600 4800
 	1    0    0    -1  
 $EndComp
+Connection ~ 6200 5150
+Wire Wire Line
+	6400 5150 6600 5150
 $EndSCHEMATC
