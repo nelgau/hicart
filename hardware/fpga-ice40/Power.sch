@@ -263,14 +263,14 @@ $EndComp
 Wire Wire Line
 	6400 3950 6500 3950
 Wire Wire Line
-	6400 4050 7550 4050
+	6400 4050 7350 4050
 Wire Wire Line
 	6400 4150 6800 4150
-Text GLabel 7000 3950 2    50   UnSpc ~ 0
+Text GLabel 6900 3950 2    50   UnSpc ~ 0
 USB_3V3
-Text GLabel 7000 4150 2    50   UnSpc ~ 0
+Text GLabel 6900 4150 2    50   UnSpc ~ 0
 N64_3V3
-Text GLabel 7550 4050 2    50   UnSpc ~ 0
+Text GLabel 7350 4050 2    50   UnSpc ~ 0
 P3V3
 Wire Wire Line
 	6500 3950 6500 4250
@@ -304,8 +304,8 @@ F 3 "" H 6500 4650 50  0001 C CNN
 $EndComp
 Connection ~ 6500 3950
 Wire Wire Line
-	6500 3950 7000 3950
+	6500 3950 6900 3950
 Connection ~ 6800 4150
 Wire Wire Line
-	6800 4150 7000 4150
+	6800 4150 6900 4150
 $EndSCHEMATC

@@ -14,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 Wire Wire Line
-	5750 3950 5950 3950
+	5750 3950 6050 3950
 Wire Wire Line
 	5250 4050 5150 4050
 Wire Wire Line
@@ -24,20 +24,18 @@ Wire Wire Line
 Wire Wire Line
 	5250 3650 5150 3650
 Wire Wire Line
-	5750 4050 5950 4050
-Text GLabel 5950 3950 2    50   Input ~ 0
+	5750 4050 6050 4050
+Text GLabel 6050 3950 2    50   Input ~ 0
 FPGA_CDONE
-Text GLabel 5150 4050 0    50   Input ~ 0
-FPGA_CRESETn
 Text GLabel 5150 3850 0    50   Input ~ 0
 CONFIG_MOSI|IO0
 Text GLabel 5150 3950 0    50   Input ~ 0
 CONFIG_MISO|IO1
 Text GLabel 5150 3650 0    50   Input ~ 0
 CONFIG_SCK
-Text GLabel 5950 4050 2    50   Input ~ 0
+Text GLabel 6050 4050 2    50   Input ~ 0
 CONFIG_SSn
-Text GLabel 5950 5350 2    50   Input ~ 0
+Text GLabel 6050 5350 2    50   Input ~ 0
 FLASH_SSn
 Text GLabel 5150 4950 0    50   Input ~ 0
 FLASH_SCK
@@ -68,7 +66,7 @@ U 1 1 5F90AA27
 P 5450 3850
 AR Path="/5F90AA27" Ref="J?"  Part="1" 
 AR Path="/5F8FED6E/5F90AA27" Ref="J3"  Part="1" 
-F 0 "J3" H 5500 4150 50  0000 C CNN
+F 0 "J3" H 5400 4150 50  0000 L CNN
 F 1 "Conn_02x05_Odd_Even" H 5500 4176 50  0001 C CNN
 F 2 "ng_conn:Samtec_FTSH-105-XX-X-DV-Mating" H 5450 3850 50  0001 C CNN
 F 3 "~" H 5450 3850 50  0001 C CNN
@@ -81,7 +79,7 @@ U 1 1 5F90AA2D
 P 5450 5150
 AR Path="/5F90AA2D" Ref="J?"  Part="1" 
 AR Path="/5F8FED6E/5F90AA2D" Ref="J4"  Part="1" 
-F 0 "J4" H 5500 5450 50  0000 C CNN
+F 0 "J4" H 5400 5450 50  0000 L CNN
 F 1 "Conn_02x05_Odd_Even" H 5500 5476 50  0001 C CNN
 F 2 "ng_conn:Samtec_FTSH-105-XX-X-DV-Mating" H 5450 5150 50  0001 C CNN
 F 3 "~" H 5450 5150 50  0001 C CNN
@@ -109,7 +107,7 @@ Wire Wire Line
 Wire Wire Line
 	5250 4950 5150 4950
 Wire Wire Line
-	5750 5350 5950 5350
+	5750 5350 6050 5350
 Wire Wire Line
 	5850 4750 5950 4750
 Text GLabel 5850 4750 0    50   UnSpc ~ 0
@@ -140,13 +138,18 @@ Wire Wire Line
 	5750 5150 5950 5150
 Wire Wire Line
 	5950 4750 5950 5150
-NoConn ~ 5750 5250
 Wire Wire Line
 	5250 5350 5150 5350
-Text GLabel 5150 5350 0    50   Input ~ 0
+Text GLabel 6050 5250 2    50   Input ~ 0
 FLASH_IO2
 Wire Wire Line
 	5150 5050 5250 5050
 Text GLabel 5150 5050 0    50   Input ~ 0
 FLASH_IO3
+Text GLabel 5150 5350 0    50   Input ~ 0
+FLASH_CRESETn
+Text GLabel 5150 4050 0    50   Input ~ 0
+CONFIG_CRESETn
+Wire Wire Line
+	5750 5250 6050 5250
 $EndSCHEMATC
