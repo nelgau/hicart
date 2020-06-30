@@ -55,57 +55,8 @@ Text GLabel 4400 3450 2    50   Input ~ 0
 FPGA_CDONE
 Text GLabel 4400 3550 2    50   Input ~ 0
 FPGA_CRESETn
-Wire Wire Line
-	4100 3550 4200 3550
-Wire Wire Line
-	4200 3250 4200 3550
-Connection ~ 4200 3550
-Wire Wire Line
-	4100 3450 4300 3450
-$Comp
-L Device:R R?
-U 1 1 5F5C1BA6
-P 4200 3100
-AR Path="/5F5C1BA6" Ref="R?"  Part="1" 
-AR Path="/5F5B53E5/5F5C1BA6" Ref="R8"  Part="1" 
-F 0 "R8" V 4250 3250 50  0000 L CNN
-F 1 "10k" V 4250 2950 50  0000 R CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 4130 3100 50  0001 C CNN
-F 3 "~" H 4200 3100 50  0001 C CNN
-	1    4200 3100
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	4200 3550 4400 3550
-Wire Wire Line
-	4300 3450 4300 3250
-Connection ~ 4300 3450
-Wire Wire Line
-	4300 3450 4400 3450
-Wire Wire Line
-	4200 2950 4200 2750
-Wire Wire Line
-	4200 2750 4300 2750
-Wire Wire Line
-	4300 2750 4300 2950
-$Comp
-L Device:R R?
-U 1 1 5F5C1BB3
-P 4300 3100
-AR Path="/5F5C1BB3" Ref="R?"  Part="1" 
-AR Path="/5F5B53E5/5F5C1BB3" Ref="R9"  Part="1" 
-F 0 "R9" V 4350 3250 50  0000 L CNN
-F 1 "10k" V 4350 2950 50  0000 R CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 4230 3100 50  0001 C CNN
-F 3 "~" H 4300 3100 50  0001 C CNN
-	1    4300 3100
-	1    0    0    -1  
-$EndComp
 Text GLabel 4100 2750 0    50   UnSpc ~ 0
 P3V3
-Wire Wire Line
-	4100 2750 4200 2750
-Connection ~ 4200 2750
 $Comp
 L Oscillator:ECS-2520MV-xxx-xx X?
 U 1 1 5F5C1BBC
@@ -202,8 +153,6 @@ Wire Wire Line
 	6950 3850 6950 3950
 Wire Wire Line
 	6950 3650 6950 3000
-Wire Wire Line
-	6950 3000 6550 3000
 $Comp
 L ng_power:GND #PWR035
 U 1 1 5EFB47F2
@@ -219,46 +168,10 @@ Text GLabel 7200 3750 2    50   Input ~ 0
 FPGA_CRESETn
 Wire Wire Line
 	6450 3500 6450 3800
-$Comp
-L Device:R R?
-U 1 1 5EFB670F
-P 6450 3350
-AR Path="/5EFB670F" Ref="R?"  Part="1" 
-AR Path="/5F5B53E5/5EFB670F" Ref="R12"  Part="1" 
-F 0 "R12" V 6500 3500 50  0000 L CNN
-F 1 "10k" V 6500 3200 50  0000 R CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 6380 3350 50  0001 C CNN
-F 3 "~" H 6450 3350 50  0001 C CNN
-	1    6450 3350
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	6550 3700 6550 3500
-Wire Wire Line
-	6450 3200 6450 3000
-Wire Wire Line
-	6450 3000 6550 3000
-Wire Wire Line
-	6550 3000 6550 3200
-$Comp
-L Device:R R?
-U 1 1 5EFB671D
-P 6550 3350
-AR Path="/5EFB671D" Ref="R?"  Part="1" 
-AR Path="/5F5B53E5/5EFB671D" Ref="R13"  Part="1" 
-F 0 "R13" V 6600 3500 50  0000 L CNN
-F 1 "10k" V 6600 3200 50  0000 R CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 6480 3350 50  0001 C CNN
-F 3 "~" H 6550 3350 50  0001 C CNN
-	1    6550 3350
-	1    0    0    -1  
-$EndComp
 Text GLabel 6350 3000 0    50   UnSpc ~ 0
 P3V3
-Wire Wire Line
-	6350 3000 6450 3000
-Connection ~ 6450 3000
-Connection ~ 6550 3000
 Wire Wire Line
 	6650 3700 6550 3700
 Connection ~ 6550 3700
@@ -269,8 +182,99 @@ Wire Wire Line
 Connection ~ 6450 3800
 Wire Wire Line
 	6450 3800 6350 3800
-Text GLabel 6350 3800 0    50   Input ~ 0
-FLASH_CRESETn
 Text GLabel 6350 3700 0    50   Input ~ 0
+FLASH_CRESETn
+Text GLabel 6350 3800 0    50   Input ~ 0
 CONFIG_CRESETn
+$Comp
+L Device:R_Pack04_Split R?
+U 4 1 5EFC6F2A
+P 4200 3100
+AR Path="/5EFC6F2A" Ref="R?"  Part="1" 
+AR Path="/5F90C399/5EFC6F2A" Ref="R?"  Part="1" 
+AR Path="/5F5B53E5/5EFC6F2A" Ref="R8"  Part="4" 
+F 0 "R8" V 4250 3250 50  0000 L CNN
+F 1 "10k" V 4250 2950 50  0000 R CNN
+F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 4130 3100 50  0001 C CNN
+F 3 "~" H 4200 3100 50  0001 C CNN
+	4    4200 3100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Pack04_Split R?
+U 3 1 5EFC6F23
+P 6450 3350
+AR Path="/5EFC6F23" Ref="R?"  Part="2" 
+AR Path="/5F90C399/5EFC6F23" Ref="R?"  Part="2" 
+AR Path="/5F5B53E5/5EFC6F23" Ref="R8"  Part="3" 
+F 0 "R8" V 6500 3500 50  0000 L CNN
+F 1 "10k" V 6500 3200 50  0000 R CNN
+F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 6380 3350 50  0001 C CNN
+F 3 "~" H 6450 3350 50  0001 C CNN
+	3    6450 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Pack04_Split R?
+U 2 1 5EFC6F1C
+P 6550 3350
+AR Path="/5EFC6F1C" Ref="R?"  Part="3" 
+AR Path="/5F90C399/5EFC6F1C" Ref="R?"  Part="3" 
+AR Path="/5F5B53E5/5EFC6F1C" Ref="R8"  Part="2" 
+F 0 "R8" V 6600 3500 50  0000 L CNN
+F 1 "10k" V 6600 3200 50  0000 R CNN
+F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 6480 3350 50  0001 C CNN
+F 3 "~" H 6550 3350 50  0001 C CNN
+	2    6550 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Pack04_Split R?
+U 1 1 5EFC6F15
+P 4300 3100
+AR Path="/5EFC6F15" Ref="R?"  Part="4" 
+AR Path="/5F90C399/5EFC6F15" Ref="R?"  Part="4" 
+AR Path="/5F5B53E5/5EFC6F15" Ref="R8"  Part="1" 
+F 0 "R8" V 4350 3250 50  0000 L CNN
+F 1 "10k" V 4350 2950 50  0000 R CNN
+F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 4230 3100 50  0001 C CNN
+F 3 "~" H 4300 3100 50  0001 C CNN
+	1    4300 3100
+	1    0    0    -1  
+$EndComp
+Connection ~ 4300 3450
+Wire Wire Line
+	4300 3450 4400 3450
+Wire Wire Line
+	4100 3450 4300 3450
+Connection ~ 4200 3550
+Wire Wire Line
+	4200 3550 4400 3550
+Wire Wire Line
+	4100 3550 4200 3550
+Wire Wire Line
+	4300 3450 4300 3250
+Wire Wire Line
+	4200 3250 4200 3550
+Wire Wire Line
+	6350 3000 6450 3000
+Wire Wire Line
+	6550 3200 6550 3000
+Connection ~ 6550 3000
+Wire Wire Line
+	6550 3000 6950 3000
+Wire Wire Line
+	4200 2950 4200 2750
+Wire Wire Line
+	4300 2950 4300 2750
+Wire Wire Line
+	4100 2750 4200 2750
+Connection ~ 4200 2750
+Wire Wire Line
+	4200 2750 4300 2750
+Wire Wire Line
+	6450 3200 6450 3000
+Connection ~ 6450 3000
+Wire Wire Line
+	6450 3000 6550 3000
 $EndSCHEMATC
