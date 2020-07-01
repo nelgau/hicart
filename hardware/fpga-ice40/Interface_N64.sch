@@ -109,8 +109,7 @@ Connection ~ 3200 4100
 Wire Wire Line
 	3200 4100 3200 4000
 Wire Wire Line
-	3200 4000 3100 4000
-Connection ~ 3200 4000
+	3200 3900 3100 3900
 NoConn ~ 3300 3400
 NoConn ~ 3300 3500
 NoConn ~ 3300 3700
@@ -174,7 +173,7 @@ Text GLabel 4000 5200 2    50   Input ~ 0
 N64_AD14
 Text GLabel 4000 5300 2    50   Input ~ 0
 N64_AD15
-Text GLabel 3100 4000 0    50   UnSpc ~ 0
+Text GLabel 3100 3900 0    50   UnSpc ~ 0
 N64_3V3
 $Comp
 L Device:R_Pack04 RN?
@@ -352,4 +351,7 @@ Text GLabel 7950 4300 2    50   Input ~ 0
 N64_AD6_IC
 Text GLabel 7950 4500 2    50   Input ~ 0
 N64_AD7_IC
+Wire Wire Line
+	3200 3900 3200 4000
+Connection ~ 3200 4000
 $EndSCHEMATC
