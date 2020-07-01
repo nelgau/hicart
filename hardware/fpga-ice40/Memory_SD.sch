@@ -220,7 +220,7 @@ Connection ~ 5400 4800
 Wire Wire Line
 	5400 4800 6100 4800
 Text GLabel 4950 4900 0    50   Input ~ 0
-SD_DET
+SD_CD
 Wire Wire Line
 	4950 4900 5150 4900
 Connection ~ 5250 3300

@@ -31,7 +31,7 @@ LED_D1
 Text GLabel 4850 3500 2    50   Input ~ 0
 LED_D0
 Text GLabel 4850 3400 2    50   Input ~ 0
-SD_DET
+SD_CD
 Text GLabel 4850 3300 2    50   Input ~ 0
 SD_DAT2
 Text GLabel 4850 3200 2    50   Input ~ 0
