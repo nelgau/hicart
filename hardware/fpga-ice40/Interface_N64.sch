@@ -273,9 +273,9 @@ Text GLabel 7550 3500 0    50   Input ~ 0
 N64_AD11
 Text GLabel 7550 3700 0    50   Input ~ 0
 N64_AD10
-Text GLabel 7550 4200 0    50   Input ~ 0
+Text GLabel 7550 4500 0    50   Input ~ 0
 N64_AD9
-Text GLabel 7550 4400 0    50   Input ~ 0
+Text GLabel 7550 4300 0    50   Input ~ 0
 N64_AD8
 $Comp
 L Device:R_Pack04 RN?
@@ -291,21 +291,17 @@ F 4 "YC164-FR-0733RL" H 7750 5100 50  0001 C CNN "MPN"
 	1    7750 5100
 	0    1    1    0   
 $EndComp
-Text GLabel 7550 5000 0    50   Input ~ 0
+Text GLabel 7550 5200 0    50   Input ~ 0
 N64_COLD_RESETn
-Text GLabel 7550 4900 0    50   Input ~ 0
+Text GLabel 7550 5100 0    50   Input ~ 0
 N64_OS_EVENTn
-NoConn ~ 7550 5100
-NoConn ~ 7550 5200
-NoConn ~ 7950 5100
-NoConn ~ 7950 5200
 Text GLabel 7550 3600 0    50   Input ~ 0
 N64_AD4
 Text GLabel 7550 3800 0    50   Input ~ 0
 N64_AD5
-Text GLabel 7550 4300 0    50   Input ~ 0
+Text GLabel 7550 4400 0    50   Input ~ 0
 N64_AD6
-Text GLabel 7550 4500 0    50   Input ~ 0
+Text GLabel 7550 4200 0    50   Input ~ 0
 N64_AD7
 Text GLabel 6100 3600 2    50   Input ~ 0
 N64_AD0_IC
@@ -335,23 +331,27 @@ Text GLabel 7950 3500 2    50   Input ~ 0
 N64_AD11_IC
 Text GLabel 7950 3700 2    50   Input ~ 0
 N64_AD10_IC
-Text GLabel 7950 4200 2    50   Input ~ 0
+Text GLabel 7950 4500 2    50   Input ~ 0
 N64_AD9_IC
-Text GLabel 7950 4400 2    50   Input ~ 0
+Text GLabel 7950 4300 2    50   Input ~ 0
 N64_AD8_IC
-Text GLabel 7950 5000 2    50   Input ~ 0
+Text GLabel 7950 5200 2    50   Input ~ 0
 N64_COLD_RESETn_IC
-Text GLabel 7950 4900 2    50   Input ~ 0
+Text GLabel 7950 5100 2    50   Input ~ 0
 N64_OS_EVENTn_IC
 Text GLabel 7950 3600 2    50   Input ~ 0
 N64_AD4_IC
 Text GLabel 7950 3800 2    50   Input ~ 0
 N64_AD5_IC
-Text GLabel 7950 4300 2    50   Input ~ 0
+Text GLabel 7950 4400 2    50   Input ~ 0
 N64_AD6_IC
-Text GLabel 7950 4500 2    50   Input ~ 0
+Text GLabel 7950 4200 2    50   Input ~ 0
 N64_AD7_IC
 Wire Wire Line
 	3200 3900 3200 4000
 Connection ~ 3200 4000
+NoConn ~ 7550 4900
+NoConn ~ 7550 5000
+NoConn ~ 7950 4900
+NoConn ~ 7950 5000
 $EndSCHEMATC

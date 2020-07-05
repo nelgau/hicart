@@ -63,8 +63,6 @@ Wire Wire Line
 	5250 3300 5400 3300
 Wire Wire Line
 	5250 3500 5250 3300
-Wire Wire Line
-	5250 4100 5250 3800
 $Comp
 L Device:R R?
 U 1 1 5F8FA3CB
@@ -177,13 +175,8 @@ Wire Wire Line
 Text GLabel 4400 3300 0    50   UnSpc ~ 0
 P3V3
 Wire Wire Line
-	4950 4100 5250 4100
-Wire Wire Line
 	4800 3300 5150 3300
 Connection ~ 4800 3300
-Connection ~ 5250 4100
-Wire Wire Line
-	5250 4100 6100 4100
 Wire Wire Line
 	6000 3300 6000 4400
 Wire Wire Line
@@ -192,33 +185,13 @@ Connection ~ 4500 3300
 Wire Wire Line
 	4500 3300 4400 3300
 Wire Wire Line
-	4950 4700 5500 4700
+	4950 4700 5400 4700
 Wire Wire Line
-	4950 4300 5600 4300
+	4950 4300 5500 4300
 Wire Wire Line
-	5500 3850 5500 4700
-Connection ~ 5500 4700
+	4950 4200 5600 4200
 Wire Wire Line
-	5500 4700 6100 4700
-Wire Wire Line
-	5600 3850 5600 4300
-Connection ~ 5600 4300
-Wire Wire Line
-	5600 4300 6100 4300
-Wire Wire Line
-	4950 4200 5700 4200
-Wire Wire Line
-	4950 4800 5400 4800
-Wire Wire Line
-	5700 3850 5700 4200
-Connection ~ 5700 4200
-Wire Wire Line
-	5700 4200 6100 4200
-Wire Wire Line
-	5400 3850 5400 4800
-Connection ~ 5400 4800
-Wire Wire Line
-	5400 4800 6100 4800
+	4950 4800 5250 4800
 Text GLabel 4950 4900 0    50   Input ~ 0
 SD_CD
 Wire Wire Line
@@ -262,4 +235,31 @@ Wire Wire Line
 Connection ~ 6000 5300
 Wire Wire Line
 	6000 5300 6000 5400
+Wire Wire Line
+	4950 4100 5700 4100
+Wire Wire Line
+	5250 3800 5250 4800
+Connection ~ 5250 4800
+Wire Wire Line
+	5250 4800 6100 4800
+Wire Wire Line
+	5400 4700 5400 3850
+Connection ~ 5400 4700
+Wire Wire Line
+	5400 4700 6100 4700
+Wire Wire Line
+	5500 4300 5500 3850
+Connection ~ 5500 4300
+Wire Wire Line
+	5500 4300 6100 4300
+Wire Wire Line
+	5600 4200 5600 3850
+Connection ~ 5600 4200
+Wire Wire Line
+	5600 4200 6100 4200
+Wire Wire Line
+	5700 4100 5700 3850
+Connection ~ 5700 4100
+Wire Wire Line
+	5700 4100 6100 4100
 $EndSCHEMATC

@@ -19,30 +19,29 @@ NoConn ~ 6850 3450
 NoConn ~ 4850 4100
 NoConn ~ 4850 4000
 NoConn ~ 4850 3900
-NoConn ~ 2850 4250
 Text GLabel 2850 4350 2    50   Input ~ 0
 CLK_50MHZ
-Text GLabel 4850 3800 2    50   Input ~ 0
-LED_D3
-Text GLabel 4850 3700 2    50   Input ~ 0
-LED_D2
-Text GLabel 4850 3600 2    50   Input ~ 0
-LED_D1
-Text GLabel 4850 3500 2    50   Input ~ 0
-LED_D0
-Text GLabel 4850 3400 2    50   Input ~ 0
-SD_CD
-Text GLabel 4850 3300 2    50   Input ~ 0
-SD_DAT2
-Text GLabel 4850 3200 2    50   Input ~ 0
-SD_DAT3
 Text GLabel 4850 3100 2    50   Input ~ 0
-SD_CMD
-Text GLabel 4850 2800 2    50   Input ~ 0
-SD_DAT1
-Text GLabel 4850 2900 2    50   Input ~ 0
-SD_DAT0
+LED_D3
 Text GLabel 4850 3000 2    50   Input ~ 0
+LED_D2
+Text GLabel 4850 2900 2    50   Input ~ 0
+LED_D1
+Text GLabel 4850 2800 2    50   Input ~ 0
+LED_D0
+Text GLabel 4850 3800 2    50   Input ~ 0
+SD_CD
+Text GLabel 4850 3700 2    50   Input ~ 0
+SD_DAT2
+Text GLabel 4850 3600 2    50   Input ~ 0
+SD_DAT3
+Text GLabel 4850 3500 2    50   Input ~ 0
+SD_CMD
+Text GLabel 4850 3200 2    50   Input ~ 0
+SD_DAT1
+Text GLabel 4850 3300 2    50   Input ~ 0
+SD_DAT0
+Text GLabel 4850 3400 2    50   Input ~ 0
 SD_CLK
 Text GLabel 8850 5350 2    50   Input ~ 0
 DRAM_A10
@@ -50,7 +49,7 @@ Text GLabel 8850 5250 2    50   Input ~ 0
 DRAM_A8
 Text GLabel 4850 4400 2    50   Input ~ 0
 USB_DETn
-Text GLabel 4850 4600 2    50   Input ~ 0
+Text GLabel 4850 4800 2    50   Input ~ 0
 FIFO_TXEn
 Text GLabel 4850 4200 2    50   Input ~ 0
 FIFO_WR
@@ -58,21 +57,21 @@ Text GLabel 4850 4300 2    50   Input ~ 0
 FIFO_RDn
 Text GLabel 4850 4900 2    50   Input ~ 0
 FIFO_RXFn
-Text GLabel 4850 4800 2    50   Input ~ 0
-FIFO_D5
-Text GLabel 4850 5000 2    50   Input ~ 0
-FIFO_D7
 Text GLabel 4850 4700 2    50   Input ~ 0
+FIFO_D5
+Text GLabel 4850 5100 2    50   Input ~ 0
+FIFO_D7
+Text GLabel 4850 4600 2    50   Input ~ 0
 FIFO_D6
-Text GLabel 4850 5300 2    50   Input ~ 0
+Text GLabel 4850 5500 2    50   Input ~ 0
 FIFO_D4
 Text GLabel 4850 4500 2    50   Input ~ 0
 FIFO_D3
-Text GLabel 4850 5200 2    50   Input ~ 0
-FIFO_D2
-Text GLabel 4850 5100 2    50   Input ~ 0
-FIFO_D1
 Text GLabel 4850 5400 2    50   Input ~ 0
+FIFO_D2
+Text GLabel 4850 5200 2    50   Input ~ 0
+FIFO_D1
+Text GLabel 4850 5600 2    50   Input ~ 0
 FIFO_D0
 Text GLabel 6850 2950 2    50   Input ~ 0
 DRAM_A5
@@ -148,49 +147,45 @@ Text GLabel 8850 3650 2    50   Input ~ 0
 DRAM_DQ9
 Text GLabel 8850 4050 2    50   Input ~ 0
 DRAM_DQ8
-Text GLabel 2850 4750 2    50   Input ~ 0
-N64_AD7_IC
-Text GLabel 2850 4550 2    50   Input ~ 0
-N64_AD6_IC
-Text GLabel 2850 3950 2    50   Input ~ 0
-N64_AD5_IC
-Text GLabel 2850 4050 2    50   Input ~ 0
-N64_AD4_IC
-Text GLabel 2850 4850 2    50   Input ~ 0
-N64_OS_EVENTn_IC
-Text GLabel 2850 4950 2    50   Input ~ 0
-N64_COLD_RESETn_IC
 Text GLabel 2850 4650 2    50   Input ~ 0
-N64_AD8_IC
-Text GLabel 2850 4450 2    50   Input ~ 0
-N64_AD9_IC
-Text GLabel 2850 3850 2    50   Input ~ 0
-N64_AD10_IC
-Text GLabel 2850 4150 2    50   Input ~ 0
-N64_AD11_IC
-Text GLabel 2850 3150 2    50   Input ~ 0
-N64_AD12_IC
+N64_AD7_IC
+Text GLabel 2850 4850 2    50   Input ~ 0
+N64_AD6_IC
 Text GLabel 2850 3550 2    50   Input ~ 0
-N64_AD13_IC
+N64_AD5_IC
 Text GLabel 2850 3350 2    50   Input ~ 0
-N64_READn_IC
-Text GLabel 2850 3650 2    50   Input ~ 0
-N64_WRITEn_IC
+N64_AD4_IC
+Text GLabel 2850 4550 2    50   Input ~ 0
+N64_OS_EVENTn_IC
+Text GLabel 2850 4450 2    50   Input ~ 0
+N64_COLD_RESETn_IC
+Text GLabel 2850 4750 2    50   Input ~ 0
+N64_AD8_IC
+Text GLabel 2850 4950 2    50   Input ~ 0
+N64_AD9_IC
 Text GLabel 2850 3450 2    50   Input ~ 0
-N64_ALE_H_IC
-Text GLabel 2850 3750 2    50   Input ~ 0
-N64_ALE_L_IC
-Text GLabel 2850 3050 2    50   Input ~ 0
-N64_AD3_IC
+N64_AD10_IC
 Text GLabel 2850 3250 2    50   Input ~ 0
-N64_AD2_IC
-Text GLabel 2850 2850 2    50   Input ~ 0
-N64_AD1_IC
+N64_AD11_IC
+Text GLabel 2850 3750 2    50   Input ~ 0
+N64_AD12_IC
+Text GLabel 2850 3950 2    50   Input ~ 0
+N64_AD13_IC
+Text GLabel 2850 3050 2    50   Input ~ 0
+N64_READn_IC
 Text GLabel 2850 2950 2    50   Input ~ 0
-N64_AD14_IC
-Text GLabel 4850 5500 2    50   Input ~ 0
+N64_WRITEn_IC
+Text GLabel 2850 3150 2    50   Input ~ 0
+N64_ALE_H_IC
+Text GLabel 2850 2850 2    50   Input ~ 0
+N64_ALE_L_IC
+Text GLabel 2850 3650 2    50   Input ~ 0
+N64_AD3_IC
+Text GLabel 2850 3850 2    50   Input ~ 0
+N64_AD2_IC
+Text GLabel 4850 5300 2    50   Input ~ 0
 N64_AD15_IC
-Text GLabel 4850 5600 2    50   Input ~ 0
+Text GLabel 2850 4250 2    50   Input ~ 0
 N64_AD0_IC
 Text GLabel 6850 4250 2    50   Input ~ 0
 FLASH_IO3
@@ -269,4 +264,8 @@ F 4 "iCE40HX4K-TQ144" H 1650 2850 50  0001 C CNN "MPN"
 	1    1650 2850
 	1    0    0    -1  
 $EndComp
+Text GLabel 2850 4150 2    50   Input ~ 0
+N64_AD14_IC
+Text GLabel 2850 4050 2    50   Input ~ 0
+N64_AD1_IC
 $EndSCHEMATC
