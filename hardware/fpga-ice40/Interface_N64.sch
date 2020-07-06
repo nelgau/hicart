@@ -119,9 +119,9 @@ NoConn ~ 3800 3500
 NoConn ~ 3800 3700
 NoConn ~ 3800 3800
 Text GLabel 3100 3600 0    50   Input ~ 0
-N64_COLD_RESETn
+xN64_COLD_RESETn
 Text GLabel 4000 3600 2    50   Input ~ 0
-N64_OS_EVENTn
+xN64_OS_EVENTn
 $Comp
 L ng_power:GND #PWR026
 U 1 1 5F1CD13A
@@ -134,47 +134,47 @@ F 3 "" H 3900 5400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text GLabel 3100 4300 0    50   Input ~ 0
-N64_AD7
+xN64_AD7
 Text GLabel 3100 4400 0    50   Input ~ 0
-N64_AD6
+xN64_AD6
 Text GLabel 3100 4500 0    50   Input ~ 0
-N64_AD5
+xN64_AD5
 Text GLabel 3100 4600 0    50   Input ~ 0
-N64_AD4
+xN64_AD4
 Text GLabel 3100 4700 0    50   Input ~ 0
-N64_ALE_H
+xN64_ALE_H
 Text GLabel 3100 4900 0    50   Input ~ 0
-N64_ALE_L
+xN64_ALE_L
 Text GLabel 3100 5000 0    50   Input ~ 0
-N64_AD3
+xN64_AD3
 Text GLabel 3100 5100 0    50   Input ~ 0
-N64_AD2
+xN64_AD2
 Text GLabel 3100 5200 0    50   Input ~ 0
-N64_AD1
+xN64_AD1
 Text GLabel 3100 5300 0    50   Input ~ 0
-N64_AD0
+xN64_AD0
 Text GLabel 4000 4300 2    50   Input ~ 0
-N64_AD8
+xN64_AD8
 Text GLabel 4000 4400 2    50   Input ~ 0
-N64_AD9
+xN64_AD9
 Text GLabel 4000 4500 2    50   Input ~ 0
-N64_AD10
+xN64_AD10
 Text GLabel 4000 4600 2    50   Input ~ 0
-N64_AD11
+xN64_AD11
 Text GLabel 4000 4700 2    50   Input ~ 0
-N64_READn
+xN64_READn
 Text GLabel 4000 4900 2    50   Input ~ 0
-N64_WRITEn
+xN64_WRITEn
 Text GLabel 4000 5000 2    50   Input ~ 0
-N64_AD12
+xN64_AD12
 Text GLabel 4000 5100 2    50   Input ~ 0
-N64_AD13
+xN64_AD13
 Text GLabel 4000 5200 2    50   Input ~ 0
-N64_AD14
+xN64_AD14
 Text GLabel 4000 5300 2    50   Input ~ 0
-N64_AD15
+xN64_AD15
 Text GLabel 3100 3900 0    50   UnSpc ~ 0
-N64_3V3
+xN64_3V3
 $Comp
 L Device:R_Pack04 RN?
 U 1 1 5F1CD155
@@ -246,37 +246,37 @@ F 4 "YC164-FR-0733RL" H 7750 4400 50  0001 C CNN "MPN"
 	0    1    1    0   
 $EndComp
 Text GLabel 5700 3600 0    50   Input ~ 0
-N64_AD0
+xN64_AD0
 Text GLabel 5700 3500 0    50   Input ~ 0
-N64_AD15
+xN64_AD15
 Text GLabel 5700 3700 0    50   Input ~ 0
-N64_AD14
+xN64_AD14
 Text GLabel 5700 3800 0    50   Input ~ 0
-N64_AD1
+xN64_AD1
 Text GLabel 5700 4300 0    50   Input ~ 0
-N64_AD2
+xN64_AD2
 Text GLabel 5700 4500 0    50   Input ~ 0
-N64_AD3
+xN64_AD3
 Text GLabel 5700 4900 0    50   Input ~ 0
-N64_ALE_L
+xN64_ALE_L
 Text GLabel 5700 5200 0    50   Input ~ 0
-N64_ALE_H
+xN64_ALE_H
 Text GLabel 5700 5000 0    50   Input ~ 0
-N64_WRITEn
+xN64_WRITEn
 Text GLabel 5700 5100 0    50   Input ~ 0
-N64_READn
+xN64_READn
 Text GLabel 5700 4200 0    50   Input ~ 0
-N64_AD13
+xN64_AD13
 Text GLabel 5700 4400 0    50   Input ~ 0
-N64_AD12
+xN64_AD12
 Text GLabel 7550 3500 0    50   Input ~ 0
-N64_AD11
+xN64_AD11
 Text GLabel 7550 3700 0    50   Input ~ 0
-N64_AD10
+xN64_AD10
 Text GLabel 7550 4500 0    50   Input ~ 0
-N64_AD9
+xN64_AD9
 Text GLabel 7550 4300 0    50   Input ~ 0
-N64_AD8
+xN64_AD8
 $Comp
 L Device:R_Pack04 RN?
 U 1 1 5F1CD183
@@ -292,61 +292,61 @@ F 4 "YC164-FR-0733RL" H 7750 5100 50  0001 C CNN "MPN"
 	0    1    1    0   
 $EndComp
 Text GLabel 7550 5200 0    50   Input ~ 0
-N64_COLD_RESETn
+xN64_COLD_RESETn
 Text GLabel 7550 5100 0    50   Input ~ 0
-N64_OS_EVENTn
+xN64_OS_EVENTn
 Text GLabel 7550 3600 0    50   Input ~ 0
-N64_AD4
+xN64_AD4
 Text GLabel 7550 3800 0    50   Input ~ 0
-N64_AD5
+xN64_AD5
 Text GLabel 7550 4400 0    50   Input ~ 0
-N64_AD6
+xN64_AD6
 Text GLabel 7550 4200 0    50   Input ~ 0
-N64_AD7
+xN64_AD7
 Text GLabel 6100 3600 2    50   Input ~ 0
-N64_AD0_IC
+N64_AD0
 Text GLabel 6100 3500 2    50   Input ~ 0
-N64_AD15_IC
+N64_AD15
 Text GLabel 6100 3700 2    50   Input ~ 0
-N64_AD14_IC
+N64_AD14
 Text GLabel 6100 3800 2    50   Input ~ 0
-N64_AD1_IC
+N64_AD1
 Text GLabel 6100 4300 2    50   Input ~ 0
-N64_AD2_IC
+N64_AD2
 Text GLabel 6100 4500 2    50   Input ~ 0
-N64_AD3_IC
+N64_AD3
 Text GLabel 6100 4900 2    50   Input ~ 0
-N64_ALE_L_IC
+N64_ALE_L
 Text GLabel 6100 5200 2    50   Input ~ 0
-N64_ALE_H_IC
+N64_ALE_H
 Text GLabel 6100 5000 2    50   Input ~ 0
-N64_WRITEn_IC
+N64_WRITEn
 Text GLabel 6100 5100 2    50   Input ~ 0
-N64_READn_IC
+N64_READn
 Text GLabel 6100 4200 2    50   Input ~ 0
-N64_AD13_IC
+N64_AD13
 Text GLabel 6100 4400 2    50   Input ~ 0
-N64_AD12_IC
+N64_AD12
 Text GLabel 7950 3500 2    50   Input ~ 0
-N64_AD11_IC
+N64_AD11
 Text GLabel 7950 3700 2    50   Input ~ 0
-N64_AD10_IC
+N64_AD10
 Text GLabel 7950 4500 2    50   Input ~ 0
-N64_AD9_IC
+N64_AD9
 Text GLabel 7950 4300 2    50   Input ~ 0
-N64_AD8_IC
+N64_AD8
 Text GLabel 7950 5200 2    50   Input ~ 0
-N64_COLD_RESETn_IC
+N64_COLD_RESETn
 Text GLabel 7950 5100 2    50   Input ~ 0
-N64_OS_EVENTn_IC
+N64_OS_EVENTn
 Text GLabel 7950 3600 2    50   Input ~ 0
-N64_AD4_IC
+N64_AD4
 Text GLabel 7950 3800 2    50   Input ~ 0
-N64_AD5_IC
+N64_AD5
 Text GLabel 7950 4400 2    50   Input ~ 0
-N64_AD6_IC
+N64_AD6
 Text GLabel 7950 4200 2    50   Input ~ 0
-N64_AD7_IC
+N64_AD7
 Wire Wire Line
 	3200 3900 3200 4000
 Connection ~ 3200 4000
