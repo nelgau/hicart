@@ -446,8 +446,8 @@ F 3 "" H 5200 5350 50  0001 C CNN
 $EndComp
 Text Label 4750 4150 0    50   ~ 0
 USB_VBUS
-Text Notes 3550 3300 0    50   ~ 0
-USBLC6 requires 100n on VBUS
+Text Notes 3500 3400 0    50   ~ 0
+USBLC6 requires 100n (C18) on VBUS,\nnot 10n as would be expected
 Wire Wire Line
 	4300 2450 4400 2450
 $Comp
