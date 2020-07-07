@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr USLetter 11000 8500
 encoding utf-8
-Sheet 1 12
+Sheet 1 13
 Title "Ferk-Cart iCE40 Devboard"
 Date "2020-06-29"
 Rev "r0.1"
@@ -70,11 +70,7 @@ $EndSheet
 Wire Notes Line
 	6750 5500 6750 2950
 Wire Notes Line
-	6750 4750 7950 4750
-Wire Notes Line
-	7950 4750 7950 2950
-Wire Notes Line
-	3150 5500 6750 5500
+	7950 5500 7950 2950
 Text Notes 4450 3150 0    100  ~ 0
 Memory
 Text Notes 5650 3150 0    100  ~ 0
@@ -102,5 +98,13 @@ S 6850 4100 1000 500
 U 5F90C399
 F0 "Display" 50
 F1 "Display.sch" 50
+$EndSheet
+Wire Notes Line
+	3150 5500 7950 5500
+$Sheet
+S 6850 4850 1000 500 
+U 5F487C1E
+F0 "Mechanical" 50
+F1 "Mechanical.sch" 50
 $EndSheet
 $EndSCHEMATC
