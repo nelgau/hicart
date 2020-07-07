@@ -266,4 +266,7 @@ N64_AD1
 NoConn ~ 4850 5000
 Text GLabel 6850 3550 2    50   Input ~ 0
 FLASH_SSn
+NoConn ~ 6850 4050
+NoConn ~ 6850 4150
+NoConn ~ 6850 4250
 $EndSCHEMATC
