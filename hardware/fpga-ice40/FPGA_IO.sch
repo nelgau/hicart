@@ -13,9 +13,6 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-NoConn ~ 6850 3650
-NoConn ~ 6850 3550
-NoConn ~ 6850 3450
 NoConn ~ 4850 4100
 NoConn ~ 4850 4000
 NoConn ~ 4850 3900
@@ -63,7 +60,7 @@ Text GLabel 4850 5100 2    50   Input ~ 0
 FIFO_D7
 Text GLabel 4850 4500 2    50   Input ~ 0
 FIFO_D6
-Text GLabel 4850 5500 2    50   Input ~ 0
+Text GLabel 4850 5400 2    50   Input ~ 0
 FIFO_D4
 Text GLabel 4850 4400 2    50   Input ~ 0
 FIFO_D3
@@ -71,7 +68,7 @@ Text GLabel 4850 5300 2    50   Input ~ 0
 FIFO_D2
 Text GLabel 4850 5200 2    50   Input ~ 0
 FIFO_D1
-Text GLabel 4850 5600 2    50   Input ~ 0
+Text GLabel 4850 5500 2    50   Input ~ 0
 FIFO_D0
 Text GLabel 6850 2950 2    50   Input ~ 0
 DRAM_A5
@@ -183,27 +180,25 @@ Text GLabel 2850 3650 2    50   Input ~ 0
 N64_AD3
 Text GLabel 2850 3850 2    50   Input ~ 0
 N64_AD2
-Text GLabel 4850 5400 2    50   Input ~ 0
+Text GLabel 4850 5600 2    50   Input ~ 0
 N64_AD15
 Text GLabel 2850 4050 2    50   Input ~ 0
 N64_AD0
-Text GLabel 6850 4250 2    50   Input ~ 0
-FLASH_IO3
 Text GLabel 6850 3850 2    50   Input ~ 0
+FLASH_IO3
+Text GLabel 6850 3650 2    50   Input ~ 0
 FLASH_IO2
-Text GLabel 6850 3950 2    50   Input ~ 0
+Text GLabel 6850 3450 2    50   Input ~ 0
 FLASH_MISO|IO1
-Text GLabel 6850 3750 2    50   Input ~ 0
+Text GLabel 6850 3950 2    50   Input ~ 0
 FLASH_MOSI|IO0
-Text GLabel 6850 4150 2    50   Input ~ 0
+Text GLabel 6850 3750 2    50   Input ~ 0
 FLASH_SCK
-Text GLabel 6850 4050 2    50   Input ~ 0
-FLASH_SSn
 NoConn ~ 6850 4650
 NoConn ~ 6850 4550
-Text GLabel 6850 4350 2    50   Input ~ 0
-CONFIG_IO3
 Text GLabel 6850 4450 2    50   Input ~ 0
+CONFIG_IO3
+Text GLabel 6850 4350 2    50   Input ~ 0
 CONFIG_IO2
 $Comp
 L ng_fpga_lattice_ice40:iCE40HX4K-TQ144 U?
@@ -269,4 +264,6 @@ N64_AD14
 Text GLabel 2850 4250 2    50   Input ~ 0
 N64_AD1
 NoConn ~ 4850 5000
+Text GLabel 6850 3550 2    50   Input ~ 0
+FLASH_SSn
 $EndSCHEMATC
