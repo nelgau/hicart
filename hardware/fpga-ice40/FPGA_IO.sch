@@ -147,7 +147,7 @@ Text GLabel 8850 3750 2    50   Input ~ 0
 DRAM_DQ9
 Text GLabel 8850 3850 2    50   Input ~ 0
 DRAM_DQ8
-Text GLabel 2850 4650 2    50   Input ~ 0
+Text GLabel 2850 4750 2    50   Input ~ 0
 N64_AD7
 Text GLabel 2850 4850 2    50   Input ~ 0
 N64_AD6
@@ -159,7 +159,7 @@ Text GLabel 2850 4550 2    50   Input ~ 0
 N64_OS_EVENTn
 Text GLabel 2850 4450 2    50   Input ~ 0
 N64_COLD_RESETn
-Text GLabel 2850 4750 2    50   Input ~ 0
+Text GLabel 2850 4650 2    50   Input ~ 0
 N64_AD8
 Text GLabel 2850 4950 2    50   Input ~ 0
 N64_AD9

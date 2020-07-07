@@ -262,4 +262,6 @@ Wire Wire Line
 Connection ~ 5700 4100
 Wire Wire Line
 	5700 4100 6100 4100
+Text Notes 4550 3800 0    50   ~ 0
+DNP
 $EndSCHEMATC

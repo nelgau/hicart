@@ -174,7 +174,7 @@ xN64_AD14
 Text GLabel 4000 5300 2    50   Input ~ 0
 xN64_AD15
 Text GLabel 3100 3900 0    50   UnSpc ~ 0
-xN64_3V3
+N64_3V3
 $Comp
 L Device:R_Pack04 RN?
 U 1 1 5F1CD155
@@ -275,7 +275,7 @@ Text GLabel 7550 3700 0    50   Input ~ 0
 xN64_AD10
 Text GLabel 7550 4500 0    50   Input ~ 0
 xN64_AD9
-Text GLabel 7550 4300 0    50   Input ~ 0
+Text GLabel 7550 4200 0    50   Input ~ 0
 xN64_AD8
 $Comp
 L Device:R_Pack04 RN?
@@ -301,7 +301,7 @@ Text GLabel 7550 3800 0    50   Input ~ 0
 xN64_AD5
 Text GLabel 7550 4400 0    50   Input ~ 0
 xN64_AD6
-Text GLabel 7550 4200 0    50   Input ~ 0
+Text GLabel 7550 4300 0    50   Input ~ 0
 xN64_AD7
 Text GLabel 6100 3600 2    50   Input ~ 0
 N64_AD0
@@ -333,7 +333,7 @@ Text GLabel 7950 3700 2    50   Input ~ 0
 N64_AD10
 Text GLabel 7950 4500 2    50   Input ~ 0
 N64_AD9
-Text GLabel 7950 4300 2    50   Input ~ 0
+Text GLabel 7950 4200 2    50   Input ~ 0
 N64_AD8
 Text GLabel 7950 5200 2    50   Input ~ 0
 N64_COLD_RESETn
@@ -345,7 +345,7 @@ Text GLabel 7950 3800 2    50   Input ~ 0
 N64_AD5
 Text GLabel 7950 4400 2    50   Input ~ 0
 N64_AD6
-Text GLabel 7950 4200 2    50   Input ~ 0
+Text GLabel 7950 4300 2    50   Input ~ 0
 N64_AD7
 Wire Wire Line
 	3200 3900 3200 4000
