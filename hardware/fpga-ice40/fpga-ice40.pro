@@ -1,4 +1,4 @@
-update=Wednesday, July 08, 2020 at 11:15:44 AM
+update=Wednesday, July 08, 2020 at 01:04:56 PM
 version=1
 last_client=kicad
 [general]
@@ -12,6 +12,16 @@ NetIExt=net
 version=1
 LibDir=
 [eeschema/libraries]
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceAjustPassiveValues=0
+LabSize=50
+ERC_TestSimilarLabels=1
 [pcbnew]
 version=1
 PageLayoutDescrFile=
@@ -30,9 +40,10 @@ MinMicroViaDrill=0.09999999999999999
 MinHoleToHole=0.25
 TrackWidth1=0.1524
 TrackWidth2=0.1524
-TrackWidth3=0.254
-TrackWidth4=0.508
-TrackWidth5=1.016
+TrackWidth3=0.175
+TrackWidth4=0.254
+TrackWidth5=0.508
+TrackWidth6=1.016
 ViaDiameter1=0.6
 ViaDrill1=0.3
 ViaDiameter2=0.45
@@ -245,6 +256,17 @@ dPairWidth=0.2
 dPairGap=0.25
 dPairViaGap=0.25
 [pcbnew/Netclasses/1]
+Name=DRAM
+Clearance=0.1524
+TrackWidth=0.1524
+ViaDiameter=0.45
+ViaDrill=0.3
+uViaDiameter=0.3
+uViaDrill=0.1
+dPairWidth=0.1524
+dPairGap=0.1524
+dPairViaGap=0.25
+[pcbnew/Netclasses/2]
 Name=FPGA_VCC
 Clearance=0.1524
 TrackWidth=0.254
@@ -255,7 +277,7 @@ uViaDrill=0.1
 dPairWidth=0.2
 dPairGap=0.25
 dPairViaGap=0.25
-[pcbnew/Netclasses/2]
+[pcbnew/Netclasses/3]
 Name=GND
 Clearance=0.1524
 TrackWidth=0.254
@@ -266,7 +288,7 @@ uViaDrill=0.1
 dPairWidth=0.2
 dPairGap=0.25
 dPairViaGap=0.25
-[pcbnew/Netclasses/3]
+[pcbnew/Netclasses/4]
 Name=USBD
 Clearance=0.1524
 TrackWidth=0.1524
@@ -277,13 +299,3 @@ uViaDrill=0.1
 dPairWidth=0.1524
 dPairGap=0.1524
 dPairViaGap=0.25
-[schematic_editor]
-version=1
-PageLayoutDescrFile=
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=
-SpiceAjustPassiveValues=0
-LabSize=50
-ERC_TestSimilarLabels=1
