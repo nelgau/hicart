@@ -155,7 +155,7 @@ Wire Wire Line
 	6300 3150 7100 3150
 Text GLabel 6300 3150 0    50   Input ~ 0
 USB_DETn
-Text Label 7000 3700 1    50   ~ 0
+Text Label 6700 3700 1    50   ~ 0
 USB_VIO
 Text Label 8700 3850 0    50   ~ 0
 USB_PWRENn
@@ -536,8 +536,8 @@ L Device:C C?
 U 1 1 5F110C16
 P 6700 4000
 AR Path="/5F110C16" Ref="C?"  Part="1" 
-AR Path="/5F302051/5F110C16" Ref="C?"  Part="1" 
-F 0 "C?" H 6750 4100 50  0000 L CNN
+AR Path="/5F302051/5F110C16" Ref="C50"  Part="1" 
+F 0 "C50" H 6750 4100 50  0000 L CNN
 F 1 "100n" H 6750 3900 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 6738 3850 50  0001 C CNN
 F 3 "~" H 6700 4000 50  0001 C CNN
