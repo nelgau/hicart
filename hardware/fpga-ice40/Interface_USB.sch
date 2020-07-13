@@ -55,21 +55,6 @@ Wire Wire Line
 Connection ~ 8000 4250
 Wire Wire Line
 	8000 4250 8100 4250
-$Comp
-L ng_power:GND #PWR?
-U 1 1 5F314866
-P 6400 4350
-AR Path="/5F314866" Ref="#PWR?"  Part="1" 
-AR Path="/5F302051/5F314866" Ref="#PWR025"  Part="1" 
-F 0 "#PWR025" H 6400 4100 50  0001 C CNN
-F 1 "GND" H 6403 4224 50  0000 C CNN
-F 2 "" H 6300 4000 50  0001 C CNN
-F 3 "" H 6400 4350 50  0001 C CNN
-	1    6400 4350
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	6400 4350 6400 4250
 NoConn ~ 7100 3450
 NoConn ~ 7100 3550
 $Comp
@@ -86,10 +71,6 @@ F 4 "CL10B104KB8NNNC" H 7000 4000 50  0001 C CNN "MPN"
 	1    7000 4000
 	1    0    0    -1  
 $EndComp
-Text GLabel 6300 2750 0    50   Input ~ 0
-USB_D-
-Text GLabel 6300 2850 0    50   Input ~ 0
-USB_D+
 Text GLabel 8650 2450 2    50   Input ~ 0
 FIFO_D0
 Text GLabel 8650 2550 2    50   Input ~ 0
@@ -134,29 +115,10 @@ Wire Wire Line
 	9250 3850 9250 3750
 Wire Wire Line
 	9250 3450 9250 3350
-Wire Wire Line
-	7000 2550 7100 2550
 Text GLabel 9350 3350 2    50   UnSpc ~ 0
 P3V3
 Wire Wire Line
 	9250 3350 9350 3350
-Wire Wire Line
-	7000 3750 7000 2550
-Connection ~ 7000 3750
-Wire Wire Line
-	6300 2750 7100 2750
-Wire Wire Line
-	6300 2850 7100 2850
-Wire Wire Line
-	6300 2450 6400 2450
-Text GLabel 6300 2450 0    50   UnSpc ~ 0
-USB_5V
-Wire Wire Line
-	6300 3150 7100 3150
-Text GLabel 6300 3150 0    50   Input ~ 0
-USB_DETn
-Text Label 6700 3700 1    50   ~ 0
-USB_VIO
 Text Label 8700 3850 0    50   ~ 0
 USB_PWRENn
 $Comp
@@ -201,30 +163,6 @@ Wire Wire Line
 	2400 4700 2400 4800
 Text GLabel 2850 4700 2    50   Input ~ 0
 USB_DETn
-$Comp
-L Device:C C?
-U 1 1 5F3148C7
-P 6400 4000
-AR Path="/5F3148C7" Ref="C?"  Part="1" 
-AR Path="/5F302051/5F3148C7" Ref="C21"  Part="1" 
-F 0 "C21" H 6450 4100 50  0000 L CNN
-F 1 "100n" H 6450 3900 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 6438 3850 50  0001 C CNN
-F 3 "~" H 6400 4000 50  0001 C CNN
-F 4 "CL10B104KB8NNNC" H 6400 4000 50  0001 C CNN "MPN"
-	1    6400 4000
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	6400 3850 6400 2450
-Connection ~ 6400 2450
-Wire Wire Line
-	6400 2450 7100 2450
-Wire Wire Line
-	6400 4150 6400 4250
-Wire Wire Line
-	6400 4250 6700 4250
-Connection ~ 6400 4250
 Wire Wire Line
 	7000 4250 7700 4250
 $Comp
@@ -531,6 +469,15 @@ F 3 "~" H 2750 4950 50  0001 C CNN
 	1    2750 4950
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	6700 2550 7100 2550
+Connection ~ 7000 4250
+Wire Wire Line
+	6700 3850 6700 2550
+Wire Wire Line
+	6700 4250 7000 4250
+Wire Wire Line
+	6700 4150 6700 4250
 $Comp
 L Device:C C?
 U 1 1 5F110C16
@@ -545,15 +492,72 @@ F 4 "CL10B104KB8NNNC" H 6700 4000 50  0001 C CNN "MPN"
 	1    6700 4000
 	1    0    0    -1  
 $EndComp
-Connection ~ 7000 4250
-Wire Wire Line
-	6700 4150 6700 4250
+Connection ~ 6700 2550
 Connection ~ 6700 4250
 Wire Wire Line
-	6700 4250 7000 4250
+	6300 2550 6700 2550
+Text GLabel 6300 2550 0    50   UnSpc ~ 0
+P3V3
+Connection ~ 6400 4250
 Wire Wire Line
-	6700 3850 6700 2550
+	6400 4250 6700 4250
 Wire Wire Line
-	6700 2550 7000 2550
-Connection ~ 7000 2550
+	6400 4150 6400 4250
+Wire Wire Line
+	6400 2450 7100 2450
+Connection ~ 6400 2450
+Wire Wire Line
+	6400 3850 6400 2450
+$Comp
+L Device:C C?
+U 1 1 5F3148C7
+P 6400 4000
+AR Path="/5F3148C7" Ref="C?"  Part="1" 
+AR Path="/5F302051/5F3148C7" Ref="C21"  Part="1" 
+F 0 "C21" H 6450 4100 50  0000 L CNN
+F 1 "100n" H 6450 3900 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 6438 3850 50  0001 C CNN
+F 3 "~" H 6400 4000 50  0001 C CNN
+F 4 "CL10B104KB8NNNC" H 6400 4000 50  0001 C CNN "MPN"
+	1    6400 4000
+	1    0    0    -1  
+$EndComp
+Text GLabel 6300 2450 0    50   UnSpc ~ 0
+USB_5V
+Wire Wire Line
+	6300 2450 6400 2450
+Wire Wire Line
+	6400 4350 6400 4250
+$Comp
+L ng_power:GND #PWR?
+U 1 1 5F314866
+P 6400 4350
+AR Path="/5F314866" Ref="#PWR?"  Part="1" 
+AR Path="/5F302051/5F314866" Ref="#PWR025"  Part="1" 
+F 0 "#PWR025" H 6400 4100 50  0001 C CNN
+F 1 "GND" H 6403 4224 50  0000 C CNN
+F 2 "" H 6300 4000 50  0001 C CNN
+F 3 "" H 6400 4350 50  0001 C CNN
+	1    6400 4350
+	1    0    0    -1  
+$EndComp
+Text Label 7000 3650 1    50   ~ 0
+USB_3V3
+Wire Wire Line
+	6300 3150 7100 3150
+Text GLabel 6300 3150 0    50   Input ~ 0
+USB_DETn
+Wire Wire Line
+	6300 2850 7100 2850
+Text GLabel 6300 2850 0    50   Input ~ 0
+USB_D+
+Wire Wire Line
+	6300 2750 7100 2750
+Text GLabel 6300 2750 0    50   Input ~ 0
+USB_D-
+Wire Wire Line
+	7000 3650 7000 3750
+Connection ~ 7000 3750
+Text Notes 6700 4750 0    50   ~ 0
+ATTN!!!\nMust run FT245R from USB_3V3 now!\nMust use external oscillator because of lower voltage!
 $EndSCHEMATC
