@@ -273,9 +273,9 @@ Text GLabel 7550 3500 0    50   Input ~ 0
 xN64_AD11
 Text GLabel 7550 3700 0    50   Input ~ 0
 xN64_AD10
-Text GLabel 7550 4500 0    50   Input ~ 0
+Text GLabel 7550 4300 0    50   Input ~ 0
 xN64_AD9
-Text GLabel 7550 4200 0    50   Input ~ 0
+Text GLabel 7550 4500 0    50   Input ~ 0
 xN64_AD8
 $Comp
 L Device:R_Pack04 RN?
@@ -291,17 +291,17 @@ F 4 "YC164-FR-0733RL" H 7750 5100 50  0001 C CNN "MPN"
 	1    7750 5100
 	0    1    1    0   
 $EndComp
-Text GLabel 7550 5200 0    50   Input ~ 0
+Text GLabel 7550 5000 0    50   Input ~ 0
 xN64_COLD_RESETn
-Text GLabel 7550 5100 0    50   Input ~ 0
+Text GLabel 7550 4900 0    50   Input ~ 0
 xN64_OS_EVENTn
 Text GLabel 7550 3600 0    50   Input ~ 0
 xN64_AD4
 Text GLabel 7550 3800 0    50   Input ~ 0
 xN64_AD5
-Text GLabel 7550 4400 0    50   Input ~ 0
+Text GLabel 7550 4200 0    50   Input ~ 0
 xN64_AD6
-Text GLabel 7550 4300 0    50   Input ~ 0
+Text GLabel 7550 4400 0    50   Input ~ 0
 xN64_AD7
 Text GLabel 6100 3600 2    50   Input ~ 0
 N64_AD0
@@ -331,27 +331,57 @@ Text GLabel 7950 3500 2    50   Input ~ 0
 N64_AD11
 Text GLabel 7950 3700 2    50   Input ~ 0
 N64_AD10
-Text GLabel 7950 4500 2    50   Input ~ 0
+Text GLabel 7950 4300 2    50   Input ~ 0
 N64_AD9
-Text GLabel 7950 4200 2    50   Input ~ 0
+Text GLabel 7950 4500 2    50   Input ~ 0
 N64_AD8
-Text GLabel 7950 5200 2    50   Input ~ 0
+Text GLabel 7950 5000 2    50   Input ~ 0
 N64_COLD_RESETn
-Text GLabel 7950 5100 2    50   Input ~ 0
+Text GLabel 7950 4900 2    50   Input ~ 0
 N64_OS_EVENTn
 Text GLabel 7950 3600 2    50   Input ~ 0
 N64_AD4
 Text GLabel 7950 3800 2    50   Input ~ 0
 N64_AD5
-Text GLabel 7950 4400 2    50   Input ~ 0
+Text GLabel 7950 4200 2    50   Input ~ 0
 N64_AD6
-Text GLabel 7950 4300 2    50   Input ~ 0
+Text GLabel 7950 4400 2    50   Input ~ 0
 N64_AD7
 Wire Wire Line
 	3200 3900 3200 4000
 Connection ~ 3200 4000
-NoConn ~ 7550 4900
-NoConn ~ 7550 5000
-NoConn ~ 7950 4900
-NoConn ~ 7950 5000
+NoConn ~ 7550 5200
+NoConn ~ 7550 5100
+NoConn ~ 7950 5100
+NoConn ~ 7950 5200
+$Comp
+L Device:C C54
+U 1 1 5F21540A
+P 1800 4350
+F 0 "C54" H 1915 4396 50  0000 L CNN
+F 1 "100n" H 1915 4305 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1838 4200 50  0001 C CNN
+F 3 "~" H 1800 4350 50  0001 C CNN
+	1    1800 4350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1800 4500 1800 4600
+Wire Wire Line
+	1800 4200 1800 4100
+Wire Wire Line
+	1800 4100 1700 4100
+Text GLabel 1700 4100 0    50   UnSpc ~ 0
+P3V3
+$Comp
+L ng_power:GND #PWR04
+U 1 1 5F217F51
+P 1800 4600
+F 0 "#PWR04" H 1800 4350 50  0001 C CNN
+F 1 "GND" H 1803 4474 50  0000 C CNN
+F 2 "" H 1700 4250 50  0001 C CNN
+F 3 "" H 1800 4600 50  0001 C CNN
+	1    1800 4600
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
