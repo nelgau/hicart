@@ -16,8 +16,19 @@ $EndDescr
 $Comp
 L Mechanical:Fiducial FID1
 U 1 1 5F487E71
+P 5000 3500
+F 0 "FID1" H 5085 3546 50  0000 L CNN
+F 1 "Fiducial" H 5085 3455 50  0000 L CNN
+F 2 "Fiducial:Fiducial_1mm_Mask2mm" H 5000 3500 50  0001 C CNN
+F 3 "~" H 5000 3500 50  0001 C CNN
+	1    5000 3500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:Fiducial FID2
+U 1 1 5F488542
 P 5000 4000
-F 0 "FID1" H 5085 4046 50  0000 L CNN
+F 0 "FID2" H 5085 4046 50  0000 L CNN
 F 1 "Fiducial" H 5085 3955 50  0000 L CNN
 F 2 "Fiducial:Fiducial_1mm_Mask2mm" H 5000 4000 50  0001 C CNN
 F 3 "~" H 5000 4000 50  0001 C CNN
@@ -25,13 +36,13 @@ F 3 "~" H 5000 4000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Mechanical:Fiducial FID2
-U 1 1 5F488542
+L ng_symbol:Symbol SYM1
+U 1 1 5F179F68
 P 5000 4500
-F 0 "FID2" H 5085 4546 50  0000 L CNN
-F 1 "Fiducial" H 5085 4455 50  0000 L CNN
-F 2 "Fiducial:Fiducial_1mm_Mask2mm" H 5000 4500 50  0001 C CNN
-F 3 "~" H 5000 4500 50  0001 C CNN
+F 0 "SYM1" H 5085 4546 50  0000 L CNN
+F 1 "Nelgau-Logo" H 5085 4455 50  0000 L CNN
+F 2 "ng_symbol:Nelgau-Logo_5.2x1.7mm_SilkScreen" H 5000 4500 50  0001 C CNN
+F 3 "" H 5000 4500 50  0001 C CNN
 	1    5000 4500
 	1    0    0    -1  
 $EndComp
