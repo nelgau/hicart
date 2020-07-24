@@ -1,0 +1,220 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Connector_Generic:Conn_02x04_Counter_Clockwise J1
+U 1 1 5EAF45F2
+P 3550 3950
+F 0 "J1" H 3600 4175 50  0000 C CNN
+F 1 "Conn_02x04_Counter_Clockwise" H 3600 4176 50  0001 C CNN
+F 2 "connector:PinHeader_2x04_P2.54mm_Horizontal" H 3550 3950 50  0001 C CNN
+F 3 "~" H 3550 3950 50  0001 C CNN
+	1    3550 3950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3350 3850 2800 3850
+Wire Wire Line
+	3350 3950 2800 3950
+Wire Wire Line
+	3350 4050 3250 4050
+Wire Wire Line
+	3250 4050 3250 4150
+Wire Wire Line
+	3350 4150 3250 4150
+Connection ~ 3250 4150
+Wire Wire Line
+	3250 4150 3250 4250
+Wire Wire Line
+	3850 4150 3950 4150
+Wire Wire Line
+	3950 4150 3950 4250
+Wire Wire Line
+	3850 4050 4350 4050
+Wire Wire Line
+	3850 3950 4350 3950
+Wire Wire Line
+	3850 3850 3950 3850
+Wire Wire Line
+	3950 3850 3950 3750
+$Comp
+L power:GND #PWR0101
+U 1 1 5EAF62C9
+P 3250 4250
+F 0 "#PWR0101" H 3250 4000 50  0001 C CNN
+F 1 "GND" H 3255 4077 50  0000 C CNN
+F 2 "" H 3250 4250 50  0001 C CNN
+F 3 "" H 3250 4250 50  0001 C CNN
+	1    3250 4250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0102
+U 1 1 5EAF6654
+P 3950 4250
+F 0 "#PWR0102" H 3950 4000 50  0001 C CNN
+F 1 "GND" H 3955 4077 50  0000 C CNN
+F 2 "" H 3950 4250 50  0001 C CNN
+F 3 "" H 3950 4250 50  0001 C CNN
+	1    3950 4250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR0103
+U 1 1 5EAF6BCE
+P 3950 3750
+F 0 "#PWR0103" H 3950 3600 50  0001 C CNN
+F 1 "+3V3" H 3965 3923 50  0000 C CNN
+F 2 "" H 3950 3750 50  0001 C CNN
+F 3 "" H 3950 3750 50  0001 C CNN
+	1    3950 3750
+	1    0    0    -1  
+$EndComp
+Text Label 2800 3850 0    50   ~ 0
+COLD_RESET#
+Text Label 2800 3950 0    50   ~ 0
+S_CLK
+Text Label 4350 3950 2    50   ~ 0
+CIC_DATA1
+Text Label 4350 4050 2    50   ~ 0
+CIC_DATA2
+$Comp
+L MCU_Microchip_ATtiny:ATtiny45-20SU U1
+U 1 1 5EAF9170
+P 6450 4000
+F 0 "U1" H 5920 4046 50  0000 R CNN
+F 1 "ATtiny45-20SU" H 5920 3955 50  0000 R CNN
+F 2 "Package_SO:SOIJ-8_5.3x5.3mm_P1.27mm" H 6450 4000 50  0001 C CIN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-2586-avr-8-bit-microcontroller-attiny25-attiny45-attiny85_datasheet.pdf" H 6450 4000 50  0001 C CNN
+	1    6450 4000
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0104
+U 1 1 5EAFB5F9
+P 6450 4600
+F 0 "#PWR0104" H 6450 4350 50  0001 C CNN
+F 1 "GND" H 6455 4427 50  0000 C CNN
+F 2 "" H 6450 4600 50  0001 C CNN
+F 3 "" H 6450 4600 50  0001 C CNN
+	1    6450 4600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR0105
+U 1 1 5EAFBB28
+P 6450 3400
+F 0 "#PWR0105" H 6450 3250 50  0001 C CNN
+F 1 "+3V3" H 6465 3573 50  0000 C CNN
+F 2 "" H 6450 3400 50  0001 C CNN
+F 3 "" H 6450 3400 50  0001 C CNN
+	1    6450 3400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5850 4200 5200 4200
+Wire Wire Line
+	5850 4000 5200 4000
+Wire Wire Line
+	5850 3900 5200 3900
+Wire Wire Line
+	5850 3800 5200 3800
+Wire Wire Line
+	5850 3700 5750 3700
+Wire Wire Line
+	5750 3700 5750 4300
+$Comp
+L power:GND #PWR0106
+U 1 1 5EAFCDE8
+P 5750 4300
+F 0 "#PWR0106" H 5750 4050 50  0001 C CNN
+F 1 "GND" H 5755 4127 50  0000 C CNN
+F 2 "" H 5750 4300 50  0001 C CNN
+F 3 "" H 5750 4300 50  0001 C CNN
+	1    5750 4300
+	1    0    0    -1  
+$EndComp
+NoConn ~ 5850 4100
+Text Label 5200 4200 0    50   ~ 0
+COLD_RESET#
+Text Label 5200 4000 0    50   ~ 0
+S_CLK
+Text Label 5200 3900 0    50   ~ 0
+CIC_DATA1
+Text Label 5200 3800 0    50   ~ 0
+CIC_DATA2
+$Comp
+L Device:C C1
+U 1 1 5EAFDFF5
+P 8250 4000
+F 0 "C1" H 8365 4046 50  0000 L CNN
+F 1 "2u2" H 8365 3955 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 8288 3850 50  0001 C CNN
+F 3 "~" H 8250 4000 50  0001 C CNN
+	1    8250 4000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C2
+U 1 1 5EAFE405
+P 8650 4000
+F 0 "C2" H 8765 4046 50  0000 L CNN
+F 1 "100n" H 8765 3955 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 8688 3850 50  0001 C CNN
+F 3 "~" H 8650 4000 50  0001 C CNN
+	1    8650 4000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8250 3850 8250 3750
+Wire Wire Line
+	8250 3750 8650 3750
+Wire Wire Line
+	8650 3750 8650 3850
+Wire Wire Line
+	8250 3750 8250 3650
+Connection ~ 8250 3750
+Wire Wire Line
+	8650 4150 8650 4250
+Wire Wire Line
+	8650 4250 8250 4250
+Wire Wire Line
+	8250 4250 8250 4150
+Wire Wire Line
+	8250 4250 8250 4350
+Connection ~ 8250 4250
+$Comp
+L power:+3V3 #PWR0107
+U 1 1 5EAFF9F6
+P 8250 3650
+F 0 "#PWR0107" H 8250 3500 50  0001 C CNN
+F 1 "+3V3" H 8265 3823 50  0000 C CNN
+F 2 "" H 8250 3650 50  0001 C CNN
+F 3 "" H 8250 3650 50  0001 C CNN
+	1    8250 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0108
+U 1 1 5EB001C3
+P 8250 4350
+F 0 "#PWR0108" H 8250 4100 50  0001 C CNN
+F 1 "GND" H 8255 4177 50  0000 C CNN
+F 2 "" H 8250 4350 50  0001 C CNN
+F 3 "" H 8250 4350 50  0001 C CNN
+	1    8250 4350
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC

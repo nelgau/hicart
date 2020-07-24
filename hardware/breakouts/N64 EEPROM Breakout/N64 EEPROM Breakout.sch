@@ -1,0 +1,196 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L n64:BU9850 U1
+U 1 1 5EAE906F
+P 6000 3800
+F 0 "U1" H 6275 3965 50  0000 C CNN
+F 1 "BU9850" H 6275 3874 50  0000 C CNN
+F 2 "Package_DIP:DIP-8_W7.62mm_Socket" H 6000 3800 50  0001 C CNN
+F 3 "" H 6000 3800 50  0001 C CNN
+	1    6000 3800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6650 3900 6750 3900
+Wire Wire Line
+	6750 3900 6750 3800
+Wire Wire Line
+	6650 4100 6750 4100
+Wire Wire Line
+	6750 4100 6750 4200
+Wire Wire Line
+	6650 4200 6750 4200
+Connection ~ 6750 4200
+Wire Wire Line
+	6750 4200 6750 4300
+$Comp
+L power:+3V3 #PWR0101
+U 1 1 5EAEA4A8
+P 6750 3800
+F 0 "#PWR0101" H 6750 3650 50  0001 C CNN
+F 1 "+3V3" H 6765 3973 50  0000 C CNN
+F 2 "" H 6750 3800 50  0001 C CNN
+F 3 "" H 6750 3800 50  0001 C CNN
+	1    6750 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0102
+U 1 1 5EAEA595
+P 6750 4300
+F 0 "#PWR0102" H 6750 4050 50  0001 C CNN
+F 1 "GND" H 6755 4127 50  0000 C CNN
+F 2 "" H 6750 4300 50  0001 C CNN
+F 3 "" H 6750 4300 50  0001 C CNN
+	1    6750 4300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5900 3900 5350 3900
+Wire Wire Line
+	5900 4000 5350 4000
+Wire Wire Line
+	5900 4100 5350 4100
+Text Label 5350 3900 0    50   ~ 0
+S_DAT
+Text Label 5350 4000 0    50   ~ 0
+S_CLK
+Text Label 5350 4100 0    50   ~ 0
+COLD_RESET#
+$Comp
+L Connector_Generic:Conn_02x04_Counter_Clockwise J1
+U 1 1 5EAEC905
+P 4100 4000
+F 0 "J1" H 4150 4225 50  0000 C CNN
+F 1 "Conn_02x04_Counter_Clockwise" H 4150 4226 50  0001 C CNN
+F 2 "connector:PinHeader_2x04_P2.54mm_Horizontal" H 4100 4000 50  0001 C CNN
+F 3 "~" H 4100 4000 50  0001 C CNN
+	1    4100 4000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4400 3900 4500 3900
+Wire Wire Line
+	4500 3900 4500 3800
+Wire Wire Line
+	3900 3900 3800 3900
+Wire Wire Line
+	3800 3900 3800 4200
+Wire Wire Line
+	3900 4200 3800 4200
+Connection ~ 3800 4200
+Wire Wire Line
+	3800 4200 3800 4300
+NoConn ~ 3900 4000
+NoConn ~ 4400 4000
+Wire Wire Line
+	4400 4100 4900 4100
+Wire Wire Line
+	4400 4200 4900 4200
+Wire Wire Line
+	3900 4100 3400 4100
+Text Label 3400 4100 0    50   ~ 0
+S_CLK
+Text Label 4900 4100 2    50   ~ 0
+COLD_RESET#
+Text Label 4900 4200 2    50   ~ 0
+S_DAT
+$Comp
+L power:GND #PWR0103
+U 1 1 5EAF1A9A
+P 3800 4300
+F 0 "#PWR0103" H 3800 4050 50  0001 C CNN
+F 1 "GND" H 3805 4127 50  0000 C CNN
+F 2 "" H 3800 4300 50  0001 C CNN
+F 3 "" H 3800 4300 50  0001 C CNN
+	1    3800 4300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR0104
+U 1 1 5EAF1D62
+P 4500 3800
+F 0 "#PWR0104" H 4500 3650 50  0001 C CNN
+F 1 "+3V3" H 4515 3973 50  0000 C CNN
+F 2 "" H 4500 3800 50  0001 C CNN
+F 3 "" H 4500 3800 50  0001 C CNN
+	1    4500 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C1
+U 1 1 5EAF2264
+P 7650 4050
+F 0 "C1" H 7765 4096 50  0000 L CNN
+F 1 "2u2" H 7765 4005 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 7688 3900 50  0001 C CNN
+F 3 "~" H 7650 4050 50  0001 C CNN
+	1    7650 4050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C2
+U 1 1 5EAF37C0
+P 8050 4050
+F 0 "C2" H 8165 4096 50  0000 L CNN
+F 1 "100n" H 8165 4005 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 8088 3900 50  0001 C CNN
+F 3 "~" H 8050 4050 50  0001 C CNN
+	1    8050 4050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7650 3900 7650 3800
+Wire Wire Line
+	7650 3800 8050 3800
+Wire Wire Line
+	8050 3800 8050 3900
+Wire Wire Line
+	7650 4200 7650 4300
+Wire Wire Line
+	7650 4300 8050 4300
+Wire Wire Line
+	8050 4300 8050 4200
+Wire Wire Line
+	7650 3800 7650 3700
+Connection ~ 7650 3800
+Wire Wire Line
+	7650 4300 7650 4400
+Connection ~ 7650 4300
+$Comp
+L power:+3V3 #PWR0105
+U 1 1 5EAF58F5
+P 7650 3700
+F 0 "#PWR0105" H 7650 3550 50  0001 C CNN
+F 1 "+3V3" H 7665 3873 50  0000 C CNN
+F 2 "" H 7650 3700 50  0001 C CNN
+F 3 "" H 7650 3700 50  0001 C CNN
+	1    7650 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0106
+U 1 1 5EAF5A9C
+P 7650 4400
+F 0 "#PWR0106" H 7650 4150 50  0001 C CNN
+F 1 "GND" H 7655 4227 50  0000 C CNN
+F 2 "" H 7650 4400 50  0001 C CNN
+F 3 "" H 7650 4400 50  0001 C CNN
+	1    7650 4400
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC

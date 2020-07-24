@@ -1,0 +1,232 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Connector_Generic:Conn_02x04_Counter_Clockwise J1
+U 1 1 5EAE6A18
+P 3800 3800
+F 0 "J1" H 3850 4025 50  0000 C CNN
+F 1 "Conn_02x04_Counter_Clockwise" H 3850 4026 50  0001 C CNN
+F 2 "connector:PinHeader_2x04_P2.54mm_Horizontal" H 3800 3800 50  0001 C CNN
+F 3 "~" H 3800 3800 50  0001 C CNN
+	1    3800 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L n64:CIC-NUS-6102A U1
+U 1 1 5EAE78FD
+P 6050 3550
+F 0 "U1" H 6400 3715 50  0000 C CNN
+F 1 "CIC-NUS-6102A" H 6400 3624 50  0000 C CNN
+F 2 "Package_DIP:DIP-16_W7.62mm_Socket" H 6050 3700 50  0001 C CNN
+F 3 "" H 6050 3700 50  0001 C CNN
+	1    6050 3550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6850 3750 6950 3750
+Wire Wire Line
+	6950 3750 6950 3650
+Wire Wire Line
+	6950 3650 6850 3650
+Wire Wire Line
+	6950 3650 6950 3550
+Connection ~ 6950 3650
+Wire Wire Line
+	6850 3950 6950 3950
+Wire Wire Line
+	6950 3950 6950 4050
+Wire Wire Line
+	6850 4250 6950 4250
+Connection ~ 6950 4250
+Wire Wire Line
+	6950 4250 6950 4350
+Wire Wire Line
+	6850 4150 6950 4150
+Connection ~ 6950 4150
+Wire Wire Line
+	6950 4150 6950 4250
+Wire Wire Line
+	6850 4050 6950 4050
+Connection ~ 6950 4050
+Wire Wire Line
+	6950 4050 6950 4150
+$Comp
+L power:GND #PWR0101
+U 1 1 5EAE89BD
+P 6950 4350
+F 0 "#PWR0101" H 6950 4100 50  0001 C CNN
+F 1 "GND" H 6955 4177 50  0000 C CNN
+F 2 "" H 6950 4350 50  0001 C CNN
+F 3 "" H 6950 4350 50  0001 C CNN
+	1    6950 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR0102
+U 1 1 5EAE8E0F
+P 6950 3550
+F 0 "#PWR0102" H 6950 3400 50  0001 C CNN
+F 1 "+3V3" H 6965 3723 50  0000 C CNN
+F 2 "" H 6950 3550 50  0001 C CNN
+F 3 "" H 6950 3550 50  0001 C CNN
+	1    6950 3550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4100 3700 4200 3700
+Wire Wire Line
+	4100 3800 4600 3800
+Wire Wire Line
+	4100 3900 4600 3900
+Wire Wire Line
+	4100 4000 4200 4000
+Wire Wire Line
+	3600 4000 3500 4000
+Wire Wire Line
+	3600 3900 3500 3900
+Wire Wire Line
+	3600 3800 3100 3800
+Wire Wire Line
+	3600 3700 3100 3700
+Text Label 3100 3700 0    50   ~ 0
+COLD_RESET#
+Text Label 3100 3800 0    50   ~ 0
+S_CLK
+Wire Wire Line
+	3500 3900 3500 4000
+Connection ~ 3500 4000
+Wire Wire Line
+	3500 4000 3500 4100
+Wire Wire Line
+	4200 4000 4200 4100
+Wire Wire Line
+	4200 3700 4200 3600
+$Comp
+L power:+3V3 #PWR0103
+U 1 1 5EAECA9E
+P 4200 3600
+F 0 "#PWR0103" H 4200 3450 50  0001 C CNN
+F 1 "+3V3" H 4215 3773 50  0000 C CNN
+F 2 "" H 4200 3600 50  0001 C CNN
+F 3 "" H 4200 3600 50  0001 C CNN
+	1    4200 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0104
+U 1 1 5EAECBE5
+P 4200 4100
+F 0 "#PWR0104" H 4200 3850 50  0001 C CNN
+F 1 "GND" H 4205 3927 50  0000 C CNN
+F 2 "" H 4200 4100 50  0001 C CNN
+F 3 "" H 4200 4100 50  0001 C CNN
+	1    4200 4100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0105
+U 1 1 5EAECCFB
+P 3500 4100
+F 0 "#PWR0105" H 3500 3850 50  0001 C CNN
+F 1 "GND" H 3505 3927 50  0000 C CNN
+F 2 "" H 3500 4100 50  0001 C CNN
+F 3 "" H 3500 4100 50  0001 C CNN
+	1    3500 4100
+	1    0    0    -1  
+$EndComp
+Text Label 4600 3800 2    50   ~ 0
+CIC_DATA1
+Text Label 4600 3900 2    50   ~ 0
+CIC_DATA2
+Wire Wire Line
+	5950 3750 5400 3750
+Wire Wire Line
+	5950 3950 5400 3950
+Wire Wire Line
+	5950 4050 5400 4050
+Text Label 5400 3650 0    50   ~ 0
+CIC_DATA1
+Text Label 5400 3750 0    50   ~ 0
+CIC_DATA2
+Text Label 5400 3950 0    50   ~ 0
+S_CLK
+Text Label 5400 4050 0    50   ~ 0
+COLD_RESET#
+Wire Wire Line
+	5950 3650 5400 3650
+$Comp
+L Device:C C1
+U 1 1 5EB00882
+P 8050 3950
+F 0 "C1" H 8165 3996 50  0000 L CNN
+F 1 "2u2" H 8165 3905 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 8088 3800 50  0001 C CNN
+F 3 "~" H 8050 3950 50  0001 C CNN
+	1    8050 3950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C2
+U 1 1 5EB01256
+P 8450 3950
+F 0 "C2" H 8565 3996 50  0000 L CNN
+F 1 "100n" H 8565 3905 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 8488 3800 50  0001 C CNN
+F 3 "~" H 8450 3950 50  0001 C CNN
+	1    8450 3950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8450 3800 8450 3700
+Wire Wire Line
+	8450 3700 8050 3700
+Wire Wire Line
+	8050 3700 8050 3800
+Wire Wire Line
+	8050 3700 8050 3600
+Connection ~ 8050 3700
+Wire Wire Line
+	8050 4100 8050 4200
+Wire Wire Line
+	8050 4200 8450 4200
+Wire Wire Line
+	8450 4200 8450 4100
+Wire Wire Line
+	8050 4200 8050 4300
+Connection ~ 8050 4200
+$Comp
+L power:GND #PWR0106
+U 1 1 5EB035DF
+P 8050 4300
+F 0 "#PWR0106" H 8050 4050 50  0001 C CNN
+F 1 "GND" H 8055 4127 50  0000 C CNN
+F 2 "" H 8050 4300 50  0001 C CNN
+F 3 "" H 8050 4300 50  0001 C CNN
+	1    8050 4300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR0107
+U 1 1 5EB03A6A
+P 8050 3600
+F 0 "#PWR0107" H 8050 3450 50  0001 C CNN
+F 1 "+3V3" H 8065 3773 50  0000 C CNN
+F 2 "" H 8050 3600 50  0001 C CNN
+F 3 "" H 8050 3600 50  0001 C CNN
+	1    8050 3600
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
