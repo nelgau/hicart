@@ -72,19 +72,19 @@ Text GLabel 4850 5500 2    50   Input ~ 0
 FIFO_D0
 Text GLabel 6850 2950 2    50   Input ~ 0
 DRAM_A5
-Text GLabel 8850 4550 2    50   Input ~ 0
+Text GLabel 8850 4850 2    50   Input ~ 0
 DRAM_BA1
-Text GLabel 8850 4450 2    50   Input ~ 0
+Text GLabel 8850 4750 2    50   Input ~ 0
 DRAM_BA0
-Text GLabel 8850 4350 2    50   Input ~ 0
+Text GLabel 8850 4650 2    50   Input ~ 0
 DRAM_CSn
-Text GLabel 8850 4250 2    50   Input ~ 0
+Text GLabel 8850 4550 2    50   Input ~ 0
 DRAM_RASn
-Text GLabel 8850 4150 2    50   Input ~ 0
+Text GLabel 8850 4450 2    50   Input ~ 0
 DRAM_CASn
-Text GLabel 8850 4050 2    50   Input ~ 0
+Text GLabel 8850 4350 2    50   Input ~ 0
 DRAM_WEn
-Text GLabel 8850 3950 2    50   Input ~ 0
+Text GLabel 8850 4050 2    50   Input ~ 0
 DRAM_LDQM
 Text GLabel 6850 3050 2    50   Input ~ 0
 DRAM_A3
@@ -122,11 +122,11 @@ Text GLabel 8850 5550 2    50   Input ~ 0
 DRAM_A6
 Text GLabel 6850 2850 2    50   Input ~ 0
 DRAM_A4
-Text GLabel 8850 4850 2    50   Input ~ 0
+Text GLabel 8850 4250 2    50   Input ~ 0
 DRAM_CKE
-Text GLabel 8850 4750 2    50   Input ~ 0
+Text GLabel 8850 4150 2    50   Input ~ 0
 DRAM_CLK
-Text GLabel 8850 4650 2    50   Input ~ 0
+Text GLabel 8850 3950 2    50   Input ~ 0
 DRAM_UDQM
 Text GLabel 8850 2850 2    50   Input ~ 0
 DRAM_DQ15
