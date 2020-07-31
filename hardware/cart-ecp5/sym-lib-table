@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name ng_fpga_lattice_ecp5)(type Legacy)(uri ${KIPRJMOD}/../lib/nelgau/symbols/ng_fpga_lattice_ecp5.lib)(options "")(descr ""))
+  (lib (name ng_power)(type Legacy)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/symbols/ng_power.lib)(options "")(descr ""))
+)
