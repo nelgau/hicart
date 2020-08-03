@@ -1,4 +1,4 @@
-update=Sunday, August 02, 2020 at 11:03:41 PM
+update=Monday, August 03, 2020 at 07:06:28 AM
 version=1
 last_client=kicad
 [general]
@@ -36,7 +36,7 @@ ViaDrill1=0.2
 dPairWidth1=0.2
 dPairGap1=0.25
 dPairViaGap1=0.25
-SilkLineWidth=0.12
+SilkLineWidth=0.15
 SilkTextSizeV=1
 SilkTextSizeH=1
 SilkTextSizeThickness=0.15
@@ -48,7 +48,7 @@ CopperTextSizeH=1.5
 CopperTextThickness=0.3
 CopperTextItalic=0
 CopperTextUpright=1
-EdgeCutLineWidth=0.05
+EdgeCutLineWidth=0.09999999999999999
 CourtyardLineWidth=0.05
 OthersLineWidth=0.15
 OthersTextSizeV=1
@@ -56,8 +56,8 @@ OthersTextSizeH=1
 OthersTextSizeThickness=0.15
 OthersTextItalic=0
 OthersTextUpright=1
-SolderMaskClearance=0.05
-SolderMaskMinWidth=0
+SolderMaskClearance=0.13
+SolderMaskMinWidth=0.3
 SolderPasteClearance=-0.015
 SolderPasteRatio=-0
 [pcbnew/Layer.F.Cu]
