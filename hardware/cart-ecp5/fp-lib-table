@@ -1,3 +1,4 @@
 (fp_lib_table
   (lib (name ng_package_bga)(type KiCad)(uri ${KIPRJMOD}/../lib/nelgau/footprints/ng_package_bga.pretty)(options "")(descr ""))
+  (lib (name ng_n64)(type KiCad)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/footprints/ng_n64.pretty)(options "")(descr ""))
 )

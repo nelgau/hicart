@@ -1,4 +1,4 @@
-update=Thursday, July 30, 2020 at 09:16:29 PM
+update=Sunday, August 02, 2020 at 11:03:41 PM
 version=1
 last_client=kicad
 [general]
@@ -16,19 +16,21 @@ LibDir=
 version=1
 PageLayoutDescrFile=
 LastNetListRead=
-CopperLayerCount=2
-BoardThickness=1.6
+CopperLayerCount=4
+BoardThickness=1.2
 AllowMicroVias=0
 AllowBlindVias=0
 RequireCourtyardDefinitions=0
 ProhibitOverlappingCourtyards=1
-MinTrackWidth=0.127
+MinTrackWidth=0.09999999999999999
 MinViaDiameter=0.45
 MinViaDrill=0.2
 MinMicroViaDiameter=0.2
 MinMicroViaDrill=0.09999999999999999
 MinHoleToHole=0.25
-TrackWidth1=0.127
+TrackWidth1=0.1
+TrackWidth2=0.1
+TrackWidth3=0.4
 ViaDiameter1=0.45
 ViaDrill1=0.2
 dPairWidth1=0.2
@@ -63,13 +65,13 @@ Name=F.Cu
 Type=0
 Enabled=1
 [pcbnew/Layer.In1.Cu]
-Name=In1.Cu
-Type=0
-Enabled=0
+Name=In1.Cu(GND)
+Type=1
+Enabled=1
 [pcbnew/Layer.In2.Cu]
-Name=In2.Cu
-Type=0
-Enabled=0
+Name=In2.Cu(PWR)
+Type=1
+Enabled=1
 [pcbnew/Layer.In3.Cu]
 Name=In3.Cu
 Type=0
@@ -227,8 +229,8 @@ Enabled=0
 [pcbnew/Netclasses]
 [pcbnew/Netclasses/Default]
 Name=Default
-Clearance=0.127
-TrackWidth=0.127
+Clearance=0.1
+TrackWidth=0.1
 ViaDiameter=0.45
 ViaDrill=0.2
 uViaDiameter=0.3
