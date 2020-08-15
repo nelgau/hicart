@@ -7,4 +7,5 @@
   (lib (name ng_ftdi)(type Legacy)(uri ${KIPRJMOD}/../lib/nelgau/symbols/ng_ftdi.lib)(options "")(descr ""))
   (lib (name ng_pmic)(type Legacy)(uri ${KIPRJMOD}/../lib/nelgau/symbols/ng_pmic.lib)(options "")(descr ""))
   (lib (name ng_symbol)(type Legacy)(uri ${KIPRJMOD}/../lib/nelgau/symbols/ng_symbol.lib)(options "")(descr ""))
+  (lib (name fpga-ice40-rescue)(type Legacy)(uri ${KIPRJMOD}/fpga-ice40-rescue.lib)(options "")(descr ""))
 )
