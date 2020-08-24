@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 1 5
+Sheet 1 6
 Title ""
 Date ""
 Rev ""
@@ -356,168 +356,15 @@ F0 "Memory" 50
 F1 "Memory.sch" 50
 $EndSheet
 $Sheet
-S 6000 1500 1500 850 
+S 6000 1450 1500 900 
 U 5F43B1FD
 F0 "Interface-N64" 50
 F1 "Interface-N64.sch" 50
 $EndSheet
-$Comp
-L ng_regulator:TLV62568DBV U?
-U 1 1 5F448D14
-P 4900 6300
-F 0 "U?" H 4900 6617 50  0000 C CNN
-F 1 "TLV62568DBV" H 4900 6526 50  0000 C CNN
-F 2 "Package_TO_SOT_SMD:SOT-23-5" H 4900 5850 50  0001 C CNN
-F 3 "https://www.ti.com/lit/ds/symlink/tlv62568.pdf" H 4900 6250 50  0001 C CNN
-	1    4900 6300
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:L L?
-U 1 1 5F44F41D
-P 5650 6250
-F 0 "L?" V 5840 6250 50  0000 C CNN
-F 1 "L" V 5749 6250 50  0000 C CNN
-F 2 "" H 5650 6250 50  0001 C CNN
-F 3 "~" H 5650 6250 50  0001 C CNN
-	1    5650 6250
-	0    -1   -1   0   
-$EndComp
-$Comp
-L Device:R R?
-U 1 1 5F45018E
-P 5400 6700
-F 0 "R?" H 5470 6746 50  0000 L CNN
-F 1 "R" H 5470 6655 50  0000 L CNN
-F 2 "" V 5330 6700 50  0001 C CNN
-F 3 "~" H 5400 6700 50  0001 C CNN
-	1    5400 6700
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R?
-U 1 1 5F4511AF
-P 5650 6450
-F 0 "R?" V 5550 6450 50  0000 C CNN
-F 1 "R" V 5450 6450 50  0000 C CNN
-F 2 "" V 5580 6450 50  0001 C CNN
-F 3 "~" H 5650 6450 50  0001 C CNN
-	1    5650 6450
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	5800 6450 5900 6450
-Wire Wire Line
-	5900 6450 5900 6250
-Wire Wire Line
-	5900 6250 5800 6250
-Wire Wire Line
-	5500 6250 5300 6250
-Wire Wire Line
-	5300 6450 5400 6450
-Wire Wire Line
-	5400 6550 5400 6450
-$Comp
-L Device:C C?
-U 1 1 5F4599C0
-P 6200 6500
-F 0 "C?" H 6315 6546 50  0000 L CNN
-F 1 "C" H 6315 6455 50  0000 L CNN
-F 2 "" H 6238 6350 50  0001 C CNN
-F 3 "~" H 6200 6500 50  0001 C CNN
-	1    6200 6500
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5900 6250 6200 6250
-Wire Wire Line
-	6200 6250 6200 6350
-Connection ~ 5900 6250
-Wire Wire Line
-	6200 6650 6200 6750
-Wire Wire Line
-	5400 6850 5400 6950
-Wire Wire Line
-	4900 6650 4900 6750
-$Comp
-L Device:C C?
-U 1 1 5F46367C
-P 4100 6500
-F 0 "C?" H 4215 6546 50  0000 L CNN
-F 1 "C" H 4215 6455 50  0000 L CNN
-F 2 "" H 4138 6350 50  0001 C CNN
-F 3 "~" H 4100 6500 50  0001 C CNN
-	1    4100 6500
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	4100 6250 4100 6350
-Wire Wire Line
-	4100 6650 4100 6750
-Wire Wire Line
-	4500 6450 4400 6450
-Wire Wire Line
-	4400 6450 4400 6250
-Wire Wire Line
-	4400 6250 4500 6250
-Wire Wire Line
-	4100 6250 4400 6250
-Connection ~ 4400 6250
-Wire Wire Line
-	4100 6250 3900 6250
-Connection ~ 4100 6250
-$Comp
-L ng_power:GND #PWR?
-U 1 1 5F46CFC1
-P 4900 6750
-F 0 "#PWR?" H 4900 6500 50  0001 C CNN
-F 1 "GND" H 4903 6624 50  0000 C CNN
-F 2 "" H 4800 6400 50  0001 C CNN
-F 3 "" H 4900 6750 50  0001 C CNN
-	1    4900 6750
-	1    0    0    -1  
-$EndComp
-$Comp
-L ng_power:GND #PWR?
-U 1 1 5F46D00C
-P 4100 6750
-F 0 "#PWR?" H 4100 6500 50  0001 C CNN
-F 1 "GND" H 4103 6624 50  0000 C CNN
-F 2 "" H 4000 6400 50  0001 C CNN
-F 3 "" H 4100 6750 50  0001 C CNN
-	1    4100 6750
-	1    0    0    -1  
-$EndComp
-$Comp
-L ng_power:GND #PWR?
-U 1 1 5F46D557
-P 6200 6750
-F 0 "#PWR?" H 6200 6500 50  0001 C CNN
-F 1 "GND" H 6203 6624 50  0000 C CNN
-F 2 "" H 6100 6400 50  0001 C CNN
-F 3 "" H 6200 6750 50  0001 C CNN
-	1    6200 6750
-	1    0    0    -1  
-$EndComp
-$Comp
-L ng_power:GND #PWR?
-U 1 1 5F46DB3A
-P 5400 6950
-F 0 "#PWR?" H 5400 6700 50  0001 C CNN
-F 1 "GND" H 5403 6824 50  0000 C CNN
-F 2 "" H 5300 6600 50  0001 C CNN
-F 3 "" H 5400 6950 50  0001 C CNN
-	1    5400 6950
-	1    0    0    -1  
-$EndComp
-Connection ~ 5400 6450
-Wire Wire Line
-	5400 6450 5500 6450
-Connection ~ 6200 6250
-Wire Wire Line
-	6200 6250 6400 6250
-Text GLabel 3900 6250 0    50   UnSpc ~ 0
-P3V3
-Text GLabel 6400 6250 2    50   UnSpc ~ 0
-P1V1
+$Sheet
+S 8000 1450 1550 900 
+U 5F483803
+F0 "Power" 50
+F1 "Power.sch" 50
+$EndSheet
 $EndSCHEMATC
