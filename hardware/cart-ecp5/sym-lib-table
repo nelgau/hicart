@@ -6,4 +6,5 @@
   (lib (name ng_n64)(type Legacy)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/symbols/ng_n64.lib)(options "")(descr ""))
   (lib (name ng_regulator)(type Legacy)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/symbols/ng_regulator.lib)(options "")(descr ""))
   (lib (name ng_time)(type Legacy)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/symbols/ng_time.lib)(options "")(descr ""))
+  (lib (name ng_conn)(type Legacy)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/symbols/ng_conn.lib)(options "")(descr ""))
 )
