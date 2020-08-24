@@ -353,34 +353,34 @@ F 3 "http://www2.st.com/resource/en/datasheet/CD00050750.pdf" H 4800 5550 50  00
 	1    4600 5200
 	1    0    0    -1  
 $EndComp
-Text GLabel 4100 5300 0    50   Input ~ 0
+Text GLabel 4200 5300 0    50   Input ~ 0
 xUSB_D-
-Text GLabel 5100 5300 2    50   Input ~ 0
+Text GLabel 5000 5300 2    50   Input ~ 0
 xUSB_D+
-Text GLabel 4100 5100 0    50   Input ~ 0
+Text GLabel 4200 5100 0    50   Input ~ 0
 USB_D-
-Text GLabel 5100 5100 2    50   Input ~ 0
+Text GLabel 5000 5100 2    50   Input ~ 0
 USB_D+
 Wire Wire Line
-	4150 4600 4600 4600
+	4150 4700 4600 4700
 Wire Wire Line
-	4600 4600 4600 4700
+	4600 4700 4600 4800
 Wire Wire Line
-	4600 5700 4600 5800
+	4600 5600 4600 5700
 $Comp
 L ng_power:GND #PWR?
 U 1 1 5F084D77
-P 4600 5800
+P 4600 5700
 AR Path="/5F084D77" Ref="#PWR?"  Part="1" 
 AR Path="/5F302051/5F084D77" Ref="#PWR036"  Part="1" 
-F 0 "#PWR036" H 4600 5550 50  0001 C CNN
-F 1 "GND" H 4603 5674 50  0000 C CNN
-F 2 "" H 4500 5450 50  0001 C CNN
-F 3 "" H 4600 5800 50  0001 C CNN
-	1    4600 5800
+F 0 "#PWR036" H 4600 5450 50  0001 C CNN
+F 1 "GND" H 4603 5574 50  0000 C CNN
+F 2 "" H 4500 5350 50  0001 C CNN
+F 3 "" H 4600 5700 50  0001 C CNN
+	1    4600 5700
 	1    0    0    -1  
 $EndComp
-Text Label 4150 4600 0    50   ~ 0
+Text Label 4150 4700 0    50   ~ 0
 USB_VBUS
 Text Notes 2950 3800 0    50   ~ 0
 USBLC6 requires 100n (C18) on VBUS,\nnot 10n as would be expected
