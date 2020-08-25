@@ -123,18 +123,18 @@ Wire Wire Line
 Wire Wire Line
 	5350 4650 5350 4850
 Wire Wire Line
-	6350 3650 6250 3650
-Connection ~ 6450 3650
+	6350 3550 6250 3550
+Connection ~ 6450 3550
 Wire Wire Line
-	6350 3650 6350 3850
+	6350 3550 6350 3850
 Wire Wire Line
-	6450 3650 6550 3650
+	6450 3550 6550 3550
 Wire Wire Line
-	6450 3650 6450 3850
+	6450 3550 6450 3850
 Wire Wire Line
-	6350 3650 6450 3650
+	6350 3550 6450 3550
 Wire Wire Line
-	6550 3850 6550 3650
+	6550 3850 6550 3550
 Wire Wire Line
 	6450 4450 6450 4150
 Wire Wire Line
@@ -323,7 +323,7 @@ Wire Wire Line
 Connection ~ 6550 4350
 Wire Wire Line
 	6250 4350 6550 4350
-Connection ~ 6350 3650
+Connection ~ 6350 3550
 Wire Wire Line
 	7550 4550 7450 4550
 Wire Wire Line
@@ -761,7 +761,7 @@ Wire Wire Line
 	3400 6000 3300 6000
 Text GLabel 3300 6000 0    50   UnSpc ~ 0
 P3V3
-Text GLabel 6250 3650 0    50   UnSpc ~ 0
+Text GLabel 6250 3550 0    50   UnSpc ~ 0
 P3V3
 $Comp
 L ng_power:GND #PWR0111

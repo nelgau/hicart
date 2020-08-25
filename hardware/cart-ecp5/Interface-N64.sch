@@ -160,8 +160,8 @@ U 1 1 5F1CD155
 P 7100 2100
 AR Path="/5F1CD155" Ref="RN?"  Part="1" 
 AR Path="/5F133F50/5F1CD155" Ref="RN4"  Part="1" 
-AR Path="/5F43B1FD/5F1CD155" Ref="RN4"  Part="1" 
-F 0 "RN4" V 6683 2100 50  0000 C CNN
+AR Path="/5F43B1FD/5F1CD155" Ref="RN1"  Part="1" 
+F 0 "RN1" V 6683 2100 50  0000 C CNN
 F 1 "33R, 1%" V 6774 2100 50  0000 C CNN
 F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 7375 2100 50  0001 C CNN
 F 3 "~" H 7100 2100 50  0001 C CNN
@@ -175,8 +175,8 @@ U 1 1 5F1CD15B
 P 7100 2800
 AR Path="/5F1CD15B" Ref="RN?"  Part="1" 
 AR Path="/5F133F50/5F1CD15B" Ref="RN6"  Part="1" 
-AR Path="/5F43B1FD/5F1CD15B" Ref="RN6"  Part="1" 
-F 0 "RN6" V 6683 2800 50  0000 C CNN
+AR Path="/5F43B1FD/5F1CD15B" Ref="RN2"  Part="1" 
+F 0 "RN2" V 6683 2800 50  0000 C CNN
 F 1 "33R, 1%" V 6774 2800 50  0000 C CNN
 F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 7375 2800 50  0001 C CNN
 F 3 "~" H 7100 2800 50  0001 C CNN
@@ -190,8 +190,8 @@ U 1 1 5F1CD161
 P 7100 3500
 AR Path="/5F1CD161" Ref="RN?"  Part="1" 
 AR Path="/5F133F50/5F1CD161" Ref="RN8"  Part="1" 
-AR Path="/5F43B1FD/5F1CD161" Ref="RN8"  Part="1" 
-F 0 "RN8" V 6683 3500 50  0000 C CNN
+AR Path="/5F43B1FD/5F1CD161" Ref="RN3"  Part="1" 
+F 0 "RN3" V 6683 3500 50  0000 C CNN
 F 1 "33R, 1%" V 6774 3500 50  0000 C CNN
 F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 7375 3500 50  0001 C CNN
 F 3 "~" H 7100 3500 50  0001 C CNN
@@ -205,8 +205,8 @@ U 1 1 5F1CD167
 P 8950 2100
 AR Path="/5F1CD167" Ref="RN?"  Part="1" 
 AR Path="/5F133F50/5F1CD167" Ref="RN5"  Part="1" 
-AR Path="/5F43B1FD/5F1CD167" Ref="RN5"  Part="1" 
-F 0 "RN5" V 8533 2100 50  0000 C CNN
+AR Path="/5F43B1FD/5F1CD167" Ref="RN4"  Part="1" 
+F 0 "RN4" V 8533 2100 50  0000 C CNN
 F 1 "33R, 1%" V 8624 2100 50  0000 C CNN
 F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 9225 2100 50  0001 C CNN
 F 3 "~" H 8950 2100 50  0001 C CNN
@@ -220,8 +220,8 @@ U 1 1 5F1CD16D
 P 8950 2800
 AR Path="/5F1CD16D" Ref="RN?"  Part="1" 
 AR Path="/5F133F50/5F1CD16D" Ref="RN7"  Part="1" 
-AR Path="/5F43B1FD/5F1CD16D" Ref="RN7"  Part="1" 
-F 0 "RN7" V 8533 2800 50  0000 C CNN
+AR Path="/5F43B1FD/5F1CD16D" Ref="RN5"  Part="1" 
+F 0 "RN5" V 8533 2800 50  0000 C CNN
 F 1 "33R, 1%" V 8624 2800 50  0000 C CNN
 F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 9225 2800 50  0001 C CNN
 F 3 "~" H 8950 2800 50  0001 C CNN
@@ -235,8 +235,8 @@ U 1 1 5F1CD183
 P 8950 3500
 AR Path="/5F1CD183" Ref="RN?"  Part="1" 
 AR Path="/5F133F50/5F1CD183" Ref="RN9"  Part="1" 
-AR Path="/5F43B1FD/5F1CD183" Ref="RN9"  Part="1" 
-F 0 "RN9" V 8533 3500 50  0000 C CNN
+AR Path="/5F43B1FD/5F1CD183" Ref="RN6"  Part="1" 
+F 0 "RN6" V 8533 3500 50  0000 C CNN
 F 1 "33R, 1%" V 8624 3500 50  0000 C CNN
 F 2 "Resistor_SMD:R_Array_Convex_4x0603" V 9225 3500 50  0001 C CNN
 F 3 "~" H 8950 3500 50  0001 C CNN
@@ -244,54 +244,50 @@ F 4 "YC164-FR-0733RL" H 8950 3500 50  0001 C CNN "MPN"
 	1    8950 3500
 	0    1    1    0   
 $EndComp
-Text GLabel 7300 2000 2    50   Input ~ 0
-N64_AD0
-Text GLabel 7300 1900 2    50   Input ~ 0
-N64_AD15
-Text GLabel 7300 2100 2    50   Input ~ 0
-N64_AD14
 Text GLabel 7300 2200 2    50   Input ~ 0
+N64_AD0
+Text GLabel 7300 2100 2    50   Input ~ 0
+N64_AD15
+Text GLabel 7300 1900 2    50   Input ~ 0
+N64_AD14
+Text GLabel 7300 2000 2    50   Input ~ 0
 N64_AD1
-Text GLabel 7300 2700 2    50   Input ~ 0
-N64_AD2
 Text GLabel 7300 2900 2    50   Input ~ 0
+N64_AD2
+Text GLabel 7300 2700 2    50   Input ~ 0
 N64_AD3
-Text GLabel 7300 3300 2    50   Input ~ 0
-N64_ALE_L
 Text GLabel 7300 3600 2    50   Input ~ 0
-N64_ALE_H
+N64_ALE_L
 Text GLabel 7300 3400 2    50   Input ~ 0
-N64_WRITE#
+N64_ALE_H
 Text GLabel 7300 3500 2    50   Input ~ 0
+N64_WRITE#
+Text GLabel 7300 3300 2    50   Input ~ 0
 N64_READ#
-Text GLabel 7300 2600 2    50   Input ~ 0
-N64_AD13
 Text GLabel 7300 2800 2    50   Input ~ 0
+N64_AD13
+Text GLabel 7300 2600 2    50   Input ~ 0
 N64_AD12
-Text GLabel 9150 1900 2    50   Input ~ 0
-N64_AD11
 Text GLabel 9150 2100 2    50   Input ~ 0
+N64_AD11
+Text GLabel 9150 1900 2    50   Input ~ 0
 N64_AD10
-Text GLabel 9150 2600 2    50   Input ~ 0
-N64_AD9
 Text GLabel 9150 2800 2    50   Input ~ 0
+N64_AD9
+Text GLabel 9150 2600 2    50   Input ~ 0
 N64_AD8
 Text GLabel 9150 3400 2    50   Input ~ 0
 N64_COLD_RESET#
 Text GLabel 9150 3300 2    50   Input ~ 0
-N64_OS_EVENT#
-Text GLabel 9150 2000 2    50   Input ~ 0
-N64_AD4
+N64_S_DAT
 Text GLabel 9150 2200 2    50   Input ~ 0
+N64_AD4
+Text GLabel 9150 2000 2    50   Input ~ 0
 N64_AD5
-Text GLabel 9150 2700 2    50   Input ~ 0
-N64_AD6
 Text GLabel 9150 2900 2    50   Input ~ 0
+N64_AD6
+Text GLabel 9150 2700 2    50   Input ~ 0
 N64_AD7
-NoConn ~ 8750 3600
-NoConn ~ 8750 3500
-NoConn ~ 9150 3500
-NoConn ~ 9150 3600
 NoConn ~ 3700 5550
 NoConn ~ 3700 5650
 Text Label 3800 2450 0    50   ~ 0
@@ -335,7 +331,7 @@ xN64_READ#
 Text Label 3800 4450 0    50   ~ 0
 xN64_WRITE#
 Text Label 3800 4750 0    50   ~ 0
-N64_S_CLK
+xN64_S_CLK
 Text Label 3800 4950 0    50   ~ 0
 xN64_COLD_RESET#
 Text Label 3800 5050 0    50   ~ 0
@@ -344,7 +340,6 @@ Text Label 3800 5250 0    50   ~ 0
 N64_CIC_DATA1
 Text Label 3800 5350 0    50   ~ 0
 N64_CIC_DATA2
-NoConn ~ 3700 4650
 NoConn ~ 2300 2950
 NoConn ~ 2300 3050
 Wire Wire Line
@@ -371,29 +366,29 @@ Wire Wire Line
 	6900 3500 6800 3500
 Wire Wire Line
 	6900 3600 6800 3600
-Text Label 6800 1900 2    50   ~ 0
-xN64_AD15
-Text Label 6800 2000 2    50   ~ 0
-xN64_AD0
 Text Label 6800 2100 2    50   ~ 0
-xN64_AD14
+xN64_AD15
 Text Label 6800 2200 2    50   ~ 0
+xN64_AD0
+Text Label 6800 1900 2    50   ~ 0
+xN64_AD14
+Text Label 6800 2000 2    50   ~ 0
 xN64_AD1
-Text Label 6800 2600 2    50   ~ 0
-xN64_AD13
-Text Label 6800 2700 2    50   ~ 0
-xN64_AD2
 Text Label 6800 2800 2    50   ~ 0
-xN64_AD12
+xN64_AD13
 Text Label 6800 2900 2    50   ~ 0
+xN64_AD2
+Text Label 6800 2600 2    50   ~ 0
+xN64_AD12
+Text Label 6800 2700 2    50   ~ 0
 xN64_AD3
-Text Label 8650 1900 2    50   ~ 0
-xN64_AD11
-Text Label 8650 2000 2    50   ~ 0
-xN64_AD4
 Text Label 8650 2100 2    50   ~ 0
-xN64_AD10
+xN64_AD11
 Text Label 8650 2200 2    50   ~ 0
+xN64_AD4
+Text Label 8650 1900 2    50   ~ 0
+xN64_AD10
+Text Label 8650 2000 2    50   ~ 0
 xN64_AD5
 Wire Wire Line
 	8750 1900 8650 1900
@@ -415,25 +410,25 @@ Wire Wire Line
 	8750 3300 8650 3300
 Wire Wire Line
 	8750 3400 8650 3400
-Text Label 8650 2700 2    50   ~ 0
-xN64_AD6
-Text Label 8650 2600 2    50   ~ 0
-xN64_AD9
 Text Label 8650 2900 2    50   ~ 0
-xN64_AD7
+xN64_AD6
 Text Label 8650 2800 2    50   ~ 0
+xN64_AD9
+Text Label 8650 2700 2    50   ~ 0
+xN64_AD7
+Text Label 8650 2600 2    50   ~ 0
 xN64_AD8
-Text Label 8650 3300 2    50   ~ 0
+Text Label 8650 3500 2    50   ~ 0
 xN64_OS_EVENT#
 Text Label 8650 3400 2    50   ~ 0
 xN64_COLD_RESET#
-Text Label 6800 3300 2    50   ~ 0
-xN64_ALE_L
-Text Label 6800 3400 2    50   ~ 0
-xN64_WRITE#
-Text Label 6800 3500 2    50   ~ 0
-xN64_READ#
 Text Label 6800 3600 2    50   ~ 0
+xN64_ALE_L
+Text Label 6800 3500 2    50   ~ 0
+xN64_WRITE#
+Text Label 6800 3300 2    50   ~ 0
+xN64_READ#
+Text Label 6800 3400 2    50   ~ 0
 xN64_ALE_H
 $Comp
 L MCU_Microchip_ATtiny:ATtiny25-20SU U4
@@ -501,8 +496,6 @@ F 3 "" H 6750 5650 50  0001 C CNN
 $EndComp
 Text Label 6100 4750 2    50   ~ 0
 N64_CIC_DATA2
-Text Label 6100 4950 2    50   ~ 0
-N64_S_CLK
 Text Label 6100 4850 2    50   ~ 0
 N64_CIC_DATA1
 Text GLabel 6100 5150 0    50   Input ~ 0
@@ -574,4 +567,22 @@ Text Label 9300 5050 2    50   ~ 0
 CIC_MOSI
 Text Label 9300 5150 2    50   ~ 0
 CIC_RESET#
+Wire Wire Line
+	3700 4650 3800 4650
+Text Label 3800 4650 0    50   ~ 0
+xN64_S_DAT
+Wire Wire Line
+	8750 3500 8650 3500
+Wire Wire Line
+	8750 3600 8650 3600
+Text GLabel 9150 3600 2    50   Input ~ 0
+N64_S_CLK
+Text GLabel 9150 3500 2    50   Input ~ 0
+N64_OS_EVENT#
+Text Label 8650 3300 2    50   ~ 0
+xN64_S_DAT
+Text Label 8650 3600 2    50   ~ 0
+xN64_S_CLK
+Text GLabel 6100 4950 0    50   Input ~ 0
+N64_S_CLK
 $EndSCHEMATC
