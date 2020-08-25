@@ -7,4 +7,7 @@
   (lib (name ng_regulator)(type Legacy)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/symbols/ng_regulator.lib)(options "")(descr ""))
   (lib (name ng_time)(type Legacy)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/symbols/ng_time.lib)(options "")(descr ""))
   (lib (name ng_conn)(type Legacy)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/symbols/ng_conn.lib)(options "")(descr ""))
+  (lib (name ng_ftdi)(type Legacy)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/symbols/ng_ftdi.lib)(options "")(descr ""))
+  (lib (name ng_osc)(type Legacy)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/symbols/ng_osc.lib)(options "")(descr ""))
+  (lib (name ng_symbol)(type Legacy)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/symbols/ng_symbol.lib)(options "")(descr ""))
 )
