@@ -14,10 +14,10 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L ng_n64:N64_Cartridge_Bus J?
+L ng_n64:N64_Cartridge_Bus J3
 U 1 1 5F443545
 P 3000 4050
-F 0 "J?" H 2450 5800 60  0000 L CNN
+F 0 "J3" H 2450 5800 60  0000 L CNN
 F 1 "N64_Cartridge_Bus" H 2450 2300 60  0000 L CNN
 F 2 "ng_n64:N64_Cartridge_Edge" H 3600 550 60  0001 C CNN
 F 3 "" H 3700 1700 60  0000 C CNN
@@ -436,10 +436,10 @@ xN64_READ#
 Text Label 6800 3600 2    50   ~ 0
 xN64_ALE_H
 $Comp
-L MCU_Microchip_ATtiny:ATtiny25-20SU U?
+L MCU_Microchip_ATtiny:ATtiny25-20SU U4
 U 1 1 5F5E9784
 P 7450 4950
-F 0 "U?" H 6921 4996 50  0000 R CNN
+F 0 "U4" H 6921 4996 50  0000 R CNN
 F 1 "ATtiny25-20SU" H 6921 4905 50  0000 R CNN
 F 2 "Package_SO:SOIJ-8_5.3x5.3mm_P1.27mm" H 7450 4950 50  0001 C CIN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-2586-avr-8-bit-microcontroller-attiny25-attiny45-attiny85_datasheet.pdf" H 7450 4950 50  0001 C CNN
@@ -453,10 +453,10 @@ Wire Wire Line
 Wire Wire Line
 	7450 5550 7450 5650
 $Comp
-L ng_power:GND #PWR?
+L ng_power:GND #PWR013
 U 1 1 5F5EFD38
 P 2200 5750
-F 0 "#PWR?" H 2200 5500 50  0001 C CNN
+F 0 "#PWR013" H 2200 5500 50  0001 C CNN
 F 1 "GND" H 2203 5624 50  0000 C CNN
 F 2 "" H 2100 5400 50  0001 C CNN
 F 3 "" H 2200 5750 50  0001 C CNN
@@ -464,10 +464,10 @@ F 3 "" H 2200 5750 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ng_power:GND #PWR?
+L ng_power:GND #PWR015
 U 1 1 5F5F0698
 P 7450 5650
-F 0 "#PWR?" H 7450 5400 50  0001 C CNN
+F 0 "#PWR015" H 7450 5400 50  0001 C CNN
 F 1 "GND" H 7453 5524 50  0000 C CNN
 F 2 "" H 7350 5300 50  0001 C CNN
 F 3 "" H 7450 5650 50  0001 C CNN
@@ -489,10 +489,10 @@ Wire Wire Line
 Wire Wire Line
 	6750 4650 6750 5250
 $Comp
-L ng_power:GND #PWR?
+L ng_power:GND #PWR014
 U 1 1 5F607950
 P 6750 5650
-F 0 "#PWR?" H 6750 5400 50  0001 C CNN
+F 0 "#PWR014" H 6750 5400 50  0001 C CNN
 F 1 "GND" H 6753 5524 50  0000 C CNN
 F 2 "" H 6650 5300 50  0001 C CNN
 F 3 "" H 6750 5650 50  0001 C CNN
@@ -517,12 +517,12 @@ CIC_MOSI
 Text Label 6650 4750 2    50   ~ 0
 CIC_MISO
 $Comp
-L Device:R R?
+L Device:R R6
 U 1 1 5F61BC6C
 P 6750 5400
-F 0 "R?" H 6680 5354 50  0000 R CNN
+F 0 "R6" H 6680 5354 50  0000 R CNN
 F 1 "10k" H 6680 5445 50  0000 R CNN
-F 2 "" V 6680 5400 50  0001 C CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6680 5400 50  0001 C CNN
 F 3 "~" H 6750 5400 50  0001 C CNN
 	1    6750 5400
 	1    0    0    1   
@@ -533,12 +533,12 @@ Text Label 6650 4850 2    50   ~ 0
 CIC_SCK
 NoConn ~ 6850 5050
 $Comp
-L Connector_Generic:Conn_01x05 J?
+L Connector_Generic:Conn_01x05 J4
 U 1 1 5F631439
 P 9700 4950
-F 0 "J?" H 9780 4992 50  0000 L CNN
+F 0 "J4" H 9780 4992 50  0000 L CNN
 F 1 "Conn_01x05" H 9780 4901 50  0000 L CNN
-F 2 "" H 9700 4950 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical" H 9700 4950 50  0001 C CNN
 F 3 "~" H 9700 4950 50  0001 C CNN
 	1    9700 4950
 	1    0    0    -1  
@@ -548,10 +548,10 @@ Wire Wire Line
 Wire Wire Line
 	9400 4750 9400 5250
 $Comp
-L ng_power:GND #PWR?
+L ng_power:GND #PWR016
 U 1 1 5F634AA1
 P 9400 5250
-F 0 "#PWR?" H 9400 5000 50  0001 C CNN
+F 0 "#PWR016" H 9400 5000 50  0001 C CNN
 F 1 "GND" H 9403 5124 50  0000 C CNN
 F 2 "" H 9300 4900 50  0001 C CNN
 F 3 "" H 9400 5250 50  0001 C CNN

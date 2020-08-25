@@ -14,10 +14,10 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L ng_fpga_lattice_ecp5:LFE5U-25F-xBG256x U?
+L ng_fpga_lattice_ecp5:LFE5U-25F-xBG256x U1
 U 8 1 5F5F3F21
 P 5000 5000
-F 0 "U?" H 5500 5190 60  0000 C CNN
+F 0 "U1" H 5500 5190 60  0000 C CNN
 F 1 "LFE5U-25F-xBG256x" H 5500 5084 60  0000 C CNN
 F 2 "ng_fpga_lattice_ecp5:LFE5U-25F_BGA-256_14.0x14.0mm_Layout16x16_P0.8mm_Pad0.35mm" H 5750 950 60  0001 C CNN
 F 3 "" H 6550 4150 60  0001 R CNN
@@ -26,10 +26,10 @@ F 4 "LFE5U-25F-xBG256x" H 5750 1050 60  0001 C CNN "MPN"
 	1    0    0    -1  
 $EndComp
 $Comp
-L ng_fpga_lattice_ecp5:LFE5U-25F-xBG256x U?
+L ng_fpga_lattice_ecp5:LFE5U-25F-xBG256x U1
 U 9 1 5F5F3F28
 P 12000 5000
-F 0 "U?" H 12500 5190 60  0000 C CNN
+F 0 "U1" H 12500 5190 60  0000 C CNN
 F 1 "LFE5U-25F-xBG256x" H 12500 5084 60  0000 C CNN
 F 2 "ng_fpga_lattice_ecp5:LFE5U-25F_BGA-256_14.0x14.0mm_Layout16x16_P0.8mm_Pad0.35mm" H 12750 950 60  0001 C CNN
 F 3 "" H 13550 4150 60  0001 R CNN
@@ -171,10 +171,10 @@ Connection ~ 11700 6400
 Wire Wire Line
 	11700 6400 11700 6500
 $Comp
-L ng_power:GND #PWR?
+L ng_power:GND #PWR01
 U 1 1 5F5F3F7D
 P 11700 6500
-F 0 "#PWR?" H 11700 6250 50  0001 C CNN
+F 0 "#PWR01" H 11700 6250 50  0001 C CNN
 F 1 "GND" H 11703 6374 50  0000 C CNN
 F 2 "" H 11600 6150 50  0001 C CNN
 F 3 "" H 11700 6500 50  0001 C CNN
@@ -182,14 +182,114 @@ F 3 "" H 11700 6500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ng_power:GND #PWR?
+L ng_power:GND #PWR02
 U 1 1 5F5F3F83
 P 13300 6500
-F 0 "#PWR?" H 13300 6250 50  0001 C CNN
+F 0 "#PWR02" H 13300 6250 50  0001 C CNN
 F 1 "GND" H 13303 6374 50  0000 C CNN
 F 2 "" H 13200 6150 50  0001 C CNN
 F 3 "" H 13300 6500 50  0001 C CNN
 	1    13300 6500
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	4800 5900 4700 5900
+Wire Wire Line
+	4700 5900 4700 5800
+Wire Wire Line
+	4700 5800 4800 5800
+Wire Wire Line
+	4700 5800 4600 5800
+Connection ~ 4700 5800
+Wire Wire Line
+	4800 5600 4700 5600
+Wire Wire Line
+	4700 5600 4700 5500
+Wire Wire Line
+	4700 5100 4800 5100
+Wire Wire Line
+	4800 5500 4700 5500
+Connection ~ 4700 5500
+Wire Wire Line
+	4700 5500 4700 5400
+Wire Wire Line
+	4700 5400 4800 5400
+Connection ~ 4700 5400
+Wire Wire Line
+	4700 5400 4700 5300
+Wire Wire Line
+	4800 5300 4700 5300
+Connection ~ 4700 5300
+Wire Wire Line
+	4700 5300 4700 5200
+Wire Wire Line
+	4700 5200 4800 5200
+Connection ~ 4700 5200
+Wire Wire Line
+	4700 5200 4700 5100
+Wire Wire Line
+	4700 5100 4600 5100
+Connection ~ 4700 5100
+Text GLabel 4600 5100 0    50   UnSpc ~ 0
+P1V1
+Text GLabel 4600 5800 0    50   UnSpc ~ 0
+P2V5
+Wire Wire Line
+	6200 6850 6400 6850
+Wire Wire Line
+	6200 6650 6300 6650
+Wire Wire Line
+	6300 6650 6300 6550
+Wire Wire Line
+	6300 6550 6200 6550
+Wire Wire Line
+	6200 6250 6300 6250
+Wire Wire Line
+	6300 6250 6300 6350
+Wire Wire Line
+	6300 6350 6200 6350
+Wire Wire Line
+	6200 5950 6300 5950
+Wire Wire Line
+	6300 5950 6300 6050
+Wire Wire Line
+	6300 6050 6200 6050
+Wire Wire Line
+	6200 5650 6300 5650
+Wire Wire Line
+	6200 5750 6300 5750
+Wire Wire Line
+	6300 5750 6300 5650
+Wire Wire Line
+	6200 5350 6300 5350
+Wire Wire Line
+	6300 5350 6300 5450
+Wire Wire Line
+	6300 5450 6200 5450
+Wire Wire Line
+	6200 5100 6300 5100
+Wire Wire Line
+	6300 5100 6300 5200
+Wire Wire Line
+	6300 5200 6200 5200
+Wire Wire Line
+	6300 5100 6400 5100
+Connection ~ 6300 5100
+Wire Wire Line
+	6300 5350 6400 5350
+Connection ~ 6300 5350
+Wire Wire Line
+	6300 5650 6400 5650
+Connection ~ 6300 5650
+Wire Wire Line
+	6300 5950 6400 5950
+Connection ~ 6300 5950
+Wire Wire Line
+	6300 6250 6400 6250
+Connection ~ 6300 6250
+Wire Wire Line
+	6300 6550 6400 6550
+Connection ~ 6300 6550
+Text GLabel 6400 6850 2    50   UnSpc ~ 0
+P3V3
 $EndSCHEMATC
