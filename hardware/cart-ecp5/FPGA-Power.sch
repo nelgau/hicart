@@ -292,4 +292,8 @@ Wire Wire Line
 Connection ~ 6300 6550
 Text GLabel 6400 6850 2    50   UnSpc ~ 0
 P3V3
+Text GLabel 6400 5100 2    50   UnSpc ~ 0
+P3V3
+Text GLabel 6400 5350 2    50   UnSpc ~ 0
+P3V3
 $EndSCHEMATC

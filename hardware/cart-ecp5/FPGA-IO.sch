@@ -426,4 +426,52 @@ Wire Wire Line
 	13100 3100 13200 3100
 Text Label 13200 3100 0    50   ~ 0
 REF_CLK
+Text GLabel 3200 1600 2    50   Input ~ 0
+N64_AD0
+Text GLabel 3200 1700 2    50   Input ~ 0
+N64_AD15
+Text GLabel 3200 1800 2    50   Input ~ 0
+N64_AD1
+Text GLabel 3200 2300 2    50   Input ~ 0
+N64_AD14
+Text GLabel 3200 1900 2    50   Input ~ 0
+N64_AD2
+Text GLabel 3200 2700 2    50   Input ~ 0
+N64_AD13
+Text GLabel 3200 3300 2    50   Input ~ 0
+N64_AD12
+Text GLabel 6700 2400 2    50   Input ~ 0
+N64_AD11
+Text GLabel 3200 2800 2    50   Input ~ 0
+N64_AD3
+Text GLabel 6700 1900 2    50   Input ~ 0
+N64_AD4
+Text GLabel 6700 2000 2    50   Input ~ 0
+N64_AD5
+Text GLabel 6700 2500 2    50   Input ~ 0
+N64_AD10
+Text GLabel 3200 2900 2    50   Input ~ 0
+N64_ALE_L
+Text GLabel 3200 3700 2    50   Input ~ 0
+N64_WRITE#
+Text GLabel 3200 3800 2    50   Input ~ 0
+N64_ALE_H
+Text GLabel 3200 3900 2    50   Input ~ 0
+N64_READ#
+Text GLabel 6700 2600 2    50   Input ~ 0
+N64_AD6
+Text GLabel 6700 3400 2    50   Input ~ 0
+N64_AD9
+Text GLabel 6700 3000 2    50   Input ~ 0
+N64_AD7
+Text GLabel 6700 3500 2    50   Input ~ 0
+N64_AD8
+Text GLabel 6700 3600 2    50   Input ~ 0
+N64_S_CLK
+Text GLabel 6700 4400 2    50   Input ~ 0
+N64_OS_EVENT#
+Text GLabel 6700 4000 2    50   Input ~ 0
+N64_COLD_RESET#
+Text GLabel 6700 4500 2    50   Input ~ 0
+N64_S_DAT
 $EndSCHEMATC
