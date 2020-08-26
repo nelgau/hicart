@@ -98,7 +98,7 @@ Wire Wire Line
 Wire Wire Line
 	7450 5550 7450 5650
 Wire Wire Line
-	7550 1750 7450 1750
+	7550 1750 6550 1750
 Wire Wire Line
 	7550 1950 7350 1950
 Wire Wire Line
@@ -141,18 +141,6 @@ Wire Wire Line
 	6250 4450 6450 4450
 Wire Wire Line
 	6550 4350 6550 4150
-$Comp
-L Device:R R25
-U 1 1 5F1F46F9
-P 6650 4000
-F 0 "R25" V 6600 4150 50  0000 L CNN
-F 1 "10k" V 6600 3700 50  0000 L CNN
-F 2 "Resistor_SMD:R_0402_1005Metric" V 6580 4000 50  0001 C CNN
-F 3 "~" H 6650 4000 50  0001 C CNN
-F 4 "" V 6650 4000 50  0001 C CNN "MPN"
-	1    6650 4000
-	1    0    0    -1  
-$EndComp
 $Comp
 L Device:R R23
 U 1 1 5F1F46FF
@@ -249,9 +237,6 @@ Wire Wire Line
 Wire Wire Line
 	7350 2350 7350 2450
 Connection ~ 7350 1950
-Connection ~ 7350 2450
-Wire Wire Line
-	7350 2450 7350 2550
 $Comp
 L Device:C C38
 U 1 1 5F1F4791
@@ -896,7 +881,7 @@ Text GLabel 5700 5250 0    50   UnSpc ~ 0
 P3V3
 Text GLabel 7050 3650 0    50   UnSpc ~ 0
 P3V3
-Text GLabel 7450 1750 0    50   UnSpc ~ 0
+Text GLabel 6450 1750 0    50   UnSpc ~ 0
 P3V3
 Text GLabel 6950 1950 0    50   UnSpc ~ 0
 P1V8
@@ -974,8 +959,6 @@ Wire Wire Line
 Connection ~ 6350 4650
 Text Label 6650 4650 0    50   ~ 0
 USB_EEDO
-NoConn ~ 6650 4150
-NoConn ~ 6650 3850
 $Comp
 L Device:R R19
 U 1 1 5FBDF481
@@ -1017,7 +1000,7 @@ L Device:R R21
 U 1 1 5F1F4742
 P 7300 3650
 F 0 "R21" V 7250 3850 50  0000 C CNN
-F 1 "1k" V 7200 3650 50  0000 C CNN
+F 1 "10k" V 7200 3650 50  0000 C CNN
 F 2 "Resistor_SMD:R_0402_1005Metric" V 7230 3650 50  0001 C CNN
 F 3 "~" H 7300 3650 50  0001 C CNN
 	1    7300 3650
@@ -1166,12 +1149,12 @@ xUSB_D-
 $Comp
 L ng_power:GND #PWR046
 U 1 1 5F7012B4
-P 7350 2550
-F 0 "#PWR046" H 7350 2300 50  0001 C CNN
-F 1 "GND" H 7353 2424 50  0000 C CNN
-F 2 "" H 7250 2200 50  0001 C CNN
-F 3 "" H 7350 2550 50  0001 C CNN
-	1    7350 2550
+P 6550 2550
+F 0 "#PWR046" H 6550 2300 50  0001 C CNN
+F 1 "GND" H 6553 2424 50  0000 C CNN
+F 2 "" H 6450 2200 50  0001 C CNN
+F 3 "" H 6550 2550 50  0001 C CNN
+	1    6550 2550
 	1    0    0    -1  
 $EndComp
 Text GLabel 9950 1750 2    50   BiDi ~ 0
@@ -1352,4 +1335,28 @@ Wire Wire Line
 Wire Wire Line
 	9250 5950 9250 5850
 Connection ~ 9150 5950
+$Comp
+L Device:C C40
+U 1 1 5F865B3F
+P 6550 2200
+F 0 "C40" H 6500 2300 50  0000 R CNN
+F 1 "100n" H 6500 2100 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 6588 2050 50  0001 C CNN
+F 3 "~" H 6550 2200 50  0001 C CNN
+	1    6550 2200
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	6550 2050 6550 1750
+Connection ~ 6550 1750
+Wire Wire Line
+	6550 1750 6450 1750
+Wire Wire Line
+	6550 2350 6550 2450
+Wire Wire Line
+	6550 2450 7050 2450
+Connection ~ 7050 2450
+Wire Wire Line
+	6550 2450 6550 2550
+Connection ~ 6550 2450
 $EndSCHEMATC

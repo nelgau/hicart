@@ -177,40 +177,6 @@ F 3 "~" H 10950 4000 50  0001 C CNN
 	1    10950 4000
 	0    1    1    0   
 $EndComp
-$Comp
-L Connector_Generic:Conn_02x05_Odd_Even J1
-U 1 1 5F651B0D
-P 12700 4150
-F 0 "J1" H 12750 4567 50  0000 C CNN
-F 1 "JTAG" H 12750 4476 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical" H 12700 4150 50  0001 C CNN
-F 3 "~" H 12700 4150 50  0001 C CNN
-	1    12700 4150
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	12500 4050 12400 4050
-Wire Wire Line
-	12400 4050 12400 4150
-Wire Wire Line
-	12500 4350 12400 4350
-Connection ~ 12400 4350
-Wire Wire Line
-	12400 4350 12400 4450
-Wire Wire Line
-	12500 4250 12400 4250
-Connection ~ 12400 4250
-Wire Wire Line
-	12400 4250 12400 4350
-Wire Wire Line
-	12500 4150 12400 4150
-Connection ~ 12400 4150
-Wire Wire Line
-	12400 4150 12400 4250
-Wire Wire Line
-	12500 3950 12300 3950
-Text GLabel 12300 3950 0    50   UnSpc ~ 0
-P3V3
 Text Label 10300 4000 0    50   ~ 0
 JTAG_TCK
 Text Label 10300 4100 0    50   ~ 0
@@ -236,37 +202,6 @@ F 3 "" H 11200 4100 50  0001 C CNN
 $EndComp
 Text Label 10300 2200 0    50   ~ 0
 FPGA_RESET
-Wire Wire Line
-	13000 3950 13100 3950
-Wire Wire Line
-	13000 4050 13100 4050
-Wire Wire Line
-	13000 4150 13100 4150
-Wire Wire Line
-	13000 4250 13100 4250
-Wire Wire Line
-	13000 4350 13100 4350
-Text Label 13100 3950 0    50   ~ 0
-JTAG_TMS
-Text Label 13100 4050 0    50   ~ 0
-JTAG_TCK
-Text Label 13100 4150 0    50   ~ 0
-JTAG_TDO
-Text Label 13100 4250 0    50   ~ 0
-JTAG_TDI
-Text Label 13100 4350 0    50   ~ 0
-FPGA_RESET
-$Comp
-L ng_power:GND #PWR06
-U 1 1 5F676420
-P 12400 4450
-F 0 "#PWR06" H 12400 4200 50  0001 C CNN
-F 1 "GND" H 12403 4324 50  0000 C CNN
-F 2 "" H 12300 4100 50  0001 C CNN
-F 3 "" H 12400 4450 50  0001 C CNN
-	1    12400 4450
-	-1   0    0    -1  
-$EndComp
 $Comp
 L Device:R R1
 U 1 1 5F67946D
@@ -474,4 +409,69 @@ Text GLabel 6700 4000 2    50   Input ~ 0
 N64_COLD_RESET#
 Text GLabel 6700 4500 2    50   Input ~ 0
 N64_S_DAT
+$Comp
+L ng_power:GND #PWR06
+U 1 1 5F676420
+P 12400 4450
+F 0 "#PWR06" H 12400 4200 50  0001 C CNN
+F 1 "GND" H 12403 4324 50  0000 C CNN
+F 2 "" H 12300 4100 50  0001 C CNN
+F 3 "" H 12400 4450 50  0001 C CNN
+	1    12400 4450
+	-1   0    0    -1  
+$EndComp
+Text Label 13100 4350 0    50   ~ 0
+FPGA_RESET
+Text Label 13100 4250 0    50   ~ 0
+JTAG_TDI
+Text Label 13100 4150 0    50   ~ 0
+JTAG_TDO
+Text Label 13100 4050 0    50   ~ 0
+JTAG_TCK
+Text Label 13100 3950 0    50   ~ 0
+JTAG_TMS
+Wire Wire Line
+	13000 4350 13100 4350
+Wire Wire Line
+	13000 4250 13100 4250
+Wire Wire Line
+	13000 4150 13100 4150
+Wire Wire Line
+	13000 4050 13100 4050
+Wire Wire Line
+	13000 3950 13100 3950
+Text GLabel 12300 3950 0    50   UnSpc ~ 0
+P3V3
+Wire Wire Line
+	12500 3950 12300 3950
+Wire Wire Line
+	12500 4150 12400 4150
+Wire Wire Line
+	12400 4150 12400 4250
+Connection ~ 12400 4250
+Wire Wire Line
+	12500 4250 12400 4250
+Wire Wire Line
+	12400 4250 12400 4350
+Wire Wire Line
+	12400 4350 12400 4450
+Connection ~ 12400 4350
+Wire Wire Line
+	12500 4350 12400 4350
+Connection ~ 12400 4150
+Wire Wire Line
+	12400 4050 12400 4150
+Wire Wire Line
+	12500 4050 12400 4050
+$Comp
+L Connector_Generic:Conn_02x05_Odd_Even J1
+U 1 1 5F651B0D
+P 12700 4150
+F 0 "J1" H 12750 4567 50  0000 C CNN
+F 1 "JTAG" H 12750 4476 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical" H 12700 4150 50  0001 C CNN
+F 3 "~" H 12700 4150 50  0001 C CNN
+	1    12700 4150
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

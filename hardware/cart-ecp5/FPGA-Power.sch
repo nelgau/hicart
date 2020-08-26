@@ -296,4 +296,12 @@ Text GLabel 6400 5100 2    50   UnSpc ~ 0
 P3V3
 Text GLabel 6400 5350 2    50   UnSpc ~ 0
 P3V3
+Text GLabel 6400 5650 2    50   UnSpc ~ 0
+P3V3
+Text GLabel 6400 5950 2    50   UnSpc ~ 0
+P3V3
+Text GLabel 6400 6250 2    50   UnSpc ~ 0
+P3V3
+Text GLabel 6400 6550 2    50   UnSpc ~ 0
+P3V3
 $EndSCHEMATC
