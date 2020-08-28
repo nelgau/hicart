@@ -474,4 +474,30 @@ F 3 "~" H 12700 4150 50  0001 C CNN
 	1    12700 4150
 	1    0    0    -1  
 $EndComp
+Text GLabel 13700 6000 2    50   BiDi ~ 0
+HRAM_DQ0
+Text GLabel 13700 6800 2    50   BiDi ~ 0
+HRAM_DQ1
+Text GLabel 13700 5700 2    50   BiDi ~ 0
+HRAM_DQ2
+Text GLabel 13700 6100 2    50   BiDi ~ 0
+HRAM_DQ3
+Text GLabel 13700 5600 2    50   BiDi ~ 0
+HRAM_DQ4
+Text GLabel 13700 5900 2    50   BiDi ~ 0
+HRAM_DQ5
+Text GLabel 13700 6300 2    50   BiDi ~ 0
+HRAM_DQ6
+Text GLabel 13700 6900 2    50   BiDi ~ 0
+HRAM_DQ7
+Text GLabel 13700 7100 2    50   BiDi ~ 0
+HRAM_RWDS
+Text GLabel 13700 8600 2    50   Output ~ 0
+HRAM_CS#
+Text GLabel 13700 8400 2    50   Output ~ 0
+HRAM_CK+
+Text GLabel 13700 8500 2    50   Output ~ 0
+HRAM_CK-
+Text GLabel 13700 8700 2    50   Output ~ 0
+HRAM_RESET#
 $EndSCHEMATC
