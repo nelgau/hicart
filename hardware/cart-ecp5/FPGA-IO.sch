@@ -476,7 +476,7 @@ F 3 "~" H 12700 4150 50  0001 C CNN
 $EndComp
 Text GLabel 13700 6000 2    50   BiDi ~ 0
 HRAM_DQ0
-Text GLabel 13700 6800 2    50   BiDi ~ 0
+Text GLabel 13700 6300 2    50   BiDi ~ 0
 HRAM_DQ1
 Text GLabel 13700 5700 2    50   BiDi ~ 0
 HRAM_DQ2
@@ -486,9 +486,9 @@ Text GLabel 13700 5600 2    50   BiDi ~ 0
 HRAM_DQ4
 Text GLabel 13700 5900 2    50   BiDi ~ 0
 HRAM_DQ5
-Text GLabel 13700 6300 2    50   BiDi ~ 0
-HRAM_DQ6
 Text GLabel 13700 6900 2    50   BiDi ~ 0
+HRAM_DQ6
+Text GLabel 13700 6800 2    50   BiDi ~ 0
 HRAM_DQ7
 Text GLabel 13700 7100 2    50   BiDi ~ 0
 HRAM_RWDS
