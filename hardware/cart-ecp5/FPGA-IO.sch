@@ -500,4 +500,18 @@ Text GLabel 13700 8500 2    50   Output ~ 0
 HRAM_CK_N
 Text GLabel 13700 8700 2    50   Output ~ 0
 HRAM_RESET_B
+Text GLabel 10200 7100 2    50   Output ~ 0
+SD_CLK
+Text GLabel 10200 5900 2    50   BiDi ~ 0
+SD_DAT0
+Text GLabel 10200 5800 2    50   BiDi ~ 0
+SD_DAT1
+Text GLabel 10200 7200 2    50   Output ~ 0
+SD_CMD
+Text GLabel 10200 6900 2    50   BiDi ~ 0
+SD_DAT3
+Text GLabel 10200 6600 2    50   BiDi ~ 0
+SD_DAT2
+Text GLabel 10200 6700 2    50   Input ~ 0
+SD_CD
 $EndSCHEMATC
