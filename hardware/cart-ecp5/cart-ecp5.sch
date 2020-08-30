@@ -49,4 +49,6 @@ U 5F4552C5
 F0 "Interface-USB" 50
 F1 "Interface-USB.sch" 50
 $EndSheet
+Text Notes 16850 1200 0    50   ~ 0
+LENGTH MATCHING:\nid: hram_dq0\nnetnames: “/(HRAM_DQ[0-7])$”\ntolerance: 0.85 mm\nvialength: 1.6 mm
 $EndSCHEMATC
