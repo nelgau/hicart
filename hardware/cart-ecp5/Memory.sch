@@ -45,13 +45,13 @@ HRAM_RWDS
 NoConn ~ 3000 4400
 NoConn ~ 3000 4500
 Text GLabel 3000 3600 0    50   Input ~ 0
-HRAM_CS#
+HRAM_CS_B
 Text GLabel 3000 3700 0    50   Input ~ 0
-HRAM_CK+
+HRAM_CK_P
 Text GLabel 3000 3800 0    50   Input ~ 0
-HRAM_CK-
+HRAM_CK_N
 Text GLabel 3000 3900 0    50   Input ~ 0
-HRAM_RESET#
+HRAM_RESET_B
 Wire Wire Line
 	3500 3350 3500 3250
 Wire Wire Line

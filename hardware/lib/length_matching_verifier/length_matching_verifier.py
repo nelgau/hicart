@@ -1,8 +1,9 @@
 #!/usr/bin/env python
+import sys
+sys.path.insert(1, '/usr/lib/python3/dist-packages/')
+
 import re
 import os.path
-import sys
-sys.path.insert(1, '/usr/lib/kicad/lib/python3/dist-packages/')
 import pcbnew
 import time
 import click
@@ -10,6 +11,7 @@ from collections import defaultdict
 import textwrap
 from dataclasses import dataclass
 from typing import Any, Sequence, Union, Dict
+import codecs
 
 """
 --- Bus aware automated length matching verification tool for KiCad ---
@@ -120,6 +122,7 @@ Hacked on by:
 
 BRIGHTGREEN = '\033[92;1m'
 BRIGHTRED = '\033[91;1m'
+BRIGHTYELLOW = '\033[93;1m'
 ENDC = '\033[0m'
 CLEARPAGE = '\033c'
 
@@ -276,6 +279,9 @@ def match_netgroup(annotation: Annotation, nets: Sequence[Net]) -> bool:
 
     print_color(BRIGHTGREEN if meets else BRIGHTRED,
                 f"Constraint {annotation.id} {'MEETS' if meets else 'FAILS'} TOLERANCE {nm_to_mm(annotation.tolerance):.3f} mm (max variance {nm_to_mm(delta):.3f} mm)")
+    
+    print('')
+
     # print individual net lengths, relative to the median/max length
     medlen = median([net.length(annotation) for net in nets])
     alignment = max(len(net.netname) for net in nets) + 1
@@ -303,6 +309,8 @@ def match_netgroup_reflength(annotation: Annotation, nets: Sequence[Net], ref_le
 
     print_color(BRIGHTGREEN if meets else BRIGHTRED,
                 f"Constraint {annotation.id} {'MEETS' if meets else 'FAILS'} TOLERANCE {nm_to_mm(annotation.tolerance):.3f} mm (max variance {nm_to_mm(delta):.3f} mm | reference {nm_to_mm(ref_length):.3f} mm)")
+    print('')
+
     # print individual net lengths, relative to the reference length
     alignment = max(len(net.netname) for net in nets) + 1
     for net in nets:
@@ -360,20 +368,23 @@ def parse_schematic_annotation(filepath) -> Sequence[Annotation]:
     # Very basic schematic parser for the new kicad format, pull out strings with "LENGTH MATCHING" in them."
     texts = []
     schematic = open(filepath, 'r').read().encode('utf-8').decode()
-
-    text_elements = re.findall(r'\"LENGTH MATCHING.*', schematic, re.MULTILINE)
+    text_elements = re.findall(r'^LENGTH MATCHING.*', schematic, re.MULTILINE)
+    
     # Remove first and last `"` in string
+    # for text in text_elements:
+    #    l = text.find('"')
+    #    r = text.rfind('"')
+    #    texts += [text[l+1:r].encode('utf-8').decode('unicode_escape')]
+
+    # TODO: What's the correct way to deal with escaped characters like '\n'?
     for text in text_elements:
-        l = text.find('"')
-        r = text.rfind('"')
-        texts += [text[l+1:r].encode('utf-8').decode('unicode_escape')]
+        texts += [text.replace("\\n", "\n")]
 
     annotations = []
     for text in texts:
         mm = re.search(r'^LENGTH MATCHING:[ \t]*\n', text, re.M)
         if mm:
             content = textwrap.indent(text[mm.start():], prefix='    ')
-
 
             annotation_id = ''
             netclass = ''
@@ -383,6 +394,7 @@ def parse_schematic_annotation(filepath) -> Sequence[Annotation]:
             ref_length_value = None
             tolerance = None
             via_length = 0.0
+
             for line in text[mm.end():].splitlines():
                 line = line.strip()
                 if not line or line[0] == '#':
@@ -443,6 +455,7 @@ def parse_schematic_annotation(filepath) -> Sequence[Annotation]:
                 print(f'Annotation id is not specified in schematic ({filepath}):\n{content}', file=sys.stderr,
                       flush=True)
                 sys.exit(1)
+
             annotations.append(
                 Annotation(annotation_id, netnames, netclass, merge, ref_length_type, ref_length_value, tolerance,
                            via_length))
@@ -479,7 +492,7 @@ def main(filepath_pcblayout, filepath_schematic):
                       flush=True)
                 sys.exit(1)
 
-        #print(CLEARPAGE, end='')
+        print(CLEARPAGE, end='')
         for a in annotations:
             netdb = NetDB.load_from_pcb(filepath_pcblayout)
             nets = netdb.nets_by_annotation(a)
@@ -487,13 +500,15 @@ def main(filepath_pcblayout, filepath_schematic):
                 try:
                     ref_length = generate_reflength(a, annotations_by_id, netdb)
                 except RuntimeError:
+                    print_color(BRIGHTYELLOW, f"Constraint {a.id} SKIPPED\n")
                     continue
                 allmatches = match_netgroup_reflength(a, nets, ref_length) and allmatches
             else:
                 allmatches = match_netgroup(a, nets) and allmatches
+
+            print('')
         if allmatches:
-            print('\nâ†’ Finished =)')
-            sys.exit(0)
+            print_color(BRIGHTGREEN, 'Finished!!! =)')
         #  print(CLEARPAGE, end='')
 
 

@@ -49,6 +49,20 @@ U 5F4552C5
 F0 "Interface-USB" 50
 F1 "Interface-USB.sch" 50
 $EndSheet
-Text Notes 16850 1200 0    50   ~ 0
-LENGTH MATCHING:\nid: hram_dq0\nnetnames: “/(HRAM_DQ[0-7])$”\ntolerance: 0.85 mm\nvialength: 1.6 mm
+Text Notes 17000 1800 0    50   ~ 0
+LENGTH MATCHING:\nid: hyperram_dq\nnetnames: "^(HRAM_DQ[0-7])$"\ntolerance: 50 mil\nvialength: 1.6 mm
+Text Notes 17000 2900 0    50   ~ 0
+LENGTH MATCHING:\nid: hyperram_rwds_to_dq\nnetnames: "^(HRAM_RWDS)$"\nreflength: group hyperram_dq\ntolerance: 25 mil\nvialength: 1.6 mm
+Text Notes 17000 2300 0    50   ~ 0
+LENGTH MATCHING:\nid: hyperram_clk\nnetnames: "^(HRAM_CK_[PN])$"\ntolerance: 10 mil\nvialength: 1.6 mm
+Text Notes 17000 3500 0    50   ~ 0
+LENGTH MATCHING:\nid: hyperram_clk_to_dq\nnetnames: "^(HRAM_CK_[PN])$"\nreflength: group hyperram_dq\ntolerance: 500 mil\nvialength: 1.6 mm
+Text Notes 17000 4100 0    50   ~ 0
+LENGTH MATCHING:\nid: hyperram_clk_to_rwds\nnetnames: "^(HRAM_CK_[PN])$"\nreflength: group hyperram_rwds_to_dq\ntolerance: 1500 mil\nvialength: 1.6 mm
+Text Notes 17000 4700 0    50   ~ 0
+LENGTH MATCHING:\nid: hyperram_cs_to_clk\nnetnames: "^(HRAM_CS_B)$"\nreflength: group hyperram_clk\ntolerance: 1500 mil\nvialength: 1.6 mm
+Text Notes 17000 5300 0    50   ~ 0
+LENGTH MATCHING:\nid: hyperram_reset_to_cs\nnetnames: "^(HRAM_RESET_B)$"\nreflength: group hyperram_cs_to_clk\ntolerance: 2000 mil\nvialength: 1.6 mm
+Text Notes 17000 1100 0    50   ~ 0
+Notes:\n\nWhen computing a group's reflength, the script takes the average of\nthe group's shortest and longest nets. Intuitively, this seems to allow\nfor tolerances to be violated by these extremal nets. I think it's more\ncorrect to evaluate reflength tolerance by exhaustively checking all\npossible pairs of nets (e.g., one drawn from each of the two groups).  
 $EndSCHEMATC

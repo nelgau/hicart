@@ -493,11 +493,11 @@ HRAM_DQ7
 Text GLabel 13700 7100 2    50   BiDi ~ 0
 HRAM_RWDS
 Text GLabel 13700 8600 2    50   Output ~ 0
-HRAM_CS#
+HRAM_CS_B
 Text GLabel 13700 8400 2    50   Output ~ 0
-HRAM_CK+
+HRAM_CK_P
 Text GLabel 13700 8500 2    50   Output ~ 0
-HRAM_CK-
+HRAM_CK_N
 Text GLabel 13700 8700 2    50   Output ~ 0
-HRAM_RESET#
+HRAM_RESET_B
 $EndSCHEMATC
