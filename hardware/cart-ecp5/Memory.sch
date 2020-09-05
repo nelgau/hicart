@@ -69,7 +69,7 @@ Wire Wire Line
 	3500 3150 3400 3150
 Connection ~ 3500 3250
 Text GLabel 3400 3150 0    50   UnSpc ~ 0
-P3V3
+P1V8
 Wire Wire Line
 	3500 4750 3500 4850
 Wire Wire Line
@@ -353,4 +353,6 @@ Wire Wire Line
 Connection ~ 8100 3600
 Wire Wire Line
 	8100 3600 8500 3600
+Text Notes 2750 5350 0    50   ~ 0
+NB. Check for the correct part for 1V8 operation!
 $EndSCHEMATC

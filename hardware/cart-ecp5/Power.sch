@@ -1297,4 +1297,6 @@ Wire Wire Line
 	9350 5500 9350 5600
 Text GLabel 6550 5000 0    50   UnSpc ~ 0
 P3V3
+Text Notes 8500 4850 0    50   ~ 0
+Compute the resistor values for 1V8 !!!
 $EndSCHEMATC

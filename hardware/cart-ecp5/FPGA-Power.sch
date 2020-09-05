@@ -747,7 +747,7 @@ Wire Wire Line
 	6500 7650 6800 7650
 Connection ~ 6500 7650
 Text GLabel 7200 7650 2    50   UnSpc ~ 0
-P3V3
+P1V8
 $Comp
 L Device:C C62
 U 1 1 5FA155CC
