@@ -16,83 +16,79 @@ $EndDescr
 $Comp
 L ng_memory:S27KS0641 U3
 U 1 1 5F47DAAE
-P 3600 4100
-F 0 "U3" H 3900 4900 60  0000 C CNN
-F 1 "S27KS0641" H 4100 4800 60  0000 C CNN
-F 2 "ng_package_bga:BGA-24_6.0x8.0mm_Layout5x5_P1.0mm_Pad0.4mm" H 2800 6050 60  0001 C CNN
-F 3 "https://www.cypress.com/file/183506/download" H 2800 6050 60  0001 C CNN
-	1    3600 4100
+P 3800 4100
+F 0 "U3" H 4100 4900 60  0000 C CNN
+F 1 "S27KS0641" H 4300 4800 60  0000 C CNN
+F 2 "ng_package_bga:BGA-24_6.0x8.0mm_Layout5x5_P1.0mm_Pad0.4mm" H 3000 6050 60  0001 C CNN
+F 3 "https://www.cypress.com/file/183506/download" H 3000 6050 60  0001 C CNN
+	1    3800 4100
 	1    0    0    -1  
 $EndComp
-Text GLabel 4200 3600 2    50   BiDi ~ 0
+Text GLabel 4400 3600 2    50   BiDi ~ 0
 HRAM_DQ0
-Text GLabel 4200 3700 2    50   BiDi ~ 0
+Text GLabel 4400 3700 2    50   BiDi ~ 0
 HRAM_DQ1
-Text GLabel 4200 3800 2    50   BiDi ~ 0
+Text GLabel 4400 3800 2    50   BiDi ~ 0
 HRAM_DQ2
-Text GLabel 4200 3900 2    50   BiDi ~ 0
+Text GLabel 4400 3900 2    50   BiDi ~ 0
 HRAM_DQ3
-Text GLabel 4200 4000 2    50   BiDi ~ 0
+Text GLabel 4400 4000 2    50   BiDi ~ 0
 HRAM_DQ4
-Text GLabel 4200 4100 2    50   BiDi ~ 0
+Text GLabel 4400 4100 2    50   BiDi ~ 0
 HRAM_DQ5
-Text GLabel 4200 4200 2    50   BiDi ~ 0
+Text GLabel 4400 4200 2    50   BiDi ~ 0
 HRAM_DQ6
-Text GLabel 4200 4300 2    50   BiDi ~ 0
+Text GLabel 4400 4300 2    50   BiDi ~ 0
 HRAM_DQ7
-Text GLabel 4200 4500 2    50   BiDi ~ 0
+Text GLabel 4400 4500 2    50   BiDi ~ 0
 HRAM_RWDS
-NoConn ~ 3000 4400
-NoConn ~ 3000 4500
-Text GLabel 3000 3600 0    50   Input ~ 0
+NoConn ~ 3200 4400
+NoConn ~ 3200 4500
+Text GLabel 3200 3600 0    50   Input ~ 0
 HRAM_CS_B
-Text GLabel 3000 3700 0    50   Input ~ 0
+Text GLabel 3200 3700 0    50   Input ~ 0
 HRAM_CK_P
-Text GLabel 3000 3800 0    50   Input ~ 0
+Text GLabel 3200 3800 0    50   Input ~ 0
 HRAM_CK_N
-Text GLabel 3000 3900 0    50   Input ~ 0
+Text GLabel 3200 3900 0    50   Input ~ 0
 HRAM_RESET_B
 Wire Wire Line
-	3500 3350 3500 3250
+	3700 3350 3700 3250
 Wire Wire Line
-	3500 3250 3600 3250
+	3700 3250 3800 3250
 Wire Wire Line
-	3700 3250 3700 3350
+	3900 3250 3900 3350
 Wire Wire Line
-	3600 3350 3600 3250
-Connection ~ 3600 3250
+	3800 3350 3800 3250
+Connection ~ 3800 3250
 Wire Wire Line
-	3600 3250 3700 3250
-Wire Wire Line
-	3500 3250 3500 3150
-Wire Wire Line
-	3500 3150 3400 3150
-Connection ~ 3500 3250
-Text GLabel 3400 3150 0    50   UnSpc ~ 0
+	3800 3250 3900 3250
+Connection ~ 3700 3250
+Text GLabel 2350 2800 0    50   UnSpc ~ 0
 P1V8
 Wire Wire Line
-	3500 4750 3500 4850
+	3700 4750 3700 4850
 Wire Wire Line
-	3500 4850 3600 4850
+	3700 4850 3800 4850
 Wire Wire Line
-	3600 4850 3600 4750
+	3800 4850 3800 4750
 Wire Wire Line
-	3600 4850 3700 4850
+	3800 4850 3900 4850
 Wire Wire Line
-	3700 4850 3700 4750
-Connection ~ 3600 4850
+	3900 4850 3900 4750
+Connection ~ 3800 4850
 Wire Wire Line
-	3500 4850 3500 4950
-Connection ~ 3500 4850
+	3700 4850 3700 4950
+Connection ~ 3700 4850
 $Comp
 L ng_power:GND #PWR09
 U 1 1 5F3CB04C
-P 3500 4950
-F 0 "#PWR09" H 3500 4700 50  0001 C CNN
-F 1 "GND" H 3503 4824 50  0000 C CNN
-F 2 "" H 3400 4600 50  0001 C CNN
-F 3 "" H 3500 4950 50  0001 C CNN
-	1    3500 4950
+P 3700 4950
+F 0 "#PWR09" H 3700 4700 50  0001 C CNN
+F 1 "GND" H 3703 4824 50  0000 C CNN
+F 2 "" H 3600 4600 50  0001 C CNN
+F 3 "" H 3700 4950 50  0001 C CNN
+	1    3700 4950
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -353,6 +349,85 @@ Wire Wire Line
 Connection ~ 8100 3600
 Wire Wire Line
 	8100 3600 8500 3600
-Text Notes 2750 5350 0    50   ~ 0
+Text Notes 2950 5350 0    50   ~ 0
 NB. Check for the correct part for 1V8 operation!
+Text Notes 2950 5450 0    50   ~ 0
+NB. Add decoupling capacitors for HyperRAM
+$Comp
+L Device:C C71
+U 1 1 5F5DCC37
+P 3050 3050
+F 0 "C71" H 3100 3150 50  0000 L CNN
+F 1 "100n" H 3100 2950 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 3088 2900 50  0001 C CNN
+F 3 "~" H 3050 3050 50  0001 C CNN
+	1    3050 3050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3050 3200 3050 3300
+Wire Wire Line
+	3050 2900 3050 2800
+$Comp
+L Device:C C70
+U 1 1 5F5E4A84
+P 2750 3050
+F 0 "C70" H 2800 3150 50  0000 L CNN
+F 1 "100n" H 2800 2950 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 2788 2900 50  0001 C CNN
+F 3 "~" H 2750 3050 50  0001 C CNN
+	1    2750 3050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2750 3200 2750 3300
+Wire Wire Line
+	2750 2900 2750 2800
+$Comp
+L Device:C C69
+U 1 1 5F5E6253
+P 2450 3050
+F 0 "C69" H 2500 3150 50  0000 L CNN
+F 1 "100n" H 2500 2950 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 2488 2900 50  0001 C CNN
+F 3 "~" H 2450 3050 50  0001 C CNN
+	1    2450 3050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2450 3200 2450 3300
+Wire Wire Line
+	2450 2900 2450 2800
+Wire Wire Line
+	2450 3300 2750 3300
+Connection ~ 2750 3300
+Wire Wire Line
+	2750 3300 3050 3300
+Wire Wire Line
+	2450 2800 2750 2800
+Wire Wire Line
+	3700 2800 3700 3250
+Connection ~ 2750 2800
+Wire Wire Line
+	2750 2800 3050 2800
+Connection ~ 3050 2800
+Wire Wire Line
+	3050 2800 3700 2800
+Wire Wire Line
+	2450 2800 2350 2800
+Connection ~ 2450 2800
+Wire Wire Line
+	2450 3300 2450 3400
+Connection ~ 2450 3300
+$Comp
+L ng_power:GND #PWR068
+U 1 1 5F5F4633
+P 2450 3400
+F 0 "#PWR068" H 2450 3150 50  0001 C CNN
+F 1 "GND" H 2453 3274 50  0000 C CNN
+F 2 "" H 2350 3050 50  0001 C CNN
+F 3 "" H 2450 3400 50  0001 C CNN
+	1    2450 3400
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

@@ -13,17 +13,6 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-$Comp
-L ng_memory:W25Q128JVSIM U2
-U 1 1 5F3FC315
-P 13200 1500
-F 0 "U2" H 13650 1665 50  0000 C CNN
-F 1 "W25Q128JVSIM" H 13650 1574 50  0000 C CNN
-F 2 "Package_SO:SOIC-8_5.275x5.275mm_P1.27mm" H 13700 650 50  0001 C CNN
-F 3 "https://www.mouser.com/datasheet/2/949/w25q32jv_dtr_revg_03272018_plus-1489786.pdf" H 14200 1200 50  0001 C CNN
-	1    13200 1500
-	-1   0    0    -1  
-$EndComp
 Wire Wire Line
 	12200 1600 12100 1600
 Wire Wire Line
@@ -514,4 +503,15 @@ Text GLabel 10200 6600 2    50   BiDi ~ 0
 SD_DAT2
 Text GLabel 10200 6700 2    50   Input ~ 0
 SD_CD
+$Comp
+L ng_memory:W25Q512JVEIM U2
+U 1 1 5F5A1820
+P 13200 1500
+F 0 "U2" H 13650 1665 50  0000 C CNN
+F 1 "W25Q512JVEIM" H 13650 1574 50  0000 C CNN
+F 2 "Package_SON:WSON-8-1EP_6x5mm_P1.27mm_EP3.4x4.3mm" H 13650 650 50  0001 C CNN
+F 3 "https://www.winbond.com/resource-files/W25Q512JV%20DTR%20RevC%2009102019%20133.pdf" H 14200 1200 50  0001 C CNN
+	1    13200 1500
+	-1   0    0    -1  
+$EndComp
 $EndSCHEMATC
