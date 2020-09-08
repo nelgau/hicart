@@ -900,7 +900,7 @@ Connection ~ 5800 5250
 Connection ~ 3400 4950
 Connection ~ 3400 6000
 Text Label 5450 3400 0    50   ~ 0
-xUSB_D+
+xUSB_D-
 Wire Wire Line
 	4550 3200 4450 3200
 Wire Wire Line
@@ -910,7 +910,7 @@ Wire Wire Line
 Wire Wire Line
 	5350 3200 5450 3200
 Text Label 5450 3200 0    50   ~ 0
-USB_D+
+USB_D-
 Connection ~ 4150 1850
 Wire Wire Line
 	4150 1850 4450 1850
@@ -1135,9 +1135,9 @@ USB_CC2
 Text Notes 6150 5700 0    50   ~ 0
 +/-30ppm, <150pS
 Text Label 4450 3400 2    50   ~ 0
-xUSB_D-
+xUSB_D+
 Text Label 4450 3200 2    50   ~ 0
-USB_D-
+USB_D+
 Text Label 7450 3050 2    50   ~ 0
 USB_D+
 Text Label 7450 2950 2    50   ~ 0
