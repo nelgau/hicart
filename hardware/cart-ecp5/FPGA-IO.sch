@@ -546,4 +546,6 @@ Text GLabel 6700 9000 2    50   BiDi ~ 0
 USB_AC6
 Text GLabel 6700 8900 2    50   BiDi ~ 0
 USB_AC7
+Text Notes 5150 9750 0    50   ~ 0
+NB. Must assign IO for USB_DET signal
 $EndSCHEMATC
