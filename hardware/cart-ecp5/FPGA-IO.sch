@@ -469,7 +469,7 @@ Text GLabel 13700 6300 2    50   BiDi ~ 0
 HRAM_DQ1
 Text GLabel 13700 5700 2    50   BiDi ~ 0
 HRAM_DQ2
-Text GLabel 13700 6100 2    50   BiDi ~ 0
+Text GLabel 13700 5800 2    50   BiDi ~ 0
 HRAM_DQ3
 Text GLabel 13700 5600 2    50   BiDi ~ 0
 HRAM_DQ4
@@ -514,4 +514,36 @@ F 3 "https://www.winbond.com/resource-files/W25Q512JV%20DTR%20RevC%2009102019%20
 	1    13200 1500
 	-1   0    0    -1  
 $EndComp
+Text GLabel 6700 5600 2    50   BiDi ~ 0
+USB_AD0
+Text GLabel 6700 5700 2    50   BiDi ~ 0
+USB_AD1
+Text GLabel 6700 5800 2    50   BiDi ~ 0
+USB_AD2
+Text GLabel 6700 5900 2    50   BiDi ~ 0
+USB_AD3
+Text GLabel 6700 7100 2    50   BiDi ~ 0
+USB_AD4
+Text GLabel 6700 6900 2    50   BiDi ~ 0
+USB_AD5
+Text GLabel 6700 6600 2    50   BiDi ~ 0
+USB_AD6
+Text GLabel 6700 7200 2    50   BiDi ~ 0
+USB_AD7
+Text GLabel 6700 6700 2    50   BiDi ~ 0
+USB_AC0
+Text GLabel 6700 7600 2    50   BiDi ~ 0
+USB_AC1
+Text GLabel 6700 7700 2    50   BiDi ~ 0
+USB_AC2
+Text GLabel 6700 7900 2    50   BiDi ~ 0
+USB_AC3
+Text GLabel 6700 8100 2    50   BiDi ~ 0
+USB_AC4
+Text GLabel 6700 8000 2    50   BiDi ~ 0
+USB_AC5
+Text GLabel 6700 9000 2    50   BiDi ~ 0
+USB_AC6
+Text GLabel 6700 8900 2    50   BiDi ~ 0
+USB_AC7
 $EndSCHEMATC
