@@ -548,4 +548,8 @@ Text GLabel 6700 8900 2    50   BiDi ~ 0
 USB_AC7
 Text Notes 5150 9750 0    50   ~ 0
 NB. Must assign IO for USB_DET signal
+Text GLabel 6700 4400 2    50   Input ~ 0
+N64_CIC_DATA1
+Text GLabel 6700 3600 2    50   Input ~ 0
+N64_CIC_DATA2
 $EndSCHEMATC
