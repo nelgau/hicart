@@ -552,4 +552,6 @@ Text GLabel 6700 4400 2    50   Input ~ 0
 N64_CIC_DATA1
 Text GLabel 6700 3600 2    50   Input ~ 0
 N64_CIC_DATA2
+Text GLabel 6700 7500 2    50   Input ~ 0
+USB_DET
 $EndSCHEMATC

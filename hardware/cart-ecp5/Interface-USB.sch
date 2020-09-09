@@ -1253,7 +1253,7 @@ Connection ~ 2850 3250
 Wire Wire Line
 	2850 3250 2850 3350
 Text GLabel 3300 3250 2    50   Output ~ 0
-USB_DETn
+USB_DET
 Text GLabel 2750 2750 0    50   UnSpc ~ 0
 USB_5V
 Text Notes 3200 3100 0    50   ~ 0
