@@ -86,7 +86,7 @@ NoConn ~ 7550 5050
 NoConn ~ 9950 5350
 NoConn ~ 9950 5450
 Wire Wire Line
-	8550 1350 8550 1250
+	8550 1350 8550 1050
 Connection ~ 8550 1350
 Wire Wire Line
 	8950 1350 8950 1250
@@ -98,7 +98,7 @@ Wire Wire Line
 Wire Wire Line
 	7450 5550 7450 5650
 Wire Wire Line
-	7550 1750 6550 1750
+	7550 1750 6450 1750
 Wire Wire Line
 	7550 1950 7350 1950
 Wire Wire Line
@@ -327,9 +327,9 @@ F 3 "~" H 7200 4650 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	8250 1350 8250 1450
+	8250 1250 8250 1450
 Wire Wire Line
-	8350 1350 8350 1450
+	8350 1150 8350 1450
 Wire Wire Line
 	4300 6000 4300 6100
 Wire Wire Line
@@ -367,7 +367,7 @@ Wire Wire Line
 	4050 1350 4150 1350
 Text Notes 3900 2200 0    50   ~ 0
 USBLC6 requires 100n (C18) on VBUS,\nnot 10n as would be expected
-Text Label 4500 2800 0    50   ~ 0
+Text Label 4850 2800 2    50   ~ 0
 USB_VBUS
 $Comp
 L ng_power:GND #PWR0107
@@ -388,7 +388,7 @@ Wire Wire Line
 Wire Wire Line
 	4950 2800 4950 2900
 Wire Wire Line
-	4500 2800 4950 2800
+	4850 2800 4950 2800
 $Comp
 L Power_Protection:USBLC6-2SC6 U?
 U 1 1 5F184C87
@@ -521,7 +521,7 @@ Wire Wire Line
 	2300 5050 2300 4950
 Connection ~ 2300 4950
 Wire Wire Line
-	2300 4950 2500 4950
+	2300 4950 2400 4950
 Connection ~ 2000 5450
 $Comp
 L ng_power:GND #PWR0109
@@ -537,8 +537,6 @@ F 3 "" H 2000 5550 50  0001 C CNN
 	1    2000 5550
 	1    0    0    -1  
 $EndComp
-Text GLabel 2500 4950 2    50   UnSpc ~ 0
-VPHY
 Text GLabel 1500 4950 0    50   UnSpc ~ 0
 P3V3
 $Comp
@@ -584,7 +582,7 @@ Wire Wire Line
 	2300 6100 2300 6000
 Connection ~ 2300 6000
 Wire Wire Line
-	2300 6000 2500 6000
+	2300 6000 2400 6000
 Connection ~ 2000 6500
 $Comp
 L ng_power:GND #PWR0110
@@ -600,8 +598,6 @@ F 3 "" H 2000 6600 50  0001 C CNN
 	1    2000 6600
 	1    0    0    -1  
 $EndComp
-Text GLabel 2500 6000 2    50   UnSpc ~ 0
-VPLL
 Text GLabel 1500 6000 0    50   UnSpc ~ 0
 P3V3
 $Comp
@@ -739,8 +735,6 @@ F 3 "~" H 3400 6250 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	3400 4950 3300 4950
-Text GLabel 3300 4950 0    50   UnSpc ~ 0
-P1V8
 Wire Wire Line
 	3400 6000 3300 6000
 Text GLabel 3300 6000 0    50   UnSpc ~ 0
@@ -881,19 +875,11 @@ Text GLabel 5700 5250 0    50   UnSpc ~ 0
 P3V3
 Text GLabel 7050 3650 0    50   UnSpc ~ 0
 P3V3
-Text GLabel 6450 1750 0    50   UnSpc ~ 0
+Text GLabel 6350 1750 0    50   UnSpc ~ 0
 P3V3
-Text GLabel 6950 1950 0    50   UnSpc ~ 0
-P1V8
 Wire Wire Line
 	6950 1950 7050 1950
 Connection ~ 7050 1950
-Text GLabel 8250 1350 1    50   UnSpc ~ 0
-VPHY
-Text GLabel 8350 1350 1    50   UnSpc ~ 0
-VPLL
-Text GLabel 8550 1250 1    50   UnSpc ~ 0
-P1V8
 Text GLabel 8950 1250 1    50   UnSpc ~ 0
 P3V3
 Connection ~ 5800 5250
@@ -1149,12 +1135,12 @@ xUSB_D-
 $Comp
 L ng_power:GND #PWR046
 U 1 1 5F7012B4
-P 6550 2550
-F 0 "#PWR046" H 6550 2300 50  0001 C CNN
-F 1 "GND" H 6553 2424 50  0000 C CNN
-F 2 "" H 6450 2200 50  0001 C CNN
-F 3 "" H 6550 2550 50  0001 C CNN
-	1    6550 2550
+P 6450 2550
+F 0 "#PWR046" H 6450 2300 50  0001 C CNN
+F 1 "GND" H 6453 2424 50  0000 C CNN
+F 2 "" H 6350 2200 50  0001 C CNN
+F 3 "" H 6450 2550 50  0001 C CNN
+	1    6450 2550
 	1    0    0    -1  
 $EndComp
 Text GLabel 9950 1750 2    50   BiDi ~ 0
@@ -1338,25 +1324,45 @@ Connection ~ 9150 5950
 $Comp
 L Device:C C40
 U 1 1 5F865B3F
-P 6550 2200
-F 0 "C40" H 6500 2300 50  0000 R CNN
-F 1 "100n" H 6500 2100 50  0000 R CNN
-F 2 "Capacitor_SMD:C_0402_1005Metric" H 6588 2050 50  0001 C CNN
-F 3 "~" H 6550 2200 50  0001 C CNN
-	1    6550 2200
+P 6450 2200
+F 0 "C40" H 6400 2300 50  0000 R CNN
+F 1 "100n" H 6400 2100 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 6488 2050 50  0001 C CNN
+F 3 "~" H 6450 2200 50  0001 C CNN
+	1    6450 2200
 	-1   0    0    -1  
 $EndComp
 Wire Wire Line
-	6550 2050 6550 1750
-Connection ~ 6550 1750
+	6450 2050 6450 1750
+Connection ~ 6450 1750
 Wire Wire Line
-	6550 1750 6450 1750
+	6450 1750 6350 1750
 Wire Wire Line
-	6550 2350 6550 2450
+	6450 2350 6450 2450
 Wire Wire Line
-	6550 2450 7050 2450
+	6450 2450 7050 2450
+Wire Wire Line
+	6450 2450 6450 2550
+Connection ~ 6450 2450
 Connection ~ 7050 2450
+Text Label 3300 4950 2    50   ~ 0
+USB_1V8
+Text Label 6950 1950 2    50   ~ 0
+USB_1V8
 Wire Wire Line
-	6550 2450 6550 2550
-Connection ~ 6550 2450
+	8250 1250 8150 1250
+Wire Wire Line
+	8350 1150 8150 1150
+Text Label 8150 1250 2    50   ~ 0
+USB_VPHY
+Text Label 8150 1150 2    50   ~ 0
+USB_VPLL
+Wire Wire Line
+	8550 1050 8150 1050
+Text Label 8150 1050 2    50   ~ 0
+USB_1V8
+Text Label 2400 4950 0    50   ~ 0
+USB_VPHY
+Text Label 2400 6000 0    50   ~ 0
+USB_VPLL
 $EndSCHEMATC
