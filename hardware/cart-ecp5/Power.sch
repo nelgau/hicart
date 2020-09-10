@@ -560,7 +560,7 @@ Connection ~ 1900 2350
 Wire Wire Line
 	1900 2550 1900 2350
 Wire Wire Line
-	2200 2350 3900 2350
+	2200 2350 3200 2350
 Connection ~ 2200 2350
 Wire Wire Line
 	2200 2550 2200 2350
@@ -569,8 +569,6 @@ Wire Wire Line
 Connection ~ 2500 2450
 Wire Wire Line
 	2500 2550 2500 2450
-Wire Wire Line
-	2800 2450 3200 2450
 Connection ~ 2800 2450
 Wire Wire Line
 	2800 2550 2800 2450
@@ -662,11 +660,6 @@ Wire Wire Line
 	3200 2850 3200 2950
 Wire Wire Line
 	3900 2950 3200 2950
-Connection ~ 3200 2450
-Wire Wire Line
-	3200 2550 3200 2450
-Wire Wire Line
-	3900 2450 3200 2450
 $Comp
 L Device:R R7
 U 1 1 5F0CCC27
@@ -987,4 +980,13 @@ Text Label 7700 1400 0    50   ~ 0
 SW_3V3
 Text Label 7700 1600 0    50   ~ 0
 FB_3V3
+Text Notes 2200 2150 0    50   ~ 0
+IN1 has priority when VSNS > 0.8V\nSee TPS2111A datasheet, pg. 16, fig. 14
+Wire Wire Line
+	2800 2450 3900 2450
+Wire Wire Line
+	3200 2550 3200 2350
+Connection ~ 3200 2350
+Wire Wire Line
+	3200 2350 3900 2350
 $EndSCHEMATC
