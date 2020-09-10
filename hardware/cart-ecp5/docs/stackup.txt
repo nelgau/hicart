@@ -1,0 +1,24 @@
+**
+*   JLCPCB 4-Layer Impedance Control Stackup (JLC2313)
+**
+
+- Stackup
+
+    Layer           Material    Thickness 
+
+    Top Layer1      Copper      0.035 mm  
+    Prepreg         2313*1      0.1 mm  
+    Inner Layer2    Copper      0.0175 mm
+    Core            Core        1.265 mm
+    Inner Layer3    Copper      0.0175 mm
+    Prepreg         2313*1      0.1 mm  
+    Bottom Layer4   Copper      0.035 mm
+
+- Controlled Impedances
+
+    - 50-ohm single-ended
+        Trace width: 5.78 mil (0.147 mm)
+
+    - 90-ohm differential
+        Trace width: 4.92 mil (0.125 mm)
+        Trace space: 4.50 mil (0.114 mm)
