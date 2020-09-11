@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 7
+Sheet 1 8
 Title ""
 Date ""
 Rev ""
@@ -65,4 +65,10 @@ Text Notes 12000 5100 0    50   ~ 0
 LENGTH MATCHING:\nid: hyperram_reset_to_cs\nnetnames: "^(HRAM_RESET_B)$"\nreflength: group hyperram_cs_to_clk\ntolerance: 2000 mil\nvialength: 1.6 mm
 Text Notes 12000 900  0    50   ~ 0
 Notes:\n\nWhen computing a group's reflength, the script takes the average of\nthe group's shortest and longest nets. Intuitively, this seems to allow\nfor tolerances to be violated by these extremal nets. I think it's more\ncorrect to evaluate reflength tolerance by exhaustively checking all\npossible pairs of nets (e.g., one drawn from each of the two groups).  
+$Sheet
+S 8000 2700 1550 950 
+U 5F5BD87F
+F0 "Display" 50
+F1 "Display.sch" 50
+$EndSheet
 $EndSCHEMATC
