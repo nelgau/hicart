@@ -16,11 +16,12 @@ Stackup:
 
 Impedances:
 
-    Type            Width                   Space
+    Type            Width                   Space                   Commment
 
     50 ohms SE      5.78 mil (~150 um)      -
+    55 ohms SE      4.73 mil (~120 um)      -
 
-    90 ohms Diff    5.55 mil (~140 um)      6.00 mil (~150 um)     
-    100 ohms Diff   4.35 mil (~110 um)      6.00 mil (~150 um)
+    90 ohms Diff    5.55 mil (~140 um)      6.00 mil (~150 um)      ~51 ohms SE
+    100 ohms Diff   4.81 mil (~110 um)      6.00 mil (~150 um)      ~54.5 ohms SE
 
-N.B., the geometry was given exactly in mils and was rounded to the nearest 10 um. 
+N.B., the geometry was given exactly in mils and was rounded to the nearest 5 um. 
