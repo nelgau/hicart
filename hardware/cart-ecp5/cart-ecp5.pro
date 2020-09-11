@@ -1,4 +1,4 @@
-update=Saturday, September 05, 2020 at 07:18:46 AM
+update=Friday, September 11, 2020 at 04:47:31 AM
 version=1
 last_client=kicad
 [general]
@@ -38,7 +38,7 @@ MinViaDrill=0.2
 MinMicroViaDiameter=0.2
 MinMicroViaDrill=0.09999999999999999
 MinHoleToHole=0.25
-TrackWidth1=0.1
+TrackWidth1=0.15
 TrackWidth2=0.1
 TrackWidth3=0.15
 TrackWidth4=0.3
@@ -243,11 +243,33 @@ Enabled=0
 [pcbnew/Netclasses/Default]
 Name=Default
 Clearance=0.1
-TrackWidth=0.1
+TrackWidth=0.15
 ViaDiameter=0.45
 ViaDrill=0.2
 uViaDiameter=0.3
 uViaDrill=0.1
 dPairWidth=0.1
 dPairGap=0.1
+dPairViaGap=0.25
+[pcbnew/Netclasses/1]
+Name=HRAM_CK
+Clearance=0.1
+TrackWidth=0.11
+ViaDiameter=0.45
+ViaDrill=0.2
+uViaDiameter=0.3
+uViaDrill=0.1
+dPairWidth=0.11
+dPairGap=0.15
+dPairViaGap=0.25
+[pcbnew/Netclasses/2]
+Name=USB_D
+Clearance=0.1
+TrackWidth=0.14
+ViaDiameter=0.45
+ViaDrill=0.2
+uViaDiameter=0.3
+uViaDrill=0.1
+dPairWidth=0.14
+dPairGap=0.15
 dPairViaGap=0.25

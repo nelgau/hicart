@@ -351,8 +351,6 @@ Wire Wire Line
 	8100 3600 8500 3600
 Text Notes 2950 5350 0    50   ~ 0
 NB. Check for the correct part for 1V8 operation!
-Text Notes 2950 5450 0    50   ~ 0
-NB. Add decoupling capacitors for HyperRAM
 $Comp
 L Device:C C71
 U 1 1 5F5DCC37
@@ -430,4 +428,8 @@ F 3 "" H 2450 3400 50  0001 C CNN
 	1    2450 3400
 	1    0    0    -1  
 $EndComp
+Text Notes 2950 5450 0    50   ~ 0
+NB. Fix decoupling (see Cypress’ HyperRAM layout guide)
+Text Notes 2950 5550 0    50   ~ 0
+https://www.cypress.com/file/278156/download
 $EndSCHEMATC
