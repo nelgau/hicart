@@ -554,4 +554,20 @@ Text GLabel 6700 7500 2    50   Input ~ 0
 USB_DET
 Text GLabel 13700 6800 2    50   BiDi ~ 0
 HRAM_DQ1
+Text GLabel 3200 6000 2    50   Output ~ 0
+LED_D0
+Text GLabel 3200 5600 2    50   Output ~ 0
+LED_D1
+Text GLabel 3200 6100 2    50   Output ~ 0
+LED_D2
+Text GLabel 3200 5700 2    50   Output ~ 0
+LED_D3
+Text GLabel 3200 7200 2    50   Output ~ 0
+LED_D4
+Text GLabel 3200 5800 2    50   Output ~ 0
+LED_D5
+Text GLabel 3200 6200 2    50   Output ~ 0
+LED_D6
+Text GLabel 3200 5900 2    50   Output ~ 0
+LED_D7
 $EndSCHEMATC
