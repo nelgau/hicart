@@ -570,4 +570,6 @@ Text GLabel 3200 6200 2    50   Output ~ 0
 LED_D6
 Text GLabel 3200 5900 2    50   Output ~ 0
 LED_D7
+Text Notes 5150 9850 0    50   ~ 0
+NB. In FT245 Sync FIFO mode, the AC5 signal is CLKOUT
 $EndSCHEMATC

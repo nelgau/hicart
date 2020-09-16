@@ -1178,38 +1178,6 @@ USB_AC7
 Connection ~ 7450 4550
 Wire Wire Line
 	6250 4550 7450 4550
-Text GLabel 9950 3550 2    50   BiDi ~ 0
-USB_BD0
-Text GLabel 9950 3650 2    50   BiDi ~ 0
-USB_BD1
-Text GLabel 9950 3750 2    50   BiDi ~ 0
-USB_BD2
-Text GLabel 9950 3850 2    50   BiDi ~ 0
-USB_BD3
-Text GLabel 9950 3950 2    50   BiDi ~ 0
-USB_BD4
-Text GLabel 9950 4050 2    50   BiDi ~ 0
-USB_BD5
-Text GLabel 9950 4150 2    50   BiDi ~ 0
-USB_BD6
-Text GLabel 9950 4250 2    50   BiDi ~ 0
-USB_BD7
-Text GLabel 9950 4450 2    50   BiDi ~ 0
-USB_BC0
-Text GLabel 9950 4550 2    50   BiDi ~ 0
-USB_BC1
-Text GLabel 9950 4650 2    50   BiDi ~ 0
-USB_BC2
-Text GLabel 9950 4750 2    50   BiDi ~ 0
-USB_BC3
-Text GLabel 9950 4850 2    50   BiDi ~ 0
-USB_BC4
-Text GLabel 9950 4950 2    50   BiDi ~ 0
-USB_BC5
-Text GLabel 9950 5050 2    50   BiDi ~ 0
-USB_BC6
-Text GLabel 9950 5150 2    50   BiDi ~ 0
-USB_BC7
 $Comp
 L Device:R R?
 U 1 1 5F3148AD
@@ -1365,4 +1333,22 @@ Text Label 2400 4950 0    50   ~ 0
 USB_VPHY
 Text Label 2400 6000 0    50   ~ 0
 USB_VPLL
+NoConn ~ 9950 3550
+NoConn ~ 9950 3650
+NoConn ~ 9950 3750
+NoConn ~ 9950 3850
+NoConn ~ 9950 3950
+NoConn ~ 9950 4050
+NoConn ~ 9950 4150
+NoConn ~ 9950 4250
+NoConn ~ 9950 4450
+NoConn ~ 9950 4550
+NoConn ~ 9950 4650
+NoConn ~ 9950 4750
+NoConn ~ 9950 4850
+NoConn ~ 9950 4950
+NoConn ~ 9950 5050
+NoConn ~ 9950 5150
+Text Notes 9250 950  0    50   ~ 0
+NB. In FT245 Sync FIFO mode, AC5 is CLKOUT !!!
 $EndSCHEMATC
