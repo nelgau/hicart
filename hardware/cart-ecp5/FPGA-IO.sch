@@ -562,9 +562,9 @@ Text GLabel 3200 7200 2    50   Output ~ 0
 LED_D4
 Text GLabel 3200 5800 2    50   Output ~ 0
 LED_D5
-Text GLabel 3200 6200 2    50   Output ~ 0
-LED_D6
 Text GLabel 3200 5900 2    50   Output ~ 0
+LED_D6
+Text GLabel 3200 6200 2    50   Output ~ 0
 LED_D7
 Text Notes 5150 9850 0    50   ~ 0
 NB. In FT245 Sync FIFO mode, the AC5 signal is CLKOUT
@@ -572,4 +572,8 @@ Text GLabel 6700 7100 2    50   BiDi ~ 0
 USB_AD4
 Text GLabel 6700 1900 2    50   Input ~ 0
 N64_READ#
+Wire Wire Line
+	3200 8600 3300 8600
+Text Label 3300 8600 0    50   ~ 0
+REF_CLK
 $EndSCHEMATC

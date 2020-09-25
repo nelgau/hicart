@@ -230,7 +230,7 @@ Wire Wire Line
 Wire Wire Line
 	4900 3150 4600 3150
 Connection ~ 4900 3150
-Text GLabel 3300 3150 0    50   UnSpc ~ 0
+Text GLabel 3600 3150 0    50   UnSpc ~ 0
 P1V1
 Text GLabel 4200 4050 0    50   UnSpc ~ 0
 P2V5
@@ -259,12 +259,12 @@ P3V3
 $Comp
 L ng_power:GND #PWR01
 U 1 1 5F9193F8
-P 3400 3750
-F 0 "#PWR01" H 3400 3500 50  0001 C CNN
-F 1 "GND" H 3403 3624 50  0000 C CNN
-F 2 "" H 3300 3400 50  0001 C CNN
-F 3 "" H 3400 3750 50  0001 C CNN
-	1    3400 3750
+P 3700 3750
+F 0 "#PWR01" H 3700 3500 50  0001 C CNN
+F 1 "GND" H 3703 3624 50  0000 C CNN
+F 2 "" H 3600 3400 50  0001 C CNN
+F 3 "" H 3700 3750 50  0001 C CNN
+	1    3700 3750
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -290,17 +290,6 @@ Wire Wire Line
 Connection ~ 4300 3150
 Wire Wire Line
 	4300 3150 4600 3150
-$Comp
-L Device:C C45
-U 1 1 5F933EBA
-P 3400 3400
-F 0 "C45" H 3450 3500 50  0000 L CNN
-F 1 "1u" H 3450 3300 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0402_1005Metric" H 3438 3250 50  0001 C CNN
-F 3 "~" H 3400 3400 50  0001 C CNN
-	1    3400 3400
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	4000 3650 4000 3550
 Wire Wire Line
@@ -334,10 +323,6 @@ F 3 "~" H 4000 3400 50  0001 C CNN
 	1    4000 3400
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	3400 3650 3400 3550
-Wire Wire Line
-	3400 3250 3400 3150
 $Comp
 L Device:C C42
 U 1 1 5F938F6F
@@ -349,15 +334,9 @@ F 3 "~" H 3700 3400 50  0001 C CNN
 	1    3700 3400
 	1    0    0    -1  
 $EndComp
-Connection ~ 3400 3150
-Wire Wire Line
-	3400 3150 3700 3150
 Connection ~ 3700 3150
 Wire Wire Line
 	3700 3150 4000 3150
-Wire Wire Line
-	3400 3650 3700 3650
-Connection ~ 3700 3650
 Wire Wire Line
 	3700 3650 4000 3650
 Connection ~ 4000 3650
@@ -367,7 +346,7 @@ Connection ~ 4300 3650
 Wire Wire Line
 	4300 3650 4600 3650
 Wire Wire Line
-	3400 3650 3400 3750
+	3700 3650 3700 3750
 $Comp
 L Device:C C49
 U 1 1 5F952B39
@@ -763,7 +742,7 @@ F 3 "~" H 7100 5200 50  0001 C CNN
 	1    7100 5200
 	1    0    0    -1  
 $EndComp
-Connection ~ 3400 3650
+Connection ~ 3700 3650
 Wire Wire Line
-	3300 3150 3400 3150
+	3600 3150 3700 3150
 $EndSCHEMATC
