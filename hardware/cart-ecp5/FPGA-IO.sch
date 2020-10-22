@@ -510,31 +510,31 @@ F 3 "https://www.winbond.com/resource-files/W25Q512JV%20DTR%20RevC%2009102019%20
 	1    13200 1500
 	-1   0    0    -1  
 $EndComp
-Text GLabel 6700 5600 2    50   BiDi ~ 0
-USB_AD0
 Text GLabel 6700 5700 2    50   BiDi ~ 0
-USB_AD1
+USB_AD0
 Text GLabel 6700 5800 2    50   BiDi ~ 0
-USB_AD2
+USB_AD1
 Text GLabel 6700 5900 2    50   BiDi ~ 0
+USB_AD2
+Text GLabel 6700 7100 2    50   BiDi ~ 0
 USB_AD3
-Text GLabel 6700 6900 2    50   BiDi ~ 0
-USB_AD5
 Text GLabel 6700 6600 2    50   BiDi ~ 0
-USB_AD6
+USB_AD5
 Text GLabel 6700 7200 2    50   BiDi ~ 0
-USB_AD7
+USB_AD6
 Text GLabel 6700 6700 2    50   BiDi ~ 0
-USB_AC0
+USB_AD7
 Text GLabel 6700 7600 2    50   BiDi ~ 0
-USB_AC1
+USB_AC0
 Text GLabel 6700 7700 2    50   BiDi ~ 0
-USB_AC2
+USB_AC1
 Text GLabel 6700 7900 2    50   BiDi ~ 0
-USB_AC3
+USB_AC2
 Text GLabel 6700 8100 2    50   BiDi ~ 0
-USB_AC4
+USB_AC3
 Text GLabel 6700 8000 2    50   BiDi ~ 0
+USB_AC4
+Text GLabel 6700 5600 2    50   BiDi ~ 0
 USB_AC5
 Text GLabel 6700 9000 2    50   BiDi ~ 0
 USB_AC6
@@ -568,12 +568,12 @@ Text GLabel 3200 6200 2    50   Output ~ 0
 LED_D7
 Text Notes 5150 9850 0    50   ~ 0
 NB. In FT245 Sync FIFO mode, the AC5 signal is CLKOUT
-Text GLabel 6700 7100 2    50   BiDi ~ 0
+Text GLabel 6700 6900 2    50   BiDi ~ 0
 USB_AD4
 Text GLabel 6700 1900 2    50   Input ~ 0
 N64_READ#
 Wire Wire Line
-	3200 8600 3300 8600
-Text Label 3300 8600 0    50   ~ 0
+	3200 8400 3300 8400
+Text Label 3300 8400 0    50   ~ 0
 REF_CLK
 $EndSCHEMATC
