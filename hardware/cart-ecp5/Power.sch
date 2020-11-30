@@ -984,12 +984,12 @@ Connection ~ 3100 1400
 Wire Wire Line
 	3100 1400 3800 1400
 $Comp
-L Connector:TestPoint TP?
+L Connector:TestPoint TP6
 U 1 1 5FC71AA9
 P 9850 1300
-F 0 "TP?" H 9908 1418 50  0000 L CNN
+F 0 "TP6" H 9908 1418 50  0000 L CNN
 F 1 "USB_3V3" H 9908 1327 50  0000 L CNN
-F 2 "" H 10050 1300 50  0001 C CNN
+F 2 "ng_test:TestPoint_Pad_D0.5mm" H 10050 1300 50  0001 C CNN
 F 3 "~" H 10050 1300 50  0001 C CNN
 	1    9850 1300
 	1    0    0    -1  
@@ -997,12 +997,12 @@ $EndComp
 Wire Wire Line
 	9850 1300 9850 1400
 $Comp
-L Connector:TestPoint TP?
+L Connector:TestPoint TP9
 U 1 1 5FC786B7
 P 9850 3100
-F 0 "TP?" H 9908 3218 50  0000 L CNN
+F 0 "TP9" H 9908 3218 50  0000 L CNN
 F 1 "P1V1" H 9908 3127 50  0000 L CNN
-F 2 "" H 10050 3100 50  0001 C CNN
+F 2 "ng_test:TestPoint_Pad_D0.5mm" H 10050 3100 50  0001 C CNN
 F 3 "~" H 10050 3100 50  0001 C CNN
 	1    9850 3100
 	1    0    0    -1  
@@ -1018,12 +1018,12 @@ Connection ~ 9850 3200
 Wire Wire Line
 	9850 3200 10050 3200
 $Comp
-L Connector:TestPoint TP?
+L Connector:TestPoint TP12
 U 1 1 5FC96756
 P 9850 4900
-F 0 "TP?" H 9908 5018 50  0000 L CNN
+F 0 "TP12" H 9908 5018 50  0000 L CNN
 F 1 "P1V8" H 9908 4927 50  0000 L CNN
-F 2 "" H 10050 4900 50  0001 C CNN
+F 2 "ng_test:TestPoint_Pad_D0.5mm" H 10050 4900 50  0001 C CNN
 F 3 "~" H 10050 4900 50  0001 C CNN
 	1    9850 4900
 	1    0    0    -1  
@@ -1034,23 +1034,23 @@ Connection ~ 9850 5000
 Wire Wire Line
 	9850 5000 10050 5000
 $Comp
-L Connector:TestPoint TP?
+L Connector:TestPoint TP3
 U 1 1 5FCA2B14
 P 1650 1300
-F 0 "TP?" H 1708 1418 50  0000 L CNN
+F 0 "TP3" H 1708 1418 50  0000 L CNN
 F 1 "USB_3V3" H 1708 1327 50  0000 L CNN
-F 2 "" H 1850 1300 50  0001 C CNN
+F 2 "ng_test:TestPoint_Pad_D0.5mm" H 1850 1300 50  0001 C CNN
 F 3 "~" H 1850 1300 50  0001 C CNN
 	1    1650 1300
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:TestPoint TP?
+L Connector:TestPoint TP10
 U 1 1 5FCB5865
 P 4100 3350
-F 0 "TP?" H 4158 3468 50  0000 L CNN
+F 0 "TP10" H 4158 3468 50  0000 L CNN
 F 1 "P2V5" H 4158 3377 50  0000 L CNN
-F 2 "" H 4300 3350 50  0001 C CNN
+F 2 "ng_test:TestPoint_Pad_D0.5mm" H 4300 3350 50  0001 C CNN
 F 3 "~" H 4300 3350 50  0001 C CNN
 	1    4100 3350
 	1    0    0    -1  
@@ -1061,12 +1061,12 @@ Connection ~ 4100 3450
 Wire Wire Line
 	4100 3450 4300 3450
 $Comp
-L Connector:TestPoint TP?
+L Connector:TestPoint TP5
 U 1 1 5FCCCB72
 P 6250 1300
-F 0 "TP?" H 6308 1418 50  0000 L CNN
+F 0 "TP5" H 6308 1418 50  0000 L CNN
 F 1 "USB_5V" H 6308 1327 50  0000 L CNN
-F 2 "" H 6450 1300 50  0001 C CNN
+F 2 "ng_test:TestPoint_Pad_D0.5mm" H 6450 1300 50  0001 C CNN
 F 3 "~" H 6450 1300 50  0001 C CNN
 	1    6250 1300
 	1    0    0    -1  
@@ -1079,12 +1079,12 @@ Wire Wire Line
 Wire Wire Line
 	4700 1400 4850 1400
 $Comp
-L Connector:TestPoint TP?
+L Connector:TestPoint TP2
 U 1 1 5FD1AC68
 P 1500 1300
-F 0 "TP?" H 1442 1418 50  0000 R CNN
+F 0 "TP2" H 1442 1418 50  0000 R CNN
 F 1 "N64_3V3" H 1442 1327 50  0000 R CNN
-F 2 "" H 1700 1300 50  0001 C CNN
+F 2 "ng_test:TestPoint_Pad_D0.5mm" H 1700 1300 50  0001 C CNN
 F 3 "~" H 1700 1300 50  0001 C CNN
 	1    1500 1300
 	1    0    0    -1  
@@ -1102,12 +1102,12 @@ Connection ~ 1500 1400
 Wire Wire Line
 	1500 1400 1800 1400
 $Comp
-L Connector:TestPoint TP?
+L Connector:TestPoint TP4
 U 1 1 5FD72291
 P 4850 1300
-F 0 "TP?" H 4908 1418 50  0000 L CNN
+F 0 "TP4" H 4908 1418 50  0000 L CNN
 F 1 "P3V3" H 4908 1327 50  0000 L CNN
-F 2 "" H 5050 1300 50  0001 C CNN
+F 2 "ng_test:TestPoint_Pad_D0.5mm" H 5050 1300 50  0001 C CNN
 F 3 "~" H 5050 1300 50  0001 C CNN
 	1    4850 1300
 	1    0    0    -1  
@@ -1118,12 +1118,12 @@ Connection ~ 4850 1400
 Wire Wire Line
 	4850 1400 5050 1400
 $Comp
-L Connector:TestPoint TP?
+L Connector:TestPoint TP7
 U 1 1 5FD79E45
 P 3400 1900
-F 0 "TP?" H 3458 2018 50  0000 L CNN
+F 0 "TP7" H 3458 2018 50  0000 L CNN
 F 1 "VSNS" H 3458 1927 50  0000 L CNN
-F 2 "" H 3600 1900 50  0001 C CNN
+F 2 "ng_test:TestPoint_Pad_D0.5mm" H 3600 1900 50  0001 C CNN
 F 3 "~" H 3600 1900 50  0001 C CNN
 	1    3400 1900
 	1    0    0    -1  
@@ -1134,12 +1134,12 @@ Connection ~ 3400 2000
 Wire Wire Line
 	3400 2000 3100 2000
 $Comp
-L Connector:TestPoint TP?
+L Connector:TestPoint TP8
 U 1 1 5FD81EA7
 P 8050 1900
-F 0 "TP?" V 8245 1972 50  0000 C CNN
+F 0 "TP8" V 8245 1972 50  0000 C CNN
 F 1 "FB_3V3" V 8154 1972 50  0000 C CNN
-F 2 "" H 8250 1900 50  0001 C CNN
+F 2 "ng_test:TestPoint_Pad_D0.5mm" H 8250 1900 50  0001 C CNN
 F 3 "~" H 8250 1900 50  0001 C CNN
 	1    8050 1900
 	0    -1   -1   0   
@@ -1148,12 +1148,12 @@ Wire Wire Line
 	8200 1900 8050 1900
 Connection ~ 8200 1900
 $Comp
-L Connector:TestPoint TP?
+L Connector:TestPoint TP11
 U 1 1 5FD8B0EA
 P 8050 3700
-F 0 "TP?" V 8245 3772 50  0000 C CNN
+F 0 "TP11" V 8245 3772 50  0000 C CNN
 F 1 "FB_1V1" V 8154 3772 50  0000 C CNN
-F 2 "" H 8250 3700 50  0001 C CNN
+F 2 "ng_test:TestPoint_Pad_D0.5mm" H 8250 3700 50  0001 C CNN
 F 3 "~" H 8250 3700 50  0001 C CNN
 	1    8050 3700
 	0    -1   -1   0   
@@ -1162,12 +1162,12 @@ Wire Wire Line
 	8200 3700 8050 3700
 Connection ~ 8200 3700
 $Comp
-L Connector:TestPoint TP?
+L Connector:TestPoint TP13
 U 1 1 5FD92D83
 P 8050 5500
-F 0 "TP?" V 8245 5572 50  0000 C CNN
+F 0 "TP13" V 8245 5572 50  0000 C CNN
 F 1 "FB_1V8" V 8154 5572 50  0000 C CNN
-F 2 "" H 8250 5500 50  0001 C CNN
+F 2 "ng_test:TestPoint_Pad_D0.5mm" H 8250 5500 50  0001 C CNN
 F 3 "~" H 8250 5500 50  0001 C CNN
 	1    8050 5500
 	0    -1   -1   0   

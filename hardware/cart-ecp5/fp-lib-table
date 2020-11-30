@@ -5,4 +5,5 @@
   (lib (name ng_time)(type KiCad)(uri ${KIPRJMOD}/../lib/nelgau/footprints/ng_time.pretty)(options "")(descr ""))
   (lib (name ng_conn)(type KiCad)(uri ${KIPRJMOD}/../lib/nelgau/footprints/ng_conn.pretty)(options "")(descr ""))
   (lib (name ng_package_qfn)(type KiCad)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/footprints/ng_package_qfn.pretty)(options "")(descr ""))
+  (lib (name ng_test)(type KiCad)(uri /Users/nelsongauthier/Code/nelgau/ferk-cart/hardware/lib/nelgau/footprints/ng_test.pretty)(options "")(descr ""))
 )
