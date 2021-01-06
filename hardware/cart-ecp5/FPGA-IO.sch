@@ -595,7 +595,7 @@ AR Path="/5F483803/5FDC5F08" Ref="TP?"  Part="1"
 AR Path="/5F3E46DE/5FDC5F08" Ref="TP1"  Part="1" 
 F 0 "TP1" H 13108 3318 50  0000 L CNN
 F 1 "TestPoint" H 13108 3227 50  0001 L CNN
-F 2 "ng_test:TestPoint_Pad_D0.5mm" H 13250 3200 50  0001 C CNN
+F 2 "TestPoint:TestPoint_Pad_D1.0mm" H 13250 3200 50  0001 C CNN
 F 3 "~" H 13250 3200 50  0001 C CNN
 	1    13050 3200
 	1    0    0    1   
