@@ -1175,4 +1175,34 @@ $EndComp
 Wire Wire Line
 	8200 5500 8050 5500
 Connection ~ 8200 5500
+$Comp
+L Connector_Generic:Conn_01x02 J4
+U 1 1 5FF61CAC
+P 3000 5550
+F 0 "J4" H 2950 5200 50  0000 C CNN
+F 1 "Conn_01x02" H 2950 5300 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 3000 5550 50  0001 C CNN
+F 3 "~" H 3000 5550 50  0001 C CNN
+	1    3000 5550
+	-1   0    0    1   
+$EndComp
+Text GLabel 3400 5450 2    50   UnSpc ~ 0
+P3V3
+Wire Wire Line
+	3200 5450 3400 5450
+Wire Wire Line
+	3200 5550 3300 5550
+Wire Wire Line
+	3300 5550 3300 5650
+$Comp
+L ng_power:GND #PWR0102
+U 1 1 5FF79703
+P 3300 5650
+F 0 "#PWR0102" H 3300 5400 50  0001 C CNN
+F 1 "GND" H 3303 5524 50  0000 C CNN
+F 2 "" H 3200 5300 50  0001 C CNN
+F 3 "" H 3300 5650 50  0001 C CNN
+	1    3300 5650
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
