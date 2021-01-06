@@ -98,9 +98,9 @@ F 4 "LFE5U-25F-xBG256x" H 9250 -2450 60  0001 C CNN "MPN"
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10200 3600 10800 3600
+	10200 3600 10300 3600
 Wire Wire Line
-	10200 2400 10800 2400
+	10200 2400 10300 2400
 Wire Wire Line
 	10200 3300 10300 3300
 Wire Wire Line
@@ -140,7 +140,7 @@ Wire Wire Line
 Text GLabel 10500 1700 2    50   UnSpc ~ 0
 P3V3
 Wire Wire Line
-	10200 2200 10300 2200
+	10200 2200 11000 2200
 $Comp
 L Device:R R3
 U 1 1 5F64C834
@@ -177,35 +177,24 @@ F 3 "" H 11200 4100 50  0001 C CNN
 $EndComp
 Text Label 10300 2200 0    50   ~ 0
 FPGA_RESET
-$Comp
-L Device:R R1
-U 1 1 5F67946D
-P 10950 2400
-F 0 "R1" V 10743 2400 50  0000 C CNN
-F 1 "1k5" V 10834 2400 50  0000 C CNN
-F 2 "Resistor_SMD:R_0402_1005Metric" V 10880 2400 50  0001 C CNN
-F 3 "~" H 10950 2400 50  0001 C CNN
-	1    10950 2400
-	0    1    1    0   
-$EndComp
 Wire Wire Line
-	11100 2400 11200 2400
+	14850 1750 14950 1750
 $Comp
 L Device:R R2
 U 1 1 5F67D9E4
-P 10950 3600
-F 0 "R2" V 10743 3600 50  0000 C CNN
-F 1 "1k5" V 10834 3600 50  0000 C CNN
-F 2 "Resistor_SMD:R_0402_1005Metric" V 10880 3600 50  0001 C CNN
-F 3 "~" H 10950 3600 50  0001 C CNN
-	1    10950 3600
+P 14700 2100
+F 0 "R2" V 14493 2100 50  0000 C CNN
+F 1 "DNP" V 14584 2100 50  0000 C CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 14630 2100 50  0001 C CNN
+F 3 "~" H 14700 2100 50  0001 C CNN
+	1    14700 2100
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	11100 3600 11200 3600
-Text GLabel 11200 3600 2    50   UnSpc ~ 0
+	14850 2100 14950 2100
+Text GLabel 14950 2100 2    50   UnSpc ~ 0
 P3V3
-Text GLabel 11200 2400 2    50   UnSpc ~ 0
+Text GLabel 14950 1750 2    50   UnSpc ~ 0
 P3V3
 $Comp
 L ng_fpga_lattice_ecp5:LFE5U-25F-xBG256x U1
@@ -562,10 +551,6 @@ F 3 "https://www.mouser.com/datasheet/2/949/w25q128jv_revf_03272018_plus-1489608
 	1    13200 1500
 	-1   0    0    -1  
 $EndComp
-Wire Wire Line
-	10200 2100 11050 2100
-Text GLabel 11050 2100 2    50   Output ~ 0
-FPGA_CDONE
 Connection ~ 10300 1600
 Wire Wire Line
 	10300 1600 10400 1600
@@ -603,4 +588,76 @@ $EndComp
 Connection ~ 13050 3100
 Wire Wire Line
 	13050 3100 13150 3100
+$Comp
+L Device:R R1
+U 1 1 5F67946D
+P 14700 1750
+F 0 "R1" V 14493 1750 50  0000 C CNN
+F 1 "DNP" V 14584 1750 50  0000 C CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 14630 1750 50  0001 C CNN
+F 3 "~" H 14700 1750 50  0001 C CNN
+	1    14700 1750
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	11000 1700 11100 1700
+Text GLabel 11100 1700 2    50   UnSpc ~ 0
+P3V3
+Text Notes 11150 1150 0    50   ~ 0
+Pull-ups on the configuration flash CSn and CLK signals are likely unnecessary\nThe Butterstick omits pull-ups on CSn, CLK, IO2, and IO3\nThe latter are likely unnecessary for a QSPI part with fixed QE=1
+Wire Wire Line
+	14550 1750 14450 1750
+Wire Wire Line
+	14550 2100 14450 2100
+Text Label 14450 2100 2    50   ~ 0
+FLASH_CS_B
+Text Label 14450 1750 2    50   ~ 0
+FLASH_CLK
+$Comp
+L Device:R R26
+U 1 1 5FF8D4D1
+P 11000 1950
+F 0 "R26" H 11070 1996 50  0000 L CNN
+F 1 "4k7" H 11070 1905 50  0000 L CNN
+F 2 "Resistor_SMD:R_0402_1005Metric" V 10930 1950 50  0001 C CNN
+F 3 "~" H 11000 1950 50  0001 C CNN
+	1    11000 1950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10200 2100 10300 2100
+Text Label 10300 2100 0    50   ~ 0
+FPGA_CDONE
+NoConn ~ 10200 2000
+$Comp
+L Device:C C45
+U 1 1 5FF9EFF4
+P 11000 2450
+F 0 "C45" H 11115 2496 50  0000 L CNN
+F 1 "100n" H 11115 2405 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0402_1005Metric" H 11038 2300 50  0001 C CNN
+F 3 "~" H 11000 2450 50  0001 C CNN
+	1    11000 2450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	11000 2200 11000 2100
+Wire Wire Line
+	11000 2200 11000 2300
+Connection ~ 11000 2200
+Wire Wire Line
+	11000 2600 11000 2700
+$Comp
+L ng_power:GND #PWR072
+U 1 1 5FFA7EA6
+P 11000 2700
+F 0 "#PWR072" H 11000 2450 50  0001 C CNN
+F 1 "GND" H 11003 2574 50  0000 C CNN
+F 2 "" H 10900 2350 50  0001 C CNN
+F 3 "" H 11000 2700 50  0001 C CNN
+	1    11000 2700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	11000 1700 11000 1800
 $EndSCHEMATC
