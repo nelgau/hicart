@@ -1000,7 +1000,7 @@ F 5 "Yageo" H 9350 5950 50  0001 C CNN "MFR"
 	1    0    0    -1  
 $EndComp
 $Comp
-L cart-ecp5-rescue:USB_C_Receptacle_USB2.0-Connector J5
+L Connector:USB_C_Receptacle_USB2.0 J5
 U 1 1 5F216B5E
 P 3850 3500
 F 0 "J5" H 3450 4350 50  0000 L CNN
