@@ -10,4 +10,5 @@
   (lib (name ng_ftdi)(type Legacy)(uri ${KIPRJMOD}/../lib/nelgau/symbols/ng_ftdi.lib)(options "")(descr ""))
   (lib (name ng_osc)(type Legacy)(uri ${KIPRJMOD}/../lib/nelgau/symbols/ng_osc.lib)(options "")(descr ""))
   (lib (name ng_symbol)(type Legacy)(uri ${KIPRJMOD}/../lib/nelgau/symbols/ng_symbol.lib)(options "")(descr ""))
+  (lib (name cart-ecp5-rescue)(type Legacy)(uri ${KIPRJMOD}/cart-ecp5-rescue.lib)(options "")(descr ""))
 )
