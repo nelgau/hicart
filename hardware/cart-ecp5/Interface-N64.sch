@@ -441,9 +441,11 @@ L MCU_Microchip_ATtiny:ATtiny25-20SU U4
 U 1 1 5F5E9784
 P 8100 4950
 F 0 "U4" H 7550 4850 50  0000 R CNN
-F 1 "ATtiny25-20SU" H 7550 4750 50  0000 R CNN
+F 1 "ATtiny45-20SU" H 7550 4750 50  0000 R CNN
 F 2 "Package_SO:SOIJ-8_5.3x5.3mm_P1.27mm" H 8100 4950 50  0001 C CIN
 F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-2586-avr-8-bit-microcontroller-attiny25-attiny45-attiny85_datasheet.pdf" H 8100 4950 50  0001 C CNN
+F 4 "Microchip" H 8100 4950 50  0001 C CNN "MFR"
+F 5 "ATTINY45-20SU" H 8100 4950 50  0001 C CNN "MPN"
 	1    8100 4950
 	-1   0    0    -1  
 $EndComp
