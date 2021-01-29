@@ -504,8 +504,6 @@ Text GLabel 6700 9000 2    50   BiDi ~ 0
 USB_AC6
 Text GLabel 6700 8900 2    50   BiDi ~ 0
 USB_AC7
-Text Notes 5150 9750 0    50   ~ 0
-NB. Must assign IO for USB_DET signal
 Text GLabel 6700 4000 2    50   Input ~ 0
 N64_CIC_DATA1
 Text GLabel 6700 3500 2    50   Input ~ 0
@@ -530,7 +528,7 @@ Text GLabel 3200 5900 2    50   Output ~ 0
 LED_D6
 Text GLabel 3200 6200 2    50   Output ~ 0
 LED_D7
-Text Notes 5150 9850 0    50   ~ 0
+Text Notes 5100 9650 0    50   ~ 0
 NB. In FT245 Sync FIFO mode, the AC5 signal is CLKOUT
 Text GLabel 6700 6900 2    50   BiDi ~ 0
 USB_AD4
