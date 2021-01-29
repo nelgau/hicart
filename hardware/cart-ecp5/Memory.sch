@@ -17,12 +17,12 @@ $Comp
 L ng_memory:S27KS0641 U3
 U 1 1 5F47DAAE
 P 4250 4100
-F 0 "U3" H 4550 4900 60  0000 C CNN
-F 1 "S27KS0641" H 4750 4800 60  0000 C CNN
+F 0 "U3" H 4450 4900 60  0000 L CNN
+F 1 "S27KS0641DPBHI020" H 4450 4800 60  0000 L CNN
 F 2 "ng_package_bga:BGA-24_6.0x8.0mm_Layout5x5_P1.0mm_Pad0.4mm" H 3450 6050 60  0001 C CNN
 F 3 "https://www.cypress.com/file/183506/download" H 3450 6050 60  0001 C CNN
 F 4 "Cypress" H 4250 4100 50  0001 C CNN "MFR"
-F 5 "S27KS0641" H 4250 4100 50  0001 C CNN "MPN"
+F 5 "S27KS0641DPBHI020" H 4250 4100 50  0001 C CNN "MPN"
 	1    4250 4100
 	1    0    0    -1  
 $EndComp
@@ -357,8 +357,6 @@ Wire Wire Line
 Connection ~ 8100 3600
 Wire Wire Line
 	8100 3600 8500 3600
-Text Notes 3400 5350 0    50   ~ 0
-NB. Check for the correct part for 1V8 operation!
 $Comp
 L Device:C C71
 U 1 1 5F5DCC37
@@ -435,10 +433,6 @@ F 3 "" H 2650 3400 50  0001 C CNN
 	1    2650 3400
 	1    0    0    -1  
 $EndComp
-Text Notes 3400 5450 0    50   ~ 0
-NB. Fix decoupling (see Cypress’ HyperRAM layout guide)
-Text Notes 3400 5550 0    50   ~ 0
-https://www.cypress.com/file/278156/download
 $Comp
 L Device:C C56
 U 1 1 6015C35E
