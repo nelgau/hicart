@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 8
+Sheet 1 9
 Title ""
 Date ""
 Rev ""
@@ -14,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Sheet
-S 1800 2750 1750 1000
+S 1800 2700 1750 950 
 U 5F4290F0
 F0 "FPGA-Power" 50
 F1 "FPGA-Power.sch" 50
@@ -70,5 +70,11 @@ S 8000 2700 1550 950
 U 5F5BD87F
 F0 "Display" 50
 F1 "Display.sch" 50
+$EndSheet
+$Sheet
+S 3900 2700 1750 950 
+U 60304B7F
+F0 "Interface-PMOD" 50
+F1 "Interface-PMOD.sch" 50
 $EndSheet
 $EndSCHEMATC

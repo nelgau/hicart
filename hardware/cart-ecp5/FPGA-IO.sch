@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
-Sheet 3 8
+Sheet 3 9
 Title ""
 Date ""
 Rev ""
@@ -733,4 +733,20 @@ F 3 "~" H 13850 2900 50  0001 C CNN
 	1    13650 2900
 	1    0    0    -1  
 $EndComp
+Text GLabel 3200 2100 2    50   BiDi ~ 0
+PMOD_P1_D4
+Text GLabel 3200 2200 2    50   BiDi ~ 0
+PMOD_P1_D0
+Text GLabel 3200 2500 2    50   BiDi ~ 0
+PMOD_P1_D5
+Text GLabel 3200 3100 2    50   BiDi ~ 0
+PMOD_P1_D6
+Text GLabel 3200 3500 2    50   BiDi ~ 0
+PMOD_P1_D7
+Text GLabel 3200 2600 2    50   BiDi ~ 0
+PMOD_P1_D1
+Text GLabel 3200 3200 2    50   BiDi ~ 0
+PMOD_P1_D2
+Text GLabel 3200 3600 2    50   BiDi ~ 0
+PMOD_P1_D3
 $EndSCHEMATC
