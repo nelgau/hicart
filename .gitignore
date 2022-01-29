@@ -18,6 +18,7 @@ build/
 *.svf
 
 # Traces
+traces/
 *.vcd
 *.gtkw
 
