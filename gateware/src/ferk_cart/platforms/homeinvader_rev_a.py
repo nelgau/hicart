@@ -254,9 +254,10 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
         ]
 
     def toolchain_prepare(self, fragment, name, **kwargs):
-        overrides = dict(ecppack_opts="--compress --freq 38.8")
-        overrides.update(kwargs)
-        return super().toolchain_prepare(fragment, name, **overrides)
+        overrides = {
+            "ecppack_opts": "--compress --freq 38.8"
+        }
+        return super().toolchain_prepare(fragment, name, **overrides, **kwargs)
 
     def toolchain_program(self, products, name, **kwargs):
         ecpprog = os.environ.get("ECPPROG", "ecpprog")
