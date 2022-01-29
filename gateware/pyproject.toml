@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "ferk-cart"
+version = "0.1.0"
+description = ""
+authors = ["Nelson Gauthier <nelson.gauthier@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pyftdi = "^0.53.3"
+# Amaranth HDL
+amaranth = {git = "https://github.com/amaranth-lang/amaranth.git", branch="main"}
+amaranth-soc = {git = "https://github.com/amaranth-lang/amaranth-soc.git", branch="main"}
+amaranth-stdio = {git = "https://github.com/amaranth-lang/amaranth-stdio.git", branch="main"}
+amaranth-boards = {git = "https://github.com/amaranth-lang/amaranth-boards.git", branch="main"}
+minerva = {git = "https://github.com/minerva-cpu/minerva.git"}
+luna = {git = "https://github.com/greatscottgadgets/luna.git", branch="main"}
+# LambdaSoC (heavy transitive dependencies)
+lambdasoc = {git = "https://github.com/nelgau/lambdasoc.git", branch="amaranth"}
+litex = {git = "https://github.com/enjoy-digital/litex"}
+litedram = {git = "https://github.com/enjoy-digital/litedram.git"}
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

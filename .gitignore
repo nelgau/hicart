@@ -1,5 +1,25 @@
-# Python virtual environment
-/env
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# C object files and binaries
+*.o
+*.d
+*.elf
+*.bin
+
+# Build
+build/
+*.bit
+*.svf
+
+# Traces
+*.vcd
+*.gtkw
 
 # For PCBs designed using KiCad: http://www.kicad-pcb.org/
 # Format documentation: http://kicad-pcb.org/help/file-formats/
@@ -27,3 +47,8 @@ fp-info-cache
 # Exported BOM files
 *.xml
 *.csv
+
+# N64 dumps
+roms/
+*.n64
+*.z64
