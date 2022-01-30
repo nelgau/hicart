@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ferk-cart"
+name = "hicart"
 version = "0.1.0"
 description = ""
 authors = ["Nelson Gauthier <nelson.gauthier@gmail.com>"]
