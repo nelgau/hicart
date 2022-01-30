@@ -10,123 +10,24 @@ from amaranth_boards.resources import *
 from hicart.interface.qspi_flash import QSPIBus
 from hicart.utils.plat import get_all_resources
 
+
+from hicart.arch.ecp5pll import ECP5PLL, ECP5PLLConfig
+
+
 __all__ = ["HomeInvaderRevAPlatform"]
 
+
 class HomeInvaderRevADomainGenerator(Elaboratable):
-    """ Clock generator for Rev A boards. """
 
     def elaborate(self, platform):
         m = Module()
 
-        # Grab our default input clock.
-        input_clock = platform.request(platform.default_clk, dir="i")        
-
-        # Create our domains; but don't do anything else for them, for now.
-        m.domains.sync = ClockDomain()
-        m.domains.cic  = ClockDomain()
-        m.domains.slow = ClockDomain()
-
-        locked = Signal()
-        clk80  = Signal()
-        clk40  = Signal()
-        clk20  = Signal()
-
-
-        # 60 Mhz sync clock
-        # ref_div  = 1
-        # fb_div   = 5
-        # clk0_div = 10
-        # clk1_div = 15
-        # clk2_div = 30
-        # clk0_freq = "60"
-        # clk1_freq = "40"
-        # clk2_freq = "20"
-
-        # 80 Mhz sync clock
-        ref_div  = 3
-        fb_div   = 20
-        clk0_div = 7
-        clk1_div = 14
-        clk2_div = 28
-        clk0_freq = "80"
-        clk1_freq = "40"
-        clk2_freq = "20"        
-
-
-
-        m.submodules.pll = Instance("EHXPLLL",
-                # Clock in
-                i_CLKI=input_clock,
-
-                # Generated clock outputs.
-                o_CLKOP=clk80,
-                o_CLKOS=clk40,
-                o_CLKOS2=clk20,
-
-                # Status
-                o_LOCK=locked,
-
-                # PLL parameters
-                p_PLLRST_ENA="DISABLED",
-                p_INTFB_WAKE="DISABLED",
-                p_STDBY_ENABLE="DISABLED",
-                p_DPHASE_SOURCE="DISABLED",
-                p_OUTDIVIDER_MUXA="DIVA",
-                p_OUTDIVIDER_MUXB="DIVB",
-                p_OUTDIVIDER_MUXC="DIVC",
-                p_OUTDIVIDER_MUXD="DIVD",
-                p_CLKI_DIV = ref_div,                     # Was 3           
-                p_CLKOP_ENABLE = "ENABLED",
-                p_CLKOP_DIV = clk0_div,                   # Was 7
-                p_CLKOP_CPHASE = 3,
-                p_CLKOP_FPHASE = 0,
-                p_CLKOS_ENABLE = "ENABLED",
-                p_CLKOS_DIV = clk1_div,
-                p_CLKOS_CPHASE = 3,
-                p_CLKOS_FPHASE = 0,
-                p_CLKOS2_ENABLE = "ENABLED",
-                p_CLKOS2_DIV = clk2_div,
-                p_CLKOS2_CPHASE = 3,
-                p_CLKOS2_FPHASE = 0,                
-                p_FEEDBK_PATH = "CLKOP",
-                p_CLKFB_DIV = fb_div,                   # Was 20
-
-                # Internal feedback
-                i_CLKFB=clk80,
-
-                # Control signals
-                i_RST=0,
-                i_STDBY=0,
-                i_PHASESEL0=0,
-                i_PHASESEL1=0,
-                i_PHASEDIR=1,
-                i_PHASESTEP=1,
-                i_PHASELOADREG=1,
-                i_PLLWAKESYNC=0,
-
-                # Output Enables.
-                i_ENCLKOP=0,                
-
-                # Synthesis attributes.
-                a_FREQUENCY_PIN_CLKI="12",
-                a_FREQUENCY_PIN_CLKOP=clk0_freq,         # Was 80
-                a_FREQUENCY_PIN_CLKOS=clk1_freq,
-                a_FREQUENCY_PIN_CLKOS2=clk2_freq,
-                a_ICP_CURRENT="12",
-                a_LPF_RESISTOR="8",
-                a_MFG_ENABLE_FILTEROPAMP="1",
-                a_MFG_GMCREF_SEL="2"
-        )
-
-        m.d.comb += [
-            ClockSignal("sync")    .eq(clk80),
-            ClockSignal("cic")     .eq(clk40),
-            ClockSignal("slow")    .eq(clk20),
-
-            ResetSignal("sync")    .eq(~locked),
-            ResetSignal("cic")     .eq(~locked),
-            ResetSignal("slow")    .eq(~locked),
+        configs = [
+            ECP5PLLConfig("sync", freq=80),
+            ECP5PLLConfig("cic",  freq=40),
         ]
+
+        m.submodules.pll = ECP5PLL(configs)
 
         return m
 
