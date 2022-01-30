@@ -126,59 +126,59 @@ class CICTest(ModuleTestCase):
         self.assertEqual(hello2, 0x1)
         self.assertEqual(seed2, [0xB, 0xD])
 
-    # @sync_test_case
-    # def test_output(self):
-    #     yield from self.wait(50e-6)
+    @sync_test_case
+    def test_output(self):
+        yield from self.wait(50e-6)
 
-    #     # Preamble (from CIC)
+        # Preamble (from CIC)
 
-    #     hello = yield from self.read_nibble()
-    #     seed  = yield from self.read_nibbles(6)
+        hello = yield from self.read_nibble()
+        seed  = yield from self.read_nibbles(6)
 
-    #     self.assertEqual(hello, 0x1)
-    #     self.assertEqual(seed, [0xB, 0xD, 0x3, 0x9, 0x3, 0xD])
+        self.assertEqual(hello, 0x1)
+        self.assertEqual(seed, [0xB, 0xD, 0x3, 0x9, 0x3, 0xD])
 
-    #     yield from self.wait(70e-6)
-    #     yield from self.read_bit()
+        yield from self.wait(70e-6)
+        yield from self.read_bit()
 
-    #     checksum = yield from self.read_nibbles(16)
+        checksum = yield from self.read_nibbles(16)
 
-    #     self.assertEqual(checksum, [
-    #         0x9, 0x0, 0x4, 0x0, 0xA, 0xE, 0xC, 0xB,
-    #             0xF, 0xD, 0xA, 0xD, 0xB, 0x2, 0x6, 0x5])
+        self.assertEqual(checksum, [
+            0x9, 0x0, 0x4, 0x0, 0xA, 0xE, 0xC, 0xB,
+                0xF, 0xD, 0xA, 0xD, 0xB, 0x2, 0x6, 0x5])
 
-    #     # Initial values (from PIF)
+        # Initial values (from PIF)
 
-    #     yield from self.wait(20e-6)
+        yield from self.wait(20e-6)
 
-    #     yield from self.write_nibble(0xA)
-    #     yield from self.write_nibble(0x7)
+        yield from self.write_nibble(0xA)
+        yield from self.write_nibble(0x7)
 
-    #     # Command 1 (from PIF)
+        # Command 1 (from PIF)
 
-    #     yield from self.wait(20e-6)
-    #     yield from self.write_bit(0)
-    #     yield from self.write_bit(0)
-    #     yield from self.wait(200e-6)
+        yield from self.wait(20e-6)
+        yield from self.write_bit(0)
+        yield from self.write_bit(0)
+        yield from self.wait(200e-6)
 
-    #     # Exchange 1 (Bidirectional)
+        # Exchange 1 (Bidirectional)
 
-    #     cmd1_in_bits = yield from self.exchange_bits([0, 1, 1, 0, 1, 1, 0])
-    #     self.assertEqual(cmd1_in_bits, [1, 1, 1, 0, 1, 0, 1])
+        cmd1_in_bits = yield from self.exchange_bits([0, 1, 1, 0, 1, 1, 0])
+        self.assertEqual(cmd1_in_bits, [1, 1, 1, 0, 1, 0, 1])
 
-    #     # Command 2 (from PIF)
+        # Command 2 (from PIF)
 
-    #     yield from self.wait(20e-6)
-    #     yield from self.write_bit(0)
-    #     yield from self.write_bit(0)
-    #     yield from self.wait(200e-6)
+        yield from self.wait(20e-6)
+        yield from self.write_bit(0)
+        yield from self.write_bit(0)
+        yield from self.wait(200e-6)
 
-    #     # Exchange 2 (Bidirectional)
+        # Exchange 2 (Bidirectional)
 
-    #     cmd2_in_bits = yield from self.exchange_bits([
-    #         1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1])
-    #     self.assertEqual(cmd2_in_bits, [
-    #         0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0])
+        cmd2_in_bits = yield from self.exchange_bits([
+            1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1])
+        self.assertEqual(cmd2_in_bits, [
+            0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0])
 
     def read_bit(self):
         yield self.dut.data_clk.eq(0)
