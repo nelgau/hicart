@@ -11,7 +11,7 @@ from hicart.interface.qspi_flash import QSPIBus
 from hicart.utils.plat import get_all_resources
 
 
-from hicart.arch.ecp5pll import ECP5PLL, ECP5PLLConfig
+from hicart.vendor.ecp5pll import ECP5PLL, ECP5PLLConfig
 
 
 __all__ = ["HomeInvaderRevAPlatform"]
