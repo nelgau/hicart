@@ -53,3 +53,6 @@ fp-info-cache
 roms/
 *.n64
 *.z64
+
+# Vine scrapes
+media/vines/output
