@@ -15,7 +15,7 @@ amaranth-boards = {git = "https://github.com/amaranth-lang/amaranth-boards.git",
 minerva = {git = "https://github.com/minerva-cpu/minerva.git"}
 luna = {git = "https://github.com/greatscottgadgets/luna.git", branch="main"}
 # LambdaSoC (heavy transitive dependencies)
-lambdasoc = {git = "https://github.com/nelgau/lambdasoc.git", branch="amaranth"}
+lambdasoc = {git = "https://github.com/nelgau/lambdasoc.git", branch="fix-compiler-rt"}
 litex = {git = "https://github.com/enjoy-digital/litex"}
 litedram = {git = "https://github.com/enjoy-digital/litedram.git"}
 
