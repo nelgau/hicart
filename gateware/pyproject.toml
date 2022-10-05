@@ -23,7 +23,7 @@ cocotb = "^1.7.1"
 cocotb-test = {git = "https://github.com/nelgau/cocotb-test.git", branch="master"}
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^7.1.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
