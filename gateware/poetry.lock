@@ -200,7 +200,7 @@ resolved_reference = "2d9340cf292102ecb88fa6db7cb72e9cbd2408d7"
 
 [[package]]
 name = "libusb1"
-version = "1.10.1"
+version = "1.9.3"
 description = "Pure-python wrapper for libusb-1.0"
 category = "main"
 optional = false
@@ -540,10 +540,13 @@ jinja2 = [
 ]
 lambdasoc = []
 libusb1 = [
-    {file = "libusb1-1.10.1-py3-none-any.whl", hash = "sha256:fa0558a3ebf1f7394be0de7a022f77a2a7d1a0dd2f5dcc3a30d77c9bf9312c56"},
-    {file = "libusb1-1.10.1-py3-none-win32.whl", hash = "sha256:7ed941416e9ef7cd0d8b76b9e3496f209d7a7e4bee31e847da04bcc1f9bdc786"},
-    {file = "libusb1-1.10.1-py3-none-win_amd64.whl", hash = "sha256:a9d3645bbdce907aa29857224c72269a4d2cc55d5255ce0d0246b18106374e7c"},
-    {file = "libusb1-1.10.1.tar.gz", hash = "sha256:8d70e5ef11a9facf304e696cc1d571c526bd9e02a8710a045b3b2567db7a54e0"},
+    {file = "libusb1-1.9.3-py2-none-any.whl", hash = "sha256:891d331836d4a97f06c484c44c2e6ecafc1402551f395aa753d436c6aa6304ad"},
+    {file = "libusb1-1.9.3-py2-none-win32.whl", hash = "sha256:a3227b010d8b6322d47a66c438a562cbb02793db0ecd68f35cb3bd2d575f2a6e"},
+    {file = "libusb1-1.9.3-py2-none-win_amd64.whl", hash = "sha256:98376b9e40df25dfc2dcdec1b056f28c2b28ca6caf46e93d9bebeea29a949c0e"},
+    {file = "libusb1-1.9.3-py3-none-any.whl", hash = "sha256:f40a09e37b656c9bb48b1c83ef74ca0c8d7e5b0888168ea54733832f6eac1ec4"},
+    {file = "libusb1-1.9.3-py3-none-win32.whl", hash = "sha256:86792164d5b5b96bdd4f186b2502f70e19c09b2086fa9b39711c3b16703948a9"},
+    {file = "libusb1-1.9.3-py3-none-win_amd64.whl", hash = "sha256:8465e042c95b0a3fb8ea11472d2b3a73987af28780a802637ff70c4e6de46335"},
+    {file = "libusb1-1.9.3.tar.gz", hash = "sha256:60e6ce37be064f6e51d02b25da44230ecc9c0b1fdb6f14568c71457d963c1749"},
 ]
 litedram = []
 litex = []
