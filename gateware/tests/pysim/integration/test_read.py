@@ -1,5 +1,3 @@
-import unittest
-
 from amaranth import *
 from amaranth.sim import *
 from amaranth_soc import wishbone

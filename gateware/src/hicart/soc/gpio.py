@@ -1,5 +1,4 @@
 from amaranth import *
-
 from lambdasoc.periph.base import Peripheral
 
 
