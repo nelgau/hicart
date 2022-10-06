@@ -42,11 +42,12 @@ def get_clock_signal(dut, cd):
 def generate_verilog(verilog_file, design, platform, name='top',
                      ports=(), vcd_file=None):
     fragment = Fragment.get(design, platform)
-    print(name, ports)
     output = verilog.convert(fragment, name=name, ports=ports)
+
     with open(verilog_file, 'w') as f:
         f.write('`timescale 1ns/1ps\n')
         f.write(output)
+
         if vcd_file:
             vcd_file = os.path.abspath(vcd_file)
             f.write(verilog_waveforms.format(vcd_file, name))
@@ -59,8 +60,10 @@ def copy_extra_files(extra_files, path):
 
 def dump_file(filename, content, d):
     file_path = d + '/' + filename
+
     if isinstance(content, bytes):
         content = content.decode('utf-8')
+
     if os.path.exists(file_path):
         with open(file_path, 'r') as f:
             c = f.read()
@@ -70,6 +73,7 @@ def dump_file(filename, content, d):
     else:
         with open(file_path, 'w') as f:
             f.write(content)
+
     return file_path
 
 
