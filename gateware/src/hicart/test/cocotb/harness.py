@@ -97,7 +97,7 @@ def run(design, module, platform=None, ports=(), name='top',
 
         compile_args = []
 
-        if vcd_file:
+        if vcd_file and os.getenv('GENERATE_VCDS', default=False):
             compile_args += compile_args_waveforms
 
         if extra_args:
