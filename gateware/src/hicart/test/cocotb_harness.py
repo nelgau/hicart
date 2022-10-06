@@ -26,8 +26,9 @@ endmodule
 
 
 def get_current_module():
-    module = inspect.getsourcefile(inspect.stack()[1][0])
-    return inspect.getmodulename(module)
+    stk = inspect.stack()[1]
+    mod = inspect.getmodule(stk[0])
+    return mod.__name__
 
 
 def get_reset_signal(dut, cd):

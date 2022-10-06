@@ -93,15 +93,7 @@ def test_module():
     dut = DUT()
     run(
         dut,
-
-        # It isn't possible to use this 
-        # get_current_module()
-        'tests.test_cocotb',
-
+        get_current_module(),
         ports=dut.ports(),
         vcd_file='output.vcd'
     )
-
-
-if __name__ == '__main__':
-    test_module()
