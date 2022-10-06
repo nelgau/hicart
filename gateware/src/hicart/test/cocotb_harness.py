@@ -1,7 +1,7 @@
 # This file was largely derived from the implementation of amaranth-cocotb.
 # See https://github.com/andresdemski/nmigen-cocotb/blob/master/amaranth_cocotb/amaranth_cocotb.py
 
-from cocotb_test.simulator import Icarus
+from cocotb_test.simulator import run as cocotb_test_run
 from amaranth import Fragment
 from amaranth.back import verilog
 from amaranth.cli import main_parser, main_runner
@@ -75,30 +75,40 @@ def dump_file(filename, content, d):
 
 def run(design, module, platform=None, ports=(), name='top',
         verilog_sources=None, extra_files=None, vcd_file=None,
-        simulator=Icarus, extra_args=None, extra_env=None):
+        extra_args=None, extra_env=None):
+
     with tempfile.TemporaryDirectory() as d:
         verilog_file = d + '/nmigen_output.v'
         generate_verilog(verilog_file, design, platform, name, ports, vcd_file)
+
         sources = [verilog_file]
+
         if verilog_sources:
             sources.extend(verilog_sources)
+
         if extra_files:
             copy_extra_files(extra_files, d)
+
         if platform:
             for filename, content in platform.extra_files.items():
                 filepath = dump_file(filename, content, d)
                 if filename.endswith('.v') or filename.endswith('.sv'):
                     sources.append(filepath)
+
         compile_args = []
+
         if vcd_file:
             compile_args += compile_args_waveforms
+
         if extra_args:
             compile_args += extra_args
-        os.environ['SIM'] = 'icarus'
-        sim = simulator(toplevel=name,
-                        module=module,
-                        verilog_sources=sources,
-                        compile_args=compile_args,
-                        sim_build=d,
-                        extra_env=extra_env)
-        sim.run()
+
+        cocotb_test_run(
+            simulator='icarus',
+            toplevel=name,
+            module=module,
+            verilog_sources=sources,
+            compile_args=compile_args,
+            sim_build=d,
+            extra_env=extra_env
+        )
