@@ -57,7 +57,7 @@ class PIWishboneInitiatorTest(ModuleTestCase):
         def elaborate(self, platform):
             m = Module()
 
-            self.decoder = wishbone.Decoder(addr_width=32, data_width=32, granularity=8)
+            self.decoder = wishbone.Decoder(addr_width=32, data_width=32, granularity=8, features={"stall"})
 
             self.rom = SRAMPeripheral(size=16, data_width=32, writable=False)
             self.decoder.add(self.rom.bus, addr=0x10000000)
