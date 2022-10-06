@@ -17,5 +17,6 @@ Install the following packages:
     $ brew install --HEAD nextpnr-ecp5
     $ brew install --HEAD ecpprog
     $ brew install riscv-tools
+    $ brew install icarus-verilog
 
 Note: Building `nextpnr-ecp5` takes approximately 11 minutes on an M1 MacBook Pro.
