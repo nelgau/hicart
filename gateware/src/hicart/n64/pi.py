@@ -4,8 +4,7 @@ from lambdasoc.periph.sram  import SRAMPeripheral
 
 from hicart.n64.ad16 import AD16, AD16Interface
 from hicart.n64.burst import BurstDecoder, DirectBurst2Wishbone, BufferedBurst2Wishbone
-
-from hicart.test import *
+from hicart.test.utils import ModuleTestCase, sync_test_case
 
 
 class PIWishboneInitiator(Elaboratable):

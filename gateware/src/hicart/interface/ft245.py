@@ -4,8 +4,7 @@ from amaranth.lib.cdc import FFSynchronizer
 from amaranth.lib.fifo import SyncFIFO
 
 from hicart.soc.stream import BasicStream
-
-from hicart.test import *
+from hicart.test.utils import ModuleTestCase, sync_test_case
 
 
 class FT245Bus(Record):

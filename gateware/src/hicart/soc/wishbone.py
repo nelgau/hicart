@@ -4,7 +4,7 @@ from amaranth.utils import log2_int
 from amaranth_soc.memory import MemoryMap
 from amaranth_soc.wishbone import Interface
 
-from hicart.test import *
+from hicart.test.testcase import MultiProcessTestCase
 from hicart.test.driver.wishbone import WishboneInitiator
 from hicart.test.emulator.wishbone import WishboneEmulator
 

@@ -10,7 +10,6 @@ from amaranth_boards.resources import *
 from hicart.interface.qspi_flash import QSPIBus
 from hicart.utils.plat import get_all_resources
 
-
 from hicart.vendor.ecp5pll import ECP5PLL, ECP5PLLConfig
 
 

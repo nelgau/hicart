@@ -4,7 +4,7 @@ from amaranth.hdl.rec import DIR_FANIN, DIR_FANOUT
 
 from amaranth_soc import wishbone
 
-from hicart.test import MultiProcessTestCase
+from hicart.test.testcase import MultiProcessTestCase
 
 
 class BurstBus(Record):

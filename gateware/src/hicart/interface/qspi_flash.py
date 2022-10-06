@@ -5,7 +5,7 @@ from amaranth.utils import log2_int
 from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 
-from hicart.test import *
+from hicart.test.utils import ModuleTestCase, sync_test_case
 
 
 class QSPIBus(Record):

@@ -1,7 +1,7 @@
 from amaranth import *
 from amaranth.hdl.rec import DIR_FANIN, DIR_FANOUT
 
-from hicart.test import *
+from hicart.test.utils import ModuleTestCase, sync_test_case
 
 
 class BasicStream(Record):

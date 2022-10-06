@@ -7,7 +7,7 @@ from amaranth_soc import wishbone
 from hicart.interface.ft245 import FT245Interface
 from hicart.soc.stream import BasicStream
 
-from hicart.test import MultiProcessTestCase
+from hicart.test.testcase import MultiProcessTestCase
 from hicart.test.driver.stream import StreamDriver
 from hicart.test.emulator.wishbone import WishboneEmulator
 

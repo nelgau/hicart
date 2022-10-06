@@ -12,7 +12,7 @@ from amaranth import Signal, Module, Cat, Elaboratable, Record, ClockDomain, Clo
 from amaranth.hdl.rec import DIR_FANIN, DIR_FANOUT
 
 from hicart.utils.io import delay
-from hicart.test import ModuleTestCase, sync_test_case
+from hicart.test.utils import ModuleTestCase, sync_test_case
 
 
 class HyperBus(Record):

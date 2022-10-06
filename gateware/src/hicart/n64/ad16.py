@@ -4,7 +4,7 @@ from amaranth.hdl.rec import DIR_FANIN, DIR_FANOUT
 from amaranth.lib.cdc import FFSynchronizer
 
 from hicart.n64.burst import BurstBus
-from hicart.test import *
+from hicart.test.utils import ModuleTestCase, sync_test_case
 
 
 class AD16(Record):

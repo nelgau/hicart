@@ -9,7 +9,7 @@ from lambdasoc.cpu.minerva  import MinervaCPU
 from lambdasoc.periph.sram  import SRAMPeripheral
 
 from hicart.soc.gpio import GPIOPeripheral
-from hicart.test import *
+from hicart.test.utils import ModuleTestCase, sync_test_case
 
 
 class CIC(Elaboratable):
