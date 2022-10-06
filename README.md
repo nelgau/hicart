@@ -18,4 +18,4 @@ Install the following packages:
     $ brew install --HEAD ecpprog
     $ brew install riscv-tools
 
-Note: Building `nextpnr-ecp5` takes approximately 20 minutes on an M1 MacBook Pro.
+Note: Building `nextpnr-ecp5` takes approximately 11 minutes on an M1 MacBook Pro.
