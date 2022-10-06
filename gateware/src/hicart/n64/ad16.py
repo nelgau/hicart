@@ -238,24 +238,31 @@ class AD16InterfaceTest(ModuleTestCase):
     @sync_test_case
     def test_basic(self):
         yield self.dut.bus.blk_stall.eq(1)
+        yield from self.advance_cycles(2)
 
         # Ale_l is active in idle state
         yield self.dut.ad16.ale_l   .eq(1)
-        yield from self.advance_cycles(2)
+        yield from self.advance_cycles(4)
 
         # Latch address
 
         yield self.dut.ad16.ale_l   .eq(0)
+        yield from self.advance_cycles(6)
+
         yield self.dut.ad16.ad.i    .eq(0x8765)
-        yield
+        yield from self.advance_cycles(6)
+
         yield self.dut.ad16.ale_h   .eq(1)
+        yield from self.advance_cycles(6)
+
         yield self.dut.ad16.ad.i    .eq(0x4321)
-        yield
-        yield self.dut.ad16.ale_l   .eq(1)        
-        yield
+        yield from self.advance_cycles(6)
+
+        yield self.dut.ad16.ale_l   .eq(1)
+        yield from self.advance_cycles(6)
 
         yield self.dut.ad16.ad.i    .eq(0)
-        yield from self.advance_cycles(4)
+        yield from self.advance_cycles(6)
 
         # 
 
@@ -294,7 +301,7 @@ class AD16InterfaceTest(ModuleTestCase):
         yield
         yield
 
-        self.assertEqual((yield self.dut.ad16.ad.o),  0xBABE)
+        self.assertEqual((yield self.dut.ad16.ad.o),  0xCAFE)
         self.assertEqual((yield self.dut.ad16.ad.oe), 1)
 
         #
@@ -313,7 +320,7 @@ class AD16InterfaceTest(ModuleTestCase):
         yield self.dut.ad16.read   .eq(1)
         yield from self.advance_cycles(6)
   
-        self.assertEqual((yield self.dut.ad16.ad.o),  0xCAFE)
+        self.assertEqual((yield self.dut.ad16.ad.o),  0xBABE)
         self.assertEqual((yield self.dut.ad16.ad.oe), 1)
 
         #
@@ -348,7 +355,7 @@ class AD16InterfaceTest(ModuleTestCase):
         yield        
         yield
 
-        self.assertEqual((yield self.dut.ad16.ad.o),  0xBEEF)
+        self.assertEqual((yield self.dut.ad16.ad.o),  0xDEAD)
         self.assertEqual((yield self.dut.ad16.ad.oe), 1)
 
         #
@@ -367,7 +374,7 @@ class AD16InterfaceTest(ModuleTestCase):
         yield self.dut.ad16.read   .eq(1)
         yield from self.advance_cycles(6)
   
-        self.assertEqual((yield self.dut.ad16.ad.o),  0xDEAD)
+        self.assertEqual((yield self.dut.ad16.ad.o),  0xBEEF)
         self.assertEqual((yield self.dut.ad16.ad.oe), 1)
 
         #
