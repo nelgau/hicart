@@ -2,9 +2,9 @@ from amaranth import *
 from amaranth.sim import *
 
 from hicart.debug.wishbone import StreamWishboneCommander
-from hicart.test.testcase import MultiProcessTestCase
-from hicart.test.driver.stream import StreamDriver
-from hicart.test.emulator.wishbone import WishboneEmulator
+from hicart.test.pysim.testcase import MultiProcessTestCase
+from hicart.test.pysim.driver.stream import StreamDriver
+from hicart.test.pysim.emulator.wishbone import WishboneEmulator
 
 
 class StreamWishboneCommanderTest(MultiProcessTestCase):

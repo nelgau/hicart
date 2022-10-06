@@ -6,9 +6,9 @@ from hicart.interface.qspi_flash import QSPIBus, QSPIFlashWishboneInterface
 from hicart.n64.ad16 import AD16
 from hicart.n64.pi import PIWishboneInitiator
 from hicart.soc.wishbone import DownConverter, Translator
-from hicart.test.driver.ad16 import PIInitiator
-from hicart.test.emulator.qspi_flash import QSPIFlashEmulator
-from hicart.test.testcase import MultiProcessTestCase
+from hicart.test.pysim.driver.ad16 import PIInitiator
+from hicart.test.pysim.emulator.qspi_flash import QSPIFlashEmulator
+from hicart.test.pysim.testcase import MultiProcessTestCase
 
 
 class DUT(Elaboratable):

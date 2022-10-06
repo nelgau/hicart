@@ -7,7 +7,7 @@ from hicart.n64.ad16 import AD16
 from hicart.n64.pi import PIWishboneInitiator
 from hicart.soc.wishbone import DownConverter, Translator
 
-from hicart.test.cocotb_harness import run, get_current_module
+from hicart.test.cocotb.harness import run, get_current_module
 
 import cocotb
 from cocotb.clock import Clock

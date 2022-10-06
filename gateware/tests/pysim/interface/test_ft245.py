@@ -2,7 +2,7 @@ from amaranth import *
 from amaranth.sim import *
 
 from hicart.interface.ft245 import  FT245Interface
-from hicart.test.utils import ModuleTestCase, sync_test_case
+from hicart.test.pysim.utils import ModuleTestCase, sync_test_case
 
 
 class FT245InterfaceTest(ModuleTestCase):

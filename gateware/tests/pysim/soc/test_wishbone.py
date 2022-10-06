@@ -5,9 +5,9 @@ from amaranth_soc.memory import MemoryMap
 from amaranth_soc.wishbone import Interface
 
 from hicart.soc.wishbone import DownConverter
-from hicart.test.testcase import MultiProcessTestCase
-from hicart.test.driver.wishbone import WishboneInitiator
-from hicart.test.emulator.wishbone import WishboneEmulator
+from hicart.test.pysim.testcase import MultiProcessTestCase
+from hicart.test.pysim.driver.wishbone import WishboneInitiator
+from hicart.test.pysim.emulator.wishbone import WishboneEmulator
 
 
 class DownConverterTest(MultiProcessTestCase):

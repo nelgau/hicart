@@ -5,7 +5,7 @@ from lambdasoc.periph.sram  import SRAMPeripheral
 
 from hicart.n64.ad16 import AD16
 from hicart.n64.pi import PIWishboneInitiator
-from hicart.test.utils import ModuleTestCase, sync_test_case
+from hicart.test.pysim.utils import ModuleTestCase, sync_test_case
 
 
 class PIWishboneInitiatorTest(ModuleTestCase):

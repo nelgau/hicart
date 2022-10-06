@@ -5,7 +5,7 @@ from amaranth import *
 from amaranth.sim import *
 
 from hicart.n64.cic import CIC
-from hicart.test.utils import ModuleTestCase, sync_test_case
+from hicart.test.pysim.utils import ModuleTestCase, sync_test_case
 
 
 @pytest.mark.skipif(

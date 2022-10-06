@@ -2,7 +2,7 @@ from amaranth import *
 from amaranth.sim import *
 
 from hicart.n64.burst import BufferedBurst2Wishbone
-from hicart.test.testcase import MultiProcessTestCase
+from hicart.test.pysim.testcase import MultiProcessTestCase
 
 
 class BufferedBurst2WishboneTest(MultiProcessTestCase):
