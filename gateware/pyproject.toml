@@ -18,6 +18,7 @@ luna = {git = "https://github.com/greatscottgadgets/luna.git", branch="main"}
 lambdasoc = {git = "https://github.com/nelgau/lambdasoc.git", branch="fix-compiler-rt"}
 litex = {git = "https://github.com/enjoy-digital/litex"}
 litedram = {git = "https://github.com/enjoy-digital/litedram.git"}
+litesdcard = {git = "https://github.com/enjoy-digital/litesdcard.git"}
 # Cosimulation testing dependencies
 cocotb = "^1.7.1"
 cocotb-test = {git = "https://github.com/nelgau/cocotb-test.git", branch="master"}
