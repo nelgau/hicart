@@ -7,6 +7,7 @@ import textwrap
 
 from amaranth import *
 from amaranth import tracer
+from amaranth.back import verilog
 from amaranth.build.plat import Platform
 from amaranth.build.run import BuildPlan, BuildProducts
 from amaranth.hdl.rec import DIR_FANIN, DIR_FANOUT
@@ -82,6 +83,7 @@ class Core(Elaboratable):
 
         self._ctrl_bus = None
         self._dma_bus = None
+        self._pins = pins
 
     @property
     def ctrl_bus(self):
@@ -134,8 +136,6 @@ class Core(Elaboratable):
         return products
 
     def elaborate(self, platform):
-        sdcard = SDCard()
-
         core_kwargs = {
             "i_clk"             : ClockSignal("sync"),
             "i_rst"             : ResetSignal("sync"),
@@ -164,17 +164,20 @@ class Core(Elaboratable):
             "o_wb_dma_bte"      : self.dma_bus.bte,
             "i_wb_dma_err"      : self.dma_bus.err,
 
-            "o_sdcard_cmd_i"    : sdcard.cmd.i,
-            "i_sdcard_cmd_o"    : sdcard.cmd.o,
-            "i_sdcard_cmd_t"    : sdcard.cmd.t,
-            "o_sdcard_dat_i"    : sdcard.dat.i,
-            "i_sdcard_dat_o"    : sdcard.dat.o,
-            "i_sdcard_dat_t"    : sdcard.dat.t,
-            "o_sdcard_clk"      : sdcard.clk,
-            "i_sdcard_cd"       : sdcard.cd,
-
             "o_irq"             : self.irq
         }
+
+        if self._pins is not None:
+            core_kwargs.update({
+                "i_sdcard_cmd_i"    : self._pins.cmd.i,
+                "o_sdcard_cmd_o"    : self._pins.cmd.o,
+                "o_sdcard_cmd_oe"   : self._pins.cmd.oe,
+                "i_sdcard_dat_i"    : self._pins.dat.i,
+                "o_sdcard_dat_o"    : self._pins.dat.o,
+                "o_sdcard_dat_oe"   : self._pins.dat.oe,
+                "o_sdcard_clk"      : self._pins.clk,
+                "i_sdcard_cd"       : self._pins.cd,
+            })
 
         return Instance(f"{self.name}", **core_kwargs)
 
@@ -243,14 +246,40 @@ class Builder:
         return plan
 
 
+def flatten_record(record):
+    signals = []
+    for field in record.fields.values():
+        if isinstance(field, Record):
+            signals += flatten_record(field)
+        else:
+            signals.append(field)
+    return signals
+
+
 def main():
     build_dir = "build/minerva_soc"
 
     platform = HomeInvaderRevAPlatform()
+
+    pins = SDCard()
     
     litesdcard_config = ECP5Config(clk_freq=int(80e6))
-    litesdcard_core = Core(litesdcard_config, pins=None)
+    litesdcard_core = Core(litesdcard_config, pins=pins)
     litesdcard_core.build(Builder(), platform, build_dir)
+
+    ports = []
+    ports += flatten_record(litesdcard_core.ctrl_bus)
+    ports += flatten_record(litesdcard_core.dma_bus)
+    ports += flatten_record(pins)
+
+    module = Module()
+    module.submodules.litesdcard = litesdcard_core
+
+    fragment = Fragment.get(module, platform)
+    output = verilog.convert(fragment, name="litesdcard_core_amaranth", ports=ports, emit_src=False)
+
+    print(output)
+
 
 if __name__ == "__main__":
     main()
