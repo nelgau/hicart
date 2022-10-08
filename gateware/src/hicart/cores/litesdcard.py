@@ -192,7 +192,7 @@ class Builder:
     }
     command_templates = [
         r"""
-            python -m hicart.cores.litesdcard_gen
+            python -m hicart.vendor.litesdcard_gen
                 # --output-dir {{top.name}}
                 # --gateware-dir {{top.name}}
                 # --csr-csv {{top.name}}_csr.csv
