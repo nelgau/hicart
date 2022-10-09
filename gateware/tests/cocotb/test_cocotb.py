@@ -1,3 +1,6 @@
+import os
+import unittest
+
 from amaranth import *
 from amaranth.sim import *
 from amaranth_soc import wishbone
@@ -89,11 +92,19 @@ async def run_test_module(dut):
         await FallingEdge(dut.clk)
     
 
-def test_module():
-    dut = DUT()
-    run(
-        dut,
-        get_current_module(),
-        ports=dut.ports(),
-        vcd_file='output.vcd'
-    )
+class CocotbTest(unittest.TestCase):
+
+    def test_module(self):
+        dut = DUT()
+
+        # Create an output directory
+        os.makedirs("traces", exist_ok=True)
+        # Figure out the name of our VCD files
+        vcd_name = os.path.join("traces", f"{self.id()}.vcd")
+
+        run(
+            dut,
+            get_current_module(),
+            ports=dut.ports(),
+            vcd_file=vcd_name
+        )
