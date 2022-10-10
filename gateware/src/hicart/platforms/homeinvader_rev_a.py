@@ -51,6 +51,8 @@ class HomeInvaderRevAFlashConnector(Elaboratable):
         sync_clk = ClockSignal()
 
         m.d.comb += [
+            # FIXME: Does this clock gating mux actually belong here? Can it
+            # be refactored out into the QSPIFlashInterface module?
             qspi_pins.cs_n          .eq(self.qspi.cs_n),
             self.spi_clk            .eq(Mux(self.qspi.sck, ~sync_clk, 1)),
         ]

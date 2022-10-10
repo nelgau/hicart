@@ -7,10 +7,12 @@ from hicart.n64.ad16 import AD16
 from hicart.n64.pi import PIWishboneInitiator
 from hicart.soc.wishbone import DownConverter, Translator
 from hicart.test.cocotb.harness import CocotbTestCase
+from hicart.test.sim.qspi_clocker import QSPIClocker
 
 import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import Timer, FallingEdge
+
 
 
 class DUT(Elaboratable):
@@ -35,12 +37,15 @@ class DUT(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
+        # FIXME: Should the clocker be integrated into QSPIFlashInterface?
+        clocker = QSPIClocker()
         initiator = PIWishboneInitiator()
         
         decoder = wishbone.Decoder(addr_width=32, data_width=32, granularity=8, features={"stall"})
         decoder.add(self.down_converter.bus, addr=0x10000000)
 
         m.submodules.initiator       = initiator
+        m.submodules.clocker         = clocker
         m.submodules.decoder         = decoder
         m.submodules.flash_interface = self.flash_interface
         m.submodules.translator      = self.translator
@@ -49,7 +54,8 @@ class DUT(Elaboratable):
         m.d.comb += [
             initiator.ad16              .connect( self.ad16 ),
             initiator.bus               .connect( decoder.bus ),
-            self.flash_interface.qspi   .connect( self.qspi ),
+            self.flash_interface.qspi   .connect( clocker.qspi_in ),
+            clocker.qspi_out            .connect( self.qspi )
         ]
 
         return m

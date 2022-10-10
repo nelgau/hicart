@@ -8,6 +8,9 @@ from amaranth_soc.memory import MemoryMap
 class QSPIBus(Record):
     def __init__(self):
         super().__init__([
+            # The sck signal enables a gated, inverted clock output in the Home Invader platform,
+            # which is otherwise held high. When cs_n goes low, this output is driven onto the
+            # physical sck qspi pin using the ECP5's USRMCLK primitive.
             ('sck',  1, DIR_FANOUT),
             ('cs_n', 1, DIR_FANOUT),
             ('d', [
