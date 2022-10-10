@@ -7,12 +7,12 @@ from hicart.n64.ad16 import AD16
 from hicart.n64.pi import PIWishboneInitiator
 from hicart.soc.wishbone import DownConverter, Translator
 from hicart.test.cocotb.harness import CocotbTestCase
+from hicart.test.cocotb.driver.ad16 import PIBus, PIInitiator
 from hicart.test.sim.qspi_clocker import QSPIClocker
 
 import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import Timer, FallingEdge
-
 
 
 class DUT(Elaboratable):
@@ -77,35 +77,25 @@ class DUT(Elaboratable):
 
 @cocotb.test()
 async def run_CocotbTest_test_module(dut):
-    dut.clk.value = 0
-    dut.rst.value = 0
+    dut.clk.setimmediatevalue(0)
+    dut.rst.setimmediatevalue(0)
 
-    dut.ad__i.value = 0
-    dut.ale_l.value = 1
-    dut.ale_h.value = 0
-    dut.read.value = 0
-    dut.write.value = 0
-
-    dut.d__i.value = 0
+    dut.d__i.setimmediatevalue(0)
 
     clock = Clock(dut.clk, 16, units="ps")
     cocotb.start_soon(clock.start())
 
-    for i in range(20):
-        await FallingEdge(dut.clk)
+    pi_bus = PIBus.from_dut(dut)
+    pi = PIInitiator(pi_bus)
 
-    dut.ale_l.value = 0
-    await Timer(56, units='ps')
-    dut.ad__i.value = 0x1054
-    await Timer(56, units='ps')
-    dut.ale_h.value = 1
-    await Timer(56, units='ps')
-    dut.ad__i.value = 0x3210
-    await Timer(56, units='ps')
-    dut.ale_l.value = 1
-    await Timer(1040, units='ps')
+    @cocotb.coroutine
+    async def pi_process():
+        await pi.begin()
+        await pi.read_burst_fast(0x10000000, 256)
 
-    for i in range(2000):
+    await cocotb.start_soon(pi_process())
+
+    for i in range(2):
         await FallingEdge(dut.clk)
 
 
