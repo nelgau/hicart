@@ -28,14 +28,6 @@ endmodule
 """
 
 
-def get_reset_signal(dut, cd):
-    return getattr(dut, cd + '_rst')
-
-
-def get_clock_signal(dut, cd):
-    return getattr(dut, cd + '_clk')
-
-
 def generate_verilog(verilog_file, design, platform, name='top',
                      ports=(), vcd_file=None):
     fragment = Fragment.get(design, platform)
