@@ -1,6 +1,3 @@
-import os
-import unittest
-
 from amaranth import *
 from amaranth.sim import *
 from amaranth_soc import wishbone
@@ -9,8 +6,7 @@ from hicart.interface.qspi_flash import QSPIBus, QSPIFlashWishboneInterface
 from hicart.n64.ad16 import AD16
 from hicart.n64.pi import PIWishboneInitiator
 from hicart.soc.wishbone import DownConverter, Translator
-
-from hicart.test.cocotb.harness import run, get_current_module
+from hicart.test.cocotb.harness import CocotbTestCase
 
 import cocotb
 from cocotb.clock import Clock
@@ -78,7 +74,7 @@ class DUT(Elaboratable):
 
 
 @cocotb.test()
-async def run_test_module(dut):
+async def run_CocotbTest_test_module(dut):
     dut.ad__i.value = 0
     dut.ale_h.value = 0
     dut.ale_l.value = 0
@@ -90,21 +86,14 @@ async def run_test_module(dut):
 
     for i in range(20):
         await FallingEdge(dut.clk)
-    
 
-class CocotbTest(unittest.TestCase):
+@cocotb.test()
+async def run_CocotbTest_test_failure(dut):
+    assert False
+
+
+class CocotbTest(CocotbTestCase):
 
     def test_module(self):
         dut = DUT()
-
-        # Create an output directory
-        os.makedirs("traces", exist_ok=True)
-        # Figure out the name of our VCD files
-        vcd_name = os.path.join("traces", f"{self.id()}.vcd")
-
-        run(
-            dut,
-            get_current_module(),
-            ports=dut.ports(),
-            vcd_file=vcd_name
-        )
+        self.simulate(dut, traces=dut.ports())

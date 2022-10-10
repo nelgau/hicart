@@ -1,14 +1,15 @@
 # This file was largely derived from the implementation of amaranth-cocotb.
 # See https://github.com/andresdemski/nmigen-cocotb/blob/master/amaranth_cocotb/amaranth_cocotb.py
 
-from cocotb_test.simulator import run as cocotb_test_run
-from amaranth import Fragment
-from amaranth.back import verilog
-from amaranth.cli import main_parser, main_runner
-import tempfile
 import os
 import shutil
-import inspect
+import tempfile
+import unittest
+
+from amaranth import Fragment
+from amaranth.back import verilog
+
+from cocotb_test.simulator import run as cocotb_test_run
 
 
 compile_args_waveforms = ['-s', 'cocotb_waveform_module']
@@ -23,12 +24,6 @@ module cocotb_waveform_module;
    end
 endmodule
 """
-
-
-def get_current_module():
-    stk = inspect.stack()[1]
-    mod = inspect.getmodule(stk[0])
-    return mod.__name__
 
 
 def get_reset_signal(dut, cd):
@@ -79,7 +74,7 @@ def dump_file(filename, content, d):
 
 def run(design, module, platform=None, ports=(), name='top',
         verilog_sources=None, extra_files=None, vcd_file=None,
-        extra_args=None, extra_env=None):
+        extra_args=None, extra_env=None, testcase=None):
 
     with tempfile.TemporaryDirectory() as d:
         verilog_file = d + '/nmigen_output.v'
@@ -101,12 +96,14 @@ def run(design, module, platform=None, ports=(), name='top',
 
         compile_args = []
 
-        if vcd_file and os.getenv('GENERATE_VCDS', default=False):
+        if vcd_file:
             compile_args += compile_args_waveforms
 
         if extra_args:
             compile_args += extra_args
 
+        # cocotb_test.simulator.run has a `testcase` argument that could be
+        # used to restrict execution to a single cocotb.test instance.
         cocotb_test_run(
             simulator='icarus',
             toplevel=name,
@@ -114,5 +111,30 @@ def run(design, module, platform=None, ports=(), name='top',
             verilog_sources=sources,
             compile_args=compile_args,
             sim_build=d,
-            extra_env=extra_env
+            extra_env=extra_env,
+            testcase=testcase
+        )
+
+
+class CocotbTestCase(unittest.TestCase):
+
+    def simulate(self, dut, *, platform=None, traces=()):
+
+        test_module, test_class, test_method = self.id().rsplit('.', 2)
+        testcase = f"run_{test_class}_{test_method}"
+        vcd_file = None
+
+        if os.getenv('GENERATE_VCDS', default=False):
+            # Create an output directory
+            os.makedirs("traces", exist_ok=True)
+            # Figure out the name of our VCD files
+            vcd_file = os.path.join("traces", f"{self.id()}.vcd")
+
+        run(
+            design=dut,
+            platform=platform,
+            ports=traces,
+            module=test_module,
+            testcase=testcase,
+            vcd_file=vcd_file,
         )
