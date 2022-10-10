@@ -71,11 +71,7 @@ class DUT(Elaboratable):
             self.ad16.write,
             self.ad16.reset,
 
-            self.qspi.sck,
-            self.qspi.cs_n,
-            self.qspi.d.i,
-            self.qspi.d.o,
-            self.qspi.d.oe,
+            self.qspi,
         ]
 
 

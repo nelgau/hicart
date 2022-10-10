@@ -2,8 +2,9 @@ import os
 import unittest
 from contextlib import contextmanager
 
-from amaranth import Signal, Record
 from amaranth.sim import Simulator
+
+from hicart.test import flatten_traces
 
 
 class MultiProcessTestCase(unittest.TestCase):
@@ -27,20 +28,8 @@ class MultiProcessTestCase(unittest.TestCase):
                 cd = fragment.domains[domain]
                 all_traces.extend((cd.clk, cd.rst))
 
-            def iter_flat(record):
-                for field_name, field in record.fields.items():
-                    if isinstance(field, Record):
-                        yield from iter_flat(field)
-                    elif isinstance(field, Signal): 
-                        yield field
-
             # Add any user-supplied traces after the clock domains
-            for trace in traces:
-                if isinstance(trace, Record):
-                    for t in iter_flat(trace):
-                        all_traces.append(t)
-                else:
-                    all_traces.append(trace)
+            all_traces += flatten_traces(traces)
 
             # ... and run the simulation while writing them.
             with sim.write_vcd(vcd_name + ".vcd", vcd_name + ".gtkw", traces=all_traces):

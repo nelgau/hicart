@@ -11,6 +11,8 @@ from amaranth.back import verilog
 
 from cocotb_test.simulator import run as cocotb_test_run
 
+from hicart.test import flatten_traces
+
 
 compile_args_waveforms = ['-s', 'cocotb_waveform_module']
 
@@ -119,7 +121,6 @@ def run(design, module, platform=None, ports=(), name='top',
 class CocotbTestCase(unittest.TestCase):
 
     def simulate(self, dut, *, platform=None, traces=()):
-
         test_module, test_class, test_method = self.id().rsplit('.', 2)
         testcase = f"run_{test_class}_{test_method}"
         vcd_file = None
@@ -130,10 +131,16 @@ class CocotbTestCase(unittest.TestCase):
             # Figure out the name of our VCD files
             vcd_file = os.path.join("traces", f"{self.id()}.vcd")
 
+        # FIXME: Add clock and reset signals?
+        all_traces = []
+
+        # Add any user-supplied traces after the clock domains
+        all_traces += flatten_traces(traces)
+
         run(
             design=dut,
             platform=platform,
-            ports=traces,
+            ports=all_traces,
             module=test_module,
             testcase=testcase,
             vcd_file=vcd_file,
