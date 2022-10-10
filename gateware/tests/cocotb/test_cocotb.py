@@ -1,19 +1,20 @@
 from amaranth import *
 from amaranth.sim import *
 from amaranth_soc import wishbone
+import cocotb
 
 from hicart.interface.qspi_flash import qspi_layout, QSPIBus, QSPIFlashWishboneInterface
 from hicart.n64.ad16 import ad16_layout, AD16
 from hicart.n64.pi import PIWishboneInitiator
 from hicart.soc.wishbone import DownConverter, Translator
-from hicart.test.cocotb.harness import Accessor, CocotbTestCase
+from hicart.test.cocotb import Accessor, CocotbTestCase, init_domains, start_clock
 from hicart.test.cocotb.driver.ad16 import PIInitiator
 from hicart.test.cocotb.emulator.qspi_flash import QSPIFlashEmulator
 from hicart.test.sim.qspi_clocker import QSPIClocker
 
-import cocotb
-from cocotb.clock import Clock
-from cocotb.triggers import Timer, FallingEdge
+
+AD16Accessor = Accessor.get(ad16_layout)
+QSPIAccessor = Accessor.get(qspi_layout)
 
 
 class DUT(Elaboratable):
@@ -68,23 +69,13 @@ class DUT(Elaboratable):
         ]
 
 
-def init_domains(dut):
-    dut.clk.setimmediatevalue(0)
-    dut.rst.setimmediatevalue(0)
-
-def start_clock(handle, rate=100e6):
-    period = int(1e9 / rate)
-    clock = Clock(handle, period, units="ps")
-    cocotb.start_soon(clock.start())
-
-
 @cocotb.test()
 async def run_CocotbTest_test_module(dut):
+    ad16 = AD16Accessor(dut, name='ad16')
+    qspi = QSPIAccessor(dut, name='qspi')
+
     init_domains(dut)
     start_clock(dut.clk, rate=60e6)
-
-    ad16 = Accessor.get(ad16_layout)(dut, name='ad16')
-    qspi = Accessor.get(qspi_layout)(dut, name='qspi')
 
     pi = PIInitiator(ad16)
     flash = QSPIFlashEmulator(qspi)
@@ -98,12 +89,8 @@ async def run_CocotbTest_test_module(dut):
 
     await cocotb.start_soon(pi_process())
 
-    for i in range(2):
-        await FallingEdge(dut.clk)
-
 
 class CocotbTest(CocotbTestCase):
-
     def test_module(self):
         dut = DUT()
         self.simulate(dut, traces=dut.ports())

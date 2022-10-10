@@ -1,15 +1,10 @@
-from collections import OrderedDict
 import os
 import shutil
 import tempfile
-import unittest
 
 from amaranth import Fragment
-from amaranth.hdl.rec import Layout
 from amaranth.back import verilog
 from cocotb_test.simulator import run as cocotb_test_run
-
-from hicart.test import flatten_traces
 
 
 compile_args_waveforms = ['-s', 'cocotb_waveform_module']
@@ -64,7 +59,7 @@ def dump_file(filename, content, d):
     return file_path
 
 
-def run(design, module, platform=None, ports=(), name='top',
+def run_test(design, module, platform=None, ports=(), name='top',
         verilog_sources=None, extra_files=None, vcd_file=None,
         extra_args=None, extra_env=None, testcase=None):
 
@@ -106,73 +101,3 @@ def run(design, module, platform=None, ports=(), name='top',
             extra_env=extra_env,
             testcase=testcase
         )
-
-
-class CocotbTestCase(unittest.TestCase):
-
-    def simulate(self, dut, *, platform=None, traces=()):
-        test_module, test_class, test_method = self.id().rsplit('.', 2)
-        testcase = f"run_{test_class}_{test_method}"
-        vcd_file = None
-
-        if os.getenv('GENERATE_VCDS', default=False):
-            # Create an output directory
-            os.makedirs("traces", exist_ok=True)
-            # Figure out the name of our VCD files
-            vcd_file = os.path.join("traces", f"{self.id()}.vcd")
-
-        # FIXME: Add clock and reset signals?
-        all_traces = []
-
-        # Add any user-supplied traces after the clock domains
-        all_traces += flatten_traces(traces)
-
-        run(
-            design=dut,
-            platform=platform,
-            ports=all_traces,
-            module=test_module,
-            testcase=testcase,
-            vcd_file=vcd_file,
-        )
-
-
-class Accessor:
-    @staticmethod
-    def get(layout):
-        def construct(dut, name=None):
-            return Accessor(dut, layout, name=name)
-        return construct
-
-    def __init__(self, dut, layout, name=None):
-        self.dut = dut
-        self.name = name
-
-        self.layout = Layout.cast(layout)
-        self.fields = OrderedDict()
-
-        def concat(a, b):
-            if a is None:
-                return b
-            return "{}__{}".format(a, b)
-
-        for field_name, field_shape, _ in self.layout:
-            full_name = concat(name, field_name)
-            if isinstance(field_shape, Layout):
-                self.fields[field_name] = Accessor(dut, field_shape, name=full_name)
-            else:
-                self.fields[field_name] = getattr(dut, full_name)
-
-    def __getattr__(self, name):
-        return self[name]
-
-    def __getitem__(self, item):
-        try:
-            return self.fields[item]
-        except KeyError:
-            if self.name is None:
-                reference = "Unnamed accessor"
-            else:
-                reference = "Accessor '{}'".format(self.name)
-            raise AttributeError("{} does not have a field '{}'. Did you mean one of: {}?"
-                                    .format(reference, item, ", ".join(self.fields))) from None
