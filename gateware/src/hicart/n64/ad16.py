@@ -1,38 +1,40 @@
 from amaranth import *
 from amaranth.hdl.ast import Fell
-from amaranth.hdl.rec import DIR_FANIN, DIR_FANOUT
+from amaranth.hdl.rec import Layout, DIR_FANIN, DIR_FANOUT
 from amaranth.lib.cdc import FFSynchronizer
 
 from hicart.n64.burst import BurstBus
 
 
+ad16_layout = Layout.cast([
+    ('ad', [
+        ('i',    16, DIR_FANIN),
+        ('o',    16, DIR_FANOUT),
+        ('oe',   1,  DIR_FANOUT),
+    ]),
+    ('ale_h',    1,  DIR_FANIN),
+    ('ale_l',    1,  DIR_FANIN),
+    ('read',     1,  DIR_FANIN),
+    ('write',    1,  DIR_FANIN),
+    ('s_clk',    1,  DIR_FANIN),
+    ('s_data', [
+        ('i',    1,  DIR_FANIN),
+        ('o',    1,  DIR_FANOUT),
+        ('oe',   1,  DIR_FANOUT),
+    ]),
+    ('cic_dclk', 1, DIR_FANIN),
+    ('cic_data', [
+        ('i',    1, DIR_FANIN),
+        ('o',    1, DIR_FANOUT),
+        ('oe',   1, DIR_FANOUT)
+    ]),
+    ('reset',    1, DIR_FANIN),
+    ('nmi',      1, DIR_FANIN),
+])
+
 class AD16(Record):
-    def __init__(self):
-        super().__init__([
-            ('ad', [
-                ('i',    16, DIR_FANIN),
-                ('o',    16, DIR_FANOUT),
-                ('oe',   1,  DIR_FANOUT),
-            ]),         
-            ('ale_h',    1,  DIR_FANIN),
-            ('ale_l',    1,  DIR_FANIN),
-            ('read',     1,  DIR_FANIN),
-            ('write',    1,  DIR_FANIN),
-            ('s_clk',    1,  DIR_FANIN),
-            ('s_data', [
-                ('i',    1,  DIR_FANIN),
-                ('o',    1,  DIR_FANOUT),
-                ('oe',   1,  DIR_FANOUT),
-            ]),
-            ('cic_dclk', 1, DIR_FANIN),
-            ('cic_data', [
-                ('i',    1, DIR_FANIN),
-                ('o',    1, DIR_FANOUT),
-                ('oe',   1, DIR_FANOUT)
-            ]),
-            ('reset',    1, DIR_FANIN),
-            ('nmi',      1, DIR_FANIN),
-        ])
+    def __init__(self, **kwargs):
+        super().__init__(ad16_layout, **kwargs)
 
 
 class AD16Interface(Elaboratable):

@@ -1,24 +1,26 @@
 from amaranth import *
-from amaranth.hdl.rec import DIR_FANIN, DIR_FANOUT
+from amaranth.hdl.rec import Layout, DIR_FANIN, DIR_FANOUT
 from amaranth.utils import log2_int
 from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 
 
+qspi_layout = Layout.cast([
+    # The sck signal enables a gated, inverted clock output in the Home Invader platform,
+    # which is otherwise held high. When cs_n goes low, this output is driven onto the
+    # physical sck qspi pin using the ECP5's USRMCLK primitive.
+    ('sck',  1, DIR_FANOUT),
+    ('cs_n', 1, DIR_FANOUT),
+    ('d', [
+        ('i',  4, DIR_FANIN),
+        ('o',  4, DIR_FANOUT),
+        ('oe', 4, DIR_FANOUT),
+    ]),
+])
+
 class QSPIBus(Record):
-    def __init__(self):
-        super().__init__([
-            # The sck signal enables a gated, inverted clock output in the Home Invader platform,
-            # which is otherwise held high. When cs_n goes low, this output is driven onto the
-            # physical sck qspi pin using the ECP5's USRMCLK primitive.
-            ('sck',  1, DIR_FANOUT),
-            ('cs_n', 1, DIR_FANOUT),
-            ('d', [
-                ('i',  4, DIR_FANIN),
-                ('o',  4, DIR_FANOUT),
-                ('oe', 4, DIR_FANOUT),
-            ]),            
-        ])
+    def __init__(self, **kwargs):
+        super().__init__(qspi_layout, **kwargs)
 
 
 class QSPIFlashInterface(Elaboratable):
