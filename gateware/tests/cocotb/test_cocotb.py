@@ -10,7 +10,7 @@ from hicart.test.cocotb.harness import CocotbTestCase
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import FallingEdge
+from cocotb.triggers import Timer, FallingEdge
 
 
 class DUT(Elaboratable):
@@ -75,21 +75,36 @@ class DUT(Elaboratable):
 
 @cocotb.test()
 async def run_CocotbTest_test_module(dut):
-    dut.ad__i.value = 0
-    dut.ale_h.value = 0
-    dut.ale_l.value = 0
     dut.clk.value = 0
+    dut.rst.value = 0
+
+    dut.ad__i.value = 0
+    dut.ale_l.value = 1
+    dut.ale_h.value = 0
+    dut.read.value = 0
+    dut.write.value = 0
+
     dut.d__i.value = 0
 
-    clock = Clock(dut.clk, 10, units="us")
+    clock = Clock(dut.clk, 16, units="ps")
     cocotb.start_soon(clock.start())
 
     for i in range(20):
         await FallingEdge(dut.clk)
 
-@cocotb.test()
-async def run_CocotbTest_test_failure(dut):
-    assert False
+    dut.ale_l.value = 0
+    await Timer(56, units='ps')
+    dut.ad__i.value = 0x1054
+    await Timer(56, units='ps')
+    dut.ale_h.value = 1
+    await Timer(56, units='ps')
+    dut.ad__i.value = 0x3210
+    await Timer(56, units='ps')
+    dut.ale_l.value = 1
+    await Timer(1040, units='ps')
+
+    for i in range(2000):
+        await FallingEdge(dut.clk)
 
 
 class CocotbTest(CocotbTestCase):
