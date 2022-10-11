@@ -1,11 +1,11 @@
 from amaranth import *
-from amaranth.sim import *
 from amaranth_soc import wishbone
 import cocotb
 
 from hicart.interface.qspi_flash import qspi_layout, QSPIBus, QSPIFlashWishboneInterface
 from hicart.n64.ad16 import ad16_layout, AD16
 from hicart.n64.pi import PIWishboneInitiator
+from hicart.platforms.homeinvader_rev_a import HomeInvaderRevAPlatform
 from hicart.soc.wishbone import DownConverter, Translator
 from hicart.test.cocotb import Accessor, CocotbTestCase, init_domains, start_clock
 from hicart.test.cocotb.driver.ad16 import PIInitiator
@@ -93,4 +93,5 @@ async def run_CocotbTest_test_module(dut):
 class CocotbTest(CocotbTestCase):
     def test_module(self):
         dut = DUT()
-        self.simulate(dut, traces=dut.ports())
+        platform = HomeInvaderRevAPlatform()
+        self.simulate(dut, traces=dut.ports(), platform=platform)
