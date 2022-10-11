@@ -75,9 +75,12 @@ class Core(Elaboratable):
                             .format(config))
         self.config = config
 
-        if name is not None and not isinstance(name, str):
-            raise TypeError("Name must be a string, not {!r}".format(name))
-        self.name = name or tracer.get_var_name(depth=2 + src_loc_at)
+        # FIXME: Find a way to set the name of the generated core!
+
+        # if name is not None and not isinstance(name, str):
+        #     raise TypeError("Name must be a string, not {!r}".format(name))
+        # self.name = name or tracer.get_var_name(depth=2 + src_loc_at)
+        self.name = "litesdcard_core"
 
         self.irq = IRQLine(name=f"{self.name}_irq")
 
