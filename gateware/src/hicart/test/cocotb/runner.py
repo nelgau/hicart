@@ -41,7 +41,8 @@ def copy_extra_files(extra_files, path):
 
 
 def dump_file(filename, content, d):
-    file_path = d + '/' + filename
+    file_path = os.path.join(d, filename)
+    file_dir = os.path.dirname(file_path)
 
     if isinstance(content, bytes):
         content = content.decode('utf-8')
@@ -53,6 +54,7 @@ def dump_file(filename, content, d):
             raise ValueError("File {!r} already exists"
                              .format(filename))
     else:
+        os.makedirs(file_dir, exist_ok=True)
         with open(file_path, 'w') as f:
             f.write(content)
 
