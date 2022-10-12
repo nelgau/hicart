@@ -57,3 +57,13 @@ This problem manifests when two things happen:
 	- Something inside the always @(*) depends on `sdblock2mem_wishbonedmawriter_sink_ready` (the if-statement)
 
 Unsuccessfully attempted to reproduce with just this structure (using two new registers).
+
+----
+
+https://github.com/steveicarus/iverilog/issues/321
+
+This is the closest I've come to seeing someone else hit this issue with Icarus Verilog.
+
+----
+
+Assigning to `sdblock2mem_wishbonedmawriter_sink_ready` exactly once in each path fixes the issue.
