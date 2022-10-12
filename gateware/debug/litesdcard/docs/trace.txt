@@ -32,3 +32,28 @@ sdblock2memdma_state:
 	1'd1 ("RUN"):
 	2'd2 ("DONE"):
 	1'd0 ("INIT"):
+
+----
+
+Issue disappears after
+	- Removing `sdblock2mem_wishbonedmawriter_sink_ready` from the if-statement (line 2422)
+	- Removing `sdblock2mem_wishbonedmawriter_sink_ready` from the assignemnt (line 2413)
+	- Removing `sdblock2mem_wishbonedmawriter_sink_ready` from the assignemnt (line 2439)
+
+Signal `sdblock2mem_wishbonedmawriter_sink_ready`...
+	- is a register (line 684)
+	- is assigned to `sdblock2mem_source_source_ready` (a wire) (line 2351)
+	- participates a the state machine (line 2404)
+
+Signal `sdblock2mem_source_source_ready`...
+	- is a wire (line 674)
+	- is assigned by `sdblock2mem_wishbonedmawriter_sink_ready` (line 2351)
+	- is assigned to `sdblock2mem_converter_source_ready` (a wire) (line 2386)
+
+----
+
+This problem manifests when two things happen:
+	- The `sdblock2mem_wishbonedmawriter_sink_ready` is assigned twice within the always @(*) block
+	- Something inside the always @(*) depends on `sdblock2mem_wishbonedmawriter_sink_ready` (the if-statement)
+
+Unsuccessfully attempted to reproduce with just this structure (using two new registers).
