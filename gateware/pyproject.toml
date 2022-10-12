@@ -22,6 +22,8 @@ litesdcard = {git = "https://github.com/enjoy-digital/litesdcard.git"}
 # Cosimulation testing dependencies
 cocotb = "^1.7.1"
 cocotb-test = {git = "https://github.com/nelgau/cocotb-test.git", branch="master"}
+# For litesdcard
+migen = {git = "https://github.com/m-labs/migen.git", branch="master"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.3"
