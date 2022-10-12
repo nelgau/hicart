@@ -20,6 +20,9 @@ build/
 *.bit
 *.svf
 
+# Icarus Verilog
+*.vvp
+
 # Traces
 traces/
 *.vcd

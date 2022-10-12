@@ -1,0 +1,34 @@
+litesdcard_core.v:2404: Event wait (@) statement.
+
+litesdcard_core.v:2405: Nonblocking assignment.    # Everything above `case`
+litesdcard_core.v:2406: Nonblocking assignment.
+litesdcard_core.v:2407: Nonblocking assignment.
+litesdcard_core.v:2408: Nonblocking assignment.
+litesdcard_core.v:2409: Nonblocking assignment.
+litesdcard_core.v:2410: Nonblocking assignment.
+litesdcard_core.v:2411: Nonblocking assignment.
+litesdcard_core.v:2412: Nonblocking assignment.
+litesdcard_core.v:2413: Nonblocking assignment.
+litesdcard_core.v:2414: Nonblocking assignment.
+
+litesdcard_core.v:2415: Case statement.
+litesdcard_core.v:2439: Nonblocking assignment.    # Default block
+litesdcard_core.v:2440: Nonblocking assignment.
+litesdcard_core.v:2441: Nonblocking assignment.
+litesdcard_core.v:2442: Nonblocking assignment.
+
+[... loops ...]
+
+litesdcard_core.v:2404: Event wait (@) statement.
+litesdcard_core.v:2405: Nonblocking assignment.
+litesdcard_core.v:2406: Nonblocking assignment.
+litesdcard_core.v:2407: Nonblocking assignment.
+
+...
+
+----
+
+sdblock2memdma_state:
+	1'd1 ("RUN"):
+	2'd2 ("DONE"):
+	1'd0 ("INIT"):
