@@ -14,8 +14,8 @@ TOP=(
 
 VVP=build/top_tb_debug.vvp
 
-mkdir build
-mkdir traces
+mkdir -p build
+mkdir -p traces
 
 iverilog -o $VVP -g2012 -pfileline=1 ${TOP[@]} ${SRC[@]}
 vvp $VVP
