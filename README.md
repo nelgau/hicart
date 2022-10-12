@@ -1,6 +1,6 @@
 # Home Invader 64
 
-![Hero](docs/images/hero.jpg)
+![Hero](https://raw.githubusercontent.com/nelgau/hicart/master/docs/images/hero.jpg)
 
 This is a present for an old friend!
 
