@@ -266,7 +266,7 @@ def main():
     platform = platform_cls(device="", io=_io)
     core     = LiteSDCardCore(platform, clk_freq=clk_freq)
     builder  = Builder(core, output_dir="build/sdcard", csr_json="build/sdcard/csr.json")
-    builder.build(build_name="litesdcard_core", run=False)
+    builder.build(build_name="litesdcard_core", run=False, regular_comb=False)
 
 
 if __name__ == "__main__":
