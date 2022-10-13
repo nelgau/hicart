@@ -13,8 +13,8 @@ from hicart.test.cocotb.emulator.qspi_flash import QSPIFlashEmulator
 from hicart.test.sim.qspi_clocker import QSPIClocker
 
 
-AD16Accessor = Accessor.get(ad16_layout)
-QSPIAccessor = Accessor.get(qspi_layout)
+ad16_accessor = Accessor.from_layout(ad16_layout)
+qspi_accessor = Accessor.from_layout(qspi_layout)
 
 
 class DUT(Elaboratable):
@@ -71,8 +71,8 @@ class DUT(Elaboratable):
 
 @cocotb.test()
 async def run_CocotbTest_test_module(dut):
-    ad16 = AD16Accessor(dut, name='ad16')
-    qspi = QSPIAccessor(dut, name='qspi')
+    ad16 = ad16_accessor(dut, name='ad16')
+    qspi = qspi_accessor(dut, name='qspi')
 
     init_domains(dut)
     start_clock(dut.clk, rate=60e6)

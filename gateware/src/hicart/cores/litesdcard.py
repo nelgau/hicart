@@ -10,7 +10,7 @@ from amaranth import tracer
 from amaranth.back import verilog
 from amaranth.build.plat import Platform
 from amaranth.build.run import BuildPlan, BuildProducts
-from amaranth.hdl.rec import DIR_FANIN, DIR_FANOUT
+from amaranth.hdl.rec import Layout, DIR_FANIN, DIR_FANOUT
 from amaranth.utils import log2_int
 
 from amaranth_soc import wishbone
@@ -22,6 +22,7 @@ from hicart.platforms.homeinvader_rev_a import HomeInvaderRevAPlatform
 
 
 __all__ = [
+    "sd_card_layout",
     "Config",
     "ECP5Config",
     "Core",
@@ -29,22 +30,25 @@ __all__ = [
 ]
 
 
+sd_card_layout = Layout.cast([
+    ('cmd', [
+        ('i',   1,  DIR_FANIN),
+        ('o',   1,  DIR_FANOUT),
+        ('oe',  1,  DIR_FANOUT),
+    ]),
+    ('dat', [
+        ('i',   4,  DIR_FANIN),
+        ('o',   4,  DIR_FANOUT),
+        ('oe',  4,  DIR_FANOUT),
+    ]),
+    ('clk',     1,  DIR_FANOUT),
+    ('cd',      1,  DIR_FANIN),
+])
+
+
 class SDCard(Record):
-    def __init__(self):
-        super().__init__([
-            ('cmd', [
-                ('i',   1,  DIR_FANIN),
-                ('o',   1,  DIR_FANOUT),
-                ('oe',  1,  DIR_FANOUT),
-            ]),
-            ('dat', [
-                ('i',   4,  DIR_FANIN),
-                ('o',   4,  DIR_FANOUT),
-                ('oe',  4,  DIR_FANOUT),
-            ]),
-            ('clk',     1,  DIR_FANOUT),
-            ('cd',      1,  DIR_FANIN),
-        ])
+    def __init__(self, **kwargs):
+        super().__init__(sd_card_layout, **kwargs)
 
 
 class Config(metaclass=ABCMeta):
