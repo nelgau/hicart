@@ -132,6 +132,17 @@ python-versions = ">=3.6"
 bus = ["cocotb-bus"]
 
 [[package]]
+name = "cocotb-bus"
+version = "0.2.1"
+description = ""
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.dependencies]
+cocotb = ">=1.5.0.dev,<2.0"
+
+[[package]]
 name = "cocotb-test"
 version = "0.2.2"
 description = ""
@@ -149,6 +160,25 @@ type = "git"
 url = "https://github.com/nelgau/cocotb-test.git"
 reference = "master"
 resolved_reference = "1acba0644139fc776ec113b84042359b058f6640"
+
+[[package]]
+name = "cocotbext-wishbone"
+version = "0.2.2.dev11+g3c66783"
+description = "Cocotb Wishbone modules"
+category = "main"
+optional = false
+python-versions = "*"
+develop = false
+
+[package.dependencies]
+cocotb = ">=1.6.0"
+cocotb-bus = "*"
+
+[package.source]
+type = "git"
+url = "https://github.com/wallento/cocotbext-wishbone"
+reference = "master"
+resolved_reference = "3c667834f41c3c40dd4647b5a7b9e4e71e1302c4"
 
 [[package]]
 name = "colorama"
@@ -286,7 +316,7 @@ requests = "*"
 type = "git"
 url = "https://github.com/enjoy-digital/litex"
 reference = "HEAD"
-resolved_reference = "ac3699770c27e43a6dfafa018153a1852758bf07"
+resolved_reference = "84db6a0b3ab6df006bc63b096551f3ecbbd7dad3"
 
 [[package]]
 name = "luna"
@@ -539,7 +569,7 @@ python-versions = "~=3.5"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "60d0f17b47e6b7a7bf4bb602e1294c3faf0752c2cd4163c317bbcb2c3eca6621"
+content-hash = "c1c3c290700c0c85f7b021423184250f70bff6a2b0c28bfb64004e6494e39e33"
 
 [metadata.files]
 amaranth = []
@@ -590,7 +620,11 @@ cocotb = [
     {file = "cocotb-1.7.1-cp39-cp39-win_amd64.whl", hash = "sha256:ab84c58e56fd83710c5f443e5d97de9ba39a4375d40d00f422716ccbf2aaafc9"},
     {file = "cocotb-1.7.1.tar.gz", hash = "sha256:1f390bb6468d70e04acebeb9ff05b54be42cbbbbbb3bd6c75d1ec0a36cb97e23"},
 ]
+cocotb-bus = [
+    {file = "cocotb-bus-0.2.1.tar.gz", hash = "sha256:a197aa4b0e0ad28469c8877b41b3fb2ec0206da9f491b9276d1578ce6dd8aa8d"},
+]
 cocotb-test = []
+cocotbext-wishbone = []
 colorama = [
     {file = "colorama-0.4.5-py2.py3-none-any.whl", hash = "sha256:854bf444933e37f5824ae7bfc1e98d5bce2ebe4160d46b5edf346a89358e99da"},
     {file = "colorama-0.4.5.tar.gz", hash = "sha256:e6c6b4334fc50988a639d9b98aa429a0b57da6e17b9a44f0451f930b6967b7a4"},
