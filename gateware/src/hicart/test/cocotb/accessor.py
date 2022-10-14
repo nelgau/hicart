@@ -20,9 +20,9 @@ class Accessor:
         return construct
 
     def __init__(self, dut, node, name=None):
-        self.dut = dut
-        self.node = node
-        self.name = name
+        self._dut = dut
+        self._node = node
+        self._name = name
 
         self.fields = OrderedDict()
 
@@ -31,7 +31,7 @@ class Accessor:
                 return b
             return "{}__{}".format(a, b)
 
-        for field_name, field_shape in self.node:
+        for field_name, field_shape in node:
             full_name = concat(name, field_name)
             if isinstance(field_shape, list):
                 self.fields[field_name] = Accessor(dut, field_shape, name=full_name)
@@ -45,10 +45,10 @@ class Accessor:
         try:
             return self.fields[item]
         except KeyError:
-            if self.name is None:
+            if self._name is None:
                 reference = "Unnamed accessor"
             else:
-                reference = "Accessor '{}'".format(self.name)
+                reference = "Accessor '{}'".format(self._name)
             raise AttributeError("{} does not have a field '{}'. Did you mean one of: {}?"
                                     .format(reference, item, ", ".join(self.fields))) from None
 
