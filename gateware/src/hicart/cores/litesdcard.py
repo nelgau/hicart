@@ -109,20 +109,34 @@ class Core(Elaboratable):
         return self._dma_bus
 
     def _populate_map(self, build_products):
+        # 30 == 32 - log_int (32 / granularity)
+        self._dma_bus = wishbone.Interface(addr_width=30, data_width=32, granularity=8, features={"cti", "bte", "err"})
+
+        ctrl_map = MemoryMap(addr_width=1, data_width=8)
+
+        # csv_name = f"{self.name}_csr.csv"
+        csv_name = f"build/sdcard/csr.csv"
+        csr_csv = build_products.get(csv_name, mode="t")
+        for row in csv.reader(csr_csv.split("\n"), delimiter=","):
+            if not row or row[0][0] == "#": continue
+            res_type, res_name, addr, size, attrs = row
+            if res_type == "csr_register":
+                ctrl_map.add_resource(
+                    object(),
+                    name   = res_name,
+                    addr   = int(addr, 16),
+                    size   = int(size, 10) * 32 // ctrl_map.data_width,
+                    extend = True,
+                )
 
         self._ctrl_bus = wishbone.Interface(
-            addr_width=30,      # 32 - log_int (32 / granularity)
-            data_width=32,
-            granularity=8,
-            features={"cti", "bte", "err"}
+            addr_width  = ctrl_map.addr_width
+                        - log2_int(32 // ctrl_map.data_width),
+            data_width  = 32,
+            granularity = ctrl_map.data_width,
+            features    = {"cti", "bte", "err"}
         )
-
-        self._dma_bus = wishbone.Interface(
-            addr_width=30,      # 32 - log_int (32 / granularity)
-            data_width=32,
-            granularity=8,
-            features={"cti", "bte", "err"}
-        )
+        self._ctrl_bus.memory_map = ctrl_map
 
     def build(self, builder, platform, build_dir, *, do_build=True, name_force=False):
         if not isinstance(builder, Builder):

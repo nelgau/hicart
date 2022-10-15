@@ -265,7 +265,7 @@ def main():
     # Generate core --------------------------------------------------------------------------------
     platform = platform_cls(device="", io=_io)
     core     = LiteSDCardCore(platform, clk_freq=clk_freq)
-    builder  = Builder(core, output_dir="build/sdcard", csr_json="build/sdcard/csr.json")
+    builder  = Builder(core, output_dir="build/sdcard", csr_csv="build/sdcard/csr.csv")
     builder.build(build_name="litesdcard_core", run=False, regular_comb=False)
 
 
