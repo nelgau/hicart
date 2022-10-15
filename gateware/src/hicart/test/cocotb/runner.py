@@ -24,7 +24,10 @@ endmodule
 def generate_verilog(verilog_file, design, platform, name='top',
                      ports=(), vcd_file=None):
     fragment = Fragment.get(design, platform)
-    output = verilog.convert(fragment, name=name, ports=ports)
+    output = verilog.convert(fragment, name=name, ports=ports, emit_src=False)
+
+    if os.getenv('PRINT_AMARANTH_VERILOG', default=False):
+        print(output)
 
     with open(verilog_file, 'w') as f:
         f.write('`timescale 1ns/1ps\n')
