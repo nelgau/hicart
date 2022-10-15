@@ -3,13 +3,13 @@ from amaranth_soc import wishbone
 from lambdasoc.periph.sram  import SRAMPeripheral
 
 import cocotb
-from cocotb.triggers import RisingEdge, FallingEdge
+from cocotb.triggers import RisingEdge
 from cocotbext.wishbone.driver import WishboneMaster
 from cocotbext.wishbone.driver import WBOp
 
 from hicart.cores import litesdcard
 from hicart.platforms.homeinvader_rev_a import HomeInvaderRevAPlatform
-from hicart.test.cocotb import CocotbTestCase, init_domains, start_clock
+from hicart.test.cocotb import CocotbTestCase, init_domains, start_clock, do_reset
 from hicart.test.cocotb.accessor import wishbone_accessor, Accessor
 
 
@@ -64,9 +64,6 @@ class DUT(Elaboratable):
 
 @cocotb.test()
 async def run_CocotbTest_test_module(dut):
-    init_domains(dut)
-    start_clock(dut.clk, rate=60e6)
-
     sd_card  = sd_card_accessor(dut, name="sd")
     bus = wishbone_accessor(dut, "bus", features={"cti", "bte", "err"})
 
@@ -78,11 +75,9 @@ async def run_CocotbTest_test_module(dut):
     # the arbiter should hold this signal low. I need to examine the verilog.
     bus.err                 .setimmediatevalue(0)
 
-    await RisingEdge(dut.clk)
-    await RisingEdge(dut.clk)
-    dut.rst.value = 1
-    await RisingEdge(dut.clk)
-    dut.rst.value = 0
+    init_domains(dut)
+    start_clock(dut.clk, rate=60e6)
+    await do_reset(dut)
 
     wb_master = WishboneMaster(
         dut,
@@ -104,12 +99,10 @@ async def run_CocotbTest_test_module(dut):
             "err": "err",
         })
 
-    await FallingEdge(dut.clk)
-
     res = await wb_master.send_cycle([WBOp(0x0001)])
 
     for i in range(20):
-        await FallingEdge(dut.clk)
+        await RisingEdge(dut.clk)
 
 
 class CocotbTest(CocotbTestCase):

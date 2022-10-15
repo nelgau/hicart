@@ -12,8 +12,6 @@ class PIInitiator:
         self.bus.read.setimmediatevalue(0)
         self.bus.write.setimmediatevalue(0)
 
-        await Timer(1000, units='ps')
-
     async def read_burst_slow(self, start_address, word_count):
         self.bus.ale_l.value = 0
         await Timer(56, units='ps')

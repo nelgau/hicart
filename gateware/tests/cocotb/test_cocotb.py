@@ -7,7 +7,7 @@ from hicart.n64.ad16 import ad16_layout, AD16
 from hicart.n64.pi import PIWishboneInitiator
 from hicart.platforms.homeinvader_rev_a import HomeInvaderRevAPlatform
 from hicart.soc.wishbone import DownConverter, Translator
-from hicart.test.cocotb import Accessor, CocotbTestCase, init_domains, start_clock
+from hicart.test.cocotb import Accessor, CocotbTestCase, init_domains, start_clock, do_reset
 from hicart.test.cocotb.driver.ad16 import PIInitiator
 from hicart.test.cocotb.emulator.qspi_flash import QSPIFlashEmulator
 from hicart.test.sim.qspi_clocker import QSPIClocker
@@ -74,17 +74,18 @@ async def run_CocotbTest_test_module(dut):
     ad16 = ad16_accessor(dut, name='ad16')
     qspi = qspi_accessor(dut, name='qspi')
 
-    init_domains(dut)
-    start_clock(dut.clk, rate=60e6)
-
     pi = PIInitiator(ad16)
     flash = QSPIFlashEmulator(qspi)
 
-    flash.begin()
+    await pi.begin()
+    await flash.begin()
+
+    init_domains(dut)
+    start_clock(dut.clk, rate=60e6)
+    await do_reset(dut)
 
     @cocotb.coroutine
     async def pi_process():
-        await pi.begin()
         await pi.read_burst_fast(0x10000000, 256)
 
     await cocotb.start_soon(pi_process())

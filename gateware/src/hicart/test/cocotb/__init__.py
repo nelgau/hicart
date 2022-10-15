@@ -3,6 +3,7 @@ import unittest
 
 import cocotb
 from cocotb.clock import Clock
+from cocotb.triggers import RisingEdge
 
 from hicart.test.cocotb.accessor import Accessor
 from hicart.test.cocotb.runner import run_test
@@ -11,12 +12,19 @@ from hicart.test import flatten_traces
 
 def init_domains(dut):
     dut.clk.setimmediatevalue(0)
-    dut.rst.setimmediatevalue(0)
+    dut.rst.setimmediatevalue(1)
 
 def start_clock(handle, rate=100e6):
     period = int(1e9 / rate)
     clock = Clock(handle, period, units="ps")
     cocotb.start_soon(clock.start())
+
+async def do_reset(dut):
+    await RisingEdge(dut.clk)
+    dut.rst.setimmediatevalue(1)
+    await RisingEdge(dut.clk)
+    dut.rst.value = 0
+    await RisingEdge(dut.clk)
 
 
 class CocotbTestCase(unittest.TestCase):
