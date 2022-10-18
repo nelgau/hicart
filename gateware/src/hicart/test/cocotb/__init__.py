@@ -23,6 +23,7 @@ async def do_reset(dut):
     await RisingEdge(dut.clk)
     dut.rst.setimmediatevalue(1)
     await RisingEdge(dut.clk)
+    await RisingEdge(dut.clk)
     dut.rst.value = 0
     await RisingEdge(dut.clk)
 
