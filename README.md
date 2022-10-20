@@ -14,9 +14,9 @@ Get these taps:
 Install the following packages:
 
     $ brew install --HEAD yosys
-    $ brew install --HEAD nextpnr-ecp5
-    $ brew install --HEAD ecpprog
-    $ brew install riscv-tools
+    $ brew install --HEAD nelgau/fpga/nextpnr-ecp5
+    $ brew install --HEAD nelgau/fpga/ecpprog
+    $ brew install riscv-software-src/riscv/riscv-tools
     $ brew install icarus-verilog
 
 Note: Building `nextpnr-ecp5` takes approximately 11 minutes on an M1 MacBook Pro.
