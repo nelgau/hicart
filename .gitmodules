@@ -1,3 +1,7 @@
 [submodule "hardware/lib/nelgau"]
 	path = hardware/lib/nelgau
 	url = git@github.com:nelgau/nelgau-kicad-libs.git
+[submodule "libdragon"]
+	path = software/libdragon
+	url = https://github.com/DragonMinded/libdragon
+	branch = trunk
