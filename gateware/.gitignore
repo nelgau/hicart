@@ -1,1 +1,26 @@
+# Witness that poetry-install completed successfully
 .install.stamp
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest
+.pytest_cache/
+
+# C extensions
+*.so
+
+# Build
+build/
+*.bit
+*.svf
+
+# Icarus Verilog
+*.vvp
+
+# Traces
+traces/
+*.vcd
+*.gtkw
