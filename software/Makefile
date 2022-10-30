@@ -6,6 +6,8 @@ LIBDRAGON_CLI = $(NPX) --yes libdragon@$(LIBDRAGON_CLI_VER)
 LIBDRAGON_MAKEFILE = Makefile.libdragon
 LIBDRAGON_MAKE = $(LIBDRAGON_CLI) make -f $(LIBDRAGON_MAKEFILE)
 
+OUT_Z64 := hicart.z64
+
 .PHONY: build
 build:
 	$(LIBDRAGON_MAKE) all
@@ -13,6 +15,10 @@ build:
 .PHONY: clean
 clean:
 	$(LIBDRAGON_MAKE) clean
+
+.PHONY: emulate
+emulate: build
+	../scripts/run_in_ares.sh $(OUT_Z64)
 
 .PHONY: libdragon-install
 libdragon-install:
