@@ -58,6 +58,3 @@ fp-info-cache
 # N64 dumps
 *.n64
 *.z64
-
-# Vine scrapes
-media/vines/output
