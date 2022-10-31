@@ -1,6 +1,6 @@
-V=0
-SOURCE_DIR=src
-BUILD_DIR=build
+V = 0
+SOURCE_DIR = src
+BUILD_DIR = build
 include $(N64_INST)/include/n64.mk
 
 OBJS = $(BUILD_DIR)/main.o
