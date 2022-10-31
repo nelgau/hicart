@@ -1,12 +1,10 @@
-V=0
+V = 0
+LIBDRAGON_CLI_VER = 10.8.2
+LIBDRAGON_MAKEFILE = Makefile.libdragon
 
 NPX := $(shell command -v npx 2> /dev/null)
-
-LIBDRAGON_CLI_VER = 10.8.2
-LIBDRAGON_CLI = $(NPX) --yes libdragon@$(LIBDRAGON_CLI_VER)
-
-LIBDRAGON_MAKEFILE = Makefile.libdragon
-LIBDRAGON_MAKE = $(LIBDRAGON_CLI) make -f $(LIBDRAGON_MAKEFILE)
+LIBDRAGON_CLI := $(NPX) --yes libdragon@$(LIBDRAGON_CLI_VER)
+LIBDRAGON_MAKE := $(LIBDRAGON_CLI) make -f $(LIBDRAGON_MAKEFILE)
 
 OUT_Z64 := hicart.z64
 
