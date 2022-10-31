@@ -9,7 +9,18 @@ int main(void)
     debug_init_usblog();
     console_set_debug(true);
 
-    printf("Hello world!\n");
+    dfs_init(DFS_DEFAULT_LOCATION);
+
+    FILE *fp = fopen("rom:/data.txt", "r");
+	if (fp) {
+	    fseek(fp, 0, SEEK_END);
+	    int size = ftell(fp);
+	    rewind(fp);
+
+	    printf("Size: %d\n", size);
+    } else {
+	    printf("Error opening file\n");
+    }
 
     while(1) {}
 }
