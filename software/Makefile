@@ -1,3 +1,5 @@
+V=0
+
 NPX := $(shell command -v npx 2> /dev/null)
 
 LIBDRAGON_CLI_VER = 10.8.2
@@ -31,3 +33,7 @@ libdragon-start:
 .PHONY: libdragon-stop
 libdragon-stop:
 	$(LIBDRAGON_CLI) stop
+
+ifneq ($(V),1)
+.SILENT:
+endif
