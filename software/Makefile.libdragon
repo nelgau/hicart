@@ -3,7 +3,8 @@ SOURCE_DIR = src
 BUILD_DIR = build
 include $(N64_INST)/include/n64.mk
 
-OBJS = $(BUILD_DIR)/main.o
+SRCS = $(wildcard $(SOURCE_DIR)/*.c)
+OBJS = $(SRCS:$(SOURCE_DIR)/%.c=$(BUILD_DIR)/%.o)
 
 .PHONY: all
 all: hicart.z64
