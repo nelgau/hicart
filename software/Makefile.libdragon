@@ -1,20 +1,21 @@
-V=1
+# V=1
 SOURCE_DIR=src
 BUILD_DIR=build
 include $(N64_INST)/include/n64.mk
 
 OBJS = $(BUILD_DIR)/main.o
-OUT_ELF = $(BUILD_DIR)/hicart.elf
-OUT_Z64 = hicart.z64
 
 .PHONY: all
-all: $(OUT_Z64)
+all: hicart.z64
 
 .PHONY: clean
 clean:
 	rm -rf $(BUILD_DIR) *.z64
 
-$(OUT_Z64): N64_ROM_TITLE="Home Invader 64"
-$(OUT_ELF): $(OBJS)
+hicart.z64: N64_ROM_TITLE="Home Invader 64"
+hicart.z64: $(BUILD_DIR)/hicart.dfs
+
+$(BUILD_DIR)/hicart.dfs: $(wildcard filesystem/*)
+$(BUILD_DIR)/hicart.elf: $(OBJS)
 
 -include $(wildcard $(BUILD_DIR)/*.d)
