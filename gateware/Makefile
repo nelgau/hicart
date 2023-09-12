@@ -1,5 +1,5 @@
 INSTALL_STAMP := .install.stamp
-POETRY := $(shell command -v poetry 2> /dev/null)
+PDM := $(shell command -v pdm 2> /dev/null)
 
 .DEFAULT_GOAL := help
 
@@ -13,17 +13,17 @@ help:
 	@echo "  program     Build design and program device"
 	@echo "  test        Run all the tests"
 
-POETRY_NOT_FOUND = "Poetry could not be found. See https://python-poetry.org/docs/"
+PDM_NOT_FOUND = "PDM could not be found. See https://pdm.fming.dev/latest/"
 
 install: $(INSTALL_STAMP)
-$(INSTALL_STAMP): pyproject.toml poetry.lock
-	@if [ -z $(POETRY) ]; then echo $(POETRY_NOT_FOUND); exit 2; fi
-	$(POETRY) install
+$(INSTALL_STAMP): pyproject.toml pdm.lock
+	@if [ -z $(PDM) ]; then echo $(PDM_NOT_FOUND); exit 2; fi
+	$(PDM) install
 	touch $(INSTALL_STAMP)
 
 .PHONY: uninstall
 uninstall:
-	$(POETRY) env remove --all
+	$(PDM) venv remove -y in-project
 	rm -rf $(INSTALL_STAMP)
 
 .PHONY: clean
@@ -33,9 +33,8 @@ clean:
 
 .PHONY: program
 program: $(INSTALL_STAMP)
-	$(POETRY) run python -m hicart.design.cart
+	$(PDM) run python -m hicart.design.cart
 
 .PHONY: test
 test: $(INSTALL_STAMP)
-	$(POETRY) run pytest
-
+	$(PDM) run pytest
