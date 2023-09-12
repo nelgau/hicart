@@ -205,7 +205,7 @@ class ECP5PLL(Elaboratable):
 
         try:
             self.clkin_frequency = platform.lookup(clock_name).clock.frequency / 1e6
-            input_clock_pin = platform.request(clock_name)
+            input_clock_pin = platform.request(clock_name).i
         except:
             input_clock_pin = ClockSignal(clock_name)
             # TODO: Make this nicer, remove clock_signal_freq
