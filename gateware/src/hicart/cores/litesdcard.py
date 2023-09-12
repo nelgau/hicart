@@ -86,7 +86,8 @@ class Core(Elaboratable):
         # self.name = name or tracer.get_var_name(depth=2 + src_loc_at)
         self.name = "litesdcard_core"
 
-        self.irq = IRQLine(name=f"{self.name}_irq")
+        # self.irq = IRQLine(name=f"{self.name}_irq")
+        self.irq = Signal(name=f"{self.name}_irq")
 
         self._ctrl_bus = None
         self._dma_bus = None
