@@ -5,22 +5,20 @@ PACKAGE_ROOT := src/hicart
 SRCS := $(shell find $(PACKAGE_ROOT) -name "*.py")
 BITSTREAM := build/top.bit
 
-TESTROM := ../roms/sm64.z64
-
 .DEFAULT_GOAL := help
 
 .PHONY: help
 help:
 	@echo "Please use 'make <target>' where <target> is one of:"
 	@echo ""
-	@echo "  install                Install packages and prepare environment"
-	@echo "  uninstall              Delete environement"
-	@echo "  clean                  Remove all temporary files"
-	@echo "  build-bitstream        Build design"
-	@echo "  send-bitstream         Send bitstream to device"
-	@echo "  program-bitstream      Write bitstream to flash"
-	@echo "  run                    Send bitstream to device and cycle power"
-	@echo "  test                   Run all the tests"
+	@echo "  install    Install packages and prepare environment"
+	@echo "  uninstall  Delete environement"
+	@echo "  clean      Remove all temporary files"
+	@echo "  build      Build design"
+	@echo "  send       Send bitstream to device"
+	@echo "  program    Write bitstream to flash"
+	@echo "  run        Send bitstream to device and cycle power"
+	@echo "  test       Run all the tests"
 
 PDM_NOT_FOUND = "PDM could not be found. See https://pdm.fming.dev/latest/"
 
@@ -40,19 +38,19 @@ clean:
 	find . -type d -name "__pycache__" | xargs rm -rf {};
 	rm -rf $(INSTALL_STAMP) build .pytest_cache
 
-.PHONY: build-bitstream
-build-bitstream: $(BITSTREAM)
+.PHONY: build
+build: $(BITSTREAM)
 
-.PHONY: send-bitstream
-send-bitstream: $(BITSTREAM)
+.PHONY: send
+send: $(BITSTREAM)
 	ecpprog -d s:0x0403:0x6010:FT5YLSVU -I B -S $(BITSTREAM)
 
-.PHONY: program-bitstream
-program-bitstream: $(BITSTREAM)
+.PHONY: program
+program: $(BITSTREAM)
 	ecpprog -d s:0x0403:0x6010:FT5YLSVU -I B $(BITSTREAM)
 
 .PHONY: run
-run: send-bitstream
+run: send
 	../scripts/set_power_state.sh --silent --state 0
 	../scripts/set_power_state.sh --silent --state 1
 
