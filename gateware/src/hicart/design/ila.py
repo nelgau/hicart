@@ -49,5 +49,5 @@ class Top(Elaboratable):
 
 
 if __name__ == "__main__":
-    top = main_runner(Top())
+    top = main_runner(Top(), do_program=True)
     top.interactive_display()

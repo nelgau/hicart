@@ -62,7 +62,7 @@ class Top(Elaboratable):
 
         m.d.comb += [
             initiator.bus           .connect(decoder.bus),
-            flash_interface.qspi    .connect(flash_connector.qspi),            
+            flash_interface.qspi    .connect(flash_connector.qspi),
 
             initiator.ad16.ad.i     .eq( n64_cart.ad.i  ),
             initiator.ad16.ale_h    .eq( n64_cart.ale_h ),

@@ -64,5 +64,5 @@ def run_remote():
     print(f"{total_time:.2f} seconds ({rate:.2f} ops/sec)")
 
 if __name__ == "__main__":
-    main_runner(Top())
+    main_runner(Top(), do_program=True)
     run_remote()

@@ -48,5 +48,5 @@ def write_serial():
         time.sleep(0.25)
 
 if __name__ == "__main__":
-    main_runner(Top())
+    main_runner(Top(), do_program=True)
     write_serial()

@@ -69,5 +69,5 @@ def read_serial():
         print(b)
 
 if __name__ == "__main__":
-    main_runner(Top())
+    main_runner(Top(), do_program=True)
     read_serial()

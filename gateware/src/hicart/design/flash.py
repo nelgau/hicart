@@ -89,5 +89,5 @@ class Top(Elaboratable):
         return m
 
 if __name__ == "__main__":
-    main_runner(Top())
+    main_runner(Top(), do_program=True)
     FT245Reader(4).run()

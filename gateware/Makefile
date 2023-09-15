@@ -1,6 +1,10 @@
 INSTALL_STAMP := .install.stamp
 PDM := $(shell command -v pdm 2> /dev/null)
 
+PACKAGE_ROOT := src/hicart
+SRCS := $(shell find $(PACKAGE_ROOT) -name "*.py")
+BITSTREAM := build/top.bit
+
 .DEFAULT_GOAL := help
 
 .PHONY: help
@@ -10,7 +14,9 @@ help:
 	@echo "  install     Install packages and prepare environment"
 	@echo "  uninstall   Delete environement"
 	@echo "  clean       Remove all temporary files"
-	@echo "  program     Build design and program device"
+	@echo "  build       Build design"
+	@echo "  program     Program device"
+	@echo "  run         Program device and cycle power"
 	@echo "  test        Run all the tests"
 
 PDM_NOT_FOUND = "PDM could not be found. See https://pdm.fming.dev/latest/"
@@ -31,10 +37,21 @@ clean:
 	find . -type d -name "__pycache__" | xargs rm -rf {};
 	rm -rf $(INSTALL_STAMP) build .pytest_cache
 
+.PHONY: build
+build: $(INSTALL_STAMP) $(BITSTREAM)
+
 .PHONY: program
-program: $(INSTALL_STAMP)
-	$(PDM) run python -m hicart.design.cart
+program: $(INSTALL_STAMP) $(BITSTREAM)
+	ecpprog -d s:0x0403:0x6010:FT5YLSVU -I B -S $(BITSTREAM)
+
+.PHONY: run
+run: program
+	../scripts/set_power_state.sh --silent --state 0
+	../scripts/set_power_state.sh --silent --state 1
 
 .PHONY: test
 test: $(INSTALL_STAMP)
 	$(PDM) run pytest
+
+$(BITSTREAM): $(INSTALL_STAMP) $(SRCS)
+	$(PDM) run python -m hicart.design.cart
