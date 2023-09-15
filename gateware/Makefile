@@ -11,13 +11,13 @@ BITSTREAM := build/top.bit
 help:
 	@echo "Please use 'make <target>' where <target> is one of:"
 	@echo ""
-	@echo "  install     Install packages and prepare environment"
-	@echo "  uninstall   Delete environement"
-	@echo "  clean       Remove all temporary files"
-	@echo "  build       Build design"
-	@echo "  program     Program device"
-	@echo "  run         Program device and cycle power"
-	@echo "  test        Run all the tests"
+	@echo "  install                Install packages and prepare environment"
+	@echo "  uninstall              Delete environement"
+	@echo "  clean                  Remove all temporary files"
+	@echo "  build-bitstream        Build design"
+	@echo "  program-bitstream      Program device with bitstream"
+	@echo "  run                    Program device and cycle power"
+	@echo "  test                   Run all the tests"
 
 PDM_NOT_FOUND = "PDM could not be found. See https://pdm.fming.dev/latest/"
 
@@ -37,21 +37,24 @@ clean:
 	find . -type d -name "__pycache__" | xargs rm -rf {};
 	rm -rf $(INSTALL_STAMP) build .pytest_cache
 
-.PHONY: build
-build: $(INSTALL_STAMP) $(BITSTREAM)
-
-.PHONY: program
-program: $(INSTALL_STAMP) $(BITSTREAM)
-	ecpprog -d s:0x0403:0x6010:FT5YLSVU -I B -S $(BITSTREAM)
-
-.PHONY: run
-run: program
-	../scripts/set_power_state.sh --silent --state 0
-	../scripts/set_power_state.sh --silent --state 1
+.PHONY: build-bitstream
+build-bitstream: $(BITSTREAM)
 
 .PHONY: test
 test: $(INSTALL_STAMP)
 	$(PDM) run pytest
 
-$(BITSTREAM): $(INSTALL_STAMP) $(SRCS)
+.PHONY: program
+program-bitstream: $(INSTALL_STAMP) $(BITSTREAM)
+	ecpprog -d s:0x0403:0x6010:FT5YLSVU -I B -S $(BITSTREAM)
+
+.PHONY: run
+run: program-bitstream
+	../scripts/set_power_state.sh --silent --state 0
+	../scripts/set_power_state.sh --silent --state 1
+
+$(BITSTREAM): $(INSTALL_STAMP) $(SRCS) ../firmware/firmware.bin
 	$(PDM) run python -m hicart.design.cart
+
+../firmware/firmware.bin:
+	$(MAKE) -C ../firmware
