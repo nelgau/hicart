@@ -4,7 +4,7 @@ FFMPEG := $(shell command -v ffmpeg 2> /dev/null)
 
 # Video
 FFMPEG_FLAGS := -c:v mpeg1video -b:v 30000
-FFMPEG_FLAGS += -vf scale=240:240:flags=lanczos
+FFMPEG_FLAGS += -vf scale=256:240:flags=lanczos
 
 # Audio
 # FFMPEG_FLAGS += -c:a mp2
