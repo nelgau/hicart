@@ -8,13 +8,17 @@ LIBDRAGON_MAKE := $(LIBDRAGON_CLI) make -f $(LIBDRAGON_MAKEFILE)
 
 OUT_Z64 := hicart.z64
 
+.PHONY: clean
+clean:
+	$(LIBDRAGON_MAKE) clean
+
 .PHONY: build
 build:
 	$(LIBDRAGON_MAKE) all
 
-.PHONY: clean
-clean:
-	$(LIBDRAGON_MAKE) clean
+.PHONY: program
+program: build
+	ecpprog -d s:0x0403:0x6010:FT5YLSVU -I B -o 8M $(OUT_Z64)
 
 .PHONY: emulate
 emulate: build
