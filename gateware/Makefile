@@ -5,6 +5,8 @@ PACKAGE_ROOT := src/hicart
 SRCS := $(shell find $(PACKAGE_ROOT) -name "*.py")
 BITSTREAM := build/top.bit
 
+TESTROM := ../roms/sm64.z64
+
 .DEFAULT_GOAL := help
 
 .PHONY: help
@@ -15,8 +17,9 @@ help:
 	@echo "  uninstall              Delete environement"
 	@echo "  clean                  Remove all temporary files"
 	@echo "  build-bitstream        Build design"
-	@echo "  program-bitstream      Program device with bitstream"
-	@echo "  run                    Program device and cycle power"
+	@echo "  send-bitstream         Send bitstream to device"
+	@echo "  program-bitstream      Write bitstream to flash"
+	@echo "  run                    Send bitstream to device and cycle power"
 	@echo "  test                   Run all the tests"
 
 PDM_NOT_FOUND = "PDM could not be found. See https://pdm.fming.dev/latest/"
@@ -40,18 +43,22 @@ clean:
 .PHONY: build-bitstream
 build-bitstream: $(BITSTREAM)
 
+.PHONY: send-bitstream
+send-bitstream: $(BITSTREAM)
+	ecpprog -d s:0x0403:0x6010:FT5YLSVU -I B -S $(BITSTREAM)
+
+.PHONY: program-bitstream
+program-bitstream: $(BITSTREAM)
+	ecpprog -d s:0x0403:0x6010:FT5YLSVU -I B $(BITSTREAM)
+
+.PHONY: run
+run: send-bitstream
+	../scripts/set_power_state.sh --silent --state 0
+	../scripts/set_power_state.sh --silent --state 1
+
 .PHONY: test
 test: $(INSTALL_STAMP)
 	$(PDM) run pytest
-
-.PHONY: program
-program-bitstream: $(INSTALL_STAMP) $(BITSTREAM)
-	ecpprog -d s:0x0403:0x6010:FT5YLSVU -I B -S $(BITSTREAM)
-
-.PHONY: run
-run: program-bitstream
-	../scripts/set_power_state.sh --silent --state 0
-	../scripts/set_power_state.sh --silent --state 1
 
 $(BITSTREAM): $(INSTALL_STAMP) $(SRCS) ../firmware/firmware.bin
 	$(PDM) run python -m hicart.design.cart
