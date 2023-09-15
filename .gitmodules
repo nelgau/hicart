@@ -3,5 +3,5 @@
 	url = git@github.com:nelgau/nelgau-kicad-libs.git
 [submodule "libdragon"]
 	path = software/libdragon
-	url = github.com:nelgau/libdragon
-	branch = trunk
+	url = github.com:DragonMinded/libdragon
+	branch = unstable

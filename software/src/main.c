@@ -8,9 +8,9 @@ int main(void)
     debug_init_isviewer();
     debug_init_usblog();
 
-    display_init(RESOLUTION_320x240, DEPTH_32_BPP, NUM_DISPLAY, GAMMA_NONE, ANTIALIAS_OFF);
+    display_init(RESOLUTION_320x240, DEPTH_32_BPP, NUM_DISPLAY, GAMMA_NONE, FILTERS_DISABLED);
     dfs_init(DFS_DEFAULT_LOCATION);
-    rdp_init();
+    rdpq_init();
 
     mpeg2_t mp2;
     mpeg2_open(&mp2, "rom:/2013-03-23.bDO3hZYHvwz.m1v");
@@ -22,17 +22,15 @@ int main(void)
     display_context_t disp = 0;
 
     while (1) {
-        if (!mpeg2_next_frame(&mp2))
+        if (!mpeg2_next_frame(&mp2)) {
             break;
-
-        RSP_WAIT_LOOP(500) {
-            disp = display_lock();
-            if (disp) break;
         }
 
-        rdp_attach(disp);
+        disp = display_get();
+        
+        rdpq_attach_clear(disp, NULL);
         mpeg2_draw_frame(&mp2, disp);
-        rdp_detach_show(disp);
+        rdpq_detach_show();
 
         nframes++;
 
