@@ -25,7 +25,8 @@ int main(void)
 
     while (1) {
         if (!mpeg2_next_frame(&mp2)) {
-            break;
+            mpeg2_rewind(&mp2);
+            continue;
         }
 
         disp = display_get();
