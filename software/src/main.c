@@ -1,12 +1,14 @@
 #include <libdragon.h>
 
+#include <assert.h>
+
 #define NUM_DISPLAY 4
 
 int main(void)
 {
     controller_init();
-    debug_init_isviewer();
-    debug_init_usblog();
+    // debug_init_isviewer();
+    // debug_init_usblog();
 
     display_init(RESOLUTION_320x240, DEPTH_32_BPP, NUM_DISPLAY, GAMMA_NONE, FILTERS_DISABLED);
     dfs_init(DFS_DEFAULT_LOCATION);
