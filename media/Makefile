@@ -19,6 +19,8 @@ DST_SUFFIX := m1v
 SRCS = $(wildcard $(SRC_DIR)/*.$(SRC_SUFFIX))
 DSTS = $(SRCS:$(SRC_DIR)/%.$(SRC_SUFFIX)=$(DST_DIR)/%.$(DST_SUFFIX))
 
+.DEFAULT_GOAL := all
+
 .PHONY: all
 all: $(DSTS)
 

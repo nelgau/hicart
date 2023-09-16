@@ -8,6 +8,8 @@ LIBDRAGON_MAKE := $(LIBDRAGON_CLI) make -f $(LIBDRAGON_MAKEFILE)
 
 OUT_Z64 := hicart.z64
 
+.DEFAULT_GOAL := build
+
 .PHONY: clean
 clean:
 	$(LIBDRAGON_MAKE) clean
