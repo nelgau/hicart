@@ -15,7 +15,7 @@ int main(void)
     rdpq_init();
 
     mpeg2_t mp2;
-    mpeg2_open(&mp2, "rom:/2013-03-23.bDO3hZYHvwz.m1v");
+    mpeg2_open(&mp2, "rom:/2013-06-21.huXPjbKqlra.m1v");
 
     float fps = mpeg2_get_framerate(&mp2);
     throttle_init(fps, 0, 8);
