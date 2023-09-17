@@ -37,6 +37,11 @@ test = [
     "pytest~=7.1.3"
 ]
 
+[tool.pdm.resolution.overrides]
+# Because amaranth-boards overconstrains to amaranth>=0.3,<0.5
+amaranth = "git+https://github.com/amaranth-lang/amaranth.git@main"
+amaranth-soc = "git+https://github.com/amaranth-lang/amaranth-soc.git@7b52e935"
+
 [tool.pdm.scripts]
 test = { cmd = "pytest" }
 

@@ -6,7 +6,7 @@ groups = ["default", "test"]
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:fb5c9a73e5467354ab70bb84756569a304c56e8575cc20bb1aa105c3757f6795"
+content_hash = "sha256:fe89111c5d93de7fb1b3ba623c34cbc76bf54a6d506f92a3b3e16f500b21860d"
 
 [[package]]
 name = "amaranth"
@@ -35,11 +35,11 @@ dependencies = [
 
 [[package]]
 name = "amaranth-soc"
-version = "0.1.dev64+gdf8013d"
+version = "0.1.dev66+g7b52e93"
 requires_python = "~=3.8"
 git = "https://github.com/amaranth-lang/amaranth-soc.git"
-ref = "main"
-revision = "df8013d2dcab7a20292b54b84bdef37d461f7531"
+ref = "7b52e935"
+revision = "7b52e9351b1f74a8e727d12f3a91469796aaa0ad"
 summary = "System on Chip toolkit for Amaranth HDL"
 dependencies = [
     "amaranth<0.5,>=0.3",
