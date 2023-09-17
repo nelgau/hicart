@@ -10,11 +10,11 @@ content_hash = "sha256:fb5c9a73e5467354ab70bb84756569a304c56e8575cc20bb1aa105c37
 
 [[package]]
 name = "amaranth"
-version = "0.4.dev194+ga9d0380"
+version = "0.4.dev197+g11d5bb1"
 requires_python = "~=3.8"
 git = "https://github.com/amaranth-lang/amaranth.git"
 ref = "main"
-revision = "a9d03805fff8c3d4f6769320323dbf44619fe422"
+revision = "11d5bb19eb34463918c07dc5e2e0eac7dbf822b0"
 summary = "Amaranth hardware definition language"
 dependencies = [
     "Jinja2~=3.0",
@@ -58,11 +58,11 @@ dependencies = [
 
 [[package]]
 name = "amaranth"
-version = "0.4.dev194+ga9d0380"
+version = "0.4.dev197+g11d5bb1"
 requires_python = "~=3.8"
 git = "https://github.com/amaranth-lang/amaranth.git"
 ref = "main"
-revision = "a9d03805fff8c3d4f6769320323dbf44619fe422"
+revision = "11d5bb19eb34463918c07dc5e2e0eac7dbf822b0"
 summary = "Amaranth hardware definition language"
 dependencies = [
     "Jinja2~=3.0",
@@ -344,13 +344,13 @@ dependencies = [
     "amaranth @ git+https://github.com/amaranth-lang/amaranth.git@main",
     "amaranth-boards @ git+https://github.com/amaranth-lang/amaranth-boards.git@main",
     "amaranth-soc @ git+https://github.com/amaranth-lang/amaranth-soc.git@main",
-    "apollo-fpga<1.0.0,>=0.0.5",
+    "apollo-fpga<0.0.6,>=0.0.5",
     "libusb1<2.0.0,>=1.9.2",
     "pyserial<4.0,>=3.5",
     "pyusb<2.0.0,>=1.1.1",
-    "pyvcd<1.0.0,>=0.2.4",
+    "pyvcd<0.3.0,>=0.2.4",
     "usb-protocol @ git+https://github.com/usb-tools/python-usb-protocol",
-    "ziglang<1.0.0,>=0.8.0",
+    "ziglang<0.9.0,>=0.8.0",
 ]
 
 [[package]]
@@ -637,15 +637,16 @@ files = [
 
 [[package]]
 name = "ziglang"
-version = "0.11.0"
+version = "0.8.1"
 requires_python = "~=3.5"
 summary = "       Zig is a general-purpose programming language and toolchain for\nmaintaining robust, optimal, and reusable software."
 files = [
-    {file = "ziglang-0.11.0-py3-none-macosx_10_9_x86_64.whl", hash = "sha256:bd046eeab97ad51048575768f6dae10468b3a4449f4467ed61dae621faf6ee55"},
-    {file = "ziglang-0.11.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:038b95cac9adef0c6dce9b72bdad895a0e4e0654c77c4a8f84fe79d2909a366e"},
-    {file = "ziglang-0.11.0-py3-none-manylinux_2_12_i686.manylinux2010_i686.musllinux_1_1_i686.whl", hash = "sha256:4f848c8cca520cb12357cfa3d303bf1149a30566f4c1e5999284dbdf921cc2b8"},
-    {file = "ziglang-0.11.0-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64.whl", hash = "sha256:45e8116428267e20529b9ee43a7e7364791c1a092845d2143b248a1dbf6760b0"},
-    {file = "ziglang-0.11.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl", hash = "sha256:d6372bada34714a5395539cc4d76e9cc6062739cee5ce9949a250f7c525ceb94"},
-    {file = "ziglang-0.11.0-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.musllinux_1_1_armv7l.whl", hash = "sha256:5fe81f91fd872fc32ed0f82807df6c680a82cbea56a9f24f818e9da299049022"},
-    {file = "ziglang-0.11.0-py3-none-win_amd64.whl", hash = "sha256:a7edc7020e7ffbbb3af3a40c17a9bda65d5a65132ff933e153ffa80d8f5ad731"},
+    {file = "ziglang-0.8.1-py3-none-macosx_10_9_x86_64.whl", hash = "sha256:75fcfc3420d5c8e5f357c825012e257e3291cbf7cbba1d36b71234b11a2cc6ea"},
+    {file = "ziglang-0.8.1-py3-none-macosx_11_0_arm64.whl", hash = "sha256:23cb31c5dc576b9be780892ab622f964671876522138dddb71779a2d168fc15f"},
+    {file = "ziglang-0.8.1-py3-none-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:d7bbfff3ed2d69f7f80efbf3922e7b66643a350cbee7e10ede5803e575a39f6f"},
+    {file = "ziglang-0.8.1-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:fe6660b61df1b4ea091f240c5988f90854cd34cec8f1e388c61ddfb4a258ff33"},
+    {file = "ziglang-0.8.1-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3c9c875282b53cfb3fb444578a421f4eb941cf3ecb976b7ea038c8981776bacc"},
+    {file = "ziglang-0.8.1-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:d77c54000577075e963105746e3dc95e2a76848f3ded109e7f790d90fbef93bb"},
+    {file = "ziglang-0.8.1-py3-none-win32.whl", hash = "sha256:be37993dd0a36f9aebcf43ded310599bd68bd15c8cbda35eed0a338566f74108"},
+    {file = "ziglang-0.8.1-py3-none-win_amd64.whl", hash = "sha256:222b643152ef9398cbc01948937582628878d2eabdfad45c81ad624bca8b1ef5"},
 ]
