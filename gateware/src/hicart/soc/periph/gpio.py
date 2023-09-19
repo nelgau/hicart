@@ -1,5 +1,6 @@
 from amaranth import *
-from lambdasoc.periph.base import Peripheral
+
+from . import Peripheral
 
 
 class GPIOPeripheral(Peripheral, Elaboratable):

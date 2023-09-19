@@ -16,9 +16,8 @@ from amaranth.utils import log2_int
 from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 
-from lambdasoc.periph import IRQLine
-
 from hicart.platforms.homeinvader_rev_a import HomeInvaderRevAPlatform
+from hicart.soc.periph import IRQLine
 
 
 __all__ = [

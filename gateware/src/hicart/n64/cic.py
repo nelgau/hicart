@@ -3,10 +3,10 @@ import struct
 from amaranth import *
 from amaranth.lib.cdc import FFSynchronizer, AsyncFFSynchronizer
 from amaranth_soc import wishbone
-from lambdasoc.cpu.minerva  import MinervaCPU
-from lambdasoc.periph.sram  import SRAMPeripheral
 
-from hicart.soc.gpio import GPIOPeripheral
+from hicart.soc.cpu.minerva  import MinervaCPU
+from hicart.soc.periph.sram  import SRAMPeripheral
+from hicart.soc.periph.gpio import GPIOPeripheral
 
 
 class CIC(Elaboratable):
