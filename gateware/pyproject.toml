@@ -16,13 +16,11 @@ dependencies = [
     "amaranth-soc @ git+https://github.com/amaranth-lang/amaranth-soc.git@main",
     "amaranth-stdio @ git+https://github.com/amaranth-lang/amaranth-stdio.git@main",
     "amaranth-boards @ git+https://github.com/amaranth-lang/amaranth-boards.git@main",
-    "minerva @ git+https://github.com/minerva-cpu/minerva.git",
+    "minerva @ git+https://github.com/minerva-cpu/minerva.git@main",
     "luna @ git+https://github.com/greatscottgadgets/luna.git@main",
 
     # LambdaSoC (heavy transitive dependencies)
-    "lambdasoc @ git+https://github.com/lambdaconcept/lambdasoc.git@master",
     "litex @ git+https://github.com/enjoy-digital/litex.git",
-    "litedram @ git+https://github.com/enjoy-digital/litedram.git",
     "litesdcard @ git+https://github.com/enjoy-digital/litesdcard.git",
     "migen @ git+https://github.com/m-labs/migen.git@master",
 
