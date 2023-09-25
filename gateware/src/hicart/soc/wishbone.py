@@ -2,7 +2,7 @@ from amaranth import *
 from amaranth.sim import *
 from amaranth.utils import log2_int
 from amaranth_soc.memory import MemoryMap
-from amaranth_soc.wishbone import Interface
+from amaranth_soc import wishbone
 
 
 class DownConverter(Elaboratable):
@@ -18,7 +18,7 @@ class DownConverter(Elaboratable):
         self.granularity = granularity
         self.features    = set(features)
 
-        self.bus = Interface(addr_width=addr_width, data_width=data_width,
+        self.bus = wishbone.Interface(addr_width=addr_width, data_width=data_width,
             granularity=granularity, features=features)
 
         granularity_bits = log2_int(data_width // granularity)
@@ -101,7 +101,7 @@ class DownConverter(Elaboratable):
 
         # Write
 
-        m.d.comb += self.sub_bus.dat_w.eq(self.bus.word_select(stb_counter, dw_to))
+        m.d.comb += self.sub_bus.dat_w.eq(self.bus.dat_w.word_select(stb_counter, dw_to))
 
         # Read
 
@@ -130,10 +130,8 @@ class Translator(Elaboratable):
         self.sub_bus = sub_bus
         self.base_addr = base_addr
 
-        self.bus = Interface(addr_width=addr_width,
-                             data_width=sub_bus.data_width,
-                             granularity=sub_bus.granularity,
-                             features=features)
+        self.bus = wishbone.Interface(addr_width=addr_width, data_width=sub_bus.data_width,
+            granularity=sub_bus.granularity, features=features)
 
         # FIXME: It would be possible to implement this so that the resources
         # on the subordinate bus are visible, removing the need to create this
@@ -152,10 +150,22 @@ class Translator(Elaboratable):
         adr_extended = Signal.like(self.sub_bus.adr)
 
         m.d.comb += [
-            self.bus            .connect(self.sub_bus, exclude={"adr"}),
-
             adr_extended        .eq(self.bus.adr),
             self.sub_bus.adr    .eq(adr_extended + self.base_addr),
+
+            self.sub_bus.dat_w  .eq(self.bus.dat_w),
+            self.sub_bus.sel    .eq(self.bus.sel),
+            self.sub_bus.cyc    .eq(self.bus.cyc),
+            self.sub_bus.stb    .eq(self.bus.stb),
+            self.sub_bus.we     .eq(self.bus.we),
+
+            self.bus.dat_r      .eq(self.sub_bus.dat_r),
+            self.bus.ack        .eq(self.sub_bus.ack),
         ]
+
+        # TODO: Implement other features
+
+        if hasattr(self.bus, "stall"):
+            m.d.comb += self.bus.stall.eq(getattr(self.sub_bus, "stall", ~self.sub_bus.ack))
 
         return m

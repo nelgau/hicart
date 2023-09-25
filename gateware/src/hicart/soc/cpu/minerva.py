@@ -1,4 +1,6 @@
 from amaranth import *
+from amaranth.lib import wiring
+from amaranth.lib.wiring import In, Out
 from amaranth_soc import wishbone
 from amaranth_soc.periph import ConstantMap
 
@@ -47,10 +49,24 @@ class MinervaCPU(CPU, Elaboratable):
         m = Module()
 
         m.submodules.minerva = self._cpu
+
+        self.forward_interface(m, self._cpu.ibus, self.ibus)
+        self.forward_interface(m, self._cpu.dbus, self.dbus)
+
         m.d.comb += [
-            self._cpu.ibus.connect(self.ibus),
-            self._cpu.dbus.connect(self.dbus),
             self._cpu.external_interrupt.eq(self.ip),
         ]
 
         return m
+
+    def forward_interface(self, m, from_bus, to_bus):
+        members = to_bus.signature.members
+        for name in members:
+            from_value = getattr(from_bus, name)
+            to_value = getattr(to_bus, name)
+
+            flow = members[name].flow
+            if flow == In:
+                m.d.comb += from_value.eq(to_value)
+            elif flow == Out:
+                m.d.comb += to_value.eq(from_value)

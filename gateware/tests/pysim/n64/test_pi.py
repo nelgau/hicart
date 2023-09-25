@@ -1,9 +1,10 @@
 from amaranth import *
+from amaranth.lib import wiring
 from amaranth.sim import *
 from amaranth_soc import wishbone
 from lambdasoc.periph.sram  import SRAMPeripheral
 
-from hicart.n64.ad16 import AD16
+from hicart.n64 import ad16
 from hicart.n64.pi import PIWishboneInitiator
 from hicart.test.pysim.utils import ModuleTestCase, sync_test_case
 
@@ -13,7 +14,7 @@ class PIWishboneInitiatorTest(ModuleTestCase):
     class DUT(Elaboratable):
 
         def __init__(self):
-            self.ad16 = AD16()
+            self.ad16 = ad16.Signature().create()
 
             self.rom_data = [
                 0x76543210,
@@ -37,10 +38,8 @@ class PIWishboneInitiatorTest(ModuleTestCase):
             m.submodules.decoder   = self.decoder
             m.submodules.rom       = self.rom
 
-            m.d.comb += [
-                self.initiator.ad16 .connect( self.ad16 ),
-                self.initiator.bus  .connect( self.decoder.bus ),
-            ]
+            wiring.connect(m, self.initiator.ad16, wiring.flipped(self.ad16))
+            wiring.connect(m, self.initiator.bus, wiring.flipped(self.decoder.bus))
 
             return m
 

@@ -1,51 +1,46 @@
 from amaranth import *
 from amaranth.hdl.ast import Fell
-from amaranth.hdl.rec import Layout, DIR_FANIN, DIR_FANOUT
+from amaranth.lib import wiring
 from amaranth.lib.cdc import FFSynchronizer
+from amaranth.lib.wiring import In, Out
 
-from hicart.n64.burst import BurstBus
-
-
-ad16_layout = Layout.cast([
-    ('ad', [
-        ('i',    16, DIR_FANIN),
-        ('o',    16, DIR_FANOUT),
-        ('oe',   1,  DIR_FANOUT),
-    ]),
-    ('ale_h',    1,  DIR_FANIN),
-    ('ale_l',    1,  DIR_FANIN),
-    ('read',     1,  DIR_FANIN),
-    ('write',    1,  DIR_FANIN),
-    ('s_clk',    1,  DIR_FANIN),
-    ('s_data', [
-        ('i',    1,  DIR_FANIN),
-        ('o',    1,  DIR_FANOUT),
-        ('oe',   1,  DIR_FANOUT),
-    ]),
-    ('cic_dclk', 1, DIR_FANIN),
-    ('cic_data', [
-        ('i',    1, DIR_FANIN),
-        ('o',    1, DIR_FANOUT),
-        ('oe',   1, DIR_FANOUT)
-    ]),
-    ('reset',    1, DIR_FANIN),
-    ('nmi',      1, DIR_FANIN),
-])
-
-class AD16(Record):
-    def __init__(self, **kwargs):
-        super().__init__(ad16_layout, **kwargs)
+from hicart.n64 import burst
 
 
-class AD16Interface(Elaboratable):
+class TristateSignature(wiring.Signature):
+    def __init__(self, width):
+        super().__init__({
+            "i": In(width),
+            "o": Out(width),
+            "oe": Out(1),
+        })
+
+
+class Signature(wiring.Signature):
     def __init__(self):
-        self.bus = BurstBus()
-        self.ad16 = AD16()
+        super().__init__({
+            "ad":       Out(TristateSignature(16)),
+            "ale_h":    In(1),
+            "ale_l":    In(1),
+            "read":     In(1),
+            "write":    In(1),
 
-        # Debugging
+            "s_clk":    In(1),
+            "s_data":   Out(TristateSignature(1)),
 
-        self.late_block = Signal()
-        self.late_read = Signal()
+            "cic_dclk": In(1),
+            "cic_data": Out(TristateSignature(1)),
+
+            "reset":    In(1),
+            "nmi":      In(1),
+        })
+
+
+class BurstBridge(wiring.Component):
+    ad16:       Out(Signature())
+    bus:        Out(burst.Signature())
+    late_block: Out(1)
+    late_read:  Out(1)
 
     def elaborate(self, platform):
         m = Module()

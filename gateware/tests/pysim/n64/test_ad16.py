@@ -1,12 +1,12 @@
 from amaranth import *
 from amaranth.sim import *
 
-from hicart.n64.ad16 import AD16Interface
+from hicart.n64 import ad16
 from hicart.test.pysim.utils import ModuleTestCase, sync_test_case
 
 
-class AD16InterfaceTest(ModuleTestCase):
-    FRAGMENT_UNDER_TEST = AD16Interface
+class BurstBridgeTest(ModuleTestCase):
+    FRAGMENT_UNDER_TEST = ad16.BurstBridge
 
     def traces_of_interest(self):
         return [

@@ -1,4 +1,5 @@
 from amaranth import *
+from amaranth.lib import wiring
 from amaranth.build import *
 from amaranth_soc import wishbone
 
@@ -41,15 +42,10 @@ class Top(Elaboratable):
         m.submodules.down_converter = down_converter
         m.submodules.decoder = decoder
 
-
-
-
-
-
-
-
         n64_cart = self.n64_cart = platform.request('n64_cart')
         pmod     = self.pmod     = platform.request('pmod')
+
+        wiring.connect(m, initiator.bus, wiring.flipped(decoder.bus))
 
         m.d.comb += [
             cic.reset               .eq( n64_cart.reset      ),
@@ -61,7 +57,6 @@ class Top(Elaboratable):
         ]
 
         m.d.comb += [
-            initiator.bus           .connect(decoder.bus),
             flash_interface.qspi    .connect(flash_connector.qspi),
 
             initiator.ad16.ad.i     .eq( n64_cart.ad.i  ),

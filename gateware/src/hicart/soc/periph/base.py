@@ -3,7 +3,6 @@ from amaranth import tracer
 from amaranth.utils import log2_int
 
 from amaranth_soc import csr, wishbone
-from amaranth_soc.memory import MemoryMap
 from amaranth_soc.csr.wishbone import WishboneCSRBridge
 
 

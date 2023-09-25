@@ -1,9 +1,10 @@
 from amaranth import *
+from amaranth.lib import wiring
 from amaranth.sim import *
 from amaranth_soc import wishbone
 
 from hicart.interface.qspi_flash import QSPIBus, QSPIFlashWishboneInterface
-from hicart.n64.ad16 import AD16
+from hicart.n64 import ad16
 from hicart.n64.pi import PIWishboneInitiator
 from hicart.soc.wishbone import DownConverter, Translator
 from hicart.test.pysim.driver.ad16 import PIInitiator
@@ -14,7 +15,7 @@ from hicart.test.pysim.testcase import MultiProcessTestCase
 class DUT(Elaboratable):
 
     def __init__(self):
-        self.ad16 = AD16()
+        self.ad16 = ad16.Signature().create()
         self.qspi = QSPIBus()
 
         self.flash_interface = QSPIFlashWishboneInterface()
@@ -44,9 +45,10 @@ class DUT(Elaboratable):
         m.submodules.translator      = self.translator
         m.submodules.down_converter  = self.down_converter
 
+        wiring.connect(m, initiator.ad16, wiring.flipped(self.ad16))
+        wiring.connect(m, initiator.bus, wiring.flipped(decoder.bus))
+
         m.d.comb += [
-            initiator.ad16              .connect( self.ad16 ),
-            initiator.bus               .connect( decoder.bus ),
             self.flash_interface.qspi   .connect( self.qspi ),
         ]
 

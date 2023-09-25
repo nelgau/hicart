@@ -1,6 +1,7 @@
 import struct
 
 from amaranth import *
+from amaranth.lib import wiring
 from amaranth.lib.cdc import FFSynchronizer, AsyncFFSynchronizer
 from amaranth_soc import wishbone
 
@@ -70,10 +71,10 @@ class CIC(Elaboratable):
         m.submodules += FFSynchronizer(      self.data_clk, data_clk_sync )
         m.submodules += FFSynchronizer(      self.data_i,   data_i_sync   )
 
-        m.d.comb += [
-            self._arbiter.bus.connect(self._decoder.bus),
-            # self.cpu.ip.eq(self.intc.ip),
+        wiring.connect(m, self._arbiter.bus, wiring.flipped(self._decoder.bus))
 
+        m.d.comb += [
+            # self.cpu.ip.eq(self.intc.ip),
             self.cpu.ip[0].eq(reset_sync)
         ]
 

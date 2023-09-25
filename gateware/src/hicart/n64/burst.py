@@ -1,35 +1,34 @@
 from amaranth import *
 from amaranth.sim import *
-from amaranth.hdl.rec import DIR_FANIN, DIR_FANOUT
-
+from amaranth.lib import wiring
+from amaranth.lib.wiring import In, Out
 from amaranth_soc import wishbone
 
 
-class BurstBus(Record):
+class Signature(wiring.Signature):
     def __init__(self):
-        super().__init__([
+        super().__init__({
             # Block
-            ('blk',         1,  DIR_FANOUT),
-            ('base',        30, DIR_FANOUT),
-            ('load',        1,  DIR_FANOUT),
-            ('blk_stall',   1,  DIR_FANIN),
+            "blk":          Out(1),
+            "base":         Out(32),
+            "load":         Out(1),
+            "blk_stall":    In(1),
             # Transfer
-            ('off',         8,  DIR_FANOUT),
-            ('dat_w',       32, DIR_FANOUT),            
-            ('dat_r',       32, DIR_FANIN),
-            ('cyc',         1,  DIR_FANOUT),
-            ('stb',         1,  DIR_FANOUT),            
-            ('we',          1,  DIR_FANOUT),
-            ('stall',       1,  DIR_FANIN),            
-            ('ack',         1,  DIR_FANIN),
-        ])
+            "off":          Out(8),
+            "dat_w":        Out(32),
+            "dat_r":        In(32),
+            "cyc":          Out(1),
+            "stb":          Out(1),
+            "we":           Out(1),
+            "stall":        In(1),
+            "ack":          In(1),
+        })
 
 
-class _AddressGenerator(Elaboratable):
-    def __init__(self):
-        self.addr = Signal(30)
-        self.base = Signal(30)
-        self.offset = Signal(8)
+class _AddressGenerator(wiring.Component):
+    base:       In(30)
+    offset:     In(30)
+    addr:       Out(30)
 
     def elaborate(self, platform):
         m = Module()
@@ -42,27 +41,24 @@ class _AddressGenerator(Elaboratable):
         return m
 
 
-class BurstDecoder(Elaboratable):
-    def __init__(self):
-        self.bus = BurstBus()
-        self.direct = BurstBus()
-        self.buffered = BurstBus()
+class BurstDecoder(wiring.Component):
+    bus:        In(Signature())
+    direct:     Out(Signature())
+    buffered:   Out(Signature())
 
     def elaborate(self, platform):
         m = Module()
 
-        # m.d.comb += self.bus.connect(self.direct)
-        m.d.comb += self.bus.connect(self.buffered)
+        # wiring.connect(self.bus, self.direct)
+        wiring.connect(m, wiring.flipped(self.bus), wiring.flipped(self.buffered))
 
         return m
 
 
-class DirectBurst2Wishbone(Elaboratable):
+class DirectBurst2Wishbone(wiring.Component):
     """ Pass-through burst to Wishbone adapter """
-
-    def __init__(self):
-        self.bbus = BurstBus()
-        self.wbbus = wishbone.Interface(addr_width=30, data_width=32, granularity=8, features={"stall"})
+    bbus:       In(Signature())
+    wbbus:      Out(wishbone.Signature(addr_width=30, data_width=32, granularity=8, features={"stall"}))
 
     def elaborate(self, platform):
         m = Module()
@@ -89,12 +85,10 @@ class DirectBurst2Wishbone(Elaboratable):
         return m
 
 
-class BufferedBurst2Wishbone(Elaboratable):
+class BufferedBurst2Wishbone(wiring.Component):
     """ Buffered burst to Wishbone adapter """
-
-    def __init__(self):
-        self.bbus = BurstBus()
-        self.wbbus = wishbone.Interface(addr_width=30, data_width=32, granularity=8, features={"stall"})
+    bbus:       In(Signature())
+    wbbus:      Out(wishbone.Signature(addr_width=30, data_width=32, granularity=8, features={"stall"}))
 
     def elaborate(self, platform):
         m = Module()
