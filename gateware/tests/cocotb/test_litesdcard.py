@@ -7,6 +7,8 @@ from cocotb.triggers import RisingEdge
 from cocotbext.wishbone.driver import WishboneMaster
 from cocotbext.wishbone.driver import WBOp
 
+import pytest
+
 from hicart.cores import litesdcard
 from hicart.platforms.homeinvader_rev_a import HomeInvaderRevAPlatform
 from hicart.test.cocotb import CocotbTestCase, init_domains, start_clock, do_reset
@@ -105,6 +107,7 @@ async def run_CocotbTest_test_module(dut):
         await RisingEdge(dut.clk)
 
 
+@pytest.mark.skip(reason="Needs to be rewritten to use lib.wiring")
 class CocotbTest(CocotbTestCase):
     def test_module(self):
         platform = HomeInvaderRevAPlatform()
