@@ -65,7 +65,7 @@ class AD16Interface(Elaboratable):
         # Inputs: ad16.ale_l_sync, ad16.ale_h_sync, ad16.ad_i_sync 
         # Outputs: base, valid
 
-        base = Signal(32)    
+        base = Signal(30)
         offset = Signal(8)
         index = Signal()
         valid = Signal()

@@ -10,7 +10,7 @@ class BurstBus(Record):
         super().__init__([
             # Block
             ('blk',         1,  DIR_FANOUT),
-            ('base',        32, DIR_FANOUT),
+            ('base',        30, DIR_FANOUT),
             ('load',        1,  DIR_FANOUT),
             ('blk_stall',   1,  DIR_FANIN),
             # Transfer
@@ -27,8 +27,8 @@ class BurstBus(Record):
 
 class _AddressGenerator(Elaboratable):
     def __init__(self):
-        self.addr = Signal(32)
-        self.base = Signal(32)
+        self.addr = Signal(30)
+        self.base = Signal(30)
         self.offset = Signal(8)
 
     def elaborate(self, platform):
@@ -36,7 +36,7 @@ class _AddressGenerator(Elaboratable):
 
         m.d.comb += [
             self.addr[0:8]  .eq((self.base[0:8] + self.offset)[0:8]),
-            self.addr[8:32] .eq(self.base[8:32])
+            self.addr[8:30] .eq(self.base[8:30])
         ]
 
         return m
@@ -62,7 +62,7 @@ class DirectBurst2Wishbone(Elaboratable):
 
     def __init__(self):
         self.bbus = BurstBus()
-        self.wbbus = wishbone.Interface(addr_width=32, data_width=32, features={"stall"})
+        self.wbbus = wishbone.Interface(addr_width=30, data_width=32, granularity=8, features={"stall"})
 
     def elaborate(self, platform):
         m = Module()
@@ -72,6 +72,8 @@ class DirectBurst2Wishbone(Elaboratable):
         m.d.comb += [
             agen.base           .eq(self.bbus.base),
             agen.offset         .eq(self.bbus.off),
+
+            self.wbbus.sel      .eq(Value.cast(1).replicate(4)),
 
             self.wbbus.cyc      .eq(self.bbus.cyc),
             self.wbbus.stb      .eq(self.bbus.stb),
@@ -92,7 +94,7 @@ class BufferedBurst2Wishbone(Elaboratable):
 
     def __init__(self):
         self.bbus = BurstBus()
-        self.wbbus = wishbone.Interface(addr_width=32, data_width=32, features={"stall"})
+        self.wbbus = wishbone.Interface(addr_width=30, data_width=32, granularity=8, features={"stall"})
 
     def elaborate(self, platform):
         m = Module()
@@ -142,6 +144,8 @@ class BufferedBurst2Wishbone(Elaboratable):
         m.d.comb += [
             agen.base           .eq(base),
             agen.offset         .eq(offset),
+
+            self.wbbus.sel      .eq(Value.cast(1).replicate(4)),
             self.wbbus.adr      .eq(agen.addr),
 
             w_port.addr         .eq(offset),

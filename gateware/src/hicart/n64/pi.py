@@ -7,7 +7,7 @@ from hicart.n64.burst import BurstDecoder, DirectBurst2Wishbone, BufferedBurst2W
 
 class PIWishboneInitiator(Elaboratable):
     def __init__(self):
-        self.bus = wishbone.Interface(addr_width=32, data_width=32, features={"stall"})
+        self.bus = wishbone.Interface(addr_width=30, data_width=32, granularity=8, features={"stall"})
         self.ad16 = AD16()
 
         self.late_block = Signal()
@@ -20,7 +20,7 @@ class PIWishboneInitiator(Elaboratable):
         m.submodules.decoder   = decoder   = BurstDecoder()
         m.submodules.direct    = direct    = DirectBurst2Wishbone()
         m.submodules.buffered  = buffered  = BufferedBurst2Wishbone()
-        m.submodules.arbiter   = arbiter   = wishbone.Arbiter(addr_width=32, data_width=32, features={"stall"})
+        m.submodules.arbiter   = arbiter   = wishbone.Arbiter(addr_width=30, data_width=32, granularity=8, features={"stall"})
 
         arbiter.add(direct.wbbus)
         arbiter.add(buffered.wbbus)

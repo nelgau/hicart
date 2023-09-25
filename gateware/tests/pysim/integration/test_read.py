@@ -35,7 +35,7 @@ class DUT(Elaboratable):
 
         initiator = PIWishboneInitiator()
         
-        decoder = wishbone.Decoder(addr_width=32, data_width=32, granularity=8, features={"stall"})
+        decoder = wishbone.Decoder(addr_width=30, data_width=32, granularity=8, features={"stall"})
         decoder.add(self.down_converter.bus, addr=0x10000000)
 
         m.submodules.initiator       = initiator
