@@ -5,15 +5,7 @@ from amaranth.lib.cdc import FFSynchronizer
 from amaranth.lib.wiring import In, Out
 
 from hicart.n64 import burst
-
-
-class TristateSignature(wiring.Signature):
-    def __init__(self, width):
-        super().__init__({
-            "i": In(width),
-            "o": Out(width),
-            "oe": Out(1),
-        })
+from hicart.utils.plat import TristateSignature
 
 
 class Signature(wiring.Signature):

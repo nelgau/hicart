@@ -49,11 +49,11 @@ class Top(Elaboratable):
 
         m.d.comb += [
             cic.reset               .eq( n64_cart.reset      ),
-            cic.data_clk            .eq( n64_cart.cic_dclk   ),
-            cic.data_i              .eq( n64_cart.cic_data.i ),
+            cic.bus.dclk            .eq( n64_cart.cic_dclk   ),
+            cic.bus.data.i          .eq( n64_cart.cic_data.i ),
 
-            n64_cart.cic_data.o     .eq( cic.data_o  ),
-            n64_cart.cic_data.oe    .eq( cic.data_oe ),
+            n64_cart.cic_data.o     .eq( cic.bus.data.o  ),
+            n64_cart.cic_data.oe    .eq( cic.bus.data.oe ),
         ]
 
         m.d.comb += [
