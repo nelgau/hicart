@@ -1,4 +1,5 @@
 from amaranth import *
+from amaranth.lib import wiring
 
 from hicart.debug.serial import FT245Streamer, FT245Reader
 from hicart.interface.qspi_flash import QSPIFlashWishboneInterface
@@ -12,14 +13,11 @@ class Top(Elaboratable):
 
         m.submodules.car                               = platform.clock_domain_generator()
         m.submodules.flash_connector = flash_connector = platform.flash_connector()
-
         m.submodules.flash_interface = flash_interface = QSPIFlashWishboneInterface()
 
-        m.d.comb += [
-            flash_interface.bus     .connect(flash_connector.qspi),
-        ]
+        wiring.connect(m, flash_interface.qspi, flash_connector.qspi)
 
-        address = Signal(24)
+        address = Signal(24, reset=0x800000)
         counter = Signal(24)
 
         with m.FSM():
@@ -38,24 +36,24 @@ class Top(Elaboratable):
                 m.next = "BEGIN"
 
             with m.State("BEGIN"):
-                m.d.comb += flash_interface.wb.cyc  .eq(1)
-                m.d.comb += flash_interface.wb.stb  .eq(1)
+                m.d.comb += flash_interface.bus.cyc  .eq(1)
+                m.d.comb += flash_interface.bus.stb  .eq(1)
 
-                with m.If(~flash_interface.wb.stall):
+                with m.If(~flash_interface.bus.stall):
                     m.next = "RUNNING"
 
             with m.State("RUNNING"):
-                m.d.comb += flash_interface.wb.cyc  .eq(1)
+                m.d.comb += flash_interface.bus.cyc  .eq(1)
 
-                with m.If(flash_interface.wb.ack):
+                with m.If(flash_interface.bus.ack):
                     m.next = "DELAY"
 
                     m.d.sync += [
-                        address     .eq(address + 4)
+                        address         .eq(address + 1)
                     ]
 
         m.d.comb += [
-            flash_interface.wb.adr      .eq(address)
+            flash_interface.bus.adr     .eq(address)
         ]
 
 
@@ -63,8 +61,8 @@ class Top(Elaboratable):
         m.submodules.streamer = streamer = FT245Streamer(byte_width=4)
 
         m.d.comb += [
-            streamer.stream.payload     .eq(flash_interface.wb.dat_r),
-            streamer.stream.valid       .eq(flash_interface.wb.ack)
+            streamer.stream.payload     .eq(flash_interface.bus.dat_r),
+            streamer.stream.valid       .eq(flash_interface.bus.ack)
         ]
 
 

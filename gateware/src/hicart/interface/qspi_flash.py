@@ -1,41 +1,38 @@
 from amaranth import *
-from amaranth.hdl.rec import Layout, DIR_FANIN, DIR_FANOUT
-from amaranth.utils import log2_int
+from amaranth.lib import wiring
+from amaranth.lib.wiring import In, Out
 from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 
-
-qspi_layout = Layout.cast([
-    # The sck signal enables a gated, inverted clock output in the Home Invader platform,
-    # which is otherwise held high. When cs_n goes low, this output is driven onto the
-    # physical sck qspi pin using the ECP5's USRMCLK primitive.
-    ('sck',  1, DIR_FANOUT),
-    ('cs_n', 1, DIR_FANOUT),
-    ('d', [
-        ('i',  4, DIR_FANIN),
-        ('o',  4, DIR_FANOUT),
-        ('oe', 4, DIR_FANOUT),
-    ]),
-])
-
-class QSPIBus(Record):
-    def __init__(self, **kwargs):
-        super().__init__(qspi_layout, **kwargs)
+from hicart.utils.plat import TristateSignature
 
 
-class QSPIFlashInterface(Elaboratable):
+class QSPISignature(wiring.Signature):
+    def __init__(self):
+        super().__init__({
+            # The sck signal enables a gated, inverted clock output in the Home Invader platform,
+            # which is otherwise held high. When cs_n goes low, this output is driven onto the
+            # physical sck qspi pin using the ECP5's USRMCLK primitive.
+            "sck":  Out(1),
+            "cs_n": Out(1),
+            "d":    Out(TristateSignature(4)),
+        })
+
+
+class QSPIFlashInterface(wiring.Component):
 
     # You can change the data width of the interface by adjusting the lines marked with "data width"
 
+    qspi:       Out(QSPISignature())
+
+    start:      In(1)
+    address:    In(24)
+    idle:       Out(1)
+    valid:      Out(1)
+    data:       Out(8)                                                  # Data width
+
     def __init__(self):
-        self.qspi = QSPIBus()
-
-        self.start      = Signal()
-        self.address    = Signal(24)
-
-        self.idle       = Signal()
-        self.valid      = Signal()
-        self.data       = Signal(8)                                     # Data width
+        super().__init__()
 
         self._in_shift  = Signal(32)
         self._out_shift = Signal(32)
@@ -161,11 +158,12 @@ class QSPIFlashInterface(Elaboratable):
         return m
 
 
-class QSPIFlashWishboneInterface(Elaboratable):
+class QSPIFlashWishboneInterface(wiring.Component):
+    qspi:       Out(QSPISignature())
+    bus:        In(wishbone.Signature(addr_width=24, data_width=8, features={"stall"}))
 
     def __init__(self):
-        self.qspi = QSPIBus()
-        self.bus = wishbone.Interface(addr_width=24, data_width=8, features={"stall"})
+        super().__init__()
 
         memory_map = MemoryMap(addr_width=24, data_width=8)
         memory_map.add_resource(self, size=2**24, name='qspi_flash')
@@ -176,9 +174,9 @@ class QSPIFlashWishboneInterface(Elaboratable):
 
         m.submodules.interface = interface = QSPIFlashInterface()
 
-        m.d.comb += [
-            interface.qspi          .connect(self.qspi),
+        wiring.connect(m, interface.qspi, wiring.flipped(self.qspi))
 
+        m.d.comb += [
             interface.start         .eq(self.bus.cyc & self.bus.stb),
             interface.address       .eq(self.bus.adr),
 

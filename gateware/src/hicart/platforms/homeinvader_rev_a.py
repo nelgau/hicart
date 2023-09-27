@@ -3,11 +3,12 @@ import subprocess
 
 from amaranth import *
 from amaranth.build import *
-from amaranth.hdl.ast import Fell
+from amaranth.lib import wiring
+from amaranth.lib.wiring import In, Out
 from amaranth.vendor.lattice_ecp5 import *
 from amaranth_boards.resources import *
 
-from hicart.interface.qspi_flash import QSPIBus
+from hicart.interface.qspi_flash import QSPISignature
 from hicart.utils.plat import get_all_resources
 
 from hicart.vendor.ecp5pll import ECP5PLL, ECP5PLLConfig
@@ -31,11 +32,9 @@ class HomeInvaderRevADomainGenerator(Elaboratable):
         return m
 
 
-class HomeInvaderRevAFlashConnector(Elaboratable):
-
-    def __init__(self):
-        self.qspi = QSPIBus()
-        self.spi_clk = Signal()
+class HomeInvaderRevAFlashConnector(wiring.Component):
+    qspi:       In(QSPISignature())
+    spi_clk:    Out(1)
 
     def elaborate(self, platform):
         m = Module()

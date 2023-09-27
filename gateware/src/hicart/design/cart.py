@@ -46,6 +46,7 @@ class Top(Elaboratable):
         pmod     = self.pmod     = platform.request('pmod')
 
         wiring.connect(m, initiator.bus, wiring.flipped(decoder.bus))
+        wiring.connect(m, flash_interface.qspi, flash_connector.qspi)
 
         m.d.comb += [
             cic.reset               .eq( n64_cart.reset      ),
@@ -57,8 +58,6 @@ class Top(Elaboratable):
         ]
 
         m.d.comb += [
-            flash_interface.qspi    .connect(flash_connector.qspi),
-
             initiator.ad16.ad.i     .eq( n64_cart.ad.i  ),
             initiator.ad16.ale_h    .eq( n64_cart.ale_h ),
             initiator.ad16.ale_l    .eq( n64_cart.ale_l ),
