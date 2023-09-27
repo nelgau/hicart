@@ -3,7 +3,7 @@ from amaranth.lib import wiring
 from amaranth.sim import *
 from amaranth_soc import wishbone
 
-from hicart.interface.qspi_flash import QSPIBus, QSPIFlashWishboneInterface
+from hicart.interface.qspi_flash import QSPISignature, QSPIFlashWishboneInterface
 from hicart.n64 import ad16
 from hicart.n64.pi import PIWishboneInitiator
 from hicart.soc.wishbone import DownConverter, Translator
@@ -16,7 +16,7 @@ class DUT(Elaboratable):
 
     def __init__(self):
         self.ad16 = ad16.Signature().create()
-        self.qspi = QSPIBus()
+        self.qspi = QSPISignature().create()
 
         self.flash_interface = QSPIFlashWishboneInterface()
 
@@ -47,10 +47,7 @@ class DUT(Elaboratable):
 
         wiring.connect(m, initiator.ad16, wiring.flipped(self.ad16))
         wiring.connect(m, initiator.bus, wiring.flipped(decoder.bus))
-
-        m.d.comb += [
-            self.flash_interface.qspi   .connect( self.qspi ),
-        ]
+        wiring.connect(m, self.flash_interface.qspi, wiring.flipped(self.qspi))
 
         return m
 
