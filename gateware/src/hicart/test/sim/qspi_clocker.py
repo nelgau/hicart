@@ -1,13 +1,13 @@
 from amaranth import *
 
-from hicart.interface.qspi_flash import QSPIBus
+from hicart.interface.qspi_flash import QSPISignature
 
 
 class QSPIClocker(Elaboratable):
 
     def __init__(self):
-        self.qspi_in = QSPIBus()
-        self.qspi_out = QSPIBus()
+        self.qspi_in = QSPISignature().create()
+        self.qspi_out = QSPISignature().create()
 
     def elaborate(self, platform):
         m = Module()

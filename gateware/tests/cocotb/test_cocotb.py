@@ -3,7 +3,7 @@ from amaranth_soc import wishbone
 import cocotb
 import pytest
 
-from hicart.interface.qspi_flash import qspi_layout, QSPIBus, QSPIFlashWishboneInterface
+from hicart.interface.qspi_flash import QSPIFlashWishboneInterface
 from hicart.n64.pi import PIWishboneInitiator
 from hicart.platforms.homeinvader_rev_a import HomeInvaderRevAPlatform
 from hicart.soc.wishbone import DownConverter, Translator
@@ -17,6 +17,7 @@ class DUT(Elaboratable):
 
     def __init__(self):
         from hicart.n64.ad16 import AD16
+        from hicart.interface.qspi_flash import QSPIBus
 
         self.ad16 = AD16(name='ad16')
         self.qspi = QSPIBus(name='qspi')
@@ -70,6 +71,7 @@ class DUT(Elaboratable):
 @cocotb.test()
 async def run_CocotbTest_test_module(dut):
     from hicart.n64.ad16 import ad16_layout
+    from hicart.interface.qspi_flash import qspi_layout
 
     ad16_accessor = Accessor.from_layout(ad16_layout)
     qspi_accessor = Accessor.from_layout(qspi_layout)
