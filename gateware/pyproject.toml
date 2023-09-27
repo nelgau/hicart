@@ -12,7 +12,7 @@ dependencies = [
     "setuptools>=67.0",
 
     # Amaranth HDL
-    "amaranth @ git+https://github.com/amaranth-lang/amaranth.git@main",
+    "amaranth @ git+https://github.com/nelgau/amaranth.git@fix-flipped-signature-create",
     "amaranth-soc @ git+https://github.com/amaranth-lang/amaranth-soc.git@main",
     "amaranth-stdio @ git+https://github.com/amaranth-lang/amaranth-stdio.git@main",
     "amaranth-boards @ git+https://github.com/amaranth-lang/amaranth-boards.git@main",
@@ -37,7 +37,7 @@ test = [
 
 [tool.pdm.resolution.overrides]
 # Because amaranth-boards overconstrains to amaranth>=0.3,<0.5
-amaranth = "git+https://github.com/amaranth-lang/amaranth.git@main"
+amaranth = "git+https://github.com/nelgau/amaranth.git@fix-flipped-signature-create"
 amaranth-soc = "git+https://github.com/amaranth-lang/amaranth-soc.git@c5e1e660"
 
 [tool.pdm.scripts]

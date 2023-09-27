@@ -6,15 +6,15 @@ groups = ["default", "test"]
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:bf274829422e78a04e3701f3b6e8778c64fae9dc3412220f058cca251c937ccd"
+content_hash = "sha256:8ca82c10547e0e91938aa7e876b92207266c9d2fac21a2a179ca827b62fd4f14"
 
 [[package]]
 name = "amaranth"
-version = "0.4.dev197+g11d5bb1"
+version = "0.1.dev1334+gf8fbbdb"
 requires_python = "~=3.8"
-git = "https://github.com/amaranth-lang/amaranth.git"
-ref = "main"
-revision = "11d5bb19eb34463918c07dc5e2e0eac7dbf822b0"
+git = "https://github.com/nelgau/amaranth.git"
+ref = "fix-flipped-signature-create"
+revision = "f8fbbdb59a462a84b462c739b10047ae27a8ec04"
 summary = "Amaranth hardware definition language"
 dependencies = [
     "Jinja2~=3.0",
@@ -58,11 +58,11 @@ dependencies = [
 
 [[package]]
 name = "amaranth"
-version = "0.4.dev198+g05cb82b"
+version = "0.1.dev1334+gf8fbbdb"
 requires_python = "~=3.8"
-git = "https://github.com/amaranth-lang/amaranth.git"
-ref = "main"
-revision = "05cb82b8fc3ac53518d5bd07c5d474ae21522099"
+git = "https://github.com/nelgau/amaranth.git"
+ref = "fix-flipped-signature-create"
+revision = "f8fbbdb59a462a84b462c739b10047ae27a8ec04"
 summary = "Amaranth hardware definition language"
 dependencies = [
     "Jinja2~=3.0",
@@ -289,10 +289,10 @@ summary = "Small footprint and configurable SD Card core"
 
 [[package]]
 name = "litex"
-version = "2023.4"
+version = "2023.8"
 requires_python = "~=3.6"
 git = "https://github.com/enjoy-digital/litex.git"
-revision = "36ce71d59b002d6e0bb99a39e52e248853926b3e"
+revision = "f5b7c0d88e278d6605325ddd7c06b867323d4826"
 summary = "Python SoC/Core builder for building FPGA based systems."
 dependencies = [
     "migen",
@@ -307,19 +307,19 @@ version = "0.1.0-dev.0"
 requires_python = ">=3.7,<4.0"
 git = "https://github.com/greatscottgadgets/luna.git"
 ref = "main"
-revision = "e5c624e66da48815f3369cf4b887a91acc430b91"
+revision = "affb448fdbce128e69e78a08153a8b7d5864b9a5"
 summary = "Amaranth HDL framework for FPGA-based USB solutions"
 dependencies = [
     "amaranth @ git+https://github.com/amaranth-lang/amaranth.git@main",
     "amaranth-boards @ git+https://github.com/amaranth-lang/amaranth-boards.git@main",
     "amaranth-soc @ git+https://github.com/amaranth-lang/amaranth-soc.git@main",
-    "apollo-fpga<0.0.6,>=0.0.5",
+    "apollo-fpga<1.0.0,>=0.0.5",
     "libusb1<2.0.0,>=1.9.2",
     "pyserial<4.0,>=3.5",
     "pyusb<2.0.0,>=1.1.1",
-    "pyvcd<0.3.0,>=0.2.4",
+    "pyvcd<1.0.0,>=0.2.4",
     "usb-protocol @ git+https://github.com/usb-tools/python-usb-protocol",
-    "ziglang<0.9.0,>=0.8.0",
+    "ziglang<1.0.0,>=0.8.0",
 ]
 
 [[package]]
@@ -375,10 +375,11 @@ dependencies = [
 
 [[package]]
 name = "minerva"
-version = "0.1.dev125+gca2804c"
+version = "0.1.dev126+ge0a565f"
 requires_python = "~=3.8"
 git = "https://github.com/minerva-cpu/minerva.git"
-revision = "ca2804cf2128aa1d961e00238927a7f4624af479"
+ref = "main"
+revision = "e0a565f4e786a6383622fdfa46e14e0c1f51126e"
 summary = "A 32-bit RISC-V soft processor"
 dependencies = [
     "amaranth[builtin-yosys]<0.5,>=0.3",
@@ -495,12 +496,12 @@ files = [
 
 [[package]]
 name = "setuptools"
-version = "68.2.1"
+version = "68.2.2"
 requires_python = ">=3.8"
 summary = "Easily download, build, install, upgrade, and uninstall Python packages"
 files = [
-    {file = "setuptools-68.2.1-py3-none-any.whl", hash = "sha256:eff96148eb336377ab11beee0c73ed84f1709a40c0b870298b0d058828761bae"},
-    {file = "setuptools-68.2.1.tar.gz", hash = "sha256:56ee14884fd8d0cd015411f4a13f40b4356775a0aefd9ebc1d3bfb9a1acb32f1"},
+    {file = "setuptools-68.2.2-py3-none-any.whl", hash = "sha256:b454a35605876da60632df1a60f736524eb73cc47bbc9f3f1ef1b644de74fd2a"},
+    {file = "setuptools-68.2.2.tar.gz", hash = "sha256:4ac1475276d2f1c48684874089fefcd83bd7162ddaafb81fac866ba0db282a87"},
 ]
 
 [[package]]
@@ -515,12 +516,12 @@ files = [
 
 [[package]]
 name = "urllib3"
-version = "2.0.4"
+version = "2.0.5"
 requires_python = ">=3.7"
 summary = "HTTP library with thread-safe connection pooling, file post, and more."
 files = [
-    {file = "urllib3-2.0.4-py3-none-any.whl", hash = "sha256:de7df1803967d2c2a98e4b11bb7d6bd9210474c46e8a0401514e3a42a75ebde4"},
-    {file = "urllib3-2.0.4.tar.gz", hash = "sha256:8d22f86aae8ef5e410d4f539fde9ce6b2113a001bb4d189e0aed70642d602b11"},
+    {file = "urllib3-2.0.5-py3-none-any.whl", hash = "sha256:ef16afa8ba34a1f989db38e1dbbe0c302e4289a47856990d0682e374563ce35e"},
+    {file = "urllib3-2.0.5.tar.gz", hash = "sha256:13abf37382ea2ce6fb744d4dad67838eec857c9f4f57009891805e0b5e123594"},
 ]
 
 [[package]]
@@ -536,29 +537,29 @@ dependencies = [
 
 [[package]]
 name = "wasmtime"
-version = "12.0.0"
-requires_python = ">=3.6"
+version = "13.0.2"
+requires_python = ">=3.8"
 summary = "A WebAssembly runtime powered by Wasmtime"
 files = [
-    {file = "wasmtime-12.0.0-py3-none-any.whl", hash = "sha256:1fee5ac11726cad1f69611779e44ffcb60e912479d1a3c7c77099c3c2f068c36"},
-    {file = "wasmtime-12.0.0-py3-none-macosx_10_13_x86_64.whl", hash = "sha256:d5e284b37204535a2817f3563102ce8a41451a5f4203db059b051640bda8bcb8"},
-    {file = "wasmtime-12.0.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:2a931214e62aa3d23c61b5f5d2cc47ce10d708f4d8d02e12ea87004c0837e650"},
-    {file = "wasmtime-12.0.0-py3-none-manylinux1_x86_64.whl", hash = "sha256:fa5372d8f3e2bfcaaf7cfffb0d5efc640351889d7aed6d34711f32a85fe9b5ff"},
-    {file = "wasmtime-12.0.0-py3-none-manylinux2014_aarch64.whl", hash = "sha256:c72d1f9b253b97aff19375d6980e3e6380929424fe07b56364413bf54fd80049"},
-    {file = "wasmtime-12.0.0-py3-none-win_amd64.whl", hash = "sha256:7eee12e6bb72123b3beec757d6b48f90b09a1097b1c6dadff7013ffbc46df2fe"},
+    {file = "wasmtime-13.0.2-py3-none-any.whl", hash = "sha256:0a40208bad7dda88475f74a9c3d6e029f24efbd5cf66e319ce0ea0c82a8c1daf"},
+    {file = "wasmtime-13.0.2-py3-none-macosx_10_13_x86_64.whl", hash = "sha256:31978efdd5fe9e314e18650b8e8236791931beff0b2bfd901a369c7e99d9f5fb"},
+    {file = "wasmtime-13.0.2-py3-none-macosx_11_0_arm64.whl", hash = "sha256:0f05a94cfe4db40c51352f7a6f9e66ada3d0b7505740c44fee7ad63e3d737e0d"},
+    {file = "wasmtime-13.0.2-py3-none-manylinux1_x86_64.whl", hash = "sha256:de4b2e498aeb8f2926e2bc1c25de32c1cac980f095ca9877510d1c2fd6c75543"},
+    {file = "wasmtime-13.0.2-py3-none-manylinux2014_aarch64.whl", hash = "sha256:454322592f7eecac42f9ff50ea87b4efc0d4c2cc7c7d13d4c15a092adcfeb916"},
+    {file = "wasmtime-13.0.2-py3-none-win_amd64.whl", hash = "sha256:8aa90461e87cff1d8700e71e37c01598ae67911ae9349aeb9aede79435fb95a2"},
 ]
 
 [[package]]
 name = "yowasp-runtime"
-version = "1.36"
-requires_python = "~=3.7"
+version = "1.40"
+requires_python = "~=3.8"
 summary = "Common runtime for YoWASP packages"
 dependencies = [
     "appdirs~=1.4",
-    "wasmtime<13,>=1.0",
+    "wasmtime<14,>=1.0",
 ]
 files = [
-    {file = "yowasp_runtime-1.36-py3-none-any.whl", hash = "sha256:f8d44fdfd6218456948149a650aa1b5a05d3c47da67f01f3cb4fdb685693a401"},
+    {file = "yowasp_runtime-1.40-py3-none-any.whl", hash = "sha256:a990745daf8d559c0ada6a591adae88354098dae515053118164a6b993b0e1ce"},
 ]
 
 [[package]]
@@ -575,16 +576,15 @@ files = [
 
 [[package]]
 name = "ziglang"
-version = "0.8.1"
+version = "0.11.0"
 requires_python = "~=3.5"
 summary = "       Zig is a general-purpose programming language and toolchain for\nmaintaining robust, optimal, and reusable software."
 files = [
-    {file = "ziglang-0.8.1-py3-none-macosx_10_9_x86_64.whl", hash = "sha256:75fcfc3420d5c8e5f357c825012e257e3291cbf7cbba1d36b71234b11a2cc6ea"},
-    {file = "ziglang-0.8.1-py3-none-macosx_11_0_arm64.whl", hash = "sha256:23cb31c5dc576b9be780892ab622f964671876522138dddb71779a2d168fc15f"},
-    {file = "ziglang-0.8.1-py3-none-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:d7bbfff3ed2d69f7f80efbf3922e7b66643a350cbee7e10ede5803e575a39f6f"},
-    {file = "ziglang-0.8.1-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:fe6660b61df1b4ea091f240c5988f90854cd34cec8f1e388c61ddfb4a258ff33"},
-    {file = "ziglang-0.8.1-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3c9c875282b53cfb3fb444578a421f4eb941cf3ecb976b7ea038c8981776bacc"},
-    {file = "ziglang-0.8.1-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:d77c54000577075e963105746e3dc95e2a76848f3ded109e7f790d90fbef93bb"},
-    {file = "ziglang-0.8.1-py3-none-win32.whl", hash = "sha256:be37993dd0a36f9aebcf43ded310599bd68bd15c8cbda35eed0a338566f74108"},
-    {file = "ziglang-0.8.1-py3-none-win_amd64.whl", hash = "sha256:222b643152ef9398cbc01948937582628878d2eabdfad45c81ad624bca8b1ef5"},
+    {file = "ziglang-0.11.0-py3-none-macosx_10_9_x86_64.whl", hash = "sha256:bd046eeab97ad51048575768f6dae10468b3a4449f4467ed61dae621faf6ee55"},
+    {file = "ziglang-0.11.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:038b95cac9adef0c6dce9b72bdad895a0e4e0654c77c4a8f84fe79d2909a366e"},
+    {file = "ziglang-0.11.0-py3-none-manylinux_2_12_i686.manylinux2010_i686.musllinux_1_1_i686.whl", hash = "sha256:4f848c8cca520cb12357cfa3d303bf1149a30566f4c1e5999284dbdf921cc2b8"},
+    {file = "ziglang-0.11.0-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64.whl", hash = "sha256:45e8116428267e20529b9ee43a7e7364791c1a092845d2143b248a1dbf6760b0"},
+    {file = "ziglang-0.11.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl", hash = "sha256:d6372bada34714a5395539cc4d76e9cc6062739cee5ce9949a250f7c525ceb94"},
+    {file = "ziglang-0.11.0-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.musllinux_1_1_armv7l.whl", hash = "sha256:5fe81f91fd872fc32ed0f82807df6c680a82cbea56a9f24f818e9da299049022"},
+    {file = "ziglang-0.11.0-py3-none-win_amd64.whl", hash = "sha256:a7edc7020e7ffbbb3af3a40c17a9bda65d5a65132ff933e153ffa80d8f5ad731"},
 ]
