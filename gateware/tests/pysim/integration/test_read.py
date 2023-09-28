@@ -108,7 +108,3 @@ class N64ReadTest(MultiProcessTestCase):
             sim.add_clock(1.0 / 80e6, domain='sync')
             sim.add_sync_process(flash_process)
             sim.add_process(pi_process)
-
-    @staticmethod
-    def _rom_bytes(data, data_width, byteorder):
-        return [b for w in data for b in w.to_bytes(data_width, byteorder=byteorder)]
