@@ -105,7 +105,7 @@ class N64ReadTest(MultiProcessTestCase):
             yield from pi.read_burst_fast(0x10000000, 256)
 
         with self.simulate(dut, traces=dut.ports()) as sim:
-            sim.add_clock(1.0 / 60e6, domain='sync')
+            sim.add_clock(1.0 / 80e6, domain='sync')
             sim.add_sync_process(flash_process)
             sim.add_process(pi_process)
 
