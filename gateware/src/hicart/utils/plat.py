@@ -21,5 +21,5 @@ class TristateSignature(wiring.Signature):
         super().__init__({
             "i": In(width),
             "o": Out(width),
-            "oe": Out(width),
+            "oe": Out(1),
         })

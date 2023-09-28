@@ -15,7 +15,11 @@ class QSPISignature(wiring.Signature):
             # physical sck qspi pin using the ECP5's USRMCLK primitive.
             "sck":  Out(1),
             "cs_n": Out(1),
-            "d":    Out(TristateSignature(4)),
+            "d":    Out(wiring.Signature({
+                "i":    In(4),
+                "o":    Out(4),
+                "oe":   Out(4),
+            }))
         })
 
 
