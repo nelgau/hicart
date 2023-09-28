@@ -87,6 +87,17 @@ class N64ReadTest(MultiProcessTestCase):
         # The ROM segment begins at offset 0x800000
         flash_bytes += rom_bytes
 
+        def check_reads(reads):
+            def assert_read(address, byte, position):
+                offset = (address - 0x10000000) + 0x800000
+                expected_byte = flash_bytes[offset]
+                assert byte == expected_byte, f"Incorrect byte 0x{byte:02x} (!= 0x{expected_byte:02x}) " \
+                        f"read ({position}) at address 0x{address:08x}, flash offset 0x{offset:06x}"
+
+            for address, value in reads:
+                assert_read(address + 0, value >> 8,    "HIGH")
+                assert_read(address + 1, value & 0xFF,  "LOW")
+
         flash = QSPIFlashEmulator(dut.qspi, flash_bytes)
         pi = PIInitiator(dut.ad16)
 
@@ -99,10 +110,10 @@ class N64ReadTest(MultiProcessTestCase):
 
             for i in range(4):
                 base_address = 0x10000000 + 4 * i
-                yield from pi.read_burst_slow(base_address, 2)
+                check_reads((yield from pi.read_burst_slow(base_address, 2)))
 
-            yield from pi.read_burst_fast(0x10000000, 256)
-            yield from pi.read_burst_fast(0x10000000, 256)
+            check_reads((yield from pi.read_burst_fast(0x10000000, 256)))
+            check_reads((yield from pi.read_burst_fast(0x10000000, 256)))
 
         with self.simulate(dut, traces=dut.ports()) as sim:
             sim.add_clock(1.0 / 80e6, domain='sync')

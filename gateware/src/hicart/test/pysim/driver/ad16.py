@@ -24,6 +24,7 @@ class PIInitiator:
         yield self.ad16.ale_l.eq(1)
         yield Delay(1040e-9)
 
+        address = start_address
         result = []
 
         for i in range(word_count):
@@ -34,7 +35,8 @@ class PIInitiator:
             yield self.ad16.read.eq(0)
             yield Delay(64e-9)
 
-            result.append(word)
+            result.append((address, word))
+            address += 2
 
         yield self.ad16.ale_h.eq(0)
         yield Delay(2256e-9)
@@ -56,6 +58,7 @@ class PIInitiator:
         yield self.ad16.ale_l.eq(1)
         yield Delay(1044e-9)
 
+        address = start_address
         result = []
 
         for i in range(word_count):
@@ -66,10 +69,10 @@ class PIInitiator:
             yield self.ad16.read.eq(0)
             yield Delay(416e-9)
 
-            result.append(word)
+            result.append((address, word))
+            address += 2
 
         yield self.ad16.ale_h.eq(0)
         yield Delay(32e-9)
 
         return result
-
