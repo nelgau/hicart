@@ -4,10 +4,11 @@ from amaranth.sim import *
 from amaranth_soc import wishbone
 
 from hicart.interface.qspi_flash import QSPISignature, QSPIFlashWishboneInterface
-from hicart.n64 import ad16
-from hicart.n64.pi import PIWishboneInitiator
+from hicart.n64.cartbus import PISignature
+from hicart.n64.pi2 import WishboneBridge
+from hicart.soc.periph.sram  import SRAMPeripheral
 from hicart.soc.wishbone import DownConverter, Translator
-from hicart.test.pysim.driver.ad16 import PIInitiator
+from hicart.test.pysim.driver.pi import PIInitiator
 from hicart.test.pysim.emulator.qspi_flash import QSPIFlashEmulator
 from hicart.test.pysim.testcase import MultiProcessTestCase
 
@@ -15,8 +16,10 @@ from hicart.test.pysim.testcase import MultiProcessTestCase
 class DUT(Elaboratable):
 
     def __init__(self):
-        self.ad16 = ad16.Signature().create()
+        self.pi = PISignature.create()
         self.qspi = QSPISignature().create()
+
+        self.bridge = WishboneBridge()
 
         self.flash_interface = QSPIFlashWishboneInterface()
 
@@ -26,47 +29,47 @@ class DUT(Elaboratable):
                                         features={"stall"})
 
         self.down_converter = DownConverter(sub_bus=self.translator.bus,
-                                        addr_width=22,
-                                        data_width=32,
+                                        addr_width=23,
+                                        data_width=16,
                                         granularity=8,
                                         features={"stall"})
 
     def elaborate(self, platform):
         m = Module()
 
-        initiator = PIWishboneInitiator()
-        
-        decoder = wishbone.Decoder(addr_width=30, data_width=32, granularity=8, features={"stall"})
+        decoder = wishbone.Decoder(addr_width=31, data_width=16, granularity=8, features={"stall"})
         decoder.add(self.down_converter.bus, addr=0x10000000)
 
-        m.submodules.initiator       = initiator
+        m.submodules.bridge          = self.bridge
         m.submodules.decoder         = decoder
+        # m.submodules.rom             = rom
         m.submodules.flash_interface = self.flash_interface
         m.submodules.translator      = self.translator
         m.submodules.down_converter  = self.down_converter
 
-        wiring.connect(m, initiator.ad16, wiring.flipped(self.ad16))
-        wiring.connect(m, initiator.bus, wiring.flipped(decoder.bus))
+        wiring.connect(m, self.bridge.pi, wiring.flipped(self.pi))
+        wiring.connect(m, self.bridge.wb, wiring.flipped(decoder.bus))
         wiring.connect(m, self.flash_interface.qspi, wiring.flipped(self.qspi))
 
         return m
 
     def ports(self):
         return [
-            self.ad16.ad.i,
-            self.ad16.ad.o,
-            self.ad16.ad.oe,
-            self.ad16.ale_h,
-            self.ad16.ale_l,
-            self.ad16.read,
-            self.ad16.write,
-            self.ad16.reset,
+            self.pi.ad.i,
+            self.pi.ad.o,
+            self.pi.ad.oe,
+            self.pi.ale_h,
+            self.pi.ale_l,
+            self.pi.read,
+            self.pi.write,
 
             self.qspi.sck,
             self.qspi.cs_n,
             self.qspi.d.i,
             self.qspi.d.o,
             self.qspi.d.oe,
+
+            self.bridge.wb,
 
             self.down_converter.bus,
             self.translator.bus,
@@ -99,7 +102,7 @@ class N64ReadTest(MultiProcessTestCase):
                 assert_read(address + 1, value & 0xFF,  "LOW")
 
         flash = QSPIFlashEmulator(dut.qspi, flash_bytes)
-        pi = PIInitiator(dut.ad16)
+        pi = PIInitiator(dut.pi)
 
         def flash_process():
             yield Passive()
