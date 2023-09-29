@@ -4,7 +4,7 @@ from amaranth.build import *
 from amaranth_soc import wishbone
 
 from hicart.n64.cic import CIC
-from hicart.n64.pi import PIWishboneInitiator
+from hicart.n64.pi2 import WishboneBridge
 from hicart.interface.qspi_flash import QSPIFlashWishboneInterface
 from hicart.soc.wishbone import DownConverter, Translator
 from hicart.utils.cli import main_runner
@@ -19,8 +19,8 @@ class Top(Elaboratable):
 
         m.submodules.car                               = platform.clock_domain_generator()
         m.submodules.cic        = self.cic = cic       = DomainRenamer("cic")(CIC())
-        
-        m.submodules.initiator       = self.initiator       = initiator       = PIWishboneInitiator();
+
+        m.submodules.bridge          = self.bridge          = bridge          = WishboneBridge()
         m.submodules.flash_interface = self.flash_interface = flash_interface = QSPIFlashWishboneInterface()
         m.submodules.flash_connector = self.flash_connector = flash_connector = platform.flash_connector()
 
@@ -30,12 +30,12 @@ class Top(Elaboratable):
                                 features={"stall"})
 
         down_converter = DownConverter(sub_bus=translator.bus,
-                                       addr_width=22,
-                                       data_width=32,
+                                       addr_width=23,
+                                       data_width=16,
                                        granularity=8,
                                        features={"stall"})
 
-        decoder = wishbone.Decoder(addr_width=30, data_width=32, granularity=8, features={"stall"})
+        decoder = wishbone.Decoder(addr_width=31, data_width=16, granularity=8, features={"stall"})
         decoder.add(down_converter.bus, addr=0x10000000)
 
         m.submodules.translator = translator
@@ -45,7 +45,7 @@ class Top(Elaboratable):
         n64_cart = self.n64_cart = platform.request('n64_cart')
         pmod     = self.pmod     = platform.request('pmod')
 
-        wiring.connect(m, initiator.bus, wiring.flipped(decoder.bus))
+        wiring.connect(m, bridge.wb, wiring.flipped(decoder.bus))
         wiring.connect(m, flash_interface.qspi, flash_connector.qspi)
 
         m.d.comb += [
@@ -58,62 +58,62 @@ class Top(Elaboratable):
         ]
 
         m.d.comb += [
-            initiator.ad16.ad.i     .eq( n64_cart.ad.i  ),
-            initiator.ad16.ale_h    .eq( n64_cart.ale_h ),
-            initiator.ad16.ale_l    .eq( n64_cart.ale_l ),
-            initiator.ad16.read     .eq( n64_cart.read  ),
-            initiator.ad16.write    .eq( n64_cart.write ),
+            bridge.pi.ad.i          .eq( n64_cart.ad.i  ),
+            bridge.pi.ale_h         .eq( n64_cart.ale_h ),
+            bridge.pi.ale_l         .eq( n64_cart.ale_l ),
+            bridge.pi.read          .eq( n64_cart.read  ),
+            bridge.pi.write         .eq( n64_cart.write ),
 
-            n64_cart.ad.o           .eq( initiator.ad16.ad.o  ),
-            n64_cart.ad.oe          .eq( initiator.ad16.ad.oe ),
+            n64_cart.ad.o           .eq( bridge.pi.ad.o  ),
+            n64_cart.ad.oe          .eq( bridge.pi.ad.oe ),
 
             pmod.d.oe               .eq(1)
         ]
 
         m.d.comb += [
-            leds[0]                 .eq(initiator.bus.cyc),
+            leds[0]                 .eq(bridge.wb.cyc),
         ]
 
         self.probe_si(m)
 
         return m
 
-    def probe_initiator_addr(self, m):
-        initiator = self.initiator
+    def probe_bridge_addr(self, m):
+        bridge = self.bridge
         pmod = self.pmod
-        m.d.comb += pmod.d.o.eq(initiator.bus.adr[0:8])
+        m.d.comb += pmod.d.o.eq(bridge.bus.adr[0:8])
 
-    def probe_initiator_bus(self, m):
-        initiator = self.initiator
+    def probe_bridge_bus(self, m):
+        bridge = self.bridge
         flash_interface = self.flash_interface
         pmod = self.pmod
         m.d.comb += [
-            pmod.d.o[0].eq(initiator.bus.cyc),
-            pmod.d.o[1].eq(initiator.bus.stb),
-            pmod.d.o[2].eq(initiator.bus.stall),
-            pmod.d.o[3].eq(initiator.bus.ack),
+            pmod.d.o[0].eq(bridge.wb.cyc),
+            pmod.d.o[1].eq(bridge.wb.stb),
+            pmod.d.o[2].eq(bridge.wb.stall),
+            pmod.d.o[3].eq(bridge.wb.ack),
 
             pmod.d.o[4].eq(flash_interface.bus.cyc),
             pmod.d.o[5].eq(flash_interface.bus.stb),
-            pmod.d.o[6].eq(flash_interface.bus.stall), 
-            pmod.d.o[7].eq(flash_interface.bus.ack), 
+            pmod.d.o[6].eq(flash_interface.bus.stall),
+            pmod.d.o[7].eq(flash_interface.bus.ack),
         ]
 
-    def probe_bus_and_initiator(self, m):
+    def probe_bus_and_bridge(self, m):
         n64_cart = self.n64_cart
-        initiator = self.initiator
+        bridge = self.bridge
         pmod = self.pmod
         m.d.comb += [
             pmod.d.o[0].eq(n64_cart.cic_data.i),
-            pmod.d.o[1].eq(n64_cart.read),            
+            pmod.d.o[1].eq(n64_cart.read),
             pmod.d.o[2].eq(n64_cart.ale_l),
             pmod.d.o[3].eq(n64_cart.ale_h),
 
-            pmod.d.o[4].eq(initiator.bus.cyc),
-            pmod.d.o[5].eq(initiator.bus.stb),
-            pmod.d.o[6].eq(initiator.bus.stall),
-            pmod.d.o[7].eq(initiator.bus.ack),
-        ]        
+            pmod.d.o[4].eq(bridge.wb.cyc),
+            pmod.d.o[5].eq(bridge.wb.stb),
+            pmod.d.o[6].eq(bridge.wb.stall),
+            pmod.d.o[7].eq(bridge.wb.ack),
+        ]
 
     def probe_flash_connector(self, m):
         flash_connector = self.flash_connector
@@ -135,7 +135,7 @@ class Top(Elaboratable):
         pmod = self.pmod
         m.d.comb += [
             pmod.d.o[0].eq(n64_cart.cic_data.i),
-            pmod.d.o[1].eq(n64_cart.read),            
+            pmod.d.o[1].eq(n64_cart.read),
             pmod.d.o[2].eq(n64_cart.ale_l),
             pmod.d.o[3].eq(n64_cart.ale_h),
             pmod.d.o[4].eq(n64_cart.ad.i[15]),
@@ -151,7 +151,7 @@ class Top(Elaboratable):
             pmod.d.o[0].eq(n64_cart.cic_dclk),
             pmod.d.o[1].eq(n64_cart.cic_data.i),
             pmod.d.o[2].eq(n64_cart.nmi),
-            pmod.d.o[3].eq(n64_cart.read),          
+            pmod.d.o[3].eq(n64_cart.read),
             pmod.d.o[4].eq(n64_cart.ale_l),
             pmod.d.o[5].eq(n64_cart.ale_h),
             pmod.d.o[6].eq(n64_cart.ad.i[15]),
@@ -165,7 +165,7 @@ class Top(Elaboratable):
             pmod.d.o[0].eq(n64_cart.cic_dclk),
             pmod.d.o[1].eq(n64_cart.cic_data.i),
             pmod.d.o[2].eq(n64_cart.nmi),
-            pmod.d.o[3].eq(n64_cart.read),          
+            pmod.d.o[3].eq(n64_cart.read),
             pmod.d.o[4].eq(n64_cart.ale_l),
             pmod.d.o[5].eq(n64_cart.ale_h),
             pmod.d.o[6].eq(n64_cart.s_clk),
