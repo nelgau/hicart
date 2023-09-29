@@ -2,19 +2,19 @@ from amaranth import *
 from amaranth.lib import wiring
 from amaranth.sim import *
 from amaranth_soc import wishbone
-from lambdasoc.periph.sram  import SRAMPeripheral
+from hicart.soc.periph.sram  import SRAMPeripheral
 
-from hicart.n64 import ad16
-from hicart.n64.pi import PIWishboneInitiator
+from hicart.n64.cartbus import PISignature
+from hicart.n64.pi import WishboneBridge
 from hicart.test.pysim.utils import ModuleTestCase, sync_test_case
 
 
-class PIWishboneInitiatorTest(ModuleTestCase):
+class WishboneBridgeTest(ModuleTestCase):
 
     class DUT(Elaboratable):
 
         def __init__(self):
-            self.ad16 = ad16.Signature().create()
+            self.pi = PISignature.create()
 
             self.rom_data = [
                 0x76543210,
@@ -26,20 +26,20 @@ class PIWishboneInitiatorTest(ModuleTestCase):
         def elaborate(self, platform):
             m = Module()
 
-            self.decoder = wishbone.Decoder(addr_width=30, data_width=32, granularity=8, features={"stall"})
+            self.decoder = wishbone.Decoder(addr_width=31, data_width=16, granularity=8, features={"stall"})
 
-            self.rom = SRAMPeripheral(size=16, data_width=32, writable=False)
+            self.rom = SRAMPeripheral(size=16, data_width=16, writable=False)
             self.decoder.add(self.rom.bus, addr=0x10000000)
             self.rom.init = self.rom_data
 
-            self.initiator = PIWishboneInitiator()
+            self.initiator = WishboneBridge()
 
             m.submodules.initiator = self.initiator
             m.submodules.decoder   = self.decoder
             m.submodules.rom       = self.rom
 
-            wiring.connect(m, self.initiator.ad16, wiring.flipped(self.ad16))
-            wiring.connect(m, self.initiator.bus, wiring.flipped(self.decoder.bus))
+            wiring.connect(m, self.initiator.pi, wiring.flipped(self.pi))
+            wiring.connect(m, self.initiator.wb, wiring.flipped(self.decoder.bus))
 
             return m
 
@@ -47,38 +47,38 @@ class PIWishboneInitiatorTest(ModuleTestCase):
 
     def traces_of_interest(self):
         return [
-            self.dut.ad16.ad.i,
-            self.dut.ad16.ad.o,
-            self.dut.ad16.ad.oe,
-            self.dut.ad16.ale_h,
-            self.dut.ad16.ale_l,
-            self.dut.ad16.read,
-            self.dut.ad16.write,
-            self.dut.ad16.reset
+            self.dut.pi.ad.i,
+            self.dut.pi.ad.o,
+            self.dut.pi.ad.oe,
+            self.dut.pi.ale_h,
+            self.dut.pi.ale_l,
+            self.dut.pi.read,
+            self.dut.pi.write,
+            self.dut.pi.reset
         ]        
 
     @sync_test_case
     def test_basic(self):
         # Ale_l is active in idle state
-        yield self.dut.ad16.ale_l   .eq(1)
+        yield self.dut.pi.ale_l   .eq(1)
         yield from self.advance_cycles(2)
 
         # Latch address
 
-        yield self.dut.ad16.ale_l   .eq(0)
-        yield self.dut.ad16.ad.i    .eq(0x1000)
+        yield self.dut.pi.ale_l   .eq(0)
+        yield self.dut.pi.ad.i    .eq(0x1000)
         yield
-        yield self.dut.ad16.ale_h   .eq(1)
-        yield self.dut.ad16.ad.i    .eq(0x0002)
+        yield self.dut.pi.ale_h   .eq(1)
+        yield self.dut.pi.ad.i    .eq(0x0002)
         yield
-        yield self.dut.ad16.ale_l   .eq(1)
+        yield self.dut.pi.ale_l   .eq(1)
         yield from self.advance_cycles(8)
 
         #
 
         for i in range(8):
 
-            yield self.dut.ad16.read   .eq(1)
+            yield self.dut.pi.read   .eq(1)
             yield from self.advance_cycles(6)
-            yield self.dut.ad16.read   .eq(0)
+            yield self.dut.pi.read   .eq(0)
             yield from self.advance_cycles(6)

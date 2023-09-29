@@ -4,7 +4,7 @@ from amaranth.build import *
 from amaranth_soc import wishbone
 
 from hicart.n64.cic import CIC
-from hicart.n64.pi2 import WishboneBridge
+from hicart.n64.pi import WishboneBridge
 from hicart.interface.qspi_flash import QSPIFlashWishboneInterface
 from hicart.soc.wishbone import DownConverter, Translator
 from hicart.utils.cli import main_runner

@@ -5,7 +5,7 @@ from amaranth_soc import wishbone
 
 from hicart.interface.qspi_flash import QSPISignature, QSPIFlashWishboneInterface
 from hicart.n64.cartbus import PISignature
-from hicart.n64.pi2 import WishboneBridge
+from hicart.n64.pi import WishboneBridge
 from hicart.soc.periph.sram  import SRAMPeripheral
 from hicart.soc.wishbone import DownConverter, Translator
 from hicart.test.pysim.driver.pi import PIInitiator
