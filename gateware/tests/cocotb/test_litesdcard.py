@@ -1,6 +1,5 @@
 from amaranth import *
 from amaranth_soc import wishbone
-from lambdasoc.periph.sram  import SRAMPeripheral
 
 import cocotb
 from cocotb.triggers import RisingEdge
@@ -11,6 +10,7 @@ import pytest
 
 from hicart.cores import litesdcard
 from hicart.platforms.homeinvader_rev_a import HomeInvaderRevAPlatform
+from hicart.soc.periph.sram import SRAMPeripheral
 from hicart.test.cocotb import CocotbTestCase, init_domains, start_clock, do_reset
 from hicart.test.cocotb.accessor import wishbone_accessor, Accessor
 

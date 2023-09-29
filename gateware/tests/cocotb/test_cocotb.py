@@ -4,7 +4,7 @@ import cocotb
 import pytest
 
 from hicart.interface.qspi_flash import QSPIFlashWishboneInterface
-from hicart.n64.pi import PIWishboneInitiator
+from hicart.n64.pi import WishboneBridge
 from hicart.platforms.homeinvader_rev_a import HomeInvaderRevAPlatform
 from hicart.soc.wishbone import DownConverter, Translator
 from hicart.test.cocotb import Accessor, CocotbTestCase, init_domains, start_clock, do_reset
@@ -30,8 +30,8 @@ class DUT(Elaboratable):
                                         features={"stall"})
 
         self.down_converter = DownConverter(sub_bus=self.translator.bus,
-                                        addr_width=22,
-                                        data_width=32,
+                                        addr_width=23,
+                                        data_width=16,
                                         granularity=8,
                                         features={"stall"})
 
@@ -40,9 +40,9 @@ class DUT(Elaboratable):
 
         # FIXME: Should the clocker be integrated into QSPIFlashInterface?
         clocker = QSPIClocker()
-        initiator = PIWishboneInitiator()
+        initiator = WishboneBridge()
         
-        decoder = wishbone.Decoder(addr_width=32, data_width=32, granularity=8, features={"stall"})
+        decoder = wishbone.Decoder(addr_width=31, data_width=16, granularity=8, features={"stall"})
         decoder.add(self.down_converter.bus, addr=0x10000000)
 
         m.submodules.initiator       = initiator
