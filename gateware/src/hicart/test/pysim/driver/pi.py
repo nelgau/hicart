@@ -2,7 +2,7 @@ from amaranth.sim import *
 
 # N.B. The control signals (e.g., ale_l, ale_h, read, write) need to be inverted!
 
-class PIInitiator:
+class PIInitiatorDriver:
 
     def __init__(self, pi):
         self.pi = pi

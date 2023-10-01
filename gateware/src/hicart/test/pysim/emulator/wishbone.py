@@ -9,7 +9,7 @@ class _Task:
     write_data: int
 
 
-class WishboneEmulator:
+class WishboneTargetEmulator:
 
     def __init__(self, bus, *, initial=0, delay=0, max_outstanding=None):
         self.bus = bus

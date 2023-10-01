@@ -6,8 +6,8 @@ from amaranth_soc.wishbone import Interface
 
 from hicart.soc.wishbone import DownConverter
 from hicart.test.pysim.testcase import MultiProcessTestCase
-from hicart.test.pysim.driver.wishbone import WishboneInitiator
-from hicart.test.pysim.emulator.wishbone import WishboneEmulator
+from hicart.test.pysim.driver.wishbone import WishboneInitiatorDriver
+from hicart.test.pysim.emulator.wishbone import WishboneTargetEmulator
 
 
 class DownConverterTest(MultiProcessTestCase):
@@ -19,8 +19,8 @@ class DownConverterTest(MultiProcessTestCase):
         dut = DownConverter(sub_bus=sub_bus, addr_width=22, data_width=32,
             granularity=8, features={"stall"})
 
-        intr_driver = WishboneInitiator(dut.bus)
-        sub_emulator = WishboneEmulator(sub_bus, delay=1, max_outstanding=1)
+        intr_driver = WishboneInitiatorDriver(dut.bus)
+        sub_emulator = WishboneTargetEmulator(sub_bus, delay=1, max_outstanding=1)
 
         def intr_process():
             yield from intr_driver.begin()

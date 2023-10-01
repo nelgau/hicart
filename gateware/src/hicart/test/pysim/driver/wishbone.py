@@ -1,7 +1,7 @@
 from amaranth.sim import *
 
 
-class WishboneInitiator:
+class WishboneInitiatorDriver:
 
     def __init__(self, bus):
         self.bus = bus

@@ -4,7 +4,7 @@ from amaranth.sim import *
 from hicart.debug.wishbone import StreamWishboneCommander
 from hicart.test.pysim.testcase import MultiProcessTestCase
 from hicart.test.pysim.driver.stream import StreamDriver
-from hicart.test.pysim.emulator.wishbone import WishboneEmulator
+from hicart.test.pysim.emulator.wishbone import WishboneTargetEmulator
 
 
 class StreamWishboneCommanderTest(MultiProcessTestCase):
@@ -12,7 +12,7 @@ class StreamWishboneCommanderTest(MultiProcessTestCase):
     def test_simple(self):
         dut = StreamWishboneCommander()
 
-        bus_emulator = WishboneEmulator(dut.bus, initial=0xFEEDFACE, delay=1, max_outstanding=1)
+        bus_emulator = WishboneTargetEmulator(dut.bus, initial=0xFEEDFACE, delay=1, max_outstanding=1)
         source_driver = StreamDriver(dut.source)
         sink_driver = StreamDriver(dut.sink)
 

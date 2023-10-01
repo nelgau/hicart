@@ -8,7 +8,7 @@ from hicart.n64.cartbus import PISignature
 from hicart.n64.pi import WishboneBridge
 from hicart.soc.periph.sram  import SRAMPeripheral
 from hicart.soc.wishbone import DownConverter, Translator
-from hicart.test.pysim.driver.pi import PIInitiator
+from hicart.test.pysim.driver.pi import PIInitiatorDriver
 from hicart.test.pysim.emulator.qspi_flash import QSPIFlashEmulator
 from hicart.test.pysim.testcase import MultiProcessTestCase
 
@@ -102,7 +102,7 @@ class N64ReadTest(MultiProcessTestCase):
                 assert_read(address + 1, value & 0xFF,  "LOW")
 
         flash = QSPIFlashEmulator(dut.qspi, flash_bytes)
-        pi = PIInitiator(dut.pi)
+        pi = PIInitiatorDriver(dut.pi)
 
         def flash_process():
             yield Passive()
