@@ -50,22 +50,22 @@ class Top(Elaboratable):
 
         m.d.comb += [
             cic.reset               .eq( n64_cart.reset      ),
-            cic.bus.dclk            .eq( n64_cart.cic_dclk   ),
-            cic.bus.data.i          .eq( n64_cart.cic_data.i ),
+            cic.bus.dclk            .eq( n64_cart.cic.dclk   ),
+            cic.bus.data.i          .eq( n64_cart.cic.data.i ),
 
-            n64_cart.cic_data.o     .eq( cic.bus.data.o  ),
-            n64_cart.cic_data.oe    .eq( cic.bus.data.oe ),
+            n64_cart.cic.data.o     .eq( cic.bus.data.o  ),
+            n64_cart.cic.data.oe    .eq( cic.bus.data.oe ),
         ]
 
         m.d.comb += [
-            bridge.pi.ad.i          .eq( n64_cart.ad.i  ),
-            bridge.pi.ale_h         .eq( n64_cart.ale_h ),
-            bridge.pi.ale_l         .eq( n64_cart.ale_l ),
-            bridge.pi.read          .eq( n64_cart.read  ),
-            bridge.pi.write         .eq( n64_cart.write ),
+            bridge.pi.ad.i          .eq( n64_cart.pi.ad.i  ),
+            bridge.pi.ale_h         .eq( n64_cart.pi.ale_h ),
+            bridge.pi.ale_l         .eq( n64_cart.pi.ale_l ),
+            bridge.pi.read          .eq( n64_cart.pi.read  ),
+            bridge.pi.write         .eq( n64_cart.pi.write ),
 
-            n64_cart.ad.o           .eq( bridge.pi.ad.o  ),
-            n64_cart.ad.oe          .eq( bridge.pi.ad.oe ),
+            n64_cart.pi.ad.o        .eq( bridge.pi.ad.o  ),
+            n64_cart.pi.ad.oe       .eq( bridge.pi.ad.oe ),
 
             pmod.d.oe               .eq(1)
         ]
@@ -104,10 +104,10 @@ class Top(Elaboratable):
         bridge = self.bridge
         pmod = self.pmod
         m.d.comb += [
-            pmod.d.o[0].eq(n64_cart.cic_data.i),
-            pmod.d.o[1].eq(n64_cart.read),
-            pmod.d.o[2].eq(n64_cart.ale_l),
-            pmod.d.o[3].eq(n64_cart.ale_h),
+            pmod.d.o[0].eq(n64_cart.cic.data.i),
+            pmod.d.o[1].eq(n64_cart.pi.read),
+            pmod.d.o[2].eq(n64_cart.pi.ale_l),
+            pmod.d.o[3].eq(n64_cart.pi.ale_h),
 
             pmod.d.o[4].eq(bridge.wb.cyc),
             pmod.d.o[5].eq(bridge.wb.stb),
@@ -134,56 +134,56 @@ class Top(Elaboratable):
         n64_cart = self.n64_cart
         pmod = self.pmod
         m.d.comb += [
-            pmod.d.o[0].eq(n64_cart.cic_data.i),
-            pmod.d.o[1].eq(n64_cart.read),
-            pmod.d.o[2].eq(n64_cart.ale_l),
-            pmod.d.o[3].eq(n64_cart.ale_h),
-            pmod.d.o[4].eq(n64_cart.ad.i[15]),
-            pmod.d.o[5].eq(n64_cart.ad.i[14]),
-            pmod.d.o[6].eq(n64_cart.ad.i[13]),
-            pmod.d.o[7].eq(n64_cart.ad.i[12]),
+            pmod.d.o[0].eq(n64_cart.cic.data.i),
+            pmod.d.o[1].eq(n64_cart.pi.read),
+            pmod.d.o[2].eq(n64_cart.pi.ale_l),
+            pmod.d.o[3].eq(n64_cart.pi.ale_h),
+            pmod.d.o[4].eq(n64_cart.pi.ad.i[15]),
+            pmod.d.o[5].eq(n64_cart.pi.ad.i[14]),
+            pmod.d.o[6].eq(n64_cart.pi.ad.i[13]),
+            pmod.d.o[7].eq(n64_cart.pi.ad.i[12]),
         ]
 
     def probe_cic(self, m):
         n64_cart = self.n64_cart
         pmod = self.pmod
         m.d.comb += [
-            pmod.d.o[0].eq(n64_cart.cic_dclk),
-            pmod.d.o[1].eq(n64_cart.cic_data.i),
+            pmod.d.o[0].eq(n64_cart.cic.dclk),
+            pmod.d.o[1].eq(n64_cart.cic.data.i),
             pmod.d.o[2].eq(n64_cart.nmi),
-            pmod.d.o[3].eq(n64_cart.read),
-            pmod.d.o[4].eq(n64_cart.ale_l),
-            pmod.d.o[5].eq(n64_cart.ale_h),
-            pmod.d.o[6].eq(n64_cart.ad.i[15]),
-            pmod.d.o[7].eq(n64_cart.ad.i[14]),
+            pmod.d.o[3].eq(n64_cart.pi.read),
+            pmod.d.o[4].eq(n64_cart.pi.ale_l),
+            pmod.d.o[5].eq(n64_cart.pi.ale_h),
+            pmod.d.o[6].eq(n64_cart.pi.ad.i[15]),
+            pmod.d.o[7].eq(n64_cart.pi.ad.i[14]),
         ]
 
     def probe_si(self, m):
         n64_cart = self.n64_cart
         pmod = self.pmod
         m.d.comb += [
-            pmod.d.o[0].eq(n64_cart.cic_dclk),
-            pmod.d.o[1].eq(n64_cart.cic_data.i),
+            pmod.d.o[0].eq(n64_cart.cic.dclk),
+            pmod.d.o[1].eq(n64_cart.cic.data.i),
             pmod.d.o[2].eq(n64_cart.nmi),
-            pmod.d.o[3].eq(n64_cart.read),
-            pmod.d.o[4].eq(n64_cart.ale_l),
-            pmod.d.o[5].eq(n64_cart.ale_h),
-            pmod.d.o[6].eq(n64_cart.s_clk),
-            pmod.d.o[7].eq(n64_cart.s_data),
+            pmod.d.o[3].eq(n64_cart.pi.read),
+            pmod.d.o[4].eq(n64_cart.pi.ale_l),
+            pmod.d.o[5].eq(n64_cart.pi.ale_h),
+            pmod.d.o[6].eq(n64_cart.si.dclk),
+            pmod.d.o[7].eq(n64_cart.si.data.i),
         ]        
 
     def probe_ad_low(self, m):
         n64_cart = self.n64_cart
         pmod = self.pmod
         m.d.comb += [
-            pmod.d.o.eq(n64_cart.ad.i[8:16]),
+            pmod.d.o.eq(n64_cart.pi.ad.i[8:16]),
         ]
 
     def probe_ad_high(self, m):
         n64_cart = self.n64_cart
         pmod = self.pmod
         m.d.comb += [
-            pmod.d.o.eq(n64_cart.ad.i[8:16]),
+            pmod.d.o.eq(n64_cart.pi.ad.i[8:16]),
         ]
 
 if __name__ == "__main__":

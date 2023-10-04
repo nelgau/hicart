@@ -81,23 +81,26 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
             Clock(12e6), Attrs(IO_TYPE="LVCMOS33")),
 
         Resource("n64_cart", 0,
-            Subsignal("ad",       Pins("A2 A3 A4 A5 A8 A9 A10 A11 B12 B11 B10 B9 B6 B5 B4 B3", dir="io"),
-                Attrs(PULLMODE="DOWN")),
+            Subsignal("pi",
+                Subsignal("ad",     Pins("A2 A3 A4 A5 A8 A9 A10 A11 B12 B11 B10 B9 B6 B5 B4 B3", dir="io"),
+                    Attrs(PULLMODE="DOWN")),
 
-            Subsignal("ale_h",    PinsN("A7", dir="i"),  Attrs(PULLMODE="UP")),
-            Subsignal("ale_l",    PinsN("A6", dir="i"),  Attrs(PULLMODE="UP")),
-            Subsignal("read",     PinsN("B8", dir="i"),  Attrs(PULLMODE="UP")),
-            Subsignal("write",    PinsN("B7", dir="i"),  Attrs(PULLMODE="UP")),
-
-            Subsignal("s_clk",    Pins("A13", dir="i")),
-            Subsignal("s_data",   Pins("B14", dir="io"), Attrs(PULLMODE="NONE")),
-
-            Subsignal("cic_dclk", Pins("A12", dir="i")),
-            Subsignal("cic_data", Pins("B13", dir="io"), Attrs(PULLMODE="NONE")),
-
-            Subsignal("reset",    PinsN("A14", dir="i"), Attrs(PULLMODE="UP")),
-            Subsignal("nmi",      PinsN("C13", dir="i"), Attrs(PULLMODE="UP")),
-
+                Subsignal("ale_h",  PinsN("A7", dir="i"),  Attrs(PULLMODE="UP")),
+                Subsignal("ale_l",  PinsN("A6", dir="i"),  Attrs(PULLMODE="UP")),
+                Subsignal("read",   PinsN("B8", dir="i"),  Attrs(PULLMODE="UP")),
+                Subsignal("write",  PinsN("B7", dir="i"),  Attrs(PULLMODE="UP")),
+            ),
+            Subsignal("si",
+                Subsignal("dclk",   Pins("A13", dir="i")),
+                Subsignal("data",   Pins("B14", dir="io"), Attrs(PULLMODE="NONE")),
+            ),
+            Subsignal("cic",
+                Subsignal("dclk",   Pins("A12", dir="i")),
+                Subsignal("data",   Pins("B13", dir="io"), Attrs(PULLMODE="NONE")),
+            ),
+            Subsignal("reset",      PinsN("A14", dir="i"), Attrs(PULLMODE="UP")),
+            Subsignal("nmi",        PinsN("C13", dir="i"), Attrs(PULLMODE="UP")),
+            
             Attrs(IO_TYPE="LVCMOS33", SLEWRATE="SLOW")
         ),
 
