@@ -5,7 +5,7 @@ from amaranth import *
 from amaranth.build import *
 from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out
-from amaranth.vendor.lattice_ecp5 import *
+from amaranth.vendor import LatticeECP5Platform
 from amaranth_boards.resources import *
 
 from hicart.interface.qspi_flash import QSPISignature
