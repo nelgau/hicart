@@ -1,8 +1,8 @@
 from amaranth import *
 from amaranth.sim import *
 from amaranth.utils import log2_int
+from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
-from amaranth_soc.wishbone import Interface
 
 from hicart.soc.wishbone import DownConverter
 from hicart.test.pysim.testcase import MultiProcessTestCase
@@ -13,8 +13,8 @@ from hicart.test.pysim.emulator.wishbone import WishboneTargetEmulator
 class DownConverterTest(MultiProcessTestCase):
 
     def test_simple(self):
-        sub_bus = Interface(addr_width=24, data_width=8, features={"stall"})
-        sub_bus.memory_map = MemoryMap(addr_width=24, data_width=8)
+        sub_memory_map = MemoryMap(addr_width=24, data_width=8)
+        sub_bus = wishbone.Interface(addr_width=24, data_width=8, features={"stall"}, memory_map=sub_memory_map)
 
         dut = DownConverter(sub_bus=sub_bus, addr_width=22, data_width=32,
             granularity=8, features={"stall"})
