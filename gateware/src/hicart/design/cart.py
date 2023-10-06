@@ -45,7 +45,7 @@ class Top(Elaboratable):
         n64_cart = self.n64_cart = platform.request('n64_cart')
         pmod     = self.pmod     = platform.request('pmod')
 
-        wiring.connect(m, bridge.wb, wiring.flipped(decoder.bus))
+        wiring.connect(m, bridge.wb, decoder.bus)
         wiring.connect(m, flash_interface.qspi, flash_connector.qspi)
 
         m.d.comb += [

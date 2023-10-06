@@ -48,7 +48,7 @@ class DUT(Elaboratable):
         m.submodules.down_converter  = self.down_converter
 
         wiring.connect(m, self.bridge.pi, wiring.flipped(self.pi))
-        wiring.connect(m, self.bridge.wb, wiring.flipped(decoder.bus))
+        wiring.connect(m, self.bridge.wb, decoder.bus)
         wiring.connect(m, self.flash_interface.qspi, wiring.flipped(self.qspi))
 
         return m

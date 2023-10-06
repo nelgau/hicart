@@ -77,7 +77,7 @@ class CIC(wiring.Component):
         m.submodules += FFSynchronizer(      self.bus.dclk,     data_clk_sync )
         m.submodules += FFSynchronizer(      self.bus.data.i,   data_i_sync   )
 
-        wiring.connect(m, self._arbiter.bus, wiring.flipped(self._decoder.bus))
+        wiring.connect(m, self._arbiter.bus, self._decoder.bus)
 
         m.d.comb += [
             # self.cpu.ip.eq(self.intc.ip),

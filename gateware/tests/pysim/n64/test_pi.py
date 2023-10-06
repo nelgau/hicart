@@ -39,7 +39,7 @@ class WishboneBridgeTest(ModuleTestCase):
             m.submodules.rom       = self.rom
 
             wiring.connect(m, self.initiator.pi, wiring.flipped(self.pi))
-            wiring.connect(m, self.initiator.wb, wiring.flipped(self.decoder.bus))
+            wiring.connect(m, self.initiator.wb, self.decoder.bus)
 
             return m
 
