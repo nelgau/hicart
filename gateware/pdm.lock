@@ -6,15 +6,15 @@ groups = ["default", "test"]
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:bf274829422e78a04e3701f3b6e8778c64fae9dc3412220f058cca251c937ccd"
+content_hash = "sha256:3430f1db41d7d2c1fd3600081391b2d72b106c7a693ae41ff377474c82d79411"
 
 [[package]]
 name = "amaranth"
-version = "0.4.dev208+gec9da2d"
+version = "0.4.dev214+gc7da6c1"
 requires_python = "~=3.8"
 git = "https://github.com/amaranth-lang/amaranth.git"
 ref = "main"
-revision = "ec9da2d4d638d32e09fd845b5469431203e9e9ab"
+revision = "c7da6c1292ea60a612ee9fd0f75d603485939580"
 summary = "Amaranth hardware definition language"
 dependencies = [
     "Jinja2~=3.0",
@@ -35,14 +35,14 @@ dependencies = [
 
 [[package]]
 name = "amaranth-soc"
-version = "0.1.dev67+gc5e1e66"
+version = "0.1.dev74+gdac848c"
 requires_python = "~=3.8"
-git = "https://github.com/amaranth-lang/amaranth-soc.git"
-ref = "c5e1e660"
-revision = "c5e1e6606a9452601c274e3e48cda8dbcf353b96"
+git = "https://github.com/jfng/amaranth-soc.git"
+ref = "lib-wiring-components"
+revision = "dac848c9d7ab3d498cc396536ba86c4995a282ac"
 summary = "System on Chip toolkit for Amaranth HDL"
 dependencies = [
-    "amaranth<0.5,>=0.3",
+    "amaranth @ git+https://github.com/amaranth-lang/amaranth",
 ]
 
 [[package]]
@@ -58,11 +58,11 @@ dependencies = [
 
 [[package]]
 name = "amaranth"
-version = "0.4.dev208+gec9da2d"
+version = "0.4.dev214+gc7da6c1"
 requires_python = "~=3.8"
 git = "https://github.com/amaranth-lang/amaranth.git"
 ref = "main"
-revision = "ec9da2d4d638d32e09fd845b5469431203e9e9ab"
+revision = "c7da6c1292ea60a612ee9fd0f75d603485939580"
 summary = "Amaranth hardware definition language"
 dependencies = [
     "Jinja2~=3.0",
