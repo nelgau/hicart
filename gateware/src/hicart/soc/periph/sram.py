@@ -1,17 +1,18 @@
 from amaranth import *
+from amaranth import tracer
+from amaranth.lib import wiring
+from amaranth.lib.wiring import In, Out
 from amaranth.utils import log2_int
 
 from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 from amaranth_soc.periph import ConstantMap
 
-from . import Peripheral
-
 
 __all__ = ["SRAMPeripheral"]
 
 
-class SRAMPeripheral(Peripheral, Elaboratable):
+class SRAMPeripheral(wiring.Component):
     """SRAM storage peripheral.
 
     Parameters
@@ -31,8 +32,10 @@ class SRAMPeripheral(Peripheral, Elaboratable):
         Wishbone bus interface.
     """
     # TODO raise bus.err if read-only and a bus write is attempted.
-    def __init__(self, *, size, data_width=32, granularity=8, writable=True, init=None):
-        super().__init__()
+    def __init__(self, *, size, data_width=32, granularity=8, writable=True, init=None, name=None, src_loc_at=1):
+        if name is not None and not isinstance(name, str):
+            raise TypeError("Name must be a string, not {!r}".format(name))
+        self.name = name or tracer.get_var_name(depth=1 + src_loc_at).lstrip("_")
 
         if not isinstance(size, int) or size <= 0 or size & size-1:
             raise ValueError("Size must be an integer power of two, not {!r}"
@@ -44,17 +47,24 @@ class SRAMPeripheral(Peripheral, Elaboratable):
 
         self._mem = Memory(depth=(size * granularity) // data_width, width=data_width, init=init)
 
-        self.bus = wishbone.Interface(addr_width=log2_int(self._mem.depth),
-                                      data_width=self._mem.width, granularity=granularity,
-                                      features={"cti", "bte"})
+        bus_signature = wishbone.Signature(addr_width=log2_int(self._mem.depth),
+                                           data_width=self._mem.width, granularity=granularity,
+                                           features={"cti", "bte"})
 
         map = MemoryMap(addr_width=log2_int(size), data_width=granularity, name=self.name)
         map.add_resource(self._mem, name="mem", size=size)
-        self.bus.memory_map = map
+        bus_signature.memory_map = map
 
         self.size        = size
         self.granularity = granularity
         self.writable    = writable
+
+        self._signature = wiring.Signature({"bus": In(bus_signature)})
+        super().__init__()
+
+    @property
+    def signature(self):
+        return self._signature
 
     @property
     def init(self):
