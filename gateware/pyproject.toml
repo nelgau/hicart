@@ -38,7 +38,7 @@ test = [
 [tool.pdm.resolution.overrides]
 # Because amaranth-boards overconstrains to amaranth>=0.3,<0.5
 amaranth = "git+https://github.com/amaranth-lang/amaranth.git@main"
-amaranth-soc = "git+https://github.com/jfng/amaranth-soc.git@lib-wiring-components"
+amaranth-soc = "git+https://github.com/amaranth-lang/amaranth-soc.git@main"
 
 [tool.pdm.scripts]
 test = { cmd = "pytest" }

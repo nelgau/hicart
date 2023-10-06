@@ -6,7 +6,7 @@ groups = ["default", "test"]
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:3430f1db41d7d2c1fd3600081391b2d72b106c7a693ae41ff377474c82d79411"
+content_hash = "sha256:3cdcd54b297bd4d3c2cf75315528af483d148011b5806e1fdcc511058255bb0d"
 
 [[package]]
 name = "amaranth"
@@ -35,11 +35,11 @@ dependencies = [
 
 [[package]]
 name = "amaranth-soc"
-version = "0.1.dev74+gdac848c"
+version = "0.1.dev74+g9ffaf94"
 requires_python = "~=3.8"
-git = "https://github.com/jfng/amaranth-soc.git"
-ref = "lib-wiring-components"
-revision = "dac848c9d7ab3d498cc396536ba86c4995a282ac"
+git = "https://github.com/amaranth-lang/amaranth-soc.git"
+ref = "main"
+revision = "9ffaf949d853467d32e3e19fc0d472de65e45427"
 summary = "System on Chip toolkit for Amaranth HDL"
 dependencies = [
     "amaranth @ git+https://github.com/amaranth-lang/amaranth",
