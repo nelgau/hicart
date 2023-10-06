@@ -1,12 +1,12 @@
 from amaranth import *
-from amaranth.sim import *
+from amaranth.lib import wiring
+from amaranth.lib.wiring import In, Out
 from amaranth.utils import log2_int
 from amaranth_soc.memory import MemoryMap
 from amaranth_soc import wishbone
 
 
-class DownConverter(Elaboratable):
-
+class DownConverter(wiring.Component):
     def __init__(self, *, sub_bus, addr_width, data_width, granularity=None, features=frozenset()):
         if granularity is None:
             granularity  = data_width
@@ -18,14 +18,21 @@ class DownConverter(Elaboratable):
         self.granularity = granularity
         self.features    = set(features)
 
-        self.bus = wishbone.Interface(addr_width=addr_width, data_width=data_width,
-            granularity=granularity, features=features)
-
         granularity_bits = log2_int(data_width // granularity)
         memory_map = MemoryMap(addr_width=max(1, addr_width + granularity_bits),
                                data_width=granularity)
         memory_map.add_window(sub_bus.memory_map)
-        self.bus.memory_map = memory_map
+
+        bus_signature = wishbone.Signature(addr_width=addr_width, data_width=data_width,
+            granularity=granularity, features=features)
+        bus_signature.memory_map = memory_map
+
+        self._signature = wiring.Signature({"bus": In(bus_signature)})
+        super().__init__()
+
+    @property
+    def signature(self):
+        return self._signature
 
     def elaborate(self, platform):
         m = Module()
@@ -121,7 +128,7 @@ class DownConverter(Elaboratable):
             self.sub_bus
         ]
 
-class Translator(Elaboratable):
+class Translator(wiring.Component):
     """Bus Translator
 
     A resource for accessing a range of addresses on a subordinate bus.
@@ -130,9 +137,6 @@ class Translator(Elaboratable):
         self.sub_bus = sub_bus
         self.base_addr = base_addr
 
-        self.bus = wishbone.Interface(addr_width=addr_width, data_width=sub_bus.data_width,
-            granularity=sub_bus.granularity, features=features)
-
         # FIXME: It would be possible to implement this so that the resources
         # on the subordinate bus are visible, removing the need to create this
         # hacky placeholder resource. Unfortunately, because it's possible to
@@ -140,7 +144,17 @@ class Translator(Elaboratable):
         # a subset of a resource and that doesn't seem trivial to do.
         memory_map = MemoryMap(addr_width=addr_width, data_width=sub_bus.data_width)
         memory_map.add_resource(self, size=2**addr_width, name='translator')
-        self.bus.memory_map = memory_map
+
+        bus_signature = wishbone.Signature(addr_width=addr_width, data_width=sub_bus.data_width,
+            granularity=sub_bus.granularity, features=features)
+        bus_signature.memory_map = memory_map
+
+        self._signature = wiring.Signature({"bus": In(bus_signature)})
+        super().__init__()
+
+    @property
+    def signature(self):
+        return self._signature
 
     def elaborate(self, platform):
         m = Module()
