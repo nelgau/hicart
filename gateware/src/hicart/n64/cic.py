@@ -6,22 +6,15 @@ from amaranth.lib.wiring import In, Out
 from amaranth.lib.cdc import FFSynchronizer, AsyncFFSynchronizer
 from amaranth_soc import wishbone
 
+from hicart.n64.cartbus import CICSignature
 from hicart.soc.cpu.minerva  import MinervaCPU
 from hicart.soc.periph.sram  import SRAMPeripheral
 from hicart.soc.periph.gpio import GPIOPeripheral
 from hicart.utils.plat import TristateSignature
 
 
-class Signature(wiring.Signature):
-    def __init__(self):
-        super().__init__({
-            "dclk":     In(1),
-            "data":     Out(TristateSignature(1)),
-        })
-
-
 class CIC(wiring.Component):
-    bus:    Out(Signature())
+    bus:    Out(CICSignature)
     reset:  In(1)
 
     RESET_ADDR = 0x00000000
