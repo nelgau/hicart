@@ -18,7 +18,7 @@ class CICTest(ModuleTestCase):
     def traces_of_interest(self):
         return [
             self.dut.reset,
-            self.dut.bus.dclk,
+            self.dut.bus.dclk.i,
             self.dut.bus.data.i,
             self.dut.bus.data.o,
             self.dut.bus.data.oe,
@@ -26,7 +26,7 @@ class CICTest(ModuleTestCase):
 
     def initialize_signals(self):
         yield self.dut.reset        .eq(0)
-        yield self.dut.bus.dclk     .eq(1)
+        yield self.dut.bus.dclk.i   .eq(1)
         yield self.dut.bus.data.i   .eq(1)
 
     @sync_test_case
@@ -105,13 +105,13 @@ class CICTest(ModuleTestCase):
             0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0])
 
     def read_bit(self):
-        yield self.dut.bus.dclk.eq(0)
+        yield self.dut.bus.dclk.i.eq(0)
         yield from self.wait(5e-6)
         
         # As the signal is pulled high externally, the bit is low if oe & ~o.
         bit = yield (~self.dut.bus.data.oe | self.dut.bus.data.o)
 
-        yield self.dut.bus.dclk.eq(1)
+        yield self.dut.bus.dclk.i.eq(1)
         yield from self.wait(5e-6)
 
         return bit
@@ -137,10 +137,10 @@ class CICTest(ModuleTestCase):
         if bit == 0:
             yield self.dut.bus.data.i.eq(0)
 
-        yield self.dut.bus.dclk.eq(0)
+        yield self.dut.bus.dclk.i.eq(0)
         yield from self.wait(5e-6)
         
-        yield self.dut.bus.dclk.eq(1)
+        yield self.dut.bus.dclk.i.eq(1)
         yield from self.wait(1e-6)
         
         yield self.dut.bus.data.i.eq(1)

@@ -62,12 +62,12 @@ class CIC(wiring.Component):
         m.submodules.ram     = self.ram
         m.submodules.gpio    = self.gpio
 
-        reset_sync    = Signal()
-        data_clk_sync = Signal()
-        data_i_sync   = Signal()
+        reset_sync  = Signal()
+        dclk_i_sync = Signal()
+        data_i_sync = Signal()
 
         m.submodules += AsyncFFSynchronizer( self.reset,        reset_sync    )
-        m.submodules += FFSynchronizer(      self.bus.dclk.i,   data_clk_sync )
+        m.submodules += FFSynchronizer(      self.bus.dclk.i,   dclk_i_sync   )
         m.submodules += FFSynchronizer(      self.bus.data.i,   data_i_sync   )
 
         wiring.connect(m, self._arbiter.bus, self._decoder.bus)
@@ -78,7 +78,7 @@ class CIC(wiring.Component):
         ]
 
         m.d.comb += [
-            self.gpio.i[0]      .eq( data_clk_sync   ),
+            self.gpio.i[0]      .eq( dclk_i_sync     ),
             self.gpio.i[1]      .eq( data_i_sync     ),
             self.bus.data.o     .eq( self.gpio.o[1]  ),
             self.bus.data.oe    .eq( self.gpio.oe[1] ),
