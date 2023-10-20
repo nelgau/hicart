@@ -1,7 +1,7 @@
 from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.cdc import FFSynchronizer
-from amaranth.lib.wiring import In, Out
+from amaranth.lib.wiring import In, Out, Signature
 
 from hicart.utils.plat import TristateSignature
 
@@ -20,7 +20,7 @@ SISignature = wiring.Signature({
 })
 
 CICSignature = wiring.Signature({
-    "dclk":     In(1),
+    "dclk":     Out(Signature({"i": In(1)})),
     "data":     Out(TristateSignature(1)),
 })
 

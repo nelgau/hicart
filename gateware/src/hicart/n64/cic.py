@@ -67,7 +67,7 @@ class CIC(wiring.Component):
         data_i_sync   = Signal()
 
         m.submodules += AsyncFFSynchronizer( self.reset,        reset_sync    )
-        m.submodules += FFSynchronizer(      self.bus.dclk,     data_clk_sync )
+        m.submodules += FFSynchronizer(      self.bus.dclk.i,   data_clk_sync )
         m.submodules += FFSynchronizer(      self.bus.data.i,   data_i_sync   )
 
         wiring.connect(m, self._arbiter.bus, self._decoder.bus)

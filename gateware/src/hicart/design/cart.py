@@ -48,13 +48,10 @@ class Top(Elaboratable):
         wiring.connect(m, bridge.wb, decoder.bus)
         wiring.connect(m, flash_interface.qspi, flash_connector.qspi)
 
+        wiring.connect(m, cic.bus, n64_cart.cic)
+
         m.d.comb += [
             cic.reset               .eq( n64_cart.reset      ),
-            cic.bus.dclk            .eq( n64_cart.cic.dclk   ),
-            cic.bus.data.i          .eq( n64_cart.cic.data.i ),
-
-            n64_cart.cic.data.o     .eq( cic.bus.data.o  ),
-            n64_cart.cic.data.oe    .eq( cic.bus.data.oe ),
         ]
 
         m.d.comb += [

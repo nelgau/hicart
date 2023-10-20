@@ -10,11 +10,11 @@ content_hash = "sha256:3cdcd54b297bd4d3c2cf75315528af483d148011b5806e1fdcc511058
 
 [[package]]
 name = "amaranth"
-version = "0.4.dev214+gc7da6c1"
+version = "0.4.dev219+gbc316b4"
 requires_python = "~=3.8"
 git = "https://github.com/amaranth-lang/amaranth.git"
 ref = "main"
-revision = "c7da6c1292ea60a612ee9fd0f75d603485939580"
+revision = "bc316b41a89ba32570a1384c5af8fab4f5a643cc"
 summary = "Amaranth hardware definition language"
 dependencies = [
     "Jinja2~=3.0",
@@ -58,11 +58,11 @@ dependencies = [
 
 [[package]]
 name = "amaranth"
-version = "0.4.dev218+g392ead8"
+version = "0.4.dev219+gbc316b4"
 requires_python = "~=3.8"
 git = "https://github.com/amaranth-lang/amaranth.git"
 ref = "main"
-revision = "392ead8d00c9a130b656b3af45c21fa410268301"
+revision = "bc316b41a89ba32570a1384c5af8fab4f5a643cc"
 summary = "Amaranth hardware definition language"
 dependencies = [
     "Jinja2~=3.0",
