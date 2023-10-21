@@ -73,11 +73,7 @@ class CIC(wiring.Component):
         wiring.connect(m, self._arbiter.bus, self._decoder.bus)
 
         m.d.comb += [
-            # self.cpu.ip.eq(self.intc.ip),
-            self.cpu.ip[0].eq(reset_sync)
-        ]
-
-        m.d.comb += [
+            self.cpu.ip[0]      .eq( reset_sync      ),
             self.gpio.i[0]      .eq( dclk_i_sync     ),
             self.gpio.i[1]      .eq( data_i_sync     ),
             self.bus.data.o     .eq( self.gpio.o[1]  ),
