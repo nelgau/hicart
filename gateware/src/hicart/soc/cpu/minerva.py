@@ -1,10 +1,15 @@
+import warnings
+
 from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out
 from amaranth_soc import wishbone
 from amaranth_soc.periph import ConstantMap
 
-from minerva.core import Minerva
+# Silence record-related deprecation warnings
+with warnings.catch_warnings():
+    warnings.filterwarnings(action="ignore", category=DeprecationWarning)
+    from minerva.core import Minerva
 
 from . import CPU, ConstantAddr
 
