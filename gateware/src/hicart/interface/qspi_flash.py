@@ -4,8 +4,6 @@ from amaranth.lib.wiring import In, Out
 from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 
-from hicart.utils.plat import TristateSignature
-
 
 class QSPISignature(wiring.Signature):
     def __init__(self):

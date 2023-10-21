@@ -16,10 +16,12 @@ def get_all_resources(platform, name):
     return resources
 
 
-class TristateSignature(wiring.Signature):
-    def __init__(self, width):
-        super().__init__({
-            "i": In(width),
-            "o": Out(width),
-            "oe": Out(1),
-        })
+def pin_signature(width, dir):
+    members = {}
+    if dir in ("i", "io"):
+        members["i"] = In(width)
+    if dir in ("o", "oe", "io"):
+        members["o"] = Out(width)
+    if dir in ("oe", "io"):
+        members["oe"] = Out(1)
+    return wiring.Signature(members)

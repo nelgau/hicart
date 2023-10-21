@@ -12,23 +12,24 @@ from hicart.n64.cartbus import PISignature
 class WishboneBridge(wiring.Component):
     pi:     Out(PISignature)
     wb:     Out(wishbone.Signature(addr_width=31, data_width=16, granularity=8, features={"stall"}))
+    reset:  In(1)
 
     def elaborate(self, platform=None):
         m = Module()
 
         # Synchronization
 
-        ale_h_sync = Signal()
-        ale_l_sync = Signal()
-        read_sync = Signal()
-        write_sync = Signal()
+        ale_h_i_sync = Signal()
+        ale_l_i_sync = Signal()
+        read_i_sync = Signal()
+        write_i_sync = Signal()
         ad_i_sync = Signal(16)
 
-        m.submodules.sync_ale_h = FFSynchronizer(self.pi.ale_h, ale_h_sync)
-        m.submodules.sync_ale_l = FFSynchronizer(self.pi.ale_l, ale_l_sync)
-        m.submodules.sync_read  = FFSynchronizer(self.pi.read,  read_sync)
-        m.submodules.sync_write = FFSynchronizer(self.pi.write, write_sync)
-        m.submodules.sync_ad_i  = FFSynchronizer(self.pi.ad.i,  ad_i_sync, stages=4)
+        m.submodules.sync_ale_h = FFSynchronizer(self.pi.ale_h.i,   ale_h_i_sync)
+        m.submodules.sync_ale_l = FFSynchronizer(self.pi.ale_l.i,   ale_l_i_sync)
+        m.submodules.sync_read  = FFSynchronizer(self.pi.read.i,    read_i_sync)
+        m.submodules.sync_write = FFSynchronizer(self.pi.write.i,   write_i_sync)
+        m.submodules.sync_ad_i  = FFSynchronizer(self.pi.ad.i,      ad_i_sync, stages=4)
 
         # FIFOs
 
@@ -48,20 +49,20 @@ class WishboneBridge(wiring.Component):
 
         with m.FSM() as fsm:                #   ALE_L       ALE_H
             with m.State("INIT"):           #   Inactive    Inactive
-                with m.If(ale_l_sync):
+                with m.If(ale_l_i_sync):
                     m.next = "A"
 
             with m.State("A"):              #   Active      Inactive
-                with m.If(~ale_l_sync):
+                with m.If(~ale_l_i_sync):
                     m.next = "B"
 
             with m.State("B"):              #   Inactive    Inactive
-                with m.If(ale_h_sync):
+                with m.If(ale_h_i_sync):
                     m.next = "C"
                     m.d.sync += base_address[16:32].eq(ad_i_sync)
 
             with m.State("C"):              #   Inactive    Active
-                with m.If(ale_l_sync):
+                with m.If(ale_l_i_sync):
                     m.next = "VALID"
                     m.d.sync += base_address[0:16].eq(ad_i_sync[0:16])
                     m.d.sync += load_address.eq(1)
@@ -71,7 +72,7 @@ class WishboneBridge(wiring.Component):
                     m.d.sync += read_fifo_wait.eq(0)
 
             with m.State("VALID"):          #   Active      Active
-                with m.If(~ale_h_sync):
+                with m.If(~ale_h_i_sync):
                     m.d.sync += read_enabled.eq(0)
                     m.next = "A"
 
@@ -80,8 +81,8 @@ class WishboneBridge(wiring.Component):
         last_read_sync = Signal()
         read_op = Signal()
 
-        m.d.sync += last_read_sync.eq(read_sync)
-        m.d.comb += read_op.eq(read_sync & ~last_read_sync)
+        m.d.sync += last_read_sync.eq(read_i_sync)
+        m.d.comb += read_op.eq(read_i_sync & ~last_read_sync)
 
         m.d.comb += read_fifo.r_en.eq(0)
 
@@ -100,7 +101,7 @@ class WishboneBridge(wiring.Component):
                 m.d.sync += self.pi.ad.o.eq(read_fifo.r_data)
                 m.d.sync += self.pi.ad.oe.eq(1)
 
-        with m.If(~read_sync):
+        with m.If(~read_i_sync):
             m.d.sync += self.pi.ad.oe.eq(0)
 
         # Wishbone bus

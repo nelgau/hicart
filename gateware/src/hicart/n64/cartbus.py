@@ -1,27 +1,26 @@
 from amaranth import *
 from amaranth.lib import wiring
-from amaranth.lib.cdc import FFSynchronizer
-from amaranth.lib.wiring import In, Out, Signature
+from amaranth.lib.wiring import Out
 
-from hicart.utils.plat import TristateSignature
+from hicart.utils.plat import pin_signature
 
 
 PISignature = wiring.Signature({
-    "ad":       Out(TristateSignature(16)),
-    "ale_h":    In(1),
-    "ale_l":    In(1),
-    "read":     In(1),
-    "write":    In(1),
+    "ad":       Out(pin_signature(16, "io")),
+    "ale_h":    Out(pin_signature(1, "i")),
+    "ale_l":    Out(pin_signature(1, "i")),
+    "read":     Out(pin_signature(1, "i")),
+    "write":    Out(pin_signature(1, "i")),
 })
 
 SISignature = wiring.Signature({
-    "dclk":     In(1),
-    "data":     Out(TristateSignature(1)),
+    "dclk":     Out(pin_signature(1, "i")),
+    "data":     Out(pin_signature(1, "io")),
 })
 
 CICSignature = wiring.Signature({
-    "dclk":     Out(Signature({"i": In(1)})),
-    "data":     Out(TristateSignature(1)),
+    "dclk":     Out(pin_signature(1, "i")),
+    "data":     Out(pin_signature(1, "io")),
 })
 
 CartBusSignature = wiring.Signature({
@@ -29,6 +28,6 @@ CartBusSignature = wiring.Signature({
     "si":       Out(SISignature),
     "cic":      Out(CICSignature),
 
-    "reset":    In(1),
-    "nmi":      In(1),
+    "reset":    Out(pin_signature(1, "i")),
+    "nmi":      Out(pin_signature(1, "i")),
 })

@@ -17,10 +17,10 @@ class WishboneBridgeTest(ModuleTestCase):
             self.pi = PISignature.create()
 
             self.rom_data = [
-                0x76543210,
-                0xFEDCBA98,
-                0xCAFEBABE,
-                0xDEADBEEF,
+                0x3210,
+                0xBA98,
+                0xBABE,
+                0xBEEF,
             ]
 
         def elaborate(self, platform):
@@ -50,35 +50,37 @@ class WishboneBridgeTest(ModuleTestCase):
             self.dut.pi.ad.i,
             self.dut.pi.ad.o,
             self.dut.pi.ad.oe,
-            self.dut.pi.ale_h,
-            self.dut.pi.ale_l,
-            self.dut.pi.read,
-            self.dut.pi.write,
-            self.dut.pi.reset
+            self.dut.pi.ale_h.i,
+            self.dut.pi.ale_l.i,
+            self.dut.pi.read.i,
+            self.dut.pi.write.i
         ]        
 
     @sync_test_case
     def test_basic(self):
         # Ale_l is active in idle state
-        yield self.dut.pi.ale_l   .eq(1)
-        yield from self.advance_cycles(2)
+        yield self.dut.pi.ale_l.i.eq(1)
+        yield self.dut.pi.ale_h.i.eq(0)
+        yield from self.advance_cycles(6)
 
         # Latch address
 
-        yield self.dut.pi.ale_l   .eq(0)
-        yield self.dut.pi.ad.i    .eq(0x1000)
-        yield
-        yield self.dut.pi.ale_h   .eq(1)
-        yield self.dut.pi.ad.i    .eq(0x0002)
-        yield
-        yield self.dut.pi.ale_l   .eq(1)
+        yield self.dut.pi.ale_l.i   .eq(0)
+        yield from self.advance_cycles(2)
+        yield self.dut.pi.ad.i      .eq(0x1000)
+        yield from self.advance_cycles(2)
+        yield self.dut.pi.ale_h.i   .eq(1)
+        yield from self.advance_cycles(2)
+        yield self.dut.pi.ad.i      .eq(0x0002)
+        yield from self.advance_cycles(2)
+        yield self.dut.pi.ale_l.i   .eq(1)
         yield from self.advance_cycles(8)
 
-        #
+        # Read
 
-        for i in range(8):
+        for i in range(3):
 
-            yield self.dut.pi.read   .eq(1)
+            yield self.dut.pi.read.i    .eq(1)
             yield from self.advance_cycles(6)
-            yield self.dut.pi.read   .eq(0)
+            yield self.dut.pi.read.i    .eq(0)
             yield from self.advance_cycles(6)

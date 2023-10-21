@@ -10,7 +10,6 @@ from hicart.n64.cartbus import CICSignature
 from hicart.soc.cpu.minerva  import MinervaCPU
 from hicart.soc.periph.sram  import SRAMPeripheral
 from hicart.soc.periph.gpio import GPIOPeripheral
-from hicart.utils.plat import TristateSignature
 
 
 class CIC(wiring.Component):

@@ -49,26 +49,16 @@ class Top(Elaboratable):
         wiring.connect(m, flash_interface.qspi, flash_connector.qspi)
 
         wiring.connect(m, cic.bus, n64_cart.cic)
+        wiring.connect(m, bridge.pi, n64_cart.pi)
 
         m.d.comb += [
-            cic.reset               .eq( n64_cart.reset      ),
-        ]
-
-        m.d.comb += [
-            bridge.pi.ad.i          .eq( n64_cart.pi.ad.i  ),
-            bridge.pi.ale_h         .eq( n64_cart.pi.ale_h ),
-            bridge.pi.ale_l         .eq( n64_cart.pi.ale_l ),
-            bridge.pi.read          .eq( n64_cart.pi.read  ),
-            bridge.pi.write         .eq( n64_cart.pi.write ),
-
-            n64_cart.pi.ad.o        .eq( bridge.pi.ad.o  ),
-            n64_cart.pi.ad.oe       .eq( bridge.pi.ad.oe ),
-
-            pmod.d.oe               .eq(1)
+            cic.reset               .eq( n64_cart.reset.i    ),
+            bridge.reset            .eq( n64_cart.reset.i    ),
         ]
 
         m.d.comb += [
             leds[0]                 .eq(bridge.wb.cyc),
+            pmod.d.oe               .eq(1)
         ]
 
         self.probe_si(m)
