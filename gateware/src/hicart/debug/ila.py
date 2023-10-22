@@ -1,3 +1,7 @@
+import os
+import subprocess
+import tempfile
+
 from amaranth import *
 from amaranth.lib import wiring
 from luna.gateware.debug.ila import StreamILA, ILAFrontend
@@ -104,3 +108,18 @@ class HomeInvaderILAFrontend(ILAFrontend):
         # Fetch all of our samples from the given device.
         all_samples = self._port.read(total_to_read)
         return list(self._split_samples(all_samples))
+
+    def interactive_display(self, *, add_clock=True):
+        """ Attempts to spawn a GTKWave instance to display the ILA results interactively. """
+
+        # Hack: generate files in a way that doesn't trip macOS's fancy guards.
+        try:
+            vcd_filename = os.path.join(tempfile.gettempdir(), os.urandom(24).hex() + '.vcd')
+            gtkw_filename = os.path.join(tempfile.gettempdir(), os.urandom(24).hex() + '.gtkw')
+
+            self.emit_vcd(vcd_filename, gtkw_filename=gtkw_filename)
+            subprocess.run(["gtkwave", "-f", vcd_filename, "-a", gtkw_filename])
+        finally:
+            print("Warning: VCD/GTKW left on filesystem. See ILA source code.")
+            # os.remove(vcd_filename)
+            # os.remove(gtkw_filename)
