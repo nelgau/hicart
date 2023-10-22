@@ -25,7 +25,7 @@ class Top(Elaboratable):
         wiring.connect(m, iface.bus, usb_fifo)
 
         m.d.comb += [
-            dc.source.payload   .eq(0xCAFEBABE),
+            dc.source.payload   .eq(0x12345678),
             dc.source.valid     .eq(dc.source.ready),
             dc.sink             .connect(iface.tx),
         ]
@@ -51,7 +51,7 @@ def read_serial():
 
     while True:
         b = port.read()
-        print(b)
+        print(f"0x{b[0]:02x}")
 
 if __name__ == "__main__":
     main_runner(Top(), do_program=True)
