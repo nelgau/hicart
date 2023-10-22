@@ -159,7 +159,8 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
 
     def toolchain_prepare(self, fragment, name, **kwargs):
         overrides = {
-            "ecppack_opts": "--compress --freq 38.8"
+            "synth_opts": "-abc9",
+            "ecppack_opts": "--compress --freq 38.8",
         }
         return super().toolchain_prepare(fragment, name, **overrides, **kwargs)
 
