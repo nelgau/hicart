@@ -11,8 +11,8 @@ class FT245InterfaceTest(ModuleTestCase):
     def instantiate_dut(self):
         dut = FT245Interface()
 
-        dut.bus.rxf = Signal(reset=1)
-        dut.bus.txe = Signal(reset=1)
+        dut.bus.rxf.i = Signal(reset=1)
+        dut.bus.txe.i = Signal(reset=1)
 
         return dut
 
@@ -21,10 +21,10 @@ class FT245InterfaceTest(ModuleTestCase):
             self.dut.bus.d.i,
             self.dut.bus.d.o,
             self.dut.bus.d.oe,
-            self.dut.bus.rxf,
-            self.dut.bus.txe,
-            self.dut.bus.rd,
-            self.dut.bus.wr,
+            self.dut.bus.rxf.i,
+            self.dut.bus.txe.i,
+            self.dut.bus.rd.o,
+            self.dut.bus.wr.o,
 
             self.dut.rx.payload,
             self.dut.rx.valid,
@@ -39,18 +39,18 @@ class FT245InterfaceTest(ModuleTestCase):
     def test_read(self):
         yield from self.advance_cycles(2)
 
-        yield self.dut.bus.rxf.eq(0)
+        yield self.dut.bus.rxf.i.eq(0)
         yield from self.advance_cycles(2)
 
-        yield from self.wait_until(~self.dut.bus.rd, timeout=20)
+        yield from self.wait_until(~self.dut.bus.rd.o, timeout=20)
         yield from self.advance_cycles(2)
 
-        yield self.dut.bus.rxf.eq(1)
+        yield self.dut.bus.rxf.i.eq(1)
         yield self.dut.bus.d.i.eq(0xA9)
 
-        yield from self.wait_until( self.dut.bus.rd, timeout=20)
+        yield from self.wait_until( self.dut.bus.rd.o, timeout=20)
         yield from self.advance_cycles(2)
-        yield self.dut.bus.rxf.eq(1)
+        yield self.dut.bus.rxf.i.eq(1)
         yield self.dut.bus.d.i.eq(0)
 
         self.assertEqual((yield self.dut.rx.payload), 0xA9)
@@ -75,13 +75,13 @@ class FT245InterfaceTest(ModuleTestCase):
         yield
         yield self.dut.tx.valid.eq(0)
 
-        yield self.dut.bus.txe.eq(0)
+        yield self.dut.bus.txe.i.eq(0)
             
-        yield from self.wait_until(~self.dut.bus.wr, timeout=20)
+        yield from self.wait_until(~self.dut.bus.wr.o, timeout=20)
 
         self.assertEqual((yield self.dut.bus.d.o),  0xBB)
         self.assertEqual((yield self.dut.bus.d.oe), 1)
 
-        yield from self.wait_until( self.dut.bus.wr, timeout=20)
+        yield from self.wait_until( self.dut.bus.wr.o, timeout=20)
 
         self.assertEqual((yield self.dut.bus.d.oe), 0)

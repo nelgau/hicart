@@ -1,34 +1,37 @@
 from amaranth import *
-from amaranth.hdl.rec import DIR_FANIN, DIR_FANOUT
+from amaranth.lib import wiring
 from amaranth.lib.cdc import FFSynchronizer
 from amaranth.lib.fifo import SyncFIFO
+from amaranth.lib.wiring import In, Out, Signature
 
 from hicart.soc.stream import BasicStream
+from hicart.utils.plat import pin_signature
 
 
-class FT245Bus(Record):
-    def __init__(self):
-        super().__init__([
-            ('d', [
-                ('i',  8, DIR_FANIN),
-                ('o',  8, DIR_FANOUT),
-                ('oe', 1, DIR_FANOUT),
-            ]),
-            ('rxf', 1, DIR_FANIN),
-            ('txe', 1, DIR_FANIN),
-            ('rd',  1, DIR_FANOUT),
-            ('wr',  1, DIR_FANOUT)
-        ])
+FT245Signature = Signature({
+    "d":        Out(pin_signature(8, "io")),
+    "rxf":      Out(pin_signature(1, "i")),
+    "txe":      Out(pin_signature(1, "i")),
+    "rd":       Out(pin_signature(1, "o")),
+    "wr":       Out(pin_signature(1, "o")),
+    "siwu":     Out(pin_signature(1, "o")),
+    # Only used in synchronous mode.
+    "clkout":   Out(pin_signature(1, "i")),
+    "oe":       Out(pin_signature(1, "o")),
+})
 
 
-class FT245Interface(Elaboratable):
+class FT245Interface(wiring.Component):
+    bus: Out(FT245Signature)
+
     WR_SETUP_CYCLES = 3
     WR_PULSE_CYCLES = 7
     RD_PULSE_CYCLES = 8
     RD_WAIT_CYCLES  = 5
 
-    def __init__(self):     
-        self.bus = FT245Bus()
+    def __init__(self):
+        super().__init__()
+
         self.rx = BasicStream(8)
         self.tx = BasicStream(8)
 
@@ -46,9 +49,9 @@ class FT245Interface(Elaboratable):
         txe = Signal()
 
         m.submodules += [
-            FFSynchronizer(self.bus.d.i, din, reset=0),
-            FFSynchronizer(self.bus.rxf, rxf, reset=1),
-            FFSynchronizer(self.bus.txe, txe, reset=1),
+            FFSynchronizer(self.bus.d.i,   din, reset=0),
+            FFSynchronizer(self.bus.rxf.i, rxf, reset=1),
+            FFSynchronizer(self.bus.txe.i, txe, reset=1),
         ]
 
         count = Signal(8, reset=0)      # FIXME: Size this more appropriately later!
@@ -79,7 +82,7 @@ class FT245Interface(Elaboratable):
                         m.next = "READ"
                         m.d.sync += [
                             count               .eq(self.RD_PULSE_CYCLES - 1),
-                            rd                  .eq(0),         
+                            rd                  .eq(0),
                         ]
 
                     with m.Elif(self._tx_fifo.r_rdy & ~txe):
@@ -99,7 +102,7 @@ class FT245Interface(Elaboratable):
                         count                   .eq(self.RD_WAIT_CYCLES - 1),
                         self._rx_fifo.w_data    .eq(din),
                         self._rx_fifo.w_en      .eq(1),
-                        rd                      .eq(1),                     
+                        rd                      .eq(1),
                         
                     ]
 
@@ -112,8 +115,8 @@ class FT245Interface(Elaboratable):
                     ]
 
         m.d.comb += [
-            self.bus.rd             .eq(rd),
-            self.bus.wr             .eq(wr),
+            self.bus.rd.o           .eq(rd),
+            self.bus.wr.o           .eq(wr),
         ]
 
         m.d.comb += [
