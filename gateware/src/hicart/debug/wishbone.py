@@ -1,6 +1,7 @@
 import struct
 
 from amaranth import *
+from amaranth.lib import wiring
 from amaranth_soc import wishbone
 
 from hicart.interface.ft245 import FT245Interface
@@ -168,12 +169,12 @@ class FT245WishboneCommander(Elaboratable):
 
         usb_fifo = platform.request('usb_fifo')
 
+        wiring.connect(m, iface.bus, usb_fifo)
+        wiring.connect(m, comm.bus, wiring.flipped(self.bus))
+
         m.d.comb += [
             iface.rx    .connect(comm.source),
             comm.sink   .connect(iface.tx),
-
-            iface.bus   .connect(usb_fifo),
-            comm.bus    .connect(self.bus),
         ]
 
         # Convert our sync domain to the domain requested by the user, if necessary.

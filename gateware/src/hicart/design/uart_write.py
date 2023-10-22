@@ -1,6 +1,7 @@
 import time
 
 from amaranth import *
+from amaranth.lib import wiring
 import pyftdi.serialext
 
 from hicart.interface.ft245 import FT245Interface
@@ -12,11 +13,13 @@ class Top(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
+        m.submodules.car           = platform.clock_domain_generator()
+        m.submodules.iface = iface = FT245Interface()
+
         usb_fifo = platform.request('usb_fifo')
         leds = platform.get_leds()
 
-        m.submodules.car           = platform.clock_domain_generator()
-        m.submodules.iface = iface = FT245Interface()
+        wiring.connect(m, iface.bus, usb_fifo)
 
         data_in = Signal(8)
 
@@ -26,8 +29,6 @@ class Top(Elaboratable):
             m.d.sync += data_in.eq(iface.rx.payload)
 
         m.d.comb += [
-            iface.bus       .connect(usb_fifo),
-
             leds.eq(data_in)
         ]
 

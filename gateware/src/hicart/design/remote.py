@@ -48,7 +48,7 @@ def run_remote():
     #     time.sleep(0.25)
 
     #     remote.write(0x22, 0x00000066)
-    #     time.sleep(0.25)        
+    #     time.sleep(0.25)
 
     count = 10000
     start_time = time.time()

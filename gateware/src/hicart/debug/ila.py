@@ -1,4 +1,5 @@
 from amaranth import *
+from amaranth.lib import wiring
 from luna.gateware.debug.ila import StreamILA, ILAFrontend
 
 from hicart.interface.ft245 import FT245Interface
@@ -44,13 +45,14 @@ class HomeInvaderILA(Elaboratable):
 
         usb_fifo = platform.request('usb_fifo')
 
+        wiring.connect(m, iface.bus, usb_fifo)
+
         m.d.comb += [
             dc.source.payload   .eq(ila.stream.payload),
             dc.source.valid     .eq(ila.stream.valid),
             ila.stream.ready    .eq(dc.source.ready),
 
             dc.sink             .connect(iface.tx),
-            iface.bus           .connect(usb_fifo),
         ]
 
         # Convert our sync domain to the domain requested by the user, if necessary.

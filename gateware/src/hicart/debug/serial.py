@@ -1,4 +1,5 @@
 from amaranth import *
+from amaranth.lib import wiring
 
 from hicart.interface.ft245 import FT245Interface
 from hicart.soc.stream import BasicStream, ByteDownConverter
@@ -20,10 +21,11 @@ class FT245Streamer(Elaboratable):
 
         usb_fifo = platform.request('usb_fifo')
 
+        wiring.connect(m, iface.bus, usb_fifo)
+
         m.d.comb += [
             self.stream     .connect(dc.source),
             dc.sink         .connect(iface.tx),
-            iface.bus       .connect(usb_fifo),
         ]        
 
         # Convert our sync domain to the domain requested by the user, if necessary.
