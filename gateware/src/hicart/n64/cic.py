@@ -12,10 +12,7 @@ from hicart.soc.periph.sram  import SRAMPeripheral
 from hicart.soc.periph.gpio import GPIOPeripheral
 
 
-class CIC(wiring.Component):
-    bus:    Out(CICSignature)
-    reset:  In(1)
-
+class Constants:
     RESET_ADDR = 0x00000000
     GPIO_ADDR = 0x00006000
 
@@ -25,24 +22,29 @@ class CIC(wiring.Component):
     RAM_ADDR = 0x00004000
     RAM_SIZE = 0x1000
 
+
+class CIC(wiring.Component):
+    bus:    Out(CICSignature)
+    reset:  In(1)
+
     def __init__(self):
         super().__init__()
 
         self._arbiter = wishbone.Arbiter(addr_width=30, data_width=32, granularity=8, features={"cti", "bte"})
         self._decoder = wishbone.Decoder(addr_width=30, data_width=32, granularity=8, features={"cti", "bte"})
 
-        self.cpu = MinervaCPU(reset_address=CIC.RESET_ADDR)
+        self.cpu = MinervaCPU(reset_address=Constants.RESET_ADDR)
         self._arbiter.add(self.cpu.ibus)
         self._arbiter.add(self.cpu.dbus)
 
-        self.rom = SRAMPeripheral(size=CIC.ROM_SIZE, writable=False)
-        self._decoder.add(self.rom.bus, addr=CIC.ROM_ADDR)
+        self.rom = SRAMPeripheral(size=Constants.ROM_SIZE, writable=False)
+        self._decoder.add(self.rom.bus, addr=Constants.ROM_ADDR)
 
-        self.ram = SRAMPeripheral(size=CIC.RAM_SIZE)
-        self._decoder.add(self.ram.bus, addr=CIC.RAM_ADDR)
+        self.ram = SRAMPeripheral(size=Constants.RAM_SIZE)
+        self._decoder.add(self.ram.bus, addr=Constants.RAM_ADDR)
 
         self.gpio = GPIOPeripheral(data_width=8)
-        self._decoder.add(self.gpio.bus, addr=CIC.GPIO_ADDR)
+        self._decoder.add(self.gpio.bus, addr=Constants.GPIO_ADDR)
 
         with open("../firmware/firmware.bin", "rb") as f:
             rom_bytes = f.read()

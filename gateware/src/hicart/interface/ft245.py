@@ -21,13 +21,15 @@ FT245Signature = Signature({
 })
 
 
-class FT245Interface(wiring.Component):
-    bus: Out(FT245Signature)
-
+class Timings:
     WR_SETUP_CYCLES = 3
     WR_PULSE_CYCLES = 7
     RD_PULSE_CYCLES = 8
     RD_WAIT_CYCLES  = 5
+
+
+class FT245Interface(wiring.Component):
+    bus: Out(FT245Signature)
 
     def __init__(self):
         super().__init__()
@@ -81,7 +83,7 @@ class FT245Interface(wiring.Component):
 
                         m.next = "READ"
                         m.d.sync += [
-                            count               .eq(self.RD_PULSE_CYCLES - 1),
+                            count               .eq(Timings.RD_PULSE_CYCLES - 1),
                             rd                  .eq(0),
                         ]
 
@@ -89,7 +91,7 @@ class FT245Interface(wiring.Component):
 
                         m.next = "WRITE"
                         m.d.sync += [
-                            count               .eq(self.RD_PULSE_CYCLES - 1),
+                            count               .eq(Timings.RD_PULSE_CYCLES - 1),
                             self._tx_fifo.r_en  .eq(1),
                             self.bus.d.o        .eq(self._tx_fifo.r_data),
                             self.bus.d.oe       .eq(1)
@@ -99,7 +101,7 @@ class FT245Interface(wiring.Component):
 
                     m.next = "IDLE"
                     m.d.sync += [
-                        count                   .eq(self.RD_WAIT_CYCLES - 1),
+                        count                   .eq(Timings.RD_WAIT_CYCLES - 1),
                         self._rx_fifo.w_data    .eq(din),
                         self._rx_fifo.w_en      .eq(1),
                         rd                      .eq(1),
@@ -110,7 +112,7 @@ class FT245Interface(wiring.Component):
 
                     m.next = "IDLE"
                     m.d.sync += [
-                        count                   .eq(self.WR_PULSE_CYCLES - 1),
+                        count                   .eq(Timings.WR_PULSE_CYCLES - 1),
                         wr                      .eq(0),
                     ]
 
