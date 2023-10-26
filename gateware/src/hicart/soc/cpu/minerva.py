@@ -17,20 +17,28 @@ from . import CPU, ConstantAddr
 __all__ = ["MinervaCPU"]
 
 
-class MinervaCPU(CPU, Elaboratable):
+class MinervaCPU(CPU, wiring.Component):
     name       = "minerva"
     arch       = "riscv"
     byteorder  = "little"
     data_width = 32
 
     def __init__(self, **kwargs):
-        super().__init__()
         self._cpu = Minerva(**kwargs)
-        self.ibus = wishbone.Interface(addr_width=30, data_width=32, granularity=8,
-                                       features={"err", "cti", "bte"})
-        self.dbus = wishbone.Interface(addr_width=30, data_width=32, granularity=8,
-                                       features={"err", "cti", "bte"})
-        self.ip   = Signal.like(self._cpu.external_interrupt)
+
+        wb_signature = wishbone.Signature(addr_width=30, data_width=32, granularity=8,
+                                          features={"err", "cti", "bte"})
+
+        self._signature = wiring.Signature({
+            "ibus": Out(wb_signature),
+            "dbus": Out(wb_signature),
+            "ip":   In(self._cpu.external_interrupt.shape()),
+        })
+        super().__init__()
+
+    @property
+    def signature(self):
+        return self._signature
 
     @property
     def reset_addr(self):
@@ -58,9 +66,7 @@ class MinervaCPU(CPU, Elaboratable):
         self.forward_interface(m, self._cpu.ibus, self.ibus)
         self.forward_interface(m, self._cpu.dbus, self.dbus)
 
-        m.d.comb += [
-            self._cpu.external_interrupt.eq(self.ip),
-        ]
+        m.d.comb += self._cpu.external_interrupt.eq(self.ip)
 
         return m
 
