@@ -4,4 +4,4 @@
 [submodule "libdragon"]
 	path = software/libdragon
 	url = github.com:DragonMinded/libdragon
-	branch = unstable
+	branch = preview
