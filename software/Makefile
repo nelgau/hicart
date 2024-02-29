@@ -1,5 +1,5 @@
 V = 0
-LIBDRAGON_CLI_VER = 10.8.2
+LIBDRAGON_CLI_VER = 11.0.3
 LIBDRAGON_MAKEFILE = Makefile.libdragon
 
 NPX := $(shell command -v npx 2> /dev/null)
