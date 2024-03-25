@@ -4,7 +4,7 @@ from amaranth.lib.cdc import FFSynchronizer
 from amaranth.lib.fifo import SyncFIFO
 from amaranth.lib.wiring import In, Out, Signature
 
-from hicart.soc.stream import BasicStream
+from hicart.component.soc.stream import BasicStream
 from hicart.utils.plat import pin_signature
 
 

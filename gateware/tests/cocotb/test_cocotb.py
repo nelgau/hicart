@@ -3,10 +3,10 @@ from amaranth_soc import wishbone
 import cocotb
 import pytest
 
-from hicart.interface.qspi_flash import QSPIFlashWishboneInterface
-from hicart.n64.pi import WishboneBridge
-from hicart.platforms.homeinvader_rev_a import HomeInvaderRevAPlatform
-from hicart.soc.wishbone import DownConverter, Translator
+from hicart.component.interface.qspi_flash import QSPIFlashWishboneInterface
+from hicart.component.n64.pi import WishboneBridge
+from hicart.component.soc.wishbone import DownConverter, Translator
+from hicart.platform.homeinvader_rev_a import HomeInvaderRevAPlatform
 from hicart.test.cocotb import Accessor, CocotbTestCase, init_domains, start_clock, do_reset
 from hicart.test.cocotb.driver.ad16 import PIInitiator
 from hicart.test.cocotb.emulator.qspi_flash import QSPIFlashEmulator

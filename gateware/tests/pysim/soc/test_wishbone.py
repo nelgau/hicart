@@ -4,7 +4,7 @@ from amaranth.utils import log2_int
 from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 
-from hicart.soc.wishbone import DownConverter
+from hicart.component.soc.wishbone import DownConverter
 from hicart.test.pysim.testcase import MultiProcessTestCase
 from hicart.test.pysim.driver.wishbone import WishboneInitiatorDriver
 from hicart.test.pysim.emulator.wishbone import WishboneTargetEmulator

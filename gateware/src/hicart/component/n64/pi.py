@@ -6,7 +6,7 @@ from amaranth.lib.fifo import SyncFIFOBuffered
 from amaranth.lib.wiring import In, Out
 from amaranth_soc import wishbone
 
-from hicart.n64.cartbus import PISignature
+from hicart.component.n64.cartbus import PISignature
 
 
 class WishboneBridge(wiring.Component):

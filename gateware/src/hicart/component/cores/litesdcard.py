@@ -16,7 +16,7 @@ from amaranth.utils import log2_int
 from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 
-from hicart.platforms.homeinvader_rev_a import HomeInvaderRevAPlatform
+from hicart.platform.homeinvader_rev_a import HomeInvaderRevAPlatform
 
 
 __all__ = [

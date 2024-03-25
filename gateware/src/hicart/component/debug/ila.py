@@ -6,8 +6,8 @@ from amaranth import *
 from amaranth.lib import wiring
 from luna.gateware.debug.ila import StreamILA, ILAFrontend
 
-from hicart.interface.ft245 import FT245Interface
-from hicart.soc.stream import ByteDownConverter
+from hicart.component.interface.ft245 import FT245Interface
+from hicart.component.soc.stream import ByteDownConverter
 
 
 class HomeInvaderILA(Elaboratable):

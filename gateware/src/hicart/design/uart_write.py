@@ -4,7 +4,7 @@ from amaranth import *
 from amaranth.lib import wiring
 import pyftdi.serialext
 
-from hicart.interface.ft245 import FT245Interface
+from hicart.component.interface.ft245 import FT245Interface
 from hicart.utils.cli import main_runner
 
 

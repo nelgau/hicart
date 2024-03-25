@@ -4,8 +4,8 @@ from amaranth import *
 from amaranth.lib import wiring
 from amaranth_soc import wishbone
 
-from hicart.interface.ft245 import FT245Interface
-from hicart.soc.stream import BasicStream
+from hicart.component.interface.ft245 import FT245Interface
+from hicart.component.soc.stream import BasicStream
 
 
 class StreamWishboneCommander(Elaboratable):

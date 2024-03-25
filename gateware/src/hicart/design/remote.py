@@ -2,7 +2,7 @@ import time
 
 from amaranth import *
 
-from hicart.debug.wishbone import FT245WishboneCommander, FT245WishboneRemote
+from hicart.component.debug.wishbone import FT245WishboneCommander, FT245WishboneRemote
 from hicart.utils.cli import main_runner
 
 

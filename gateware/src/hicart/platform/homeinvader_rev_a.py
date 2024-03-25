@@ -8,7 +8,7 @@ from amaranth.lib.wiring import In, Out
 from amaranth.vendor import LatticeECP5Platform
 from amaranth_boards.resources import *
 
-from hicart.interface.qspi_flash import QSPISignature
+from hicart.component.interface.qspi_flash import QSPISignature
 from hicart.utils.plat import get_all_resources
 
 from hicart.vendor.ecp5pll import ECP5PLL, ECP5PLLConfig

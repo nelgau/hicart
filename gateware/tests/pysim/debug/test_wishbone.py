@@ -1,7 +1,7 @@
 from amaranth import *
 from amaranth.sim import *
 
-from hicart.debug.wishbone import StreamWishboneCommander
+from hicart.component.debug.wishbone import StreamWishboneCommander
 from hicart.test.pysim.testcase import MultiProcessTestCase
 from hicart.test.pysim.driver.stream import StreamDriver
 from hicart.test.pysim.emulator.wishbone import WishboneTargetEmulator

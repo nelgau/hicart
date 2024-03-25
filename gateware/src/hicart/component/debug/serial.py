@@ -1,8 +1,8 @@
 from amaranth import *
 from amaranth.lib import wiring
 
-from hicart.interface.ft245 import FT245Interface
-from hicart.soc.stream import BasicStream, ByteDownConverter
+from hicart.component.interface.ft245 import FT245Interface
+from hicart.component.soc.stream import BasicStream, ByteDownConverter
 
 
 class FT245Streamer(Elaboratable):

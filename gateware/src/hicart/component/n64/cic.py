@@ -6,10 +6,10 @@ from amaranth.lib.wiring import In, Out
 from amaranth.lib.cdc import FFSynchronizer, AsyncFFSynchronizer
 from amaranth_soc import wishbone
 
-from hicart.n64.cartbus import CICSignature
-from hicart.soc.cpu.minerva  import MinervaCPU
-from hicart.soc.periph.sram  import SRAMPeripheral
-from hicart.soc.periph.gpio import GPIOPeripheral
+from hicart.component.n64.cartbus import CICSignature
+from hicart.component.soc.cpu.minerva  import MinervaCPU
+from hicart.component.soc.periph.sram  import SRAMPeripheral
+from hicart.component.soc.periph.gpio import GPIOPeripheral
 
 
 class Constants:

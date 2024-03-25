@@ -8,9 +8,9 @@ from cocotbext.wishbone.driver import WBOp
 
 import pytest
 
-from hicart.cores import litesdcard
-from hicart.platforms.homeinvader_rev_a import HomeInvaderRevAPlatform
-from hicart.soc.periph.sram import SRAMPeripheral
+from hicart.component.cores import litesdcard
+from hicart.component.soc.periph.sram import SRAMPeripheral
+from hicart.platform.homeinvader_rev_a import HomeInvaderRevAPlatform
 from hicart.test.cocotb import CocotbTestCase, init_domains, start_clock, do_reset
 from hicart.test.cocotb.accessor import wishbone_accessor, Accessor
 

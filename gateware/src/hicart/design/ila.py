@@ -1,6 +1,6 @@
 from amaranth import *
 
-from hicart.debug.ila import HomeInvaderILA, HomeInvaderILAFrontend
+from hicart.component.debug.ila import HomeInvaderILA, HomeInvaderILAFrontend
 from hicart.utils.cli import main_runner
 
 

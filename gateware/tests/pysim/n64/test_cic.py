@@ -4,7 +4,7 @@ import pytest
 from amaranth import *
 from amaranth.sim import *
 
-from hicart.n64.cic import CIC
+from hicart.component.n64.cic import CIC
 from hicart.test.pysim.utils import ModuleTestCase, sync_test_case
 
 

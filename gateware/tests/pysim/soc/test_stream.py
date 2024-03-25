@@ -1,7 +1,7 @@
 from amaranth import *
 from amaranth.sim import *
 
-from hicart.soc.stream import ByteDownConverter
+from hicart.component.soc.stream import ByteDownConverter
 from hicart.test.pysim.utils import ModuleTestCase, sync_test_case
 
 

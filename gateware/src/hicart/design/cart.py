@@ -3,10 +3,10 @@ from amaranth.lib import wiring
 from amaranth.build import *
 from amaranth_soc import wishbone
 
-from hicart.n64.cic import CIC
-from hicart.n64.pi import WishboneBridge
-from hicart.interface.qspi_flash import QSPIFlashWishboneInterface
-from hicart.soc.wishbone import DownConverter, Translator
+from hicart.component.n64.cic import CIC
+from hicart.component.n64.pi import WishboneBridge
+from hicart.component.interface.qspi_flash import QSPIFlashWishboneInterface
+from hicart.component.soc.wishbone import DownConverter, Translator
 from hicart.utils.cli import main_runner
 
 
@@ -60,6 +60,17 @@ class Top(Elaboratable):
             leds[0]                 .eq(bridge.wb.cyc),
             pmod.d.oe               .eq(1)
         ]
+
+        m.d.comb += [
+            pmod.d.o[0]             .eq(n64_cart.cic.dclk),
+            pmod.d.o[1]             .eq(n64_cart.cic.data.i),
+            pmod.d.o[2]             .eq(n64_cart.nmi),
+            pmod.d.o[3]             .eq(n64_cart.pi.read),          
+            pmod.d.o[4]             .eq(n64_cart.pi.ale_l),
+            pmod.d.o[5]             .eq(n64_cart.pi.ale_h),
+            pmod.d.o[6]             .eq(n64_cart.si.dclk),
+            pmod.d.o[7]             .eq(n64_cart.si.data.i),
+        ]           
 
         return m
 

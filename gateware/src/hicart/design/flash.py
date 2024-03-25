@@ -1,8 +1,8 @@
 from amaranth import *
 from amaranth.lib import wiring
 
-from hicart.debug.serial import FT245Streamer, FT245Reader
-from hicart.interface.qspi_flash import QSPIFlashWishboneInterface
+from hicart.component.debug.serial import FT245Streamer, FT245Reader
+from hicart.component.interface.qspi_flash import QSPIFlashWishboneInterface
 from hicart.utils.cli import main_runner
 
 

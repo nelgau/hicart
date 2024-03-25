@@ -1,7 +1,7 @@
 from amaranth import *
 from amaranth.sim import *
 
-from hicart.interface.qspi_flash import QSPIFlashInterface, QSPIFlashWishboneInterface
+from hicart.component.interface.qspi_flash import QSPIFlashInterface, QSPIFlashWishboneInterface
 from hicart.test.pysim.utils import ModuleTestCase, sync_test_case
 
 

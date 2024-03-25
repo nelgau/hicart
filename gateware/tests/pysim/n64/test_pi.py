@@ -2,10 +2,10 @@ from amaranth import *
 from amaranth.lib import wiring
 from amaranth.sim import *
 from amaranth_soc import wishbone
-from hicart.soc.periph.sram  import SRAMPeripheral
 
-from hicart.n64.cartbus import PISignature
-from hicart.n64.pi import WishboneBridge
+from hicart.component.n64.cartbus import PISignature
+from hicart.component.n64.pi import WishboneBridge
+from hicart.component.soc.periph.sram  import SRAMPeripheral
 from hicart.test.pysim.utils import ModuleTestCase, sync_test_case
 
 

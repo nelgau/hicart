@@ -2,7 +2,7 @@ from amaranth import *
 from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 
-from hicart.interface.hyperram import HyperBus, HyperRAMInterface
+from hicart.component.interface.hyperram import HyperBus, HyperRAMInterface
 
 
 class HyperRAMWishboneInterface(Elaboratable):

@@ -1,6 +1,6 @@
 from amaranth import *
 
-from hicart.interface.qspi_flash import QSPISignature
+from hicart.component.interface.qspi_flash import QSPISignature
 
 
 class QSPIClocker(Elaboratable):
