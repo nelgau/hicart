@@ -27,12 +27,10 @@ class DownConverter(wiring.Component):
             granularity=granularity, features=features)
         bus_signature.memory_map = memory_map
 
-        self._signature = wiring.Signature({"bus": In(bus_signature)})
-        super().__init__()
-
-    @property
-    def signature(self):
-        return self._signature
+        super().__init__({
+            "bus": In(bus_signature)
+        })
+        self.bus.memory_map = memory_map
 
     def elaborate(self, platform):
         m = Module()
@@ -143,14 +141,15 @@ class Translator(wiring.Component):
         # slice a resource using a translator, we'd need a way to represent
         # a subset of a resource and that doesn't seem trivial to do.
         memory_map = MemoryMap(addr_width=addr_width, data_width=sub_bus.data_width)
-        memory_map.add_resource(self, size=2**addr_width, name='translator')
+        memory_map.add_resource(self, size=2**addr_width, name=("translator",))
 
         bus_signature = wishbone.Signature(addr_width=addr_width, data_width=sub_bus.data_width,
             granularity=sub_bus.granularity, features=features)
-        bus_signature.memory_map = memory_map
 
-        self._signature = wiring.Signature({"bus": In(bus_signature)})
-        super().__init__()
+        super().__init__({
+            "bus": In(bus_signature)
+        })
+        self.bus.memory_map = memory_map
 
     @property
     def signature(self):

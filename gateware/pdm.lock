@@ -3,22 +3,21 @@
 
 [metadata]
 groups = ["default", "test"]
-cross_platform = true
-static_urls = false
-lock_version = "4.3"
-content_hash = "sha256:3cdcd54b297bd4d3c2cf75315528af483d148011b5806e1fdcc511058255bb0d"
+strategy = ["cross_platform"]
+lock_version = "4.4.1"
+content_hash = "sha256:e3399d3afbc4ee31c83b8d432de8c8fa3aeda879e2893cc9181563d749fc1b4a"
 
 [[package]]
 name = "amaranth"
-version = "0.4.dev219+gbc316b4"
+version = "0.4.3"
 requires_python = "~=3.8"
-git = "https://github.com/amaranth-lang/amaranth.git"
-ref = "main"
-revision = "bc316b41a89ba32570a1384c5af8fab4f5a643cc"
 summary = "Amaranth hardware definition language"
 dependencies = [
     "Jinja2~=3.0",
     "pyvcd<0.5,>=0.2.2",
+]
+files = [
+    {file = "amaranth-0.4.3-py3-none-any.whl", hash = "sha256:9d278f68673fa341a1327b68566c2c4bf9955b73e50a571fcb39c1f2f3524e3f"},
 ]
 
 [[package]]
@@ -35,11 +34,11 @@ dependencies = [
 
 [[package]]
 name = "amaranth-soc"
-version = "0.1.dev75+g2d3d176"
+version = "0.1a1.dev1"
 requires_python = "~=3.8"
 git = "https://github.com/amaranth-lang/amaranth-soc.git"
 ref = "main"
-revision = "2d3d1762d682c8ca5cb60e4a6f0ef9b764f423f2"
+revision = "9f46553aa4289e2a11788a73fade6410a371b162"
 summary = "System on Chip toolkit for Amaranth HDL"
 dependencies = [
     "amaranth @ git+https://github.com/amaranth-lang/amaranth",
@@ -58,11 +57,11 @@ dependencies = [
 
 [[package]]
 name = "amaranth"
-version = "0.4.dev219+gbc316b4"
+version = "0.4.3"
 requires_python = "~=3.8"
 git = "https://github.com/amaranth-lang/amaranth.git"
-ref = "main"
-revision = "bc316b41a89ba32570a1384c5af8fab4f5a643cc"
+ref = "v0.4.3"
+revision = "a430c1d4a37c07328d30e37de15d077c90dc0aa5"
 summary = "Amaranth hardware definition language"
 dependencies = [
     "Jinja2~=3.0",
@@ -367,7 +366,7 @@ version = "0.9.2"
 requires_python = ">=3.3"
 git = "https://github.com/m-labs/migen.git"
 ref = "master"
-revision = "2cfee3e0db6fdca9b5918686ea77c93252e7cebd"
+revision = "50934ad10a87ade47219b796535978b9bdf24023"
 summary = "Python toolbox for building complex digital hardware"
 dependencies = [
     "colorama",

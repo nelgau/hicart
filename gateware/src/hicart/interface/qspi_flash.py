@@ -163,16 +163,15 @@ class QSPIFlashInterface(wiring.Component):
 class QSPIFlashWishboneInterface(wiring.Component):
     def __init__(self):
         memory_map = MemoryMap(addr_width=24, data_width=8)
-        memory_map.add_resource(self, size=2**24, name='qspi_flash')
+        memory_map.add_resource(self, size=2**24, name=('qspi_flash',))
 
         bus_signature = wishbone.Signature(addr_width=24, data_width=8, features={"stall"})
-        bus_signature.memory_map = memory_map
 
-        self._signature = wiring.Signature({
+        super().__init__({
             "qspi":     Out(QSPISignature()),
             "bus":      In(bus_signature),
         })
-        super().__init__()
+        self.bus.memory_map = memory_map
 
     @property
     def signature(self):

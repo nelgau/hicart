@@ -32,7 +32,7 @@ class SRAMPeripheral(wiring.Component):
         Wishbone bus interface.
     """
     # TODO raise bus.err if read-only and a bus write is attempted.
-    def __init__(self, *, size, data_width=32, granularity=8, writable=True, init=None, name=None, src_loc_at=1):
+    def __init__(self, *, size, data_width=32, granularity=8, writable=True, init=None, name="sram", src_loc_at=1):
         if name is not None and not isinstance(name, str):
             raise TypeError("Name must be a string, not {!r}".format(name))
         self.name = name or tracer.get_var_name(depth=1 + src_loc_at).lstrip("_")
@@ -51,20 +51,17 @@ class SRAMPeripheral(wiring.Component):
                                            data_width=self._mem.width, granularity=granularity,
                                            features={"cti", "bte"})
 
-        map = MemoryMap(addr_width=log2_int(size), data_width=granularity, name=self.name)
-        map.add_resource(self._mem, name="mem", size=size)
-        bus_signature.memory_map = map
+        memory_map = MemoryMap(addr_width=log2_int(size), data_width=granularity, name=self.name)
+        memory_map.add_resource(name=(name,), size=size, resource=self)
 
         self.size        = size
         self.granularity = granularity
         self.writable    = writable
 
-        self._signature = wiring.Signature({"bus": In(bus_signature)})
-        super().__init__()
-
-    @property
-    def signature(self):
-        return self._signature
+        super().__init__({
+            "bus": In(bus_signature)
+        })
+        self.bus.memory_map = memory_map
 
     @property
     def init(self):
