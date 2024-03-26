@@ -31,6 +31,7 @@ $(INSTALL_STAMP): pyproject.toml pdm.lock
 .PHONY: uninstall
 uninstall:
 	$(PDM) venv remove -y in-project
+	rm -rf .pdm-build
 	rm -rf $(INSTALL_STAMP)
 
 .PHONY: clean
