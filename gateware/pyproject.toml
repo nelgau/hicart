@@ -37,11 +37,11 @@ test = [
 
 [tool.pdm.resolution.overrides]
 # Because amaranth-boards overconstrains to amaranth>=0.3,<0.5
-amaranth = "git+https://github.com/amaranth-lang/amaranth.git@bc316b41"
-amaranth-soc = "git+https://github.com/amaranth-lang/amaranth-soc.git@2d3d1762"
+amaranth = "git+https://github.com/amaranth-lang/amaranth.git@6058ad35cf34f9f9203313e8c920749fbd6efab8"
+amaranth-soc = "git+https://github.com/amaranth-lang/amaranth-soc.git@6f59eec798bd287b28480c013e2885c6cb4f895e"
 amaranth-stdio = "git+https://github.com/amaranth-lang/amaranth-stdio.git@bb39058b"
 amaranth-boards = "git+https://github.com/amaranth-lang/amaranth-boards.git@91ffa38e"
-minerva = "git+https://github.com/minerva-cpu/minerva.git@e0a565f4"
+minerva = "git+https://github.com/minerva-cpu/minerva.git@5bac31a40b6d8098ba2f4b7c4906ca667b6155f7"
 luna = "git+https://github.com/greatscottgadgets/luna.git@affb448f"
 
 [tool.pdm.scripts]

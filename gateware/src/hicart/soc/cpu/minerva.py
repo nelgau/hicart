@@ -29,16 +29,11 @@ class MinervaCPU(CPU, wiring.Component):
         wb_signature = wishbone.Signature(addr_width=30, data_width=32, granularity=8,
                                           features={"err", "cti", "bte"})
 
-        self._signature = wiring.Signature({
+        super().__init__({
             "ibus": Out(wb_signature),
             "dbus": Out(wb_signature),
             "ip":   In(self._cpu.external_interrupt.shape()),
         })
-        super().__init__()
-
-    @property
-    def signature(self):
-        return self._signature
 
     @property
     def reset_addr(self):

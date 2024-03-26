@@ -37,10 +37,10 @@ class CIC(wiring.Component):
         self._arbiter.add(self.cpu.ibus)
         self._arbiter.add(self.cpu.dbus)
 
-        self.rom = SRAMPeripheral(size=Constants.ROM_SIZE, writable=False)
+        self.rom = SRAMPeripheral(size=Constants.ROM_SIZE, writable=False, name="rom")
         self._decoder.add(self.rom.bus, addr=Constants.ROM_ADDR)
 
-        self.ram = SRAMPeripheral(size=Constants.RAM_SIZE)
+        self.ram = SRAMPeripheral(size=Constants.RAM_SIZE, name="ram")
         self._decoder.add(self.ram.bus, addr=Constants.RAM_ADDR)
 
         self.gpio = GPIOPeripheral(data_width=8)

@@ -1,5 +1,4 @@
 from amaranth import *
-from amaranth.hdl.ast import Fell
 from amaranth.lib import wiring
 from amaranth.lib.cdc import FFSynchronizer
 from amaranth.lib.fifo import SyncFIFOBuffered

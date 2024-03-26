@@ -14,7 +14,8 @@ class DownConverterTest(MultiProcessTestCase):
 
     def test_simple(self):
         sub_memory_map = MemoryMap(addr_width=24, data_width=8)
-        sub_bus = wishbone.Interface(addr_width=24, data_width=8, features={"stall"}, memory_map=sub_memory_map)
+        sub_bus = wishbone.Interface(addr_width=24, data_width=8, features={"stall"})
+        sub_bus.memory_map = sub_memory_map
 
         dut = DownConverter(sub_bus=sub_bus, addr_width=22, data_width=32,
             granularity=8, features={"stall"})

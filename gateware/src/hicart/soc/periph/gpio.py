@@ -37,14 +37,11 @@ class GPIOPeripheral(wiring.Component):
         memory_map = MemoryMap(addr_width=self._csr_mux.bus.addr_width,
                                data_width=self._csr_mux.bus.data_width)
         memory_map.add_window(self._csr_bridge.wb_bus.memory_map)
-        wb_signature.memory_map = memory_map
 
-        self._signature = wiring.Signature({"bus": In(wb_signature)})
-        super().__init__()
-
-    @property
-    def signature(self):
-        return self._signature
+        super().__init__(
+            {"bus": In(wb_signature)
+        })
+        self.bus.memory_map = memory_map
 
     def elaborate(self, platform):
         m = Module()
