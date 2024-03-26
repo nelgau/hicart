@@ -1,4 +1,4 @@
-# Witness that poetry-install completed successfully
+# Witness that PDM-install completed successfully
 .install.stamp
 
 # Byte-compiled / optimized / DLL files
@@ -6,6 +6,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.egg-info/
+
+# PDM
+.pdm.toml
+.pdm-python
+.pdm-build/
 
 # Pytest
 .pytest_cache/
