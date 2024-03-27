@@ -5,7 +5,7 @@
 groups = ["default", "test"]
 strategy = ["cross_platform"]
 lock_version = "4.4.1"
-content_hash = "sha256:00bf275213d32192269edecd0708c70b0a3b4bfc6675c32fb07059f59ef0d3ef"
+content_hash = "sha256:9a47a9cc2a3f7e4b18aca7283cec1371c8b5a5db835a20626bb52dcf60e62249"
 
 [[package]]
 name = "amaranth"
@@ -377,7 +377,7 @@ name = "minerva"
 version = "0.1.dev128"
 requires_python = "~=3.8"
 git = "https://github.com/minerva-cpu/minerva.git"
-ref = "5bac31a40b6d8098ba2f4b7c4906ca667b6155f7"
+ref = "main"
 revision = "5bac31a40b6d8098ba2f4b7c4906ca667b6155f7"
 summary = "A 32-bit RISC-V soft processor"
 dependencies = [
