@@ -48,17 +48,45 @@ class Top(Elaboratable):
         wiring.connect(m, bridge.wb, decoder.bus)
         wiring.connect(m, flash_interface.qspi, flash_connector.qspi)
 
-        wiring.connect(m, cic.bus, n64_cart.cic)
-        wiring.connect(m, bridge.pi, n64_cart.pi)
+        # wiring.connect(m, cic.bus, n64_cart.cic)
+        # wiring.connect(m, bridge.pi, n64_cart.pi)
 
         m.d.comb += [
-            cic.reset               .eq( n64_cart.reset.i    ),
-            bridge.reset            .eq( n64_cart.reset.i    ),
+            cic.bus.dclk.i          .eq( n64_cart.cic.dclk.i    ),
+            cic.bus.data.i          .eq( n64_cart.cic.data.i    ),
+            n64_cart.cic.data.o     .eq( cic.bus.data.o         ),
+            n64_cart.cic.data.oe    .eq( cic.bus.data.oe        ),
         ]
 
         m.d.comb += [
-            leds[0]                 .eq(bridge.wb.cyc),
-            pmod.d.oe               .eq(1)
+            bridge.pi.ad.i          .eq( n64_cart.pi.ad.i       ),
+            n64_cart.pi.ad.o        .eq( bridge.pi.ad.o         ),
+            n64_cart.pi.ad.oe       .eq( bridge.pi.ad.oe        ),
+            bridge.pi.ale_h.i       .eq( n64_cart.pi.ale_h.i    ),
+            bridge.pi.ale_l.i       .eq( n64_cart.pi.ale_l.i    ),
+            bridge.pi.read.i        .eq( n64_cart.pi.read.i     ),
+            bridge.pi.write.i       .eq( n64_cart.pi.write.i    ),
+        ]
+
+        m.d.comb += [
+            cic.reset               .eq( n64_cart.reset.i       ),
+            bridge.reset            .eq( n64_cart.reset.i       ),
+        ]
+
+        m.d.comb += [
+            leds[0]                 .eq( bridge.wb.cyc          ),
+            pmod.d.oe               .eq( 1 )
+        ]
+
+        m.d.comb += [
+            pmod.d.o[0]             .eq( n64_cart.cic.dclk      ),
+            pmod.d.o[1]             .eq( n64_cart.cic.data.i    ),
+            pmod.d.o[2]             .eq( n64_cart.nmi.i         ),
+            pmod.d.o[3]             .eq( n64_cart.pi.read.i     ),
+            pmod.d.o[4]             .eq( n64_cart.pi.ale_l.i    ),
+            pmod.d.o[5]             .eq( n64_cart.pi.ale_h.i    ),
+            pmod.d.o[6]             .eq( n64_cart.si.dclk.i     ),
+            pmod.d.o[7]             .eq( n64_cart.si.data.i     ),
         ]
 
         return m
