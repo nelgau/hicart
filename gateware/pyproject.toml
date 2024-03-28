@@ -37,7 +37,7 @@ test = [
 
 [tool.pdm.resolution.overrides]
 # Because amaranth-boards overconstrains to amaranth>=0.3,<0.5
-amaranth = "git+https://github.com/amaranth-lang/amaranth.git@v0.4.4"
+amaranth = "git+https://github.com/amaranth-lang/amaranth.git@b30c87fa3eeef0373a6abf68e456f5eef4154790"
 amaranth-soc = "git+https://github.com/amaranth-lang/amaranth-soc.git@6f59eec798bd287b28480c013e2885c6cb4f895e"
 amaranth-stdio = "git+https://github.com/amaranth-lang/amaranth-stdio.git@bb39058b"
 amaranth-boards = "git+https://github.com/amaranth-lang/amaranth-boards.git@91ffa38e"
