@@ -1,0 +1,405 @@
+(kicad_sch
+	(version 20231120)
+	(generator "eeschema")
+	(generator_version "8.0")
+	(uuid "d0de5b81-cadf-4377-8c13-b4d382700369")
+	(paper "A4")
+	(lib_symbols)
+	(text "LENGTH MATCHING:\nid: hyperram_reset_to_cs\nnetnames: \"^(HRAM_RESET_B)$\"\nreflength: group hyperram_cs_to_clk\ntolerance: 2000 mil\nvialength: 1.6 mm"
+		(exclude_from_sim no)
+		(at 304.8 129.54 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "1281bf12-ead7-46b5-b903-3b4ab4ef7649")
+	)
+	(text "LENGTH MATCHING:\nid: hyperram_clk_to_dq\nnetnames: \"^(HRAM_CK_[PN])$\"\nreflength: group hyperram_dq\ntolerance: 500 mil\nvialength: 1.6 mm"
+		(exclude_from_sim no)
+		(at 304.8 83.82 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "2a704a8c-71cc-424e-979e-8f2b5d109ed8")
+	)
+	(text "LENGTH MATCHING:\nid: hyperram_clk\nnetnames: \"^(HRAM_CK_[PN])$\"\ntolerance: 10 mil\nvialength: 1.6 mm"
+		(exclude_from_sim no)
+		(at 304.8 53.34 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4cb3a5be-34f0-49c5-9dec-40de5bad8312")
+	)
+	(text "LENGTH MATCHING:\nid: hyperram_dq\nnetnames: \"^(HRAM_DQ[0-7])$\"\ntolerance: 50 mil\nvialength: 1.6 mm"
+		(exclude_from_sim no)
+		(at 304.8 40.64 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "5eb361d7-f397-42f4-b745-ebbe407f7d85")
+	)
+	(text "LENGTH MATCHING:\nid: hyperram_clk_to_rwds\nnetnames: \"^(HRAM_CK_[PN])$\"\nreflength: group hyperram_rwds_to_dq\ntolerance: 1500 mil\nvialength: 1.6 mm"
+		(exclude_from_sim no)
+		(at 304.8 99.06 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "b22948d6-43de-4b86-9c9c-477a859d3e26")
+	)
+	(text "LENGTH MATCHING:\nid: hyperram_cs_to_clk\nnetnames: \"^(HRAM_CS_B)$\"\nreflength: group hyperram_clk\ntolerance: 1500 mil\nvialength: 1.6 mm"
+		(exclude_from_sim no)
+		(at 304.8 114.3 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "c33796eb-2a39-4ce5-a0df-32f8ca990a0b")
+	)
+	(text "LENGTH MATCHING:\nid: hyperram_rwds_to_dq\nnetnames: \"^(HRAM_RWDS)$\"\nreflength: group hyperram_dq\ntolerance: 25 mil\nvialength: 1.6 mm"
+		(exclude_from_sim no)
+		(at 304.8 68.58 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d3ff3745-a4de-41e9-a522-9c86a3abe70d")
+	)
+	(text "Notes:\n\nWhen computing a group's reflength, the script takes the average of\nthe group's shortest and longest nets. Intuitively, this seems to allow\nfor tolerances to be violated by these extremal nets. I think it's more\ncorrect to evaluate reflength tolerance by exhaustively checking all\npossible pairs of nets (e.g., one drawn from each of the two groups).  "
+		(exclude_from_sim no)
+		(at 304.8 22.86 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d7bab7b0-681f-4a4f-8e3d-d685aa69454f")
+	)
+	(sheet
+		(at 45.72 36.83)
+		(size 45.72 22.86)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "00000000-0000-0000-0000-00005f3e46de")
+		(property "Sheetname" "FPGA-IO"
+			(at 45.72 36.1184 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "FPGA-IO.kicad_sch"
+			(at 45.72 60.2746 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 45.72 68.58)
+		(size 44.45 24.13)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4290f0")
+		(property "Sheetname" "FPGA-Power"
+			(at 45.72 67.8684 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "FPGA-Power.kicad_sch"
+			(at 45.72 93.2946 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 152.4 36.83)
+		(size 38.1 22.86)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "00000000-0000-0000-0000-00005f43b1fd")
+		(property "Sheetname" "Interface-N64"
+			(at 152.4 36.1184 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Interface-N64.kicad_sch"
+			(at 152.4 60.2746 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 152.4 68.58)
+		(size 38.1 24.13)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "00000000-0000-0000-0000-00005f4552c5")
+		(property "Sheetname" "Interface-USB"
+			(at 152.4 67.8684 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Interface-USB.kicad_sch"
+			(at 152.4 93.2946 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369"
+					(page "7")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 203.2 36.83)
+		(size 39.37 22.86)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "00000000-0000-0000-0000-00005f483803")
+		(property "Sheetname" "Power"
+			(at 203.2 36.1184 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Power.kicad_sch"
+			(at 203.2 60.2746 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369"
+					(page "8")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 203.2 68.58)
+		(size 39.37 24.13)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "00000000-0000-0000-0000-00005f5bd87f")
+		(property "Sheetname" "Display"
+			(at 203.2 67.8684 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Display.kicad_sch"
+			(at 203.2 93.2946 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369"
+					(page "9")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 99.06 36.83)
+		(size 44.45 22.86)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "00000000-0000-0000-0000-00005f7b735c")
+		(property "Sheetname" "Memory"
+			(at 99.06 36.1184 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Memory.kicad_sch"
+			(at 99.06 60.2746 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 99.06 68.58)
+		(size 44.45 24.13)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "00000000-0000-0000-0000-000060304b7f")
+		(property "Sheetname" "Interface-PMOD"
+			(at 99.06 67.8684 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Interface-PMOD.kicad_sch"
+			(at 99.06 93.2946 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+)
