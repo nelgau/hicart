@@ -5,15 +5,15 @@
 groups = ["default", "test"]
 strategy = ["cross_platform"]
 lock_version = "4.4.1"
-content_hash = "sha256:9a47a9cc2a3f7e4b18aca7283cec1371c8b5a5db835a20626bb52dcf60e62249"
+content_hash = "sha256:06f3db195817d52f46e579153ffcbf4efb629dcf8ffd3132a84f37f053ee9bda"
 
 [[package]]
 name = "amaranth"
-version = "0.4.4"
+version = "0.4.5"
 requires_python = "~=3.8"
 git = "https://github.com/amaranth-lang/amaranth.git"
-ref = "v0.4.4"
-revision = "0564dd5d7853bd768aef8cc1bd8405ec0b7e48c5"
+ref = "v0.4.5"
+revision = "4d1c4fc20dc44398c09d334b7f34096b0185d43d"
 summary = "Amaranth hardware definition language"
 dependencies = [
     "Jinja2~=3.0",
@@ -57,11 +57,11 @@ dependencies = [
 
 [[package]]
 name = "amaranth"
-version = "0.4.4"
+version = "0.4.5"
 requires_python = "~=3.8"
 git = "https://github.com/amaranth-lang/amaranth.git"
-ref = "v0.4.4"
-revision = "0564dd5d7853bd768aef8cc1bd8405ec0b7e48c5"
+ref = "v0.4.5"
+revision = "4d1c4fc20dc44398c09d334b7f34096b0185d43d"
 summary = "Amaranth hardware definition language"
 dependencies = [
     "Jinja2~=3.0",
