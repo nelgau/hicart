@@ -629,7 +629,7 @@
 				)
 			)
 		)
-		(symbol "cart-ecp5-rescue:ATtiny25-20SU-MCU_Microchip_ATtiny"
+		(symbol "MCU_Microchip_ATtiny:ATtiny45-20S"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -642,7 +642,7 @@
 					(justify left bottom)
 				)
 			)
-			(property "Value" "MCU_Microchip_ATtiny_ATtiny25-20SU"
+			(property "Value" "ATtiny45-20S"
 				(at 2.54 -13.97 0)
 				(effects
 					(font
@@ -651,7 +651,7 @@
 					(justify left top)
 				)
 			)
-			(property "Footprint" "Package_SO:SOIJ-8_5.3x5.3mm_P1.27mm"
+			(property "Footprint" "Package_SO:SOIC-8W_5.3x5.3mm_P1.27mm"
 				(at 0 0 0)
 				(effects
 					(font
@@ -661,7 +661,7 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" ""
+			(property "Datasheet" "http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-2586-avr-8-bit-microcontroller-attiny25-attiny45-attiny85_datasheet.pdf"
 				(at 0 0 0)
 				(effects
 					(font
@@ -670,7 +670,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" ""
+			(property "Description" "20MHz, 4kB Flash, 256B SRAM, 256B EEPROM, debugWIRE, SOIC-8W"
 				(at 0 0 0)
 				(effects
 					(font
@@ -679,7 +679,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_fp_filters" "SOIJ*5.3x5.3mm*P1.27mm*"
+			(property "ki_keywords" "AVR 8bit Microcontroller tinyAVR"
 				(at 0 0 0)
 				(effects
 					(font
@@ -688,20 +688,29 @@
 					(hide yes)
 				)
 			)
-			(symbol "ATtiny25-20SU-MCU_Microchip_ATtiny_0_1"
+			(property "ki_fp_filters" "SOIC*5.3x5.3mm*P1.27mm*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "ATtiny45-20S_0_1"
 				(rectangle
 					(start -12.7 -12.7)
 					(end 12.7 12.7)
 					(stroke
 						(width 0.254)
-						(type solid)
+						(type default)
 					)
 					(fill
 						(type background)
 					)
 				)
 			)
-			(symbol "ATtiny25-20SU-MCU_Microchip_ATtiny_1_1"
+			(symbol "ATtiny45-20S_1_1"
 				(pin bidirectional line
 					(at 15.24 -5.08 180)
 					(length 2.54)
@@ -5049,7 +5058,7 @@
 		)
 	)
 	(symbol
-		(lib_id "cart-ecp5-rescue:ATtiny25-20SU-MCU_Microchip_ATtiny")
+		(lib_id "MCU_Microchip_ATtiny:ATtiny45-20S")
 		(at 205.74 125.73 0)
 		(mirror y)
 		(unit 1)
@@ -5076,7 +5085,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIJ-8_5.3x5.3mm_P1.27mm"
+		(property "Footprint" "Package_SO:SOIC-8W_5.3x5.3mm_P1.27mm"
 			(at 205.74 125.73 0)
 			(effects
 				(font
@@ -5095,7 +5104,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "20MHz, 4kB Flash, 256B SRAM, 256B EEPROM, debugWIRE, SOIC-8W"
 			(at 205.74 125.73 0)
 			(effects
 				(font
@@ -5211,6 +5220,14 @@
 		(pin "1"
 			(uuid "2518efdc-82e6-41c7-ae31-7ffa5cc0f51d")
 		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369/00000000-0000-0000-0000-00005f43b1fd"
+					(reference "#PWR013")
+					(unit 1)
+				)
+			)
+		)
 	)
 	(symbol
 		(lib_id "ng_power:GND")
@@ -5269,6 +5286,14 @@
 		(pin "1"
 			(uuid "4a70c852-d838-4a81-b19b-46418d5018d9")
 		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369/00000000-0000-0000-0000-00005f43b1fd"
+					(reference "#PWR015")
+					(unit 1)
+				)
+			)
+		)
 	)
 	(symbol
 		(lib_id "ng_power:GND")
@@ -5326,6 +5351,14 @@
 		)
 		(pin "1"
 			(uuid "9eb6c5e4-63b5-49e2-b086-be48b4f6c179")
+		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369/00000000-0000-0000-0000-00005f43b1fd"
+					(reference "#PWR014")
+					(unit 1)
+				)
+			)
 		)
 	)
 	(symbol
