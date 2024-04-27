@@ -3417,6 +3417,14 @@
 		(pin "1"
 			(uuid "00e63d53-71c0-4292-965c-b2053f8a3c8e")
 		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369/00000000-0000-0000-0000-00005f7b735c"
+					(reference "#PWR09")
+					(unit 1)
+				)
+			)
+		)
 	)
 	(symbol
 		(lib_id "ng_memory:S27KS0641")
@@ -3887,6 +3895,14 @@
 		)
 		(pin "1"
 			(uuid "8d223105-0fa7-4af5-83b0-ea4f69e130fd")
+		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369/00000000-0000-0000-0000-00005f7b735c"
+					(reference "#PWR068")
+					(unit 1)
+				)
+			)
 		)
 	)
 	(symbol

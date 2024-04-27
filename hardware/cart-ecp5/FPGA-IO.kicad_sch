@@ -15159,6 +15159,14 @@
 		(pin "1"
 			(uuid "7ca08ef4-b9bd-46d5-9309-193913c289ef")
 		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369/00000000-0000-0000-0000-00005f3e46de"
+					(reference "#PWR03")
+					(unit 1)
+				)
+			)
+		)
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -15410,6 +15418,14 @@
 		)
 		(pin "1"
 			(uuid "e300d85c-2514-4c96-9e61-6aa153f6283c")
+		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369/00000000-0000-0000-0000-00005f3e46de"
+					(reference "#PWR06")
+					(unit 1)
+				)
+			)
 		)
 	)
 	(symbol
@@ -15689,6 +15705,14 @@
 		)
 		(pin "1"
 			(uuid "c166fd66-23ec-4660-a76c-f5e4712bd8fa")
+		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369/00000000-0000-0000-0000-00005f3e46de"
+					(reference "#PWR07")
+					(unit 1)
+				)
+			)
 		)
 	)
 	(symbol
@@ -16183,6 +16207,14 @@
 		(pin "1"
 			(uuid "82043738-eee3-4f5c-b87f-d49311ef3fcc")
 		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369/00000000-0000-0000-0000-00005f3e46de"
+					(reference "#PWR072")
+					(unit 1)
+				)
+			)
+		)
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -16307,6 +16339,14 @@
 		)
 		(pin "1"
 			(uuid "ee8cafa8-28fb-435c-b586-5032552a90b4")
+		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369/00000000-0000-0000-0000-00005f3e46de"
+					(reference "#PWR0103")
+					(unit 1)
+				)
+			)
 		)
 	)
 	(symbol

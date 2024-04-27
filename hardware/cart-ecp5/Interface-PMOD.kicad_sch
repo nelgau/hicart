@@ -950,6 +950,14 @@
 		(pin "1"
 			(uuid "2e69ec53-a95f-4e21-b6bf-7fd74cb619a9")
 		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369/00000000-0000-0000-0000-000060304b7f"
+					(reference "#PWR073")
+					(unit 1)
+				)
+			)
+		)
 	)
 	(symbol
 		(lib_id "ng_power:GND")
@@ -1006,6 +1014,14 @@
 		)
 		(pin "1"
 			(uuid "20a27171-21d4-46c9-89e7-524df58cf7ae")
+		)
+		(instances
+			(project "cart-ecp5"
+				(path "/d0de5b81-cadf-4377-8c13-b4d382700369/00000000-0000-0000-0000-000060304b7f"
+					(reference "#PWR08")
+					(unit 1)
+				)
+			)
 		)
 	)
 	(symbol
