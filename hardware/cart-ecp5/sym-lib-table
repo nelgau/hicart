@@ -11,5 +11,4 @@
   (lib (name "ng_ftdi")(type "KiCad")(uri "${KIPRJMOD}/lib/nelgau-kicad-lib/symbols/ng_ftdi.kicad_sym")(options "")(descr ""))
   (lib (name "ng_osc")(type "KiCad")(uri "${KIPRJMOD}/lib/nelgau-kicad-lib/symbols/ng_osc.kicad_sym")(options "")(descr ""))
   (lib (name "ng_symbol")(type "KiCad")(uri "${KIPRJMOD}/lib/nelgau-kicad-lib/symbols/ng_symbol.kicad_sym")(options "")(descr ""))
-  (lib (name "cart-ecp5-rescue")(type "KiCad")(uri "${KIPRJMOD}/cart-ecp5-rescue.kicad_sym")(options "")(descr ""))
 )
