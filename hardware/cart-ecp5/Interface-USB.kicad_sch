@@ -5918,7 +5918,7 @@
 		(uuid "3bca91a4-856a-4d08-abc0-6bf560801326")
 	)
 	(label "USB_D-"
-		(at 138.43 123.19 0)
+		(at 138.43 125.73 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6017,13 +6017,13 @@
 		(uuid "7489e928-93ad-4bd6-9697-e0d4cde1b394")
 	)
 	(label "USB_D+"
-		(at 123.19 123.19 180)
+		(at 138.43 123.19 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right bottom)
+			(justify left bottom)
 		)
 		(uuid "91e198a7-75aa-45ad-840e-ccad8ead9e30")
 	)
@@ -6050,7 +6050,7 @@
 		(uuid "a5f2f236-893f-4899-8fb1-0144fd46fc12")
 	)
 	(label "xUSB_D+"
-		(at 123.19 125.73 180)
+		(at 123.19 123.19 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6061,13 +6061,13 @@
 		(uuid "aed2c0a6-bc49-4605-bc4c-21921a7b5979")
 	)
 	(label "xUSB_D-"
-		(at 138.43 125.73 0)
+		(at 123.19 125.73 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left bottom)
+			(justify right bottom)
 		)
 		(uuid "bc47a7c5-8640-413c-be4d-88c073a3c32d")
 	)
