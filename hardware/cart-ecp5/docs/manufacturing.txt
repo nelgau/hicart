@@ -1,0 +1,10 @@
+**
+*   JLCPCB 4-Layer Process
+**
+
+Deviations:
+
+- Copper to hole clearance
+
+    For BGA breakout, via hole to track
+    Adjusted to 0.225mm, from 0.254mm (JLCPCB)
