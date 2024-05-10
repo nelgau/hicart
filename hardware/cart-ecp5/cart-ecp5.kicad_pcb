@@ -17844,7 +17844,7 @@
 			(at 0 -5.8 90)
 			(layer "F.SilkS")
 			(hide yes)
-			(uuid "114cd7cb-28f2-44ad-85bc-795cd4c4154f")
+			(uuid "b59966fb-78e0-4f90-a017-22f1a32d7dc9")
 			(effects
 				(font
 					(size 1 1)
@@ -17856,7 +17856,7 @@
 			(at 0 5.8 90)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "0e1d5fe2-dc46-4e11-b820-bf22010b3889")
+			(uuid "6b7f1d34-fbce-4717-a113-21767a921b18")
 			(effects
 				(font
 					(size 1 1)
@@ -17869,7 +17869,7 @@
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "10b266f3-c929-4360-9b40-f561e32d23ec")
+			(uuid "41de21cf-0990-40b7-823a-2a4eb337d7c4")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17881,7 +17881,7 @@
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "4f28f1c6-3aa4-49db-b157-457d6502dc9d")
+			(uuid "e641d87d-e580-4e15-af5e-e24054952a3f")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17893,7 +17893,7 @@
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "605f18be-5158-440a-883b-0dd8edd1e38b")
+			(uuid "b67afdb6-2966-45a7-b85b-f3f7cf9ff50b")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17939,7 +17939,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "da1e2888-66e8-408e-9fea-0966ca8d193b")
+			(uuid "dcf5e5d0-edf5-478c-9021-60554c2952c6")
 		)
 		(fp_line
 			(start 4.135 -4.61)
@@ -17949,17 +17949,27 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "1b1a08c8-8381-418f-9ef1-ac958f12eca0")
+			(uuid "5b0a22b9-d9ec-42b9-af28-bb42790e1a68")
 		)
 		(fp_line
 			(start -4.135 -4.61)
-			(end -4.61 -4.61)
+			(end -4.31 -4.61)
 			(stroke
 				(width 0.12)
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "776c32da-8532-43e6-848d-f8d19fb70b07")
+			(uuid "f4fdc657-c02b-407f-a8cc-049ef6e6df01")
+		)
+		(fp_line
+			(start -4.61 -4.135)
+			(end -4.61 -4.37)
+			(stroke
+				(width 0.12)
+				(type solid)
+			)
+			(layer "F.SilkS")
+			(uuid "c5c2987c-e04c-4da1-b456-0bcbfce2a3ac")
 		)
 		(fp_line
 			(start 4.61 4.61)
@@ -17969,7 +17979,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "1dd074ea-7ab5-4b25-86a9-ea51af2aa20c")
+			(uuid "8c2877fb-ab1d-488d-bf68-227b7e707b90")
 		)
 		(fp_line
 			(start 4.135 4.61)
@@ -17979,7 +17989,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "91f35168-954a-440c-94d9-ceab65af028d")
+			(uuid "7d645db0-588f-45de-8072-bca5fdc94ba9")
 		)
 		(fp_line
 			(start -4.135 4.61)
@@ -17989,7 +17999,7 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "97378eb7-3212-4e45-b138-75cd7cda12cf")
+			(uuid "53686da4-9c98-4d2a-b120-d072c9044f97")
 		)
 		(fp_line
 			(start -4.61 4.61)
@@ -17999,47 +18009,59 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "adf98d86-fbb6-4c41-b9fb-3d63d9fde3f5")
+			(uuid "3ad5bf8c-1c9d-4d36-8754-4254cb073d1f")
+		)
+		(fp_poly
+			(pts
+				(xy -4.61 -4.61) (xy -4.85 -4.94) (xy -4.37 -4.94) (xy -4.61 -4.61)
+			)
+			(stroke
+				(width 0.12)
+				(type solid)
+			)
+			(fill solid)
+			(layer "F.SilkS")
+			(uuid "ce5e741c-62de-4e0a-8782-6c8d57038429")
 		)
 		(fp_line
-			(start 5.1 -5.1)
-			(end -5.1 -5.1)
+			(start 5.11 -5.11)
+			(end -5.11 -5.11)
 			(stroke
 				(width 0.05)
 				(type solid)
 			)
 			(layer "F.CrtYd")
-			(uuid "0a5007c7-e887-464c-8b84-2dcec1f10e30")
+			(uuid "c88ab693-1641-4495-8c6a-3713ddfc5a97")
 		)
 		(fp_line
-			(start -5.1 -5.1)
-			(end -5.1 5.1)
+			(start -5.11 -5.11)
+			(end -5.11 5.11)
 			(stroke
 				(width 0.05)
 				(type solid)
 			)
 			(layer "F.CrtYd")
-			(uuid "73b8fec7-8d93-4746-a17a-c7336fbf9e8d")
+			(uuid "cc269056-b164-4b3f-9163-e3fbc7cbb82c")
 		)
 		(fp_line
-			(start 5.1 5.1)
-			(end 5.1 -5.1)
+			(start 5.11 5.11)
+			(end 5.11 -5.11)
 			(stroke
 				(width 0.05)
 				(type solid)
 			)
 			(layer "F.CrtYd")
-			(uuid "01a2e041-b7ab-4ee5-93b2-a7ffc7835098")
+			(uuid "67cacb2a-c9a2-4878-8142-08130817de71")
 		)
 		(fp_line
-			(start -5.1 5.1)
-			(end 5.1 5.1)
+			(start -5.11 5.11)
+			(end 5.11 5.11)
 			(stroke
 				(width 0.05)
 				(type solid)
 			)
 			(layer "F.CrtYd")
-			(uuid "9e0b3f89-602b-4594-bf44-494a0e6075c5")
+			(uuid "ebb18023-5cb5-4915-8961-12a344783f4e")
 		)
 		(fp_line
 			(start 4.5 -4.5)
@@ -18049,7 +18071,7 @@
 				(type solid)
 			)
 			(layer "F.Fab")
-			(uuid "89faa467-62fb-4b2c-ba8e-8bb75010cece")
+			(uuid "4adcbd3b-f313-48c3-917c-ee1ac3eda547")
 		)
 		(fp_line
 			(start -3.5 -4.5)
@@ -18059,7 +18081,7 @@
 				(type solid)
 			)
 			(layer "F.Fab")
-			(uuid "dfcfaf5d-a28a-4e01-ac98-a4c6a1aaf0a1")
+			(uuid "ef5b1d2f-55b6-413a-ba44-e08abc73f867")
 		)
 		(fp_line
 			(start -4.5 -3.5)
@@ -18069,7 +18091,7 @@
 				(type solid)
 			)
 			(layer "F.Fab")
-			(uuid "2ee0d295-ebaf-47b7-9ecd-c8c46df7a27c")
+			(uuid "13cba48d-a040-4e06-be77-7597115904ab")
 		)
 		(fp_line
 			(start 4.5 4.5)
@@ -18079,7 +18101,7 @@
 				(type solid)
 			)
 			(layer "F.Fab")
-			(uuid "24b525d7-c817-4af3-8048-3f2347c22e50")
+			(uuid "bd67ede0-874c-4425-aabd-957c697079ec")
 		)
 		(fp_line
 			(start -4.5 4.5)
@@ -18089,12 +18111,12 @@
 				(type solid)
 			)
 			(layer "F.Fab")
-			(uuid "03273e46-d82f-403b-ad48-ab28c81fe50a")
+			(uuid "340cd8ea-308d-44fc-8147-29d312558f57")
 		)
 		(fp_text user "${REFERENCE}"
 			(at 0 0 90)
 			(layer "F.Fab")
-			(uuid "bb494138-28aa-4114-af91-3abbdba4e9d3")
+			(uuid "795356e7-790f-46c8-b452-5b3ad162128f")
 			(effects
 				(font
 					(size 1 1)
@@ -18106,64 +18128,64 @@
 			(at -1.45 -1.45 90)
 			(size 1.17 1.17)
 			(layers "F.Paste")
-			(roundrect_rratio 0.213674359)
-			(uuid "a69c5aa3-8665-45e2-b50c-3bd36805b559")
+			(roundrect_rratio 0.213675)
+			(uuid "98f84df7-bd0e-4a56-913a-12c6887b2ff6")
 		)
 		(pad "" smd roundrect
 			(at -1.45 0 90)
 			(size 1.17 1.17)
 			(layers "F.Paste")
-			(roundrect_rratio 0.213674359)
-			(uuid "b0c10f36-ee86-4f53-9d9b-f37d52f10e2b")
+			(roundrect_rratio 0.213675)
+			(uuid "2c27caa7-7e98-4575-b2d8-3d8a5c66740b")
 		)
 		(pad "" smd roundrect
 			(at -1.45 1.45 90)
 			(size 1.17 1.17)
 			(layers "F.Paste")
-			(roundrect_rratio 0.213674359)
-			(uuid "1a09a2cb-5dfd-4a8a-8386-fac831a34731")
+			(roundrect_rratio 0.213675)
+			(uuid "992c6bc5-dfc3-45fb-9244-b1bd4a5463b4")
 		)
 		(pad "" smd roundrect
 			(at 0 -1.45 90)
 			(size 1.17 1.17)
 			(layers "F.Paste")
-			(roundrect_rratio 0.213674359)
-			(uuid "d3baccf3-36ea-4bc7-9a25-b8260686d123")
+			(roundrect_rratio 0.213675)
+			(uuid "d132bad7-03ab-4b02-9d00-690211bbe1f5")
 		)
 		(pad "" smd roundrect
 			(at 0 0 90)
 			(size 1.17 1.17)
 			(layers "F.Paste")
-			(roundrect_rratio 0.213674359)
-			(uuid "a854bfac-697b-4e2c-9850-5cb3d70b424b")
+			(roundrect_rratio 0.213675)
+			(uuid "c9208aad-826e-429c-a5eb-71d246e1a890")
 		)
 		(pad "" smd roundrect
 			(at 0 1.45 90)
 			(size 1.17 1.17)
 			(layers "F.Paste")
-			(roundrect_rratio 0.213674359)
-			(uuid "4305e3e8-10fd-4494-8373-fccc4cb18723")
+			(roundrect_rratio 0.213675)
+			(uuid "307dec3d-4d2f-481c-8304-4ce26be49a04")
 		)
 		(pad "" smd roundrect
 			(at 1.45 -1.45 90)
 			(size 1.17 1.17)
 			(layers "F.Paste")
-			(roundrect_rratio 0.213674359)
-			(uuid "5cf3c849-7f9d-464d-973b-9096413ddf6f")
+			(roundrect_rratio 0.213675)
+			(uuid "ea650ae9-8da4-4705-8582-89ac626e33f0")
 		)
 		(pad "" smd roundrect
 			(at 1.45 0 90)
 			(size 1.17 1.17)
 			(layers "F.Paste")
-			(roundrect_rratio 0.213674359)
-			(uuid "fe7694d2-b025-447c-bcac-9c938d9845c3")
+			(roundrect_rratio 0.213675)
+			(uuid "aa1f6409-f5d6-416c-b4f6-f64693f49bb4")
 		)
 		(pad "" smd roundrect
 			(at 1.45 1.45 90)
 			(size 1.17 1.17)
 			(layers "F.Paste")
-			(roundrect_rratio 0.213674359)
-			(uuid "635f7d24-9300-4c80-874e-01ea06129a1c")
+			(roundrect_rratio 0.213675)
+			(uuid "9e73b53d-14bc-48a5-8864-0af3c97c48a8")
 		)
 		(pad "1" smd roundrect
 			(at -4.45 -3.75 90)
@@ -18173,7 +18195,7 @@
 			(net 1 "GND")
 			(pinfunction "GND")
 			(pintype "power_in")
-			(uuid "cb03be60-7236-41ca-a035-320c2fc1eaaa")
+			(uuid "4c8486ed-2bf5-44f9-ae5a-31482f94463a")
 		)
 		(pad "2" smd roundrect
 			(at -4.45 -3.25 90)
@@ -18183,7 +18205,7 @@
 			(net 133 "/Interface-USB/USB_CLK")
 			(pinfunction "OSCI")
 			(pintype "input")
-			(uuid "2bbaeed4-7d85-4b0e-a73a-25f69fba56f8")
+			(uuid "b266ee12-d83b-4247-ae7d-b17a4a47330a")
 		)
 		(pad "3" smd roundrect
 			(at -4.45 -2.75 90)
@@ -18193,7 +18215,7 @@
 			(net 317 "unconnected-(U11-OSCO-Pad3)")
 			(pinfunction "OSCO")
 			(pintype "output+no_connect")
-			(uuid "e6fccde8-cdbf-472e-b839-cfa56ee59f9a")
+			(uuid "819fcf86-973b-434c-8ab8-1566de3d5d37")
 		)
 		(pad "4" smd roundrect
 			(at -4.45 -2.25 90)
@@ -18203,7 +18225,7 @@
 			(net 155 "/Interface-USB/USB_VPHY")
 			(pinfunction "VPHY")
 			(pintype "power_in")
-			(uuid "1dbc6ee7-ef80-4563-9ee4-5004eccf2288")
+			(uuid "08b32097-c267-465d-aa65-7f163f6e29db")
 		)
 		(pad "5" smd roundrect
 			(at -4.45 -1.75 90)
@@ -18213,7 +18235,7 @@
 			(net 1 "GND")
 			(pinfunction "GND")
 			(pintype "power_in")
-			(uuid "cf2248b1-f94d-4112-86c7-d758cec88518")
+			(uuid "7b4b43c2-8c3f-4f15-83ea-e6cf5cb1e4d8")
 		)
 		(pad "6" smd roundrect
 			(at -4.45 -1.25 90)
@@ -18223,7 +18245,7 @@
 			(net 144 "Net-(U11-REF)")
 			(pinfunction "REF")
 			(pintype "output")
-			(uuid "5da03018-8506-4233-a0c2-32349e261425")
+			(uuid "6dcd5e89-0b6e-411e-b236-2692961d5ed0")
 		)
 		(pad "7" smd roundrect
 			(at -4.45 -0.75 90)
@@ -18233,7 +18255,7 @@
 			(net 112 "/Interface-USB/USB_D-")
 			(pinfunction "DM")
 			(pintype "bidirectional")
-			(uuid "ed9dec40-e76f-4464-a818-4ba695961e08")
+			(uuid "c21ca21d-bc93-4825-b45d-70a5c6540317")
 		)
 		(pad "8" smd roundrect
 			(at -4.45 -0.25 90)
@@ -18243,7 +18265,7 @@
 			(net 113 "/Interface-USB/USB_D+")
 			(pinfunction "DP")
 			(pintype "bidirectional")
-			(uuid "24150e6b-dd75-413e-9f1e-0cf46e38cd69")
+			(uuid "9ac53114-e1b5-4004-84dc-0a20c0df40c2")
 		)
 		(pad "9" smd roundrect
 			(at -4.45 0.25 90)
@@ -18253,7 +18275,7 @@
 			(net 156 "/Interface-USB/USB_VPLL")
 			(pinfunction "VPLL")
 			(pintype "power_in")
-			(uuid "dfc8a854-beec-42cb-ae17-08ecb2708a80")
+			(uuid "63c00341-1f27-42f4-93ec-ce9ca697dc0a")
 		)
 		(pad "10" smd roundrect
 			(at -4.45 0.75 90)
@@ -18263,7 +18285,7 @@
 			(net 1 "GND")
 			(pinfunction "AGND")
 			(pintype "power_in")
-			(uuid "2fb2b472-f445-4276-ac60-e1c0a879b4db")
+			(uuid "dd8a8430-c57b-455a-bd8b-7a344b65ef14")
 		)
 		(pad "11" smd roundrect
 			(at -4.45 1.25 90)
@@ -18273,7 +18295,7 @@
 			(net 1 "GND")
 			(pinfunction "GND")
 			(pintype "power_in")
-			(uuid "ffc54b77-4a06-4de4-ae17-9e1fd9269665")
+			(uuid "4b57c072-6840-4caa-adf1-43d475a9d38f")
 		)
 		(pad "12" smd roundrect
 			(at -4.45 1.75 90)
@@ -18283,7 +18305,7 @@
 			(net 157 "/Interface-USB/USB_1V8")
 			(pinfunction "VCORE")
 			(pintype "power_in")
-			(uuid "59dc1d7d-ad88-43ab-9f9e-d348ace4999a")
+			(uuid "36c53dad-c4ac-4a92-ad48-69b51825346d")
 		)
 		(pad "13" smd roundrect
 			(at -4.45 2.25 90)
@@ -18293,7 +18315,7 @@
 			(net 1 "GND")
 			(pinfunction "TEST")
 			(pintype "input")
-			(uuid "4df39a5c-bf6b-496b-8b51-88157732378a")
+			(uuid "38f1791b-ae72-443b-b2b1-35cc47ca6f30")
 		)
 		(pad "14" smd roundrect
 			(at -4.45 2.75 90)
@@ -18303,7 +18325,7 @@
 			(net 143 "Net-(U11-~{RESET})")
 			(pinfunction "~{RESET}")
 			(pintype "input")
-			(uuid "b844b83d-8793-4b92-b0af-7b580788020c")
+			(uuid "e5ccb354-a955-4974-8a05-72355fec6917")
 		)
 		(pad "15" smd roundrect
 			(at -4.45 3.25 90)
@@ -18313,7 +18335,7 @@
 			(net 1 "GND")
 			(pinfunction "GND")
 			(pintype "power_in")
-			(uuid "d5b446f4-ab0a-4833-9a51-16f86b2e139a")
+			(uuid "d833e275-80f2-4b82-a2f9-7f29de15867d")
 		)
 		(pad "16" smd roundrect
 			(at -4.45 3.75 90)
@@ -18323,7 +18345,7 @@
 			(net 131 "USB_AD0")
 			(pinfunction "ADBUS0")
 			(pintype "bidirectional")
-			(uuid "f62776e6-c0a2-4633-8c06-92d4af023a0e")
+			(uuid "e9697e70-364f-4ff2-baf2-f54f2ee31890")
 		)
 		(pad "17" smd roundrect
 			(at -3.75 4.45 90)
@@ -18333,7 +18355,7 @@
 			(net 130 "USB_AD1")
 			(pinfunction "ADBUS1")
 			(pintype "bidirectional")
-			(uuid "48f5da13-5af9-4136-bf7f-2dc6c05f363d")
+			(uuid "a9c1afe9-661f-42a0-82f1-01621c7976be")
 		)
 		(pad "18" smd roundrect
 			(at -3.25 4.45 90)
@@ -18343,7 +18365,7 @@
 			(net 129 "USB_AD2")
 			(pinfunction "ADBUS2")
 			(pintype "bidirectional")
-			(uuid "898cb5f1-42fe-4e79-bd91-c2be6253e167")
+			(uuid "408bd865-f01e-413d-925d-c7df01211189")
 		)
 		(pad "19" smd roundrect
 			(at -2.75 4.45 90)
@@ -18353,7 +18375,7 @@
 			(net 128 "USB_AD3")
 			(pinfunction "ADBUS3")
 			(pintype "bidirectional")
-			(uuid "31dda36f-88f1-4ce2-a637-2c7f95fe903b")
+			(uuid "fc195639-2def-41d5-ab68-53998b22d837")
 		)
 		(pad "20" smd roundrect
 			(at -2.25 4.45 90)
@@ -18363,7 +18385,7 @@
 			(net 2 "P3V3")
 			(pinfunction "VCCIO")
 			(pintype "power_in")
-			(uuid "64073def-311f-457d-afb8-553c3d2d1dd4")
+			(uuid "ad27acb1-d3a1-4684-9160-a4f3cf196146")
 		)
 		(pad "21" smd roundrect
 			(at -1.75 4.45 90)
@@ -18373,7 +18395,7 @@
 			(net 127 "USB_AD4")
 			(pinfunction "ADBUS4")
 			(pintype "bidirectional")
-			(uuid "e512599a-9b5e-49cb-b7e7-c9d3b9076d48")
+			(uuid "c7bce7ca-ac96-4180-a907-9f572820da7e")
 		)
 		(pad "22" smd roundrect
 			(at -1.25 4.45 90)
@@ -18383,7 +18405,7 @@
 			(net 126 "USB_AD5")
 			(pinfunction "ADBUS5")
 			(pintype "bidirectional")
-			(uuid "8b37252a-ecc1-482e-ad84-4704bf2bb292")
+			(uuid "6150e1e1-7297-4410-ab24-2b891b3fa461")
 		)
 		(pad "23" smd roundrect
 			(at -0.75 4.45 90)
@@ -18393,7 +18415,7 @@
 			(net 125 "USB_AD6")
 			(pinfunction "ADBUS6")
 			(pintype "bidirectional")
-			(uuid "6b5bac05-2924-4946-89e1-798336303697")
+			(uuid "dfac2dde-2b4b-401a-8a5a-66aa5cb48bbe")
 		)
 		(pad "24" smd roundrect
 			(at -0.25 4.45 90)
@@ -18403,7 +18425,7 @@
 			(net 124 "USB_AD7")
 			(pinfunction "ADBUS7")
 			(pintype "bidirectional")
-			(uuid "500346c5-af62-4812-b6c0-889a00481367")
+			(uuid "5341c3a2-1925-41cd-8fa3-71d0c1e7f30e")
 		)
 		(pad "25" smd roundrect
 			(at 0.25 4.45 90)
@@ -18413,7 +18435,7 @@
 			(net 1 "GND")
 			(pinfunction "GND")
 			(pintype "power_in")
-			(uuid "7c3dbe46-60a9-41c6-a381-518240ffe9ae")
+			(uuid "8a15d5e3-d60e-4709-a74e-534374363fe5")
 		)
 		(pad "26" smd roundrect
 			(at 0.75 4.45 90)
@@ -18423,7 +18445,7 @@
 			(net 123 "USB_AC0")
 			(pinfunction "ACBUS0")
 			(pintype "bidirectional")
-			(uuid "f4afe9d9-f1f6-4d37-937b-830adda916ac")
+			(uuid "1bafb794-ae78-4853-8402-048743146ea7")
 		)
 		(pad "27" smd roundrect
 			(at 1.25 4.45 90)
@@ -18433,7 +18455,7 @@
 			(net 122 "USB_AC1")
 			(pinfunction "ACBUS1")
 			(pintype "bidirectional")
-			(uuid "777d670d-95cb-4977-b5e9-190ea5b0a693")
+			(uuid "b0467132-f066-46cc-8b04-9cfaba7a1d0d")
 		)
 		(pad "28" smd roundrect
 			(at 1.75 4.45 90)
@@ -18443,7 +18465,7 @@
 			(net 121 "USB_AC2")
 			(pinfunction "ACBUS2")
 			(pintype "bidirectional")
-			(uuid "128d286e-0bf1-429b-baf8-eb3442040c5d")
+			(uuid "f51f5f44-77fb-4d11-bdef-e6567ac7e7a3")
 		)
 		(pad "29" smd roundrect
 			(at 2.25 4.45 90)
@@ -18453,7 +18475,7 @@
 			(net 120 "USB_AC3")
 			(pinfunction "ACBUS3")
 			(pintype "bidirectional")
-			(uuid "663e02c4-3db2-45bc-8515-2e57b02aad79")
+			(uuid "433af69f-aaf3-4931-8389-d6489df316e9")
 		)
 		(pad "30" smd roundrect
 			(at 2.75 4.45 90)
@@ -18463,7 +18485,7 @@
 			(net 119 "USB_AC4")
 			(pinfunction "ACBUS4")
 			(pintype "bidirectional")
-			(uuid "8fb69c3a-032c-4349-8ad7-11ad8caa53fb")
+			(uuid "f0b5c4df-66cc-4229-a91e-ed7868e679aa")
 		)
 		(pad "31" smd roundrect
 			(at 3.25 4.45 90)
@@ -18473,7 +18495,7 @@
 			(net 2 "P3V3")
 			(pinfunction "VCCIO")
 			(pintype "power_in")
-			(uuid "76d2da51-f7f8-44a4-90c2-dc55197ef53d")
+			(uuid "3b66d431-3c19-4bba-a4bf-13b0cc748d91")
 		)
 		(pad "32" smd roundrect
 			(at 3.75 4.45 90)
@@ -18483,7 +18505,7 @@
 			(net 118 "USB_AC5")
 			(pinfunction "ACBUS5")
 			(pintype "bidirectional")
-			(uuid "c76cfc99-dd10-4d50-aecd-e1db05d34f66")
+			(uuid "8b966a2b-59e7-43a6-b294-2c24dbb843c2")
 		)
 		(pad "33" smd roundrect
 			(at 4.45 3.75 90)
@@ -18493,7 +18515,7 @@
 			(net 117 "USB_AC6")
 			(pinfunction "ACBUS6")
 			(pintype "bidirectional")
-			(uuid "2f85872b-dc5b-463f-b7a6-2fe82c0cc6de")
+			(uuid "dc49d27f-1885-48c1-abf5-06c9acbd0109")
 		)
 		(pad "34" smd roundrect
 			(at 4.45 3.25 90)
@@ -18503,7 +18525,7 @@
 			(net 116 "USB_AC7")
 			(pinfunction "ACBUS7")
 			(pintype "bidirectional")
-			(uuid "2f13badf-d4c4-4be9-a5dc-011ddac16b98")
+			(uuid "90ab51fb-a322-46dc-9c45-c241d84eb69f")
 		)
 		(pad "35" smd roundrect
 			(at 4.45 2.75 90)
@@ -18513,7 +18535,7 @@
 			(net 1 "GND")
 			(pinfunction "GND")
 			(pintype "power_in")
-			(uuid "dae557f4-5559-4572-b8b1-91e95a0214ab")
+			(uuid "3e021da5-7975-4825-b639-e2cae7212494")
 		)
 		(pad "36" smd roundrect
 			(at 4.45 2.25 90)
@@ -18523,7 +18545,7 @@
 			(net 306 "unconnected-(U11-~{SUSPEND}-Pad36)")
 			(pinfunction "~{SUSPEND}")
 			(pintype "output+no_connect")
-			(uuid "44031a03-ebd2-4aa3-83fb-669b14e73208")
+			(uuid "03e08129-52cf-4103-8828-465e22831f49")
 		)
 		(pad "37" smd roundrect
 			(at 4.45 1.75 90)
@@ -18533,7 +18555,7 @@
 			(net 157 "/Interface-USB/USB_1V8")
 			(pinfunction "VCORE")
 			(pintype "power_in")
-			(uuid "c952215d-8119-4907-b648-1785f8a5af63")
+			(uuid "de37e8e9-9799-4184-8832-b478d373027a")
 		)
 		(pad "38" smd roundrect
 			(at 4.45 1.25 90)
@@ -18543,7 +18565,7 @@
 			(net 314 "unconnected-(U11-BDBUS0-Pad38)")
 			(pinfunction "BDBUS0")
 			(pintype "bidirectional+no_connect")
-			(uuid "a7fba9c1-b288-4edd-a6ae-f6121a6f36b3")
+			(uuid "dc7a8f1c-d4a7-42fa-9faf-3c540d1f7f24")
 		)
 		(pad "39" smd roundrect
 			(at 4.45 0.75 90)
@@ -18553,7 +18575,7 @@
 			(net 303 "unconnected-(U11-BDBUS1-Pad39)")
 			(pinfunction "BDBUS1")
 			(pintype "bidirectional+no_connect")
-			(uuid "0fd3a4d5-35ff-4eed-8c9b-dc6637fba798")
+			(uuid "4ebfe5a7-0130-4ea1-b3d4-ba348c2a810c")
 		)
 		(pad "40" smd roundrect
 			(at 4.45 0.25 90)
@@ -18563,7 +18585,7 @@
 			(net 315 "unconnected-(U11-BDBUS2-Pad40)")
 			(pinfunction "BDBUS2")
 			(pintype "bidirectional+no_connect")
-			(uuid "a95a3854-4953-4f3f-9ce3-efcf2a971970")
+			(uuid "d3b12aa3-eabc-411b-9c19-a2a92e99dd02")
 		)
 		(pad "41" smd roundrect
 			(at 4.45 -0.25 90)
@@ -18573,7 +18595,7 @@
 			(net 308 "unconnected-(U11-BDBUS3-Pad41)")
 			(pinfunction "BDBUS3")
 			(pintype "bidirectional+no_connect")
-			(uuid "88aef3c8-8ab4-4887-bb75-34f16fe38140")
+			(uuid "ce6c2472-3cf2-4b21-b10e-b8d485621369")
 		)
 		(pad "42" smd roundrect
 			(at 4.45 -0.75 90)
@@ -18583,7 +18605,7 @@
 			(net 2 "P3V3")
 			(pinfunction "VCCIO")
 			(pintype "power_in")
-			(uuid "3d2cf01f-89cd-4448-b8c2-f430c58abf62")
+			(uuid "264c18cd-fd14-426c-b613-5b0dc7169e26")
 		)
 		(pad "43" smd roundrect
 			(at 4.45 -1.25 90)
@@ -18593,7 +18615,7 @@
 			(net 305 "unconnected-(U11-BDBUS4-Pad43)")
 			(pinfunction "BDBUS4")
 			(pintype "bidirectional+no_connect")
-			(uuid "279a3caf-7000-462e-865f-85f30d86102f")
+			(uuid "a4981449-26de-4d10-b3f9-df5daa6ab6dc")
 		)
 		(pad "44" smd roundrect
 			(at 4.45 -1.75 90)
@@ -18603,7 +18625,7 @@
 			(net 318 "unconnected-(U11-BDBUS5-Pad44)")
 			(pinfunction "BDBUS5")
 			(pintype "bidirectional+no_connect")
-			(uuid "e98e8e64-506c-473c-8954-8db744c70df4")
+			(uuid "8b610bae-d328-4555-9721-eb51a4122264")
 		)
 		(pad "45" smd roundrect
 			(at 4.45 -2.25 90)
@@ -18613,7 +18635,7 @@
 			(net 307 "unconnected-(U11-BDBUS6-Pad45)")
 			(pinfunction "BDBUS6")
 			(pintype "bidirectional+no_connect")
-			(uuid "5e1036af-f084-4147-abe7-2fa9de5c3033")
+			(uuid "501c80a8-53fc-4c96-aff2-c65bef46de64")
 		)
 		(pad "46" smd roundrect
 			(at 4.45 -2.75 90)
@@ -18623,7 +18645,7 @@
 			(net 311 "unconnected-(U11-BDBUS7-Pad46)")
 			(pinfunction "BDBUS7")
 			(pintype "bidirectional+no_connect")
-			(uuid "a4d7c19d-71dd-40e8-bc84-d34eb7f26d44")
+			(uuid "402358d6-d815-48d7-b14b-46005f280f88")
 		)
 		(pad "47" smd roundrect
 			(at 4.45 -3.25 90)
@@ -18633,7 +18655,7 @@
 			(net 1 "GND")
 			(pinfunction "GND")
 			(pintype "power_in")
-			(uuid "b8048c34-e6c6-4871-a768-b7a687029a3c")
+			(uuid "05ec081e-b6a0-4ab3-9e01-97336962f1ce")
 		)
 		(pad "48" smd roundrect
 			(at 4.45 -3.75 90)
@@ -18643,7 +18665,7 @@
 			(net 301 "unconnected-(U11-BCBUS0-Pad48)")
 			(pinfunction "BCBUS0")
 			(pintype "bidirectional+no_connect")
-			(uuid "047caf60-7876-40c0-9551-da2e0bb0adb3")
+			(uuid "c23e0c9b-19c6-4ff0-be66-86b4d2ab6c70")
 		)
 		(pad "49" smd roundrect
 			(at 3.75 -4.45 90)
@@ -18653,7 +18675,7 @@
 			(net 157 "/Interface-USB/USB_1V8")
 			(pinfunction "VREGOUT")
 			(pintype "power_out")
-			(uuid "1ede96c1-117a-4f66-b126-2b285837f8ab")
+			(uuid "a0ec1b54-1b36-427f-95bd-a98acceefd8f")
 		)
 		(pad "50" smd roundrect
 			(at 3.25 -4.45 90)
@@ -18663,7 +18685,7 @@
 			(net 2 "P3V3")
 			(pinfunction "VREGIN")
 			(pintype "power_in")
-			(uuid "ac65300f-4e68-4c2d-ba03-d3c8f656f06b")
+			(uuid "9a897350-0530-4687-90bd-539c008567f3")
 		)
 		(pad "51" smd roundrect
 			(at 2.75 -4.45 90)
@@ -18673,7 +18695,7 @@
 			(net 1 "GND")
 			(pinfunction "GND")
 			(pintype "power_in")
-			(uuid "dffc13fc-258f-4302-b6ca-6a1c8041454b")
+			(uuid "745fe6fd-1c5c-4ee2-8fd5-1b5ae259cb3f")
 		)
 		(pad "52" smd roundrect
 			(at 2.25 -4.45 90)
@@ -18683,7 +18705,7 @@
 			(net 309 "unconnected-(U11-BCBUS1-Pad52)")
 			(pinfunction "BCBUS1")
 			(pintype "bidirectional+no_connect")
-			(uuid "8bbdd0c0-e747-43d3-8f26-5cb70a71a37a")
+			(uuid "24a2c498-78a9-4d1c-8600-699f5c06d147")
 		)
 		(pad "53" smd roundrect
 			(at 1.75 -4.45 90)
@@ -18693,7 +18715,7 @@
 			(net 302 "unconnected-(U11-BCBUS2-Pad53)")
 			(pinfunction "BCBUS2")
 			(pintype "bidirectional+no_connect")
-			(uuid "09240dda-9608-4d33-8de2-62fd07042f56")
+			(uuid "32aca4e5-b5bd-444e-a54f-ae44e1476052")
 		)
 		(pad "54" smd roundrect
 			(at 1.25 -4.45 90)
@@ -18703,7 +18725,7 @@
 			(net 316 "unconnected-(U11-BCBUS3-Pad54)")
 			(pinfunction "BCBUS3")
 			(pintype "bidirectional+no_connect")
-			(uuid "ce5aa768-3688-44f5-8270-a3e967df4f38")
+			(uuid "b8c762c0-b6e3-490a-a74a-764236ae79b1")
 		)
 		(pad "55" smd roundrect
 			(at 0.75 -4.45 90)
@@ -18713,7 +18735,7 @@
 			(net 310 "unconnected-(U11-BCBUS4-Pad55)")
 			(pinfunction "BCBUS4")
 			(pintype "bidirectional+no_connect")
-			(uuid "936a7fdb-c70e-4e10-8c77-652656929666")
+			(uuid "a5316937-0b5b-4f91-874d-6ced7a837c48")
 		)
 		(pad "56" smd roundrect
 			(at 0.25 -4.45 90)
@@ -18723,7 +18745,7 @@
 			(net 2 "P3V3")
 			(pinfunction "VCCIO")
 			(pintype "power_in")
-			(uuid "b7314e26-3e4a-4d08-9a01-5849140599f5")
+			(uuid "8dbf17fe-2a2b-4f15-82db-6e0987a8cfe2")
 		)
 		(pad "57" smd roundrect
 			(at -0.25 -4.45 90)
@@ -18733,7 +18755,7 @@
 			(net 313 "unconnected-(U11-BCBUS5-Pad57)")
 			(pinfunction "BCBUS5")
 			(pintype "bidirectional+no_connect")
-			(uuid "a6cc8b35-c117-4347-86ad-ffe91fb2819c")
+			(uuid "0d011439-7105-41ef-9551-ad36f9a1df5e")
 		)
 		(pad "58" smd roundrect
 			(at -0.75 -4.45 90)
@@ -18743,7 +18765,7 @@
 			(net 319 "unconnected-(U11-BCBUS6-Pad58)")
 			(pinfunction "BCBUS6")
 			(pintype "bidirectional+no_connect")
-			(uuid "f25d5483-2020-4c41-9898-11c3346b57da")
+			(uuid "80320fbf-12fa-4131-abbb-56e1b5373610")
 		)
 		(pad "59" smd roundrect
 			(at -1.25 -4.45 90)
@@ -18753,7 +18775,7 @@
 			(net 312 "unconnected-(U11-BCBUS7-Pad59)")
 			(pinfunction "BCBUS7")
 			(pintype "bidirectional+no_connect")
-			(uuid "a63177e4-cbf8-4644-b5a7-bab993b8ef9d")
+			(uuid "bcf35c1c-cdb1-4925-a7a2-99ea0009aa91")
 		)
 		(pad "60" smd roundrect
 			(at -1.75 -4.45 90)
@@ -18763,7 +18785,7 @@
 			(net 304 "unconnected-(U11-~{PWREN}-Pad60)")
 			(pinfunction "~{PWREN}")
 			(pintype "output+no_connect")
-			(uuid "2154217e-c73e-49ff-86b6-27e3acc001dc")
+			(uuid "9cc18b95-e85a-4fb4-9aad-740e0378be1f")
 		)
 		(pad "61" smd roundrect
 			(at -2.25 -4.45 90)
@@ -18773,7 +18795,7 @@
 			(net 92 "/Interface-USB/USB_EEDATA")
 			(pinfunction "EEDATA")
 			(pintype "bidirectional")
-			(uuid "168a6c50-023c-4f24-a67c-d474ae6a831b")
+			(uuid "4d2e0f72-83e3-467e-adf7-dfbb6e186242")
 		)
 		(pad "62" smd roundrect
 			(at -2.75 -4.45 90)
@@ -18783,7 +18805,7 @@
 			(net 89 "/Interface-USB/USB_EECLK")
 			(pinfunction "EECLK")
 			(pintype "output")
-			(uuid "5fcd2164-13f2-4908-ade7-02ea0040ea4a")
+			(uuid "3449201b-e499-4cca-a30b-8434b0aa93ec")
 		)
 		(pad "63" smd roundrect
 			(at -3.25 -4.45 90)
@@ -18793,7 +18815,7 @@
 			(net 90 "/Interface-USB/USB_EECS")
 			(pinfunction "EECS")
 			(pintype "output")
-			(uuid "ac652c09-5feb-4739-a130-6655cc71dc8b")
+			(uuid "4772bedf-4c7d-4ba3-bb53-01a33dc0ebdd")
 		)
 		(pad "64" smd roundrect
 			(at -3.75 -4.45 90)
@@ -18803,18 +18825,20 @@
 			(net 157 "/Interface-USB/USB_1V8")
 			(pinfunction "VCORE")
 			(pintype "power_in")
-			(uuid "85c1fa87-cff2-4da8-afd4-9678bc14f30d")
+			(uuid "2e31c968-ea29-4cef-aa7e-f0ba5cee5b91")
 		)
 		(pad "65" smd rect
 			(at 0 0 90)
 			(size 4.35 4.35)
+			(property pad_prop_heatsink)
 			(layers "F.Cu" "F.Mask")
 			(net 1 "GND")
 			(pinfunction "GND")
 			(pintype "power_in")
-			(uuid "615c0650-6915-419a-82f6-18d4d6bbe944")
+			(zone_connect 2)
+			(uuid "53e99ba1-4c01-4626-8d15-08e1a972cd0a")
 		)
-		(model "${KISYS3DMOD}/Package_DFN_QFN.3dshapes/QFN-64-1EP_9x9mm_P0.5mm_EP4.35x4.35mm.wrl"
+		(model "${KICAD8_3DMODEL_DIR}/Package_DFN_QFN.3dshapes/QFN-64-1EP_9x9mm_P0.5mm_EP4.35x4.35mm.wrl"
 			(offset
 				(xyz 0 0 0)
 			)
