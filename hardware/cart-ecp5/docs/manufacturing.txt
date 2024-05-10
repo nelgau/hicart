@@ -8,3 +8,8 @@ Deviations:
 
     For BGA breakout, via hole to track
     Adjusted to 0.225mm, from 0.254mm (JLCPCB)
+
+- Minimum text height
+
+    For silkscreen labels throughout
+    Adjusted to 0.75mm, from 1.0mm (JLCPCB)
