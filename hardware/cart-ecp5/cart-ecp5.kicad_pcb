@@ -28145,7 +28145,7 @@
 			(at 0 -3.45 0)
 			(layer "F.SilkS")
 			(hide yes)
-			(uuid "66155ce4-c3a5-486a-837f-96e0a91f033b")
+			(uuid "5fd9a356-98ec-41ee-9f1b-d3891bcda21f")
 			(effects
 				(font
 					(size 1 1)
@@ -28157,7 +28157,7 @@
 			(at 0 3.45 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "f6cf981f-d4e7-4a24-8104-f0b252288cb7")
+			(uuid "0008d82f-ebd0-4461-9cda-f362abbdfa25")
 			(effects
 				(font
 					(size 1 1)
@@ -28170,7 +28170,7 @@
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "356f4b50-5df8-4625-b5c0-ce9dc44ce771")
+			(uuid "23379c62-7a42-43c9-8afb-bea2526c6572")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28182,7 +28182,7 @@
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "79a477b6-7b5d-4b23-8507-7cdd150f9b4c")
+			(uuid "2efff782-4d1e-4ed2-a8a3-371a54cde668")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28194,7 +28194,7 @@
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "7164fa15-3587-4f66-b63b-adc42a8f07d9")
+			(uuid "26c623f3-eb0c-4c3a-a471-b2b87088d2bd")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28232,14 +28232,14 @@
 		(sheetfile "FPGA-IO.kicad_sch")
 		(attr smd)
 		(fp_line
-			(start 0 -2.61)
+			(start -2.96 -2.61)
 			(end 3 -2.61)
 			(stroke
 				(width 0.12)
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "2c02fda7-f619-4dd8-b18f-36d932c7c307")
+			(uuid "6150bb5a-e9c3-4a61-adf7-ce6005caf76d")
 		)
 		(fp_line
 			(start -3 2.61)
@@ -28249,7 +28249,19 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "184fc121-b3a0-4300-ac83-08d0d6eca414")
+			(uuid "58da3203-9646-445f-ac9e-bdd64d36e425")
+		)
+		(fp_poly
+			(pts
+				(xy -3.2 -2.31) (xy -3.68 -2.31) (xy -3.2 -2.79) (xy -3.2 -2.31)
+			)
+			(stroke
+				(width 0.12)
+				(type solid)
+			)
+			(fill solid)
+			(layer "F.SilkS")
+			(uuid "ef96a33c-809a-4150-8151-22c1a394560f")
 		)
 		(fp_line
 			(start 3.3 2.75)
@@ -28259,7 +28271,7 @@
 				(type solid)
 			)
 			(layer "F.CrtYd")
-			(uuid "3e38c7e8-142c-42fb-ab6f-bb1372401380")
+			(uuid "cab6a102-6a4f-4206-a4b4-03070d917c75")
 		)
 		(fp_line
 			(start 3.3 -2.75)
@@ -28269,7 +28281,7 @@
 				(type solid)
 			)
 			(layer "F.CrtYd")
-			(uuid "ebae08b9-7a3a-42bd-af4b-e46636f96779")
+			(uuid "569a4e11-2671-4cb8-b247-d7c2875c8ce7")
 		)
 		(fp_line
 			(start -3.3 2.75)
@@ -28279,7 +28291,7 @@
 				(type solid)
 			)
 			(layer "F.CrtYd")
-			(uuid "d4402164-02db-4236-98ed-18d7f9c6c0c8")
+			(uuid "497da59c-a969-40a8-a337-d830ab9d8764")
 		)
 		(fp_line
 			(start -3.3 -2.75)
@@ -28289,7 +28301,7 @@
 				(type solid)
 			)
 			(layer "F.CrtYd")
-			(uuid "1e3697df-a989-4fff-9f6f-a5ae60a755cf")
+			(uuid "2c20f47f-7cbf-46d6-8a1d-1e524921897c")
 		)
 		(fp_line
 			(start 3 2.5)
@@ -28299,7 +28311,7 @@
 				(type solid)
 			)
 			(layer "F.Fab")
-			(uuid "8b16710a-5edc-43e3-a410-8e195d9ea07f")
+			(uuid "6838fb7f-af5e-460a-9969-d87200402344")
 		)
 		(fp_line
 			(start 3 -2.5)
@@ -28309,7 +28321,7 @@
 				(type solid)
 			)
 			(layer "F.Fab")
-			(uuid "b2331e53-b1aa-42c4-952d-38aea8d3d76c")
+			(uuid "1624e440-cc5c-4026-a7ba-fb8269fc2335")
 		)
 		(fp_line
 			(start -2 -2.5)
@@ -28319,7 +28331,7 @@
 				(type solid)
 			)
 			(layer "F.Fab")
-			(uuid "b2a8f51b-64c6-4a26-a341-4db460641f52")
+			(uuid "23948c28-998a-4d79-b6ee-9a6639606c12")
 		)
 		(fp_line
 			(start -3 2.5)
@@ -28329,7 +28341,7 @@
 				(type solid)
 			)
 			(layer "F.Fab")
-			(uuid "ab920382-3e7a-4a56-93ff-53aca1d842bd")
+			(uuid "0bf821f1-e441-4434-ae3a-727f395bf214")
 		)
 		(fp_line
 			(start -3 -1.5)
@@ -28339,12 +28351,12 @@
 				(type solid)
 			)
 			(layer "F.Fab")
-			(uuid "b6b0f518-2065-4ceb-bc6f-62c36b3a9115")
+			(uuid "45d2f5d5-7630-418a-9cd7-1bb408f4d295")
 		)
 		(fp_text user "${REFERENCE}"
 			(at 0 0 0)
 			(layer "F.Fab")
-			(uuid "f818872d-458e-4f5a-8ac4-f9fa3ba6cf52")
+			(uuid "342a5ee6-2210-4e11-97a0-6c9d87165bd5")
 			(effects
 				(font
 					(size 1 1)
@@ -28356,29 +28368,29 @@
 			(at -0.85 -1 180)
 			(size 1.37 1.61)
 			(layers "F.Paste")
-			(roundrect_rratio 0.182479562)
-			(uuid "191b6751-f214-45e9-b40a-29a6bd155288")
+			(roundrect_rratio 0.182482)
+			(uuid "c4ee921f-931c-4013-a0d1-1f896d0d759b")
 		)
 		(pad "" smd roundrect
 			(at -0.85 1 180)
 			(size 1.37 1.61)
 			(layers "F.Paste")
-			(roundrect_rratio 0.182479562)
-			(uuid "bbfcc8c6-664d-4583-b514-5b30517c3641")
+			(roundrect_rratio 0.182482)
+			(uuid "c9a6612d-d693-4a78-b22f-e8128d1250e0")
 		)
 		(pad "" smd roundrect
 			(at 0.85 -1 180)
 			(size 1.37 1.61)
 			(layers "F.Paste")
-			(roundrect_rratio 0.182479562)
-			(uuid "05ec31b9-c039-4751-88a1-ade82681bb4c")
+			(roundrect_rratio 0.182482)
+			(uuid "da1a1c02-4d1a-4edd-8a80-8c08d7d88bfe")
 		)
 		(pad "" smd roundrect
 			(at 0.85 1 180)
 			(size 1.37 1.61)
 			(layers "F.Paste")
-			(roundrect_rratio 0.182479562)
-			(uuid "ff029c83-a522-45a8-bf41-d84b331abd46")
+			(roundrect_rratio 0.182482)
+			(uuid "0c996162-a639-41dd-9f64-3a84b26aedd8")
 		)
 		(pad "1" smd roundrect
 			(at -2.6625 -1.905 180)
@@ -28388,7 +28400,7 @@
 			(net 30 "/FPGA-IO/FLASH_CS_B")
 			(pinfunction "~{CS}")
 			(pintype "input")
-			(uuid "d3963d26-9ce5-4241-a672-d232c1eac88e")
+			(uuid "a8acb389-4e18-4111-a877-8adbd422a9f9")
 		)
 		(pad "2" smd roundrect
 			(at -2.6625 -0.635 180)
@@ -28398,7 +28410,7 @@
 			(net 96 "/FPGA-IO/FLASH_MISO")
 			(pinfunction "DO/IO1")
 			(pintype "bidirectional")
-			(uuid "d6d4e794-e82e-4176-a2c4-d70e5f9bcef8")
+			(uuid "1360a156-1106-4b2b-8cd0-81f7171feb02")
 		)
 		(pad "3" smd roundrect
 			(at -2.6625 0.635 180)
@@ -28408,7 +28420,7 @@
 			(net 29 "/FPGA-IO/FLASH_IO2")
 			(pinfunction "~{WP}/IO2")
 			(pintype "bidirectional")
-			(uuid "528594d9-f72e-44fa-a0da-4fb24e6ada3b")
+			(uuid "f74472f9-3b64-4cd4-99b7-785ac853bb9f")
 		)
 		(pad "4" smd roundrect
 			(at -2.6625 1.905 180)
@@ -28418,7 +28430,7 @@
 			(net 1 "GND")
 			(pinfunction "GND")
 			(pintype "power_in")
-			(uuid "cf2fa60b-93fd-4ad8-b0d6-812c102bc884")
+			(uuid "63c656a6-e838-4300-97d4-6324135e637d")
 		)
 		(pad "5" smd roundrect
 			(at 2.6625 1.905 180)
@@ -28428,7 +28440,7 @@
 			(net 95 "/FPGA-IO/FLASH_MOSI")
 			(pinfunction "DI/IO0")
 			(pintype "bidirectional")
-			(uuid "9936030f-4345-44b2-be4a-f1716a79b700")
+			(uuid "52473e86-8801-4f3e-804b-9b55d052b6eb")
 		)
 		(pad "6" smd roundrect
 			(at 2.6625 0.635 180)
@@ -28438,7 +28450,7 @@
 			(net 28 "/FPGA-IO/FLASH_CLK")
 			(pinfunction "CLK")
 			(pintype "input")
-			(uuid "cca061d4-c367-44f7-b65d-48283263d9af")
+			(uuid "b61f1b3b-294c-46f7-8979-c3e1a786c674")
 		)
 		(pad "7" smd roundrect
 			(at 2.6625 -0.635 180)
@@ -28448,7 +28460,7 @@
 			(net 31 "/FPGA-IO/FLASH_IO3")
 			(pinfunction "~{HLD}/~{RST}/IO3")
 			(pintype "bidirectional")
-			(uuid "4e624a96-ae9c-47e5-aeb1-8686510daf5a")
+			(uuid "ad1a7942-ba4e-44dc-b084-ffc3abcca7d2")
 		)
 		(pad "8" smd roundrect
 			(at 2.6625 -1.905 180)
@@ -28458,18 +28470,20 @@
 			(net 2 "P3V3")
 			(pinfunction "VCC")
 			(pintype "power_in")
-			(uuid "514bfdc6-151c-41e1-9e54-9b7db3c8028b")
+			(uuid "40c81595-98ee-4b1e-a448-51319392f089")
 		)
 		(pad "9" smd rect
 			(at 0 0 180)
 			(size 3.4 4)
+			(property pad_prop_heatsink)
 			(layers "F.Cu" "F.Mask")
 			(net 1 "GND")
 			(pinfunction "EP")
 			(pintype "power_in")
-			(uuid "b8d0bd99-83a0-4ccc-8021-36d7affb6226")
+			(zone_connect 2)
+			(uuid "79bfe0ad-7548-4f30-a1a2-25f508409e19")
 		)
-		(model "${KISYS3DMOD}/Package_SON.3dshapes/WSON-8-1EP_6x5mm_P1.27mm_EP3.4x4mm.wrl"
+		(model "${KICAD8_3DMODEL_DIR}/Package_SON.3dshapes/WSON-8-1EP_6x5mm_P1.27mm_EP3.4x4mm.wrl"
 			(offset
 				(xyz 0 0 0)
 			)
