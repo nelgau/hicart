@@ -15278,7 +15278,7 @@
 				)
 			)
 		)
-		(property "Footprint" "ng_conn:Samtec_FTSH-105-XX-X-DV-Mating"
+		(property "Footprint" "Connector:Tag-Connect_TC2050-IDC-FP_2x05_P1.27mm_Vertical"
 			(at 321.31 106.68 0)
 			(effects
 				(font
