@@ -79,7 +79,7 @@ class Top(Elaboratable):
         ]
 
         m.d.comb += [
-            pmod.d.o[0]             .eq( n64_cart.cic.dclk      ),
+            pmod.d.o[0]             .eq( n64_cart.cic.dclk.i    ),
             pmod.d.o[1]             .eq( n64_cart.cic.data.i    ),
             pmod.d.o[2]             .eq( n64_cart.nmi.i         ),
             pmod.d.o[3]             .eq( n64_cart.pi.read.i     ),

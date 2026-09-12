@@ -2,7 +2,7 @@ from amaranth import *
 from amaranth.lib import wiring
 from amaranth.sim import *
 from amaranth_soc import wishbone
-from hicart.soc.periph.sram  import SRAMPeripheral
+from amaranth_soc.wishbone.sram import WishboneSRAM
 
 from hicart.n64.cartbus import PISignature
 from hicart.n64.pi import WishboneBridge
@@ -28,8 +28,9 @@ class WishboneBridgeTest(ModuleTestCase):
 
             self.decoder = wishbone.Decoder(addr_width=31, data_width=16, granularity=8, features={"stall"})
 
-            self.rom = SRAMPeripheral(size=16, data_width=16, writable=False)
-            self.decoder.add(self.rom.bus, addr=0x10000000)
+            self.rom = WishboneSRAM(size=16, data_width=16, granularity=8, writable=False)
+            self.decoder.add(self.rom.wb_bus, addr=0x10000000)
+
             self.rom.init = self.rom_data
 
             self.initiator = WishboneBridge()

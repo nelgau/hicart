@@ -1,5 +1,6 @@
 from amaranth import *
 from amaranth_soc import wishbone
+from amaranth_soc.wishbone.sram import WishboneSRAM
 
 import cocotb
 from cocotb.triggers import RisingEdge
@@ -10,7 +11,6 @@ import pytest
 
 from hicart.cores import litesdcard
 from hicart.platforms.homeinvader_rev_a import HomeInvaderRevAPlatform
-from hicart.soc.periph.sram import SRAMPeripheral
 from hicart.test.cocotb import CocotbTestCase, init_domains, start_clock, do_reset
 from hicart.test.cocotb.accessor import wishbone_accessor, Accessor
 
@@ -31,7 +31,7 @@ class DUT(Elaboratable):
         config = litesdcard.ECP5Config(clk_freq=int(80e6))
         self.litesdcard = litesdcard.Core(config, pins=self.pins)
 
-        self.ram = SRAMPeripheral(size=0x100)
+        self.ram = WishboneSRAM(size=0x100, data_width=32, granularity=8)
 
     def build(self, platform):
         build_dir = "build/cores"
@@ -49,7 +49,7 @@ class DUT(Elaboratable):
         self.arbiter.add(self.litesdcard.dma_bus)
 
         self.decoder.add(self.litesdcard.ctrl_bus, addr=0x00000)
-        self.decoder.add(self.ram.bus, addr=0x10000)
+        self.decoder.add(self.ram.wb_bus, addr=0x10000)
 
         m.d.comb += [
             self.arbiter.bus.connect(self.decoder.bus),

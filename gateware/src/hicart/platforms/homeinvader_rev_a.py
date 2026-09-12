@@ -52,12 +52,12 @@ class HomeInvaderRevAFlashConnector(wiring.Component):
         m.d.comb += [
             # FIXME: Does this clock gating mux actually belong here? Can it
             # be refactored out into the QSPIFlashInterface module?
-            qspi_pins.cs_n          .eq(self.qspi.cs_n),
+            qspi_pins.cs_n.o        .eq(self.qspi.cs_n),
             self.spi_clk            .eq(Mux(self.qspi.sck, ~sync_clk, 1)),
         ]
 
         for i in range(4):
-            dq_pin = qspi_pins[f"dq{i}"]
+            dq_pin = getattr(qspi_pins, f"dq{i}")
             m.d.comb += [
                 self.qspi.d.i[i]    .eq(dq_pin.i),
                 dq_pin.o            .eq(self.qspi.d.o[i]),

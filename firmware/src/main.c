@@ -93,17 +93,18 @@ unsigned char _6105Mem[32];
 /* Read a bit synchronized by DCLK */
 unsigned char ReadBit(void)
 {
-    volatile unsigned long *gpio = (void *)0x00006000;
+    volatile unsigned long *gpio_input  = (void *)0x00006001;
+
     unsigned char res;
 
     // wait for DCLK to go low
-    while (*(gpio + 0) & 0x1) { }
+    while (*gpio_input & 0x1) { }
 
     // Read the data bit
-    res = !!(*(gpio + 0) & 0x2);
+    res = !!(*gpio_input & 0x2);
 
     // wait for DCLK to go high
-    while (!(*(gpio + 0) & 0x1)) { }
+    while (!(*gpio_input & 0x1)) { }
 
     return res;
 }
@@ -111,20 +112,22 @@ unsigned char ReadBit(void)
 /* Write a bit synchronized by DCLK */
 void WriteBit(unsigned char b)
 {
-    volatile unsigned long *gpio = (void *)0x00006000;
+    volatile unsigned long *gpio_mode   = (void *)0x00006000;
+    volatile unsigned long *gpio_input  = (void *)0x00006001;
+    volatile unsigned long *gpio_output = (void *)0x00006002;
 
     // wait for DCLK to go low
-    while (*(gpio + 0) & 0x1) { }
+    while (*gpio_input & 0x1) { }
 
     if (b == 0)
     {
         // drive the output low
-        *(gpio + 1) = 0x0;
-        *(gpio + 2) = 0x2;
+        *gpio_output = 0x0;
+        *gpio_mode = 0x4;
     }
 
     // wait for DCLK to go high
-    while (!(*(gpio + 0) & 0x1)) { }
+    while (!(*gpio_input & 0x1)) { }
 
     //
     // NOTE: It may be necessary to add a delay here to meet the PIF's
@@ -132,7 +135,7 @@ void WriteBit(unsigned char b)
     //
 
     // disable the output
-    *(gpio + 2) = 0x0;
+    *gpio_mode = 0x0;
 }
 
 /* Writes the lowes 4 bits of the byte */
