@@ -5,18 +5,33 @@
 groups = ["default", "test"]
 strategy = ["cross_platform"]
 lock_version = "4.5.0"
-content_hash = "sha256:c7b8d8955fa7ee8c2ef2920d1d6d28b58bccfc8f1b2c0f0353eaf1fcbdfe7029"
+content_hash = "sha256:6fbd927c523a2977e732d9de8be5637fd2eaeee3121df1d5b6fc3f60946e3155"
 
 [[metadata.targets]]
 requires_python = "~=3.10"
 
 [[package]]
 name = "amaranth"
-version = "0.5.1"
+version = "0.5.10"
 requires_python = "~=3.8"
 git = "https://github.com/amaranth-lang/amaranth.git"
-ref = "v0.5.1"
-revision = "212cb2c57c191ef7442a9cb5ded39b6a07278ccd"
+ref = "main"
+revision = "4ce62de58b3235cb9a39721bf151cd0f02a5532f"
+summary = "Amaranth hardware definition language"
+dependencies = [
+    "Jinja2~=3.0",
+    "importlib-resources; python_version < \"3.9\"",
+    "jschon~=0.11.1",
+    "pyvcd<0.5,>=0.2.2",
+]
+
+[[package]]
+name = "amaranth"
+version = "0.5.10"
+requires_python = "~=3.8"
+git = "https://github.com/amaranth-lang/amaranth.git"
+ref = "v0.5.10"
+revision = "4ce62de58b3235cb9a39721bf151cd0f02a5532f"
 summary = "Amaranth hardware definition language"
 dependencies = [
     "Jinja2~=3.0",
@@ -39,11 +54,11 @@ dependencies = [
 
 [[package]]
 name = "amaranth-soc"
-version = "0.1a1.dev22"
-requires_python = "~=3.8"
-git = "https://github.com/amaranth-lang/amaranth-soc.git"
-ref = "6cd3e1c01764abe1bab1623aab70e3eaf70a0f7e"
-revision = "6cd3e1c01764abe1bab1623aab70e3eaf70a0f7e"
+version = "0.1a1.dev32"
+requires_python = "~=3.9"
+git = "https://github.com/jfng/amaranth-soc.git"
+ref = "main"
+revision = "3e3d8b7241c1c7e80e0cd12937d288d0ad4a6cba"
 summary = "System on Chip toolkit for Amaranth HDL"
 dependencies = [
     "amaranth<0.6,>=0.5",
