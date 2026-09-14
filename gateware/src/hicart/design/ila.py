@@ -33,7 +33,7 @@ class Top(Elaboratable):
         m.d.sync += self.counter.eq(self.counter + 1)
 
         # Say "hello world" constantly over our ILA...
-        letters = Array(ord(i) for i in "Hello, world! \r\n")
+        letters = Array(ord(i) for i in "Hello, world!\r\n")
 
         current_letter = Signal(range(0, len(letters)))
 

@@ -5,7 +5,7 @@
 groups = ["default", "test"]
 strategy = []
 lock_version = "4.5.1"
-content_hash = "sha256:7de96cf0a204a21bf77da2950e2d8f5a92a94f5b4a90c77b4afda0bc7c1456b8"
+content_hash = "sha256:bebc436419c195089e07b9b48d2e13214cd8a18947631e06a2bcb862b813ed4c"
 
 [[metadata.targets]]
 requires_python = "~=3.10"
@@ -84,22 +84,9 @@ ref = "v0.5.10"
 revision = "4ce62de58b3235cb9a39721bf151cd0f02a5532f"
 summary = "Amaranth hardware definition language"
 dependencies = [
+    "amaranth @ git+https://github.com/amaranth-lang/amaranth.git@4ce62de58b3235cb9a39721bf151cd0f02a5532f",
     "amaranth @ git+https://github.com/amaranth-lang/amaranth.git@v0.5.10",
     "amaranth-yosys>=0.40",
-]
-
-[[package]]
-name = "apollo-fpga"
-version = "0.0.5"
-requires_python = ">=3.7,<4.0"
-summary = "host tools for Apollo FPGA debug controllers"
-dependencies = [
-    "pyusb<2.0.0,>=1.1.1",
-    "pyvcd<0.3.0,>=0.2.4",
-]
-files = [
-    {file = "apollo-fpga-0.0.5.tar.gz", hash = "sha256:8cc008a36cb07734470e8c49e9e17fd64944478fb9cfec7211e257ea575eed7d"},
-    {file = "apollo_fpga-0.0.5-py3-none-any.whl", hash = "sha256:9b9dcf16646ec0a92581fb95902ddecc6156fc6a552d12ba740e39ed9974a72b"},
 ]
 
 [[package]]
@@ -130,16 +117,6 @@ summary = "Cross-platform colored terminal text."
 files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
-]
-
-[[package]]
-name = "construct"
-version = "2.10.70"
-requires_python = ">=3.6"
-summary = "A powerful declarative symmetric parser/builder for binary data"
-files = [
-    {file = "construct-2.10.70-py3-none-any.whl", hash = "sha256:c80be81ef595a1a821ec69dc16099550ed22197615f4320b57cc9ce2a672cb30"},
-    {file = "construct-2.10.70.tar.gz", hash = "sha256:4d2472f9684731e58cc9c56c463be63baa1447d674e0d66aeb5627b22f512c29"},
 ]
 
 [[package]]
@@ -176,38 +153,6 @@ dependencies = [
 files = [
     {file = "jschon-0.11.1-py3-none-any.whl", hash = "sha256:2350e8b6747b17358022960f91208bea70de448b914827af3184d30e20500f0f"},
     {file = "jschon-0.11.1.tar.gz", hash = "sha256:c0ca0beab1f1694a03d726b91ed75ec604a7787af3ae91ead765f78215bf149f"},
-]
-
-[[package]]
-name = "libusb1"
-version = "1.9.3"
-summary = "Pure-python wrapper for libusb-1.0"
-files = [
-    {file = "libusb1-1.9.3-py3-none-any.whl", hash = "sha256:f40a09e37b656c9bb48b1c83ef74ca0c8d7e5b0888168ea54733832f6eac1ec4"},
-    {file = "libusb1-1.9.3-py3-none-win32.whl", hash = "sha256:86792164d5b5b96bdd4f186b2502f70e19c09b2086fa9b39711c3b16703948a9"},
-    {file = "libusb1-1.9.3-py3-none-win_amd64.whl", hash = "sha256:8465e042c95b0a3fb8ea11472d2b3a73987af28780a802637ff70c4e6de46335"},
-    {file = "libusb1-1.9.3.tar.gz", hash = "sha256:60e6ce37be064f6e51d02b25da44230ecc9c0b1fdb6f14568c71457d963c1749"},
-]
-
-[[package]]
-name = "luna"
-version = "0.1.0.dev0"
-requires_python = "<4.0,>=3.7"
-git = "https://github.com/greatscottgadgets/luna.git"
-ref = "affb448f"
-revision = "affb448fdbce128e69e78a08153a8b7d5864b9a5"
-summary = "Amaranth HDL framework for FPGA-based USB solutions"
-dependencies = [
-    "amaranth @ git+https://github.com/amaranth-lang/amaranth.git@main",
-    "amaranth-boards @ git+https://github.com/amaranth-lang/amaranth-boards.git@main",
-    "amaranth-soc @ git+https://github.com/amaranth-lang/amaranth-soc.git@main",
-    "apollo-fpga<0.0.6,>=0.0.5",
-    "libusb1<2.0.0,>=1.9.2",
-    "pyserial<4.0,>=3.5",
-    "pyusb<2.0.0,>=1.1.1",
-    "pyvcd<0.3.0,>=0.2.4",
-    "usb-protocol @ git+https://github.com/usb-tools/python-usb-protocol",
-    "ziglang<0.9.0,>=0.8.0",
 ]
 
 [[package]]
@@ -489,17 +434,6 @@ files = [
 ]
 
 [[package]]
-name = "usb-protocol"
-version = "0.9.2.post6"
-requires_python = ">=3.9"
-git = "https://github.com/usb-tools/python-usb-protocol"
-revision = "4e12f6a705f2d803f6b09402fc1d0175d5631218"
-summary = "Python library providing utilities, data structures, constants, parsers, and tools for working with the USB protocol."
-dependencies = [
-    "construct~=2.10",
-]
-
-[[package]]
 name = "wasmtime"
 version = "47.0.1"
 requires_python = ">=3.9"
@@ -544,20 +478,4 @@ dependencies = [
 ]
 files = [
     {file = "yowasp_yosys-0.69.0.0.post1233-py3-none-any.whl", hash = "sha256:59284760d6455b764fce5dcf296d2c183b05dc980f59092461deddc9caa09bdd"},
-]
-
-[[package]]
-name = "ziglang"
-version = "0.8.1"
-requires_python = "~=3.5"
-summary = "       Zig is a general-purpose programming language and toolchain for\nmaintaining robust, optimal, and reusable software."
-files = [
-    {file = "ziglang-0.8.1-py3-none-macosx_10_9_x86_64.whl", hash = "sha256:75fcfc3420d5c8e5f357c825012e257e3291cbf7cbba1d36b71234b11a2cc6ea"},
-    {file = "ziglang-0.8.1-py3-none-macosx_11_0_arm64.whl", hash = "sha256:23cb31c5dc576b9be780892ab622f964671876522138dddb71779a2d168fc15f"},
-    {file = "ziglang-0.8.1-py3-none-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:d7bbfff3ed2d69f7f80efbf3922e7b66643a350cbee7e10ede5803e575a39f6f"},
-    {file = "ziglang-0.8.1-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:fe6660b61df1b4ea091f240c5988f90854cd34cec8f1e388c61ddfb4a258ff33"},
-    {file = "ziglang-0.8.1-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3c9c875282b53cfb3fb444578a421f4eb941cf3ecb976b7ea038c8981776bacc"},
-    {file = "ziglang-0.8.1-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:d77c54000577075e963105746e3dc95e2a76848f3ded109e7f790d90fbef93bb"},
-    {file = "ziglang-0.8.1-py3-none-win32.whl", hash = "sha256:be37993dd0a36f9aebcf43ded310599bd68bd15c8cbda35eed0a338566f74108"},
-    {file = "ziglang-0.8.1-py3-none-win_amd64.whl", hash = "sha256:222b643152ef9398cbc01948937582628878d2eabdfad45c81ad624bca8b1ef5"},
 ]
