@@ -25,3 +25,17 @@ def pin_signature(width, dir):
     if dir in ("oe", "io"):
         members["oe"] = Out(1)
     return wiring.Signature(members)
+
+
+def forward_interface(self, m, from_bus, to_bus):
+    # FIXME: Extend for nested interfaces.
+    members = to_bus.signature.members
+    for name in members:
+        from_value = getattr(from_bus, name)
+        to_value = getattr(to_bus, name)
+
+        flow = members[name].flow
+        if flow == In:
+            m.d.comb += from_value.eq(to_value)
+        elif flow == Out:
+            m.d.comb += to_value.eq(from_value)

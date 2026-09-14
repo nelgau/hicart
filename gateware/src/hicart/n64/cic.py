@@ -9,9 +9,9 @@ from amaranth_soc import gpio
 from amaranth_soc.csr.wishbone import WishboneCSRBridge
 from amaranth_soc import wishbone
 from amaranth_soc.wishbone.sram import WishboneSRAM
+from minerva.core import Minerva
 
 from hicart.n64.cartbus import CICSignature
-from hicart.soc.cpu.minerva  import MinervaCPU
 
 
 class Constants:
@@ -32,10 +32,12 @@ class CIC(wiring.Component):
     def __init__(self):
         super().__init__()
 
+        # self.cpu = MinervaCPU(reset_address=Constants.RESET_ADDR)
+        self.cpu = Minerva(reset_address=Constants.RESET_ADDR)
+
         self._arbiter = wishbone.Arbiter(addr_width=30, data_width=32, granularity=8, features={"cti", "bte"})
         self._decoder = wishbone.Decoder(addr_width=30, data_width=32, granularity=8, features={"cti", "bte"})
 
-        self.cpu = MinervaCPU(reset_address=Constants.RESET_ADDR)
         self._arbiter.add(self.cpu.ibus)
         self._arbiter.add(self.cpu.dbus)
 
@@ -75,13 +77,12 @@ class CIC(wiring.Component):
         m.submodules.gpio           = self.gpio
 
         reset_sync  = Signal()
-
-        m.submodules += AsyncFFSynchronizer( self.reset,        reset_sync    )
+        m.d.comb += self.cpu.external_interrupt.eq(reset_sync)
+        m.submodules += AsyncFFSynchronizer(self.reset, reset_sync)
 
         wiring.connect(m, self._arbiter.bus, self._decoder.bus)
 
         m.d.comb += [
-            self.cpu.ip[0]      .eq( reset_sync             ),
             self.gpio.pins[0].i .eq( self.bus.dclk.i        ),
             self.gpio.pins[1].i .eq( self.bus.data.i        ),
             self.bus.data.o     .eq( self.gpio.pins[1].o    ),
