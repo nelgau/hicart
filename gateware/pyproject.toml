@@ -16,6 +16,9 @@ dependencies = [
     "amaranth-stdio @ git+https://github.com/amaranth-lang/amaranth-stdio.git@main",
     "amaranth-boards @ git+https://github.com/amaranth-lang/amaranth-boards.git@main",
     "minerva @ git+https://github.com/minerva-cpu/minerva.git@main",
+
+    "yowasp-yosys~=0.69.0",
+    "yowasp-nextpnr-ecp5~=0.11.1",
 ]
 
 [tool.pdm.dev-dependencies]
@@ -32,6 +35,11 @@ minerva = "git+https://github.com/minerva-cpu/minerva.git@6109879e"
 
 [tool.pdm.scripts]
 test = { cmd = "pytest" }
+
+[tool.pdm.scripts._.env]
+YOSYS = "yowasp-yosys"
+NEXTPNR_ECP5 = "yowasp-nextpnr-ecp5"
+ECPPACK = "yowasp-ecppack"
 
 [tool.pyright]
 venvPath = ".venv"

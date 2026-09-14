@@ -5,7 +5,7 @@
 groups = ["default", "test"]
 strategy = []
 lock_version = "4.5.1"
-content_hash = "sha256:bebc436419c195089e07b9b48d2e13214cd8a18947631e06a2bcb862b813ed4c"
+content_hash = "sha256:4996c7b0d601cc1bebd757087f4bfc211ffd09d6105965d531b67519fecb9a37"
 
 [[metadata.targets]]
 requires_python = "~=3.10"
@@ -451,6 +451,17 @@ files = [
     {file = "wasmtime-47.0.1-py3-none-win_amd64.whl", hash = "sha256:4e46a4a29092a2ac1001159d5673e2a23996f4474261c791401867b1630429f4"},
     {file = "wasmtime-47.0.1-py3-none-win_arm64.whl", hash = "sha256:812058e7b40b73defa1d5118c25faa674920b7833c0a22cf79f0ff4eadee0c32"},
     {file = "wasmtime-47.0.1.tar.gz", hash = "sha256:fab6ee0e87354f14ef228fa71b40841dd3c2c713f6efce636af234b4e3e6edcc"},
+]
+
+[[package]]
+name = "yowasp-nextpnr-ecp5"
+version = "0.11.1.0.post826"
+summary = "nextpnr-ecp5 FPGA place and route tool"
+dependencies = [
+    "yowasp-runtime~=1.93",
+]
+files = [
+    {file = "yowasp_nextpnr_ecp5-0.11.1.0.post826-py3-none-any.whl", hash = "sha256:42c70c022cc2e0620761db725b5b57aa5c6b9b7e32b1f31b29343fc10a767986"},
 ]
 
 [[package]]
