@@ -18,8 +18,8 @@ DEPENDS := $(C_FILES:.c=.d)
 INCLUDES = -I./include
 LDSCRIPT = firmware.ld
 
-CFLAGS = -march=rv32i -mabi=ilp32 -Os -fno-builtin $(INCLUDES)
-ASFLAGS = -march=rv32i -mabi=ilp32
+CFLAGS = -march=rv32i_zicsr -mabi=ilp32 -Os -fno-builtin $(INCLUDES)
+ASFLAGS = -march=rv32i_zicsr -mabi=ilp32
 LDFLAGS = -b elf32-littleriscv -nostdlib -T$(LDSCRIPT)
 
 .PHONY: all clean disassemble symbols
