@@ -5,10 +5,10 @@
 groups = ["default", "test"]
 strategy = []
 lock_version = "4.5.1"
-content_hash = "sha256:4996c7b0d601cc1bebd757087f4bfc211ffd09d6105965d531b67519fecb9a37"
+content_hash = "sha256:d69f6f3c7437c519e14b6e3b0662fc535af97edb84bf7257f41fa87a90abc55a"
 
 [[metadata.targets]]
-requires_python = "~=3.10"
+requires_python = "~=3.10.0"
 
 [[package]]
 name = "amaranth"
