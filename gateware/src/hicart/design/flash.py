@@ -2,7 +2,7 @@ from amaranth import *
 from amaranth.lib import wiring
 
 from hicart.debug.serial import FT245Streamer, FT245Reader
-from hicart.interface.qspi_flash import QSPIFlashWishboneInterface
+from hicart.interface.flash import FlashWishboneInterface
 from hicart.utils.cli import main_runner
 
 
@@ -11,11 +11,11 @@ class Top(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules.car                               = platform.clock_domain_generator()
-        m.submodules.flash_connector = flash_connector = platform.flash_connector()
-        m.submodules.flash_interface = flash_interface = QSPIFlashWishboneInterface()
+        m.submodules.car                                    = platform.clock_domain_generator()
+        m.submodules.flash_io           = flash_io          = platform.flash_io()
+        m.submodules.flash_interface    = flash_interface   = FlashWishboneInterface()
 
-        wiring.connect(m, flash_interface.qspi, flash_connector.qspi)
+        wiring.connect(m, flash_interface.qspi_ce, flash_io.qspi_ce)
 
         address = Signal(24, reset=0x800000)
         counter = Signal(24)
@@ -72,17 +72,17 @@ class Top(Elaboratable):
 
         m.d.comb += [
             pmod.d.o[0].eq(ClockSignal('sync')),
-            pmod.d.o[1].eq(flash_connector.qspi.cs_n),
-            pmod.d.o[2].eq(flash_connector.spi_clk),
+            pmod.d.o[1].eq(flash_io.qspi_ce.cs_n),
+            pmod.d.o[2].eq(flash_io.spi_clk),
 
-            pmod.d.o[3].eq(flash_connector.qspi.d.i[0]),
-            pmod.d.o[4].eq(flash_connector.qspi.d.i[1]),
-            pmod.d.o[5].eq(flash_connector.qspi.d.i[2]),
-            pmod.d.o[6].eq(flash_connector.qspi.d.i[3]),
-            pmod.d.o[7].eq(flash_connector.qspi.d.oe[0]),
+            pmod.d.o[3].eq(flash_io.qspi_ce.d.i[0]),
+            pmod.d.o[4].eq(flash_io.qspi_ce.d.i[1]),
+            pmod.d.o[5].eq(flash_io.qspi_ce.d.i[2]),
+            pmod.d.o[6].eq(flash_io.qspi_ce.d.i[3]),
+            pmod.d.o[7].eq(flash_io.qspi_ce.d.oe[0]),
 
             pmod.d.oe.eq(1),
-        ]        
+        ]
 
         return m
 

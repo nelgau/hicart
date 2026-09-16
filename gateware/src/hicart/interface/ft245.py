@@ -105,7 +105,7 @@ class FT245Interface(wiring.Component):
                         self._rx_fifo.w_data    .eq(din),
                         self._rx_fifo.w_en      .eq(1),
                         rd                      .eq(1),
-                        
+
                     ]
 
                 with m.State("WRITE"):

@@ -32,7 +32,6 @@ class CIC(wiring.Component):
     def __init__(self):
         super().__init__()
 
-        # self.cpu = MinervaCPU(reset_address=Constants.RESET_ADDR)
         self.cpu = Minerva(reset_address=Constants.RESET_ADDR)
 
         self._arbiter = wishbone.Arbiter(addr_width=30, data_width=32, granularity=8, features={"cti", "bte"})

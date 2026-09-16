@@ -5,7 +5,7 @@ from amaranth_soc import wishbone
 
 from hicart.n64.cic import CIC
 from hicart.n64.pi import WishboneBridge
-from hicart.interface.qspi_flash import QSPIFlashWishboneInterface
+from hicart.interface.flash import FlashWishboneInterface
 from hicart.soc.wishbone import DownConverter, Translator
 from hicart.utils.cli import main_runner
 
@@ -17,12 +17,12 @@ class Top(Elaboratable):
 
         leds = platform.get_leds()
 
-        m.submodules.car                               = platform.clock_domain_generator()
-        m.submodules.cic        = self.cic = cic       = DomainRenamer("cic")(CIC())
+        m.submodules.car                                    = platform.clock_domain_generator()
+        m.submodules.cic                = cic               = DomainRenamer("cic")(CIC())
 
-        m.submodules.bridge          = self.bridge          = bridge          = WishboneBridge()
-        m.submodules.flash_interface = self.flash_interface = flash_interface = QSPIFlashWishboneInterface()
-        m.submodules.flash_connector = self.flash_connector = flash_connector = platform.flash_connector()
+        m.submodules.bridge             = bridge            = WishboneBridge()
+        m.submodules.flash_interface    = flash_interface   = FlashWishboneInterface()
+        m.submodules.flash_io           = flash_io          = platform.flash_io()
 
         translator = Translator(sub_bus=flash_interface.bus,
                                 base_addr=0x800000,
@@ -46,7 +46,7 @@ class Top(Elaboratable):
         pmod     = self.pmod     = platform.request('pmod')
 
         wiring.connect(m, bridge.wb, decoder.bus)
-        wiring.connect(m, flash_interface.qspi, flash_connector.qspi)
+        wiring.connect(m, flash_interface.qspi_ce, flash_io.qspi_ce)
 
         # wiring.connect(m, cic.bus, n64_cart.cic)
         # wiring.connect(m, bridge.pi, n64_cart.pi)

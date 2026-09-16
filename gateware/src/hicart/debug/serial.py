@@ -26,7 +26,7 @@ class FT245Streamer(Elaboratable):
         m.d.comb += [
             self.stream     .connect(dc.source),
             dc.sink         .connect(iface.tx),
-        ]        
+        ]
 
         # Convert our sync domain to the domain requested by the user, if necessary.
         if self.domain != "sync":

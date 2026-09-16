@@ -8,7 +8,7 @@ from amaranth.lib.wiring import In, Out
 from amaranth.vendor import LatticeECP5Platform
 from amaranth_boards.resources import *
 
-from hicart.interface.qspi_flash import QSPISignature
+from hicart.interface import flash
 from hicart.utils.plat import get_all_resources
 
 from hicart.vendor.ecp5pll import ECP5PLL, ECP5PLLConfig
@@ -32,8 +32,8 @@ class HomeInvaderRevADomainGenerator(Elaboratable):
         return m
 
 
-class HomeInvaderRevAFlashConnector(wiring.Component):
-    qspi:       In(QSPISignature())
+class FlashIO(wiring.Component):
+    qspi_ce:    In(flash.ClockEnableSignature())
     spi_clk:    Out(1)
 
     def elaborate(self, platform):
@@ -43,25 +43,23 @@ class HomeInvaderRevAFlashConnector(wiring.Component):
             # Gated clock signal
             i_USRMCLKI=self.spi_clk,
             # Active-low output enable (tristate)
-            i_USRMCLKTS=self.qspi.cs_n
+            i_USRMCLKTS=self.qspi_ce.cs_n
         )
 
         qspi_pins = platform.request("qspi_flash")
         sync_clk = ClockSignal()
 
         m.d.comb += [
-            # FIXME: Does this clock gating mux actually belong here? Can it
-            # be refactored out into the QSPIFlashInterface module?
-            qspi_pins.cs_n.o        .eq(self.qspi.cs_n),
-            self.spi_clk            .eq(Mux(self.qspi.sck, ~sync_clk, 1)),
+            qspi_pins.cs_n.o            .eq(self.qspi_ce.cs_n),
+            self.spi_clk                .eq(Mux(self.qspi_ce.sck_en, ~sync_clk, 1)),
         ]
 
         for i in range(4):
             dq_pin = getattr(qspi_pins, f"dq{i}")
             m.d.comb += [
-                self.qspi.d.i[i]    .eq(dq_pin.i),
-                dq_pin.o            .eq(self.qspi.d.o[i]),
-                dq_pin.oe           .eq(self.qspi.d.oe[i]),
+                self.qspi_ce.d.i[i]     .eq(dq_pin.i),
+                dq_pin.o                .eq(self.qspi_ce.d.o[i]),
+                dq_pin.oe               .eq(self.qspi_ce.d.oe[i]),
             ]
 
         return m
@@ -74,10 +72,10 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
     default_clk = "clk12"
 
     clock_domain_generator = HomeInvaderRevADomainGenerator
-    flash_connector = HomeInvaderRevAFlashConnector
-    
+    flash_io = FlashIO
+
     resources = [
-        Resource("clk12", 0, Pins("J16", dir="i"), 
+        Resource("clk12", 0, Pins("J16", dir="i"),
             Clock(12e6), Attrs(IO_TYPE="LVCMOS33")),
 
         Resource("n64_cart", 0,
@@ -100,7 +98,7 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
             ),
             Subsignal("reset",      PinsN("A14", dir="i"), Attrs(PULLMODE="UP")),
             Subsignal("nmi",        PinsN("C13", dir="i"), Attrs(PULLMODE="UP")),
-            
+
             Attrs(IO_TYPE="LVCMOS33", SLEWRATE="SLOW")
         ),
 

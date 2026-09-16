@@ -50,7 +50,7 @@ class DownConverter(wiring.Component):
         with m.FSM() as fsm:
 
             m.d.comb += [
-                self.bus.stall.eq(~fsm.ongoing("IDLE") & ~self.bus.ack),                
+                self.bus.stall.eq(~fsm.ongoing("IDLE") & ~self.bus.ack),
             ]
 
             with m.State("IDLE"):
@@ -76,7 +76,7 @@ class DownConverter(wiring.Component):
                         m.next = "IDLE"
 
                         with m.If(self.bus.cyc & self.bus.stb):
-                            m.next = "SENDING"                
+                            m.next = "SENDING"
 
         # Strobe/Ack Counters
 
@@ -101,7 +101,7 @@ class DownConverter(wiring.Component):
         with m.If(self.bus.cyc & self.bus.stb & ~self.bus.stall):
             m.d.sync += address.eq(self.bus.adr)
 
-        m.d.comb += self.sub_bus.adr.eq(Cat(stb_counter, address))            
+        m.d.comb += self.sub_bus.adr.eq(Cat(stb_counter, address))
 
         # Write
 

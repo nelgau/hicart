@@ -117,7 +117,7 @@ class StreamWishboneCommander(Elaboratable):
                             read_data       .eq(self.bus.dat_r)
                         ]
 
-            with m.State("READ_DATA"):                
+            with m.State("READ_DATA"):
                 m.d.comb += [
                     self.sink.payload       .eq(read_data[-8:]),
                     self.sink.valid         .eq(1),
@@ -128,7 +128,7 @@ class StreamWishboneCommander(Elaboratable):
                     m.d.sync += [
                         read_data[8:]     .eq(read_data[:-8]),
                         read_data[:8]     .eq(0),
-                    ]                    
+                    ]
 
                     with m.If(count > 0):
                         m.d.sync += count.eq(count - 1)
@@ -190,7 +190,7 @@ class FT245WishboneRemote:
         import pyftdi.serialext
 
         self._port = pyftdi.serialext.serial_for_url('ftdi://ftdi:2232h:FT5RTNBA/1', baudrate=3000000)
-        self._port.reset_input_buffer()    
+        self._port.reset_input_buffer()
 
     def read(self, address):
         self._port.write(struct.pack('>B', 0x10))
@@ -214,4 +214,4 @@ class FT245WishboneRemote:
         ack  = struct.unpack('>B', self._port.read(1))[0]
 
         if ack != 0xDD:
-            print(f"Got bad response! 0x{ack:02X}")     
+            print(f"Got bad response! 0x{ack:02X}")
