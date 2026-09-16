@@ -20,10 +20,10 @@ class MultiProcessTestCase(unittest.TestCase):
             os.makedirs("traces", exist_ok=True)
             # Figure out the name of our VCD files
             vcd_name = "traces/" + self.id()
-            
+
             all_traces = []
             # Add clock signals to the traces by default
-            fragment = sim._fragment
+            fragment = sim._design.fragment
             for domain in fragment.iter_domains():
                 cd = fragment.domains[domain]
                 all_traces.extend((cd.clk, cd.rst))

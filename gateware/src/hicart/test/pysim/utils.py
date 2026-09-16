@@ -3,42 +3,27 @@ import math
 import unittest
 from functools import wraps
 
-from amaranth import Signal
 from amaranth.sim import Simulator
 
 def sync_test_case(process_function):
-    """ Decorator that converts a function into a simple synchronous-process test case. """
-
-    # This pattern is lifted from LUNA
-
     def run_test(self):
         @wraps(process_function)
-        def test_case():
-            yield from self.initialize_signals()
-            yield from process_function(self)
+        async def testbench(ctx):
+            await self.initialize_signals(ctx)
+            await process_function(self, ctx)
 
-        self.domain = 'sync'
-        self._ensure_clocks_present()
-        self.sim.add_sync_process(test_case, domain='sync')
+        self.sim.add_testbench(testbench)
         self.simulate()
 
     return run_test
 
 class ModuleTestCase(unittest.TestCase):
-    # Convenience property: if set, instantiate_dut will automatically create
-    # the relevant fragment with FRAGMENT_ARGUMENTS.
     FRAGMENT_UNDER_TEST = None
     FRAGMENT_ARGUMENTS = {}
 
-    # Convenience properties: if not None, a clock with the relevant frequency
-    # will automatically be added.
     CLOCK_FREQUENCY = 100e6
 
     def instantiate_dut(self):
-        """ Basic-most function to instantiate a device-under-test.
-
-        By default, instantiates FRAGMENT_UNDER_TEST.
-        """
         return self.FRAGMENT_UNDER_TEST(**self.FRAGMENT_ARGUMENTS)
 
     def setUp(self):
@@ -46,35 +31,26 @@ class ModuleTestCase(unittest.TestCase):
         self.sim = Simulator(self.dut)
         self.sim.add_clock(1.0 / self.CLOCK_FREQUENCY, domain='sync')
 
-    def initialize_signals(self):
-        """ Provide an opportunity for the test apparatus to initialize signals. """
-        yield Signal()
+    async def initialize_signals(self, ctx):
+        pass
 
     def traces_of_interest(self):
-        """ Returns an iterable of traces in any generated output. """
         return ()
 
     def simulate(self, *, vcd_suffix=None):
-        """ Runs our core simulation. """
-
-        # If we're generating VCDs, run the test under a VCD writer.
         if os.getenv('GENERATE_VCDS', default=False):
-            # Create an output directory
             os.makedirs("traces", exist_ok=True)
-            # Figure out the name of our VCD files
             vcd_name = "traces/" + self.id()
-            
+
             all_traces = []
-            # Add clock signals to the traces by default
-            fragment = self.sim._fragment
+
+            fragment = self.sim._design.fragment
             for domain in fragment.iter_domains():
                 cd = fragment.domains[domain]
                 all_traces.extend((cd.clk, cd.rst))
-                
-            # Add any user-supplied traces after the clock domains
+
             all_traces += self.traces_of_interest()
 
-            # ... and run the simulation while writing them.
             with self.sim.write_vcd(vcd_name + ".vcd", vcd_name + ".gtkw", traces=all_traces):
                 self.sim.run()
         else:
@@ -108,12 +84,8 @@ class ModuleTestCase(unittest.TestCase):
             if timeout and cycles_passed > timeout:
                 raise RuntimeError(f"Timeout waiting for '{strobe.name}' to go high!")
 
-    def _ensure_clocks_present(self):
-        pass
-
     def wait(self, time):
         """ Helper method that waits for a given number of seconds. """
         period = 1 / self.CLOCK_FREQUENCY
         cycles = math.ceil(time / period)
-        yield from self.advance_cycles(cycles) 
-
+        yield from self.advance_cycles(cycles)

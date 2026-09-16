@@ -23,15 +23,14 @@ class DownConverterTest(MultiProcessTestCase):
         intr_driver = WishboneInitiatorDriver(dut.bus)
         sub_emulator = WishboneTargetEmulator(sub_bus, delay=1, max_outstanding=1)
 
-        def intr_process():
-            yield from intr_driver.begin()
-            yield from intr_driver.read_sequential(5, 0x00040000, 7)
+        async def intr_process(ctx):
+            await intr_driver.begin(ctx)
+            await intr_driver.read_sequential(ctx, 5, 0x00040000, 7)
 
-        def sub_process():
-            yield Passive()
-            yield from sub_emulator.emulate()
+        async def sub_process(ctx):
+            await sub_emulator.emulate(ctx)
 
         with self.simulate(dut, traces=dut.ports()) as sim:
             sim.add_clock(1.0 / 100e6, domain='sync')
-            sim.add_sync_process(intr_process)
-            sim.add_sync_process(sub_process)        
+            sim.add_testbench(sub_process, background=True)
+            sim.add_testbench(intr_process)

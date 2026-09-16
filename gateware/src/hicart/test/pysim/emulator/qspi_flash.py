@@ -8,35 +8,35 @@ class QSPIFlashEmulator:
         self.qspi = qspi
         self.data = data
 
-    def emulate(self):    
+    async def emulate(self, ctx):
         while True:
-            yield self.qspi.d.i.eq(0)
+            ctx.set(self.qspi.d.i, 0)
 
-            yield from self._wait_for_cs()            
+            await self._wait_for_cs(ctx)
 
-            command = yield from self._read_spi(8)
+            command = await self._read_spi(ctx, 8)
             if command is None:
                 continue
 
             assert command == 0xEB
 
-            address = yield from self._read_qspi(6)
+            address = await self._read_qspi(ctx, 6)
             if address is None:
                 continue
 
-            mode = yield from self._read_qspi(2)
+            mode = await self._read_qspi(ctx, 2)
             if mode is None:
                 continue
 
-            assert mode == 0xF0  
+            assert mode == 0xF0
 
-            dummy = yield from self._read_qspi(3)
+            dummy = await self._read_qspi(ctx, 4)
             if dummy is None:
                 continue
 
             while True:
                 data = self._load_data(address)
-                bursting = yield from self._write_qspi(2, data)
+                bursting = await self._write_qspi(ctx, 2, data)
                 if not bursting:
                     break
                 address += 1
@@ -47,60 +47,60 @@ class QSPIFlashEmulator:
         else:
             return 0xFF
 
-    def _wait_for_cs(self):
-        while (yield self.qspi.cs_n):
-            yield
+    async def _wait_for_cs(self, ctx):
+        while ctx.get(self.qspi.cs_n):
+            await ctx.tick()
 
-    def _read_spi(self, bit_count):
+    async def _read_spi(self, ctx, bit_count):
         result = 0
 
         for i in range(bit_count):
-            aborted = yield from self._wait_for_next_clock()
+            aborted = await self._wait_for_next_clock(ctx)
             if aborted:
                 return None
 
-            bit = (yield self.qspi.d.o[0])
+            bit = ctx.get(self.qspi.d.o[0])
             result = (result << 1) | bit
-            yield
+            await ctx.tick()
 
         return result
 
-    def _read_qspi(self, nibble_count):
+    async def _read_qspi(self, ctx, nibble_count):
         result = 0
 
         for i in range(nibble_count):
-            aborted = yield from self._wait_for_next_clock()
+            aborted = await self._wait_for_next_clock(ctx)
             if aborted:
                 return None
 
-            nibble = (yield self.qspi.d.o)
+            nibble = ctx.get(self.qspi.d.o)
             result = (result << 4) | nibble
-            yield
+            await ctx.tick()
 
         return result
 
-    def _write_qspi(self, nibble_count, data):
+    async def _write_qspi(self, ctx, nibble_count, data):
         nibbles = []
         for i in range(nibble_count):
             nibbles.append(data & 0xF)
             data >>= 4
 
         for nibble in reversed(nibbles):
-            aborted = yield from self._wait_for_next_clock()
+            aborted = await self._wait_for_next_clock(ctx)
             if aborted:
                 return False
 
-            yield self.qspi.d.i.eq(nibble)
-            yield
+            ctx.set(self.qspi.d.i, nibble)
+            await ctx.tick()
 
         return True
 
-    def _wait_for_next_clock(self):        
+    async def _wait_for_next_clock(self, ctx):
         while True:
-            if (yield self.qspi.cs_n):
+            if ctx.get(self.qspi.cs_n):
                 return True
 
-            if (yield self.qspi.sck):
+            if ctx.get(self.qspi.sck):
                 return False
-            
-            yield
+
+            await ctx.tick()

@@ -21,62 +21,55 @@ class ByteDownConverterTest(ModuleTestCase):
         ]
 
     @sync_test_case
-    def test_basic(self):
-        # yield from self.advance_cycles(2)
+    async def test_basic(self, ctx):
+        assert ctx.get(self.dut.source.ready) == 1
+        ctx.set(self.dut.source.payload, 0xCAFEBABE)
+        ctx.set(self.dut.source.valid, 1)
+        await ctx.tick()
 
-        self.assertEqual((yield self.dut.source.ready), 1)
+        ctx.set(self.dut.source.valid, 0)
+        await ctx.tick()
 
-        yield self.dut.source.payload.eq(0xCAFEBABE)
-        yield self.dut.source.valid.eq(1)
-        yield
+        assert ctx.get(self.dut.source.ready) == 0
+        ctx.set(self.dut.source.payload, 0xDEADBEEF)
+        ctx.set(self.dut.source.valid, 1)
+        await ctx.tick()
 
-        yield self.dut.source.valid.eq(0)
-        yield
+        assert ctx.get(self.dut.sink.payload) == 0xBE
+        assert ctx.get(self.dut.sink.valid) == 1
+        ctx.set(self.dut.sink.ready, 1)
+        await ctx.tick()
 
-        self.assertEqual((yield self.dut.source.ready), 0)
+        assert ctx.get(self.dut.sink.payload) == 0xBA
+        assert ctx.get(self.dut.sink.valid) == 1
+        await ctx.tick()
 
-        yield self.dut.source.payload.eq(0xDEADBEEF)
-        yield self.dut.source.valid.eq(1)
-        yield
+        assert ctx.get(self.dut.sink.payload) == 0xFE
+        assert ctx.get(self.dut.sink.valid) == 1
+        await ctx.tick()
 
-        self.assertEqual((yield self.dut.sink.payload), 0xBE)
-        self.assertEqual((yield self.dut.sink.valid),   1)
+        assert ctx.get(self.dut.source.ready) == 1
+        assert ctx.get(self.dut.sink.payload) == 0xCA
+        assert ctx.get(self.dut.sink.valid) == 1
+        await ctx.tick()
 
-        yield self.dut.sink.ready.eq(1)
-        yield
-        yield
+        assert ctx.get(self.dut.source.ready) == 0
+        assert ctx.get(self.dut.sink.payload) == 0xEF
+        assert ctx.get(self.dut.sink.valid) == 1
+        ctx.set(self.dut.source.valid, 0)
+        await ctx.tick()
 
-        self.assertEqual((yield self.dut.sink.payload), 0xBA)
-        self.assertEqual((yield self.dut.sink.valid),   1)
-        yield
+        assert ctx.get(self.dut.sink.payload) == 0xBE
+        assert ctx.get(self.dut.sink.valid) == 1
+        await ctx.tick()
 
-        self.assertEqual((yield self.dut.sink.payload), 0xFE)
-        self.assertEqual((yield self.dut.sink.valid),   1)
-        yield
+        assert ctx.get(self.dut.sink.payload) == 0xAD
+        assert ctx.get(self.dut.sink.valid) == 1
+        await ctx.tick()
 
-        self.assertEqual((yield self.dut.source.ready), 1)
-        self.assertEqual((yield self.dut.sink.payload), 0xCA)
-        self.assertEqual((yield self.dut.sink.valid),   1)        
+        assert ctx.get(self.dut.sink.payload) == 0xDE
+        assert ctx.get(self.dut.sink.valid) == 1
+        await ctx.tick()
 
-        yield self.dut.source.valid.eq(0)
-        yield
-
-        self.assertEqual((yield self.dut.source.ready), 0)
-        self.assertEqual((yield self.dut.sink.payload), 0xEF)
-        self.assertEqual((yield self.dut.sink.valid),   1)
-        yield
-
-        self.assertEqual((yield self.dut.sink.payload), 0xBE)
-        self.assertEqual((yield self.dut.sink.valid),   1)
-        yield
-
-        self.assertEqual((yield self.dut.sink.payload), 0xAD)
-        self.assertEqual((yield self.dut.sink.valid),   1)
-        yield
-
-        self.assertEqual((yield self.dut.sink.payload), 0xDE)
-        self.assertEqual((yield self.dut.sink.valid),   1)
-        yield
-
-        self.assertEqual((yield self.dut.source.ready), 1)
-        self.assertEqual((yield self.dut.sink.valid),   0)
+        assert ctx.get(self.dut.source.ready) == 1
+        assert ctx.get(self.dut.sink.valid) == 0

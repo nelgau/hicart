@@ -103,21 +103,20 @@ class N64ReadTest(MultiProcessTestCase):
         flash = QSPIFlashEmulator(dut.qspi, flash_bytes)
         pi = PIInitiatorDriver(dut.pi)
 
-        def flash_process():
-            yield Passive()
-            yield from flash.emulate()
+        async def flash_process(ctx):
+            await flash.emulate(ctx)
 
-        def pi_process():
-            yield from pi.begin()
+        async def pi_process(ctx):
+            await pi.begin(ctx)
 
             for i in range(4):
                 base_address = 0x10000000 + 4 * i
-                check_reads((yield from pi.read_burst_slow(base_address, 2)))
+                check_reads(await pi.read_burst_slow(ctx, base_address, 2))
 
-            check_reads((yield from pi.read_burst_fast(0x10000000, 256)))
-            check_reads((yield from pi.read_burst_fast(0x10000000, 256)))
+            check_reads(await pi.read_burst_fast(ctx, 0x10000000, 256))
+            check_reads(await pi.read_burst_fast(ctx, 0x10000000, 256))
 
         with self.simulate(dut, traces=dut.ports()) as sim:
             sim.add_clock(1.0 / 80e6, domain='sync')
-            sim.add_sync_process(flash_process)
-            sim.add_process(pi_process)
+            sim.add_testbench(flash_process, background=True)
+            sim.add_testbench(pi_process)

@@ -16,37 +16,36 @@ class StreamWishboneCommanderTest(MultiProcessTestCase):
         source_driver = StreamDriver(dut.source)
         sink_driver = StreamDriver(dut.sink)
 
-        def bus_process():
-            yield Passive()
-            yield from bus_emulator.emulate()
+        async def bus_process(ctx):
+            await bus_emulator.emulate(ctx)
 
-        def source_process():
-            yield from source_driver.begin()
+        async def source_process(ctx):
+            await source_driver.begin(ctx)
 
             # Read command
-            yield from source_driver.produce([0x10])
-            yield from source_driver.produce([0xCA, 0xFE, 0xBA, 0xBE])
+            await source_driver.produce(ctx, [0x10])
+            await source_driver.produce(ctx, [0xCA, 0xFE, 0xBA, 0xBE])
 
             for i in range(4):
-                yield
+                await ctx.tick()
 
             # Write command
-            yield from source_driver.produce([0x11])
-            yield from source_driver.produce([0xDE, 0xAD, 0xBE, 0xEF])
-            yield from source_driver.produce([0x12, 0x34, 0x56, 0x78])
+            await source_driver.produce(ctx, [0x11])
+            await source_driver.produce(ctx, [0xDE, 0xAD, 0xBE, 0xEF])
+            await source_driver.produce(ctx, [0x12, 0x34, 0x56, 0x78])
 
-        def sink_process():
-            yield from sink_driver.begin()
+        async def sink_process(ctx):
+            await sink_driver.begin(ctx)
 
             # Read command
-            yield from sink_driver.consume(4)
-            yield from sink_driver.consume()
+            await sink_driver.consume(ctx, 4)
+            await sink_driver.consume(ctx)
 
             # Write command
-            yield from sink_driver.consume()
+            await sink_driver.consume(ctx)
 
         with self.simulate(dut, traces=dut.ports()) as sim:
             sim.add_clock(1.0 / 100e6, domain='sync')
-            sim.add_sync_process(bus_process)
-            sim.add_sync_process(source_process)
-            sim.add_sync_process(sink_process)
+            sim.add_testbench(bus_process, background=True)
+            sim.add_testbench(source_process)
+            sim.add_testbench(sink_process)

@@ -6,51 +6,35 @@ class StreamDriver:
     def __init__(self, stream):
         self.stream = stream
 
-    def begin(self):
-        yield
+    async def begin(self, ctx):
+        pass
 
-    def produce(self, items):
+    async def produce(self, ctx, items):
+        ctx.set(self.stream.valid, 1)
+
         for item in items:
-            yield self.stream.payload.eq(item)
-            yield self.stream.valid.eq(1)
-            yield Settle()
+            ctx.set(self.stream.payload, item)
 
-            # This is necessary because each stream transaction handshake must
-            # span at least one simulation time step.
-            did_advance = False
+            while not ctx.get(self.stream.ready):
+                await ctx.tick()
 
-            while not (yield self.stream.ready):
-                did_advance = True
-                yield
+            await ctx.tick()
 
-            if not did_advance:
-                yield
+        ctx.set(self.stream.payload, 0)
+        ctx.set(self.stream.valid, 0)
 
-        yield self.stream.payload.eq(0)
-        yield self.stream.valid.eq(0)
-        yield
-
-    def consume(self, count=1):
+    async def consume(self, ctx, count=1):
         results = []
 
-        yield self.stream.ready.eq(1)
-        yield Settle()
+        ctx.set(self.stream.ready, 1)
 
         while len(results) < count:
-            # This is necessary because each stream transaction handshake must
-            # span at least one simulation time step.
-            did_advance = False
+            while not ctx.get(self.stream.valid):
+                await ctx.tick()
 
-            while not (yield self.stream.valid):
-                did_advance = True
-                yield
+            results.append(ctx.get(self.stream.payload))
+            await ctx.tick()
 
-            results.append((yield self.stream.payload))
-
-            if not did_advance:
-                yield
-
-        yield self.stream.ready.eq(0)
-        yield
+        ctx.set(self.stream.ready, 0)
 
         return results
