@@ -45,6 +45,7 @@ ECPPACK = "yowasp-ecppack"
 venvPath = ".venv"
 typeCheckingMode = "off"
 reportWildcardImportFromLibrary = "none"
+reportInvalidTypeForm = "none"
 
 [build-system]
 requires = ["pdm-backend"]
