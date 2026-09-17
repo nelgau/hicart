@@ -11,17 +11,17 @@ from hicart.test.pysim.utils import ModuleTestCase, sync_test_case
 
 class WishboneBridgeTest(ModuleTestCase):
 
+    ROM_DATA = [
+        0x3210,     # 0x1000000
+        0xBA98,
+        0xBABE,
+        0xBEEF,
+    ]
+
     class DUT(Elaboratable):
 
         def __init__(self):
             self.pi = PISignature.create()
-
-            self.rom_data = [
-                0x3210,
-                0xBA98,
-                0xBABE,
-                0xBEEF,
-            ]
 
         def elaborate(self, platform):
             m = Module()
@@ -31,7 +31,7 @@ class WishboneBridgeTest(ModuleTestCase):
             self.rom = WishboneSRAM(size=16, data_width=16, granularity=8, writable=False)
             self.decoder.add(self.rom.wb_bus, addr=0x10000000)
 
-            self.rom.init = self.rom_data
+            self.rom.init = WishboneBridgeTest.ROM_DATA
 
             self.initiator = WishboneBridge()
 
@@ -55,33 +55,38 @@ class WishboneBridgeTest(ModuleTestCase):
             self.dut.pi.ale_l.i,
             self.dut.pi.read.i,
             self.dut.pi.write.i
-        ]        
+        ]
 
     @sync_test_case
-    def test_basic(self):
+    async def test_basic(self, ctx):
         # Ale_l is active in idle state
-        yield self.dut.pi.ale_l.i.eq(1)
-        yield self.dut.pi.ale_h.i.eq(0)
-        yield from self.advance_cycles(6)
+        ctx.set(self.dut.pi.ale_l.i, 1)
+        ctx.set(self.dut.pi.ale_h.i, 0)
+        await ctx.tick().repeat(6)
 
         # Latch address
 
-        yield self.dut.pi.ale_l.i   .eq(0)
-        yield from self.advance_cycles(2)
-        yield self.dut.pi.ad.i      .eq(0x1000)
-        yield from self.advance_cycles(2)
-        yield self.dut.pi.ale_h.i   .eq(1)
-        yield from self.advance_cycles(2)
-        yield self.dut.pi.ad.i      .eq(0x0002)
-        yield from self.advance_cycles(2)
-        yield self.dut.pi.ale_l.i   .eq(1)
-        yield from self.advance_cycles(8)
+        ctx.set(self.dut.pi.ale_l.i, 0)
+        await ctx.tick().repeat(2)
+        ctx.set(self.dut.pi.ad.i, 0x1000)
+        await ctx.tick().repeat(2)
+        ctx.set(self.dut.pi.ale_h.i, 1)
+        await ctx.tick().repeat(2)
+        ctx.set(self.dut.pi.ad.i, 0x0002)
+        await ctx.tick().repeat(2)
+        ctx.set(self.dut.pi.ale_l.i, 1)
+        await ctx.tick().repeat(8)
 
         # Read
 
         for i in range(3):
+            ctx.set(self.dut.pi.read.i, 1)
+            await ctx.tick().repeat(6)
 
-            yield self.dut.pi.read.i    .eq(1)
-            yield from self.advance_cycles(6)
-            yield self.dut.pi.read.i    .eq(0)
-            yield from self.advance_cycles(6)
+            assert ctx.get(self.dut.pi.ad.o) == self.ROM_DATA[i + 1]
+            assert ctx.get(self.dut.pi.ad.oe) == 1
+
+            ctx.set(self.dut.pi.read.i, 0)
+            await ctx.tick().repeat(6)
+
+            assert ctx.get(self.dut.pi.ad.oe) == 0

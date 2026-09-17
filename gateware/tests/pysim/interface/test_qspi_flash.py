@@ -25,65 +25,65 @@ class QSPIFlashInterfaceTest(ModuleTestCase):
             self.dut._in_shift,
             self.dut._out_shift,
             self.dut._counter,
-        ]    
+        ]
 
     @sync_test_case
-    def test_basic(self):
-        yield from self.advance_cycles(10)
+    async def test_basic(self, ctx):
+        await ctx.tick().repeat(10)
 
         #
 
-        yield self.dut.address.eq(0x876543)
-        yield self.dut.start.eq(1)
-        yield
-        yield self.dut.start.eq(0)
-        yield
+        ctx.set(self.dut.address, 0x876543)
+        ctx.set(self.dut.start, 1)
+        await ctx.tick()
+        ctx.set(self.dut.start, 0)
+        await ctx.tick()
 
-        yield from self.advance_cycles(20)
+        await ctx.tick().repeat(20)
 
         for x in [0xF, 0xE, 0xD, 0xC, 0xB, 0xA, 0x9, 0x8]:
-            yield self.dut.qspi.d.i.eq(x)
-            yield
+            ctx.set(self.dut.qspi.d.i, x)
+            await ctx.tick()
 
-        yield self.dut.qspi.d.i.eq(0)
-        yield
+        ctx.set(self.dut.qspi.d.i, 0)
+        await ctx.tick()
 
-        yield from self.advance_cycles(5)
+        await ctx.tick().repeat(5)
 
         #
 
-        yield self.dut.address.eq(0x876544)
-        yield self.dut.start.eq(1)
-        yield
-        yield self.dut.start.eq(0)        
+        ctx.set(self.dut.address, 0x876544)
+        ctx.set(self.dut.start, 1)
+        await ctx.tick()
+        ctx.set(self.dut.start, 0)
 
         for x in [0x7, 0x6, 0x5, 0x4, 0x3, 0x2, 0x1, 0x0]:
-            yield self.dut.qspi.d.i.eq(x)
-            yield
+            ctx.set(self.dut.qspi.d.i, x)
+            await ctx.tick()
 
-        yield self.dut.qspi.d.i.eq(0)
-        yield
+        ctx.set(self.dut.qspi.d.i, 0)
+        await ctx.tick()
 
-        yield from self.advance_cycles(5)
+        await ctx.tick().repeat(5)
 
         #
 
-        yield self.dut.address.eq(0x876546)
-        yield self.dut.start.eq(1)
-        yield
-        yield self.dut.start.eq(0)
-        yield
+        ctx.set(self.dut.address, 0x876546)
+        ctx.set(self.dut.start, 1)
+        await ctx.tick()
+        ctx.set(self.dut.start, 0)
+        await ctx.tick()
 
-        yield from self.advance_cycles(28)
+        await ctx.tick().repeat(28)
 
         for x in [0xC, 0xA, 0xF, 0xE, 0xB, 0xA, 0xB, 0xE]:
-            yield self.dut.qspi.d.i.eq(x)
-            yield
+            ctx.set(self.dut.qspi.d.i, x)
+            await ctx.tick()
 
-        yield self.dut.qspi.d.i.eq(0)
-        yield
+        ctx.set(self.dut.qspi.d.i, 0)
+        await ctx.tick()
 
-        yield from self.advance_cycles(20) 
+        await ctx.tick().repeat(20)
 
 
 class QSPIFlashWishboneInterfaceTest(ModuleTestCase):
@@ -106,72 +106,72 @@ class QSPIFlashWishboneInterfaceTest(ModuleTestCase):
         ]
 
     @sync_test_case
-    def test_basic(self):
-        yield from self.advance_cycles(10)
+    async def test_basic(self, ctx):
+        await ctx.tick().repeat(10)
 
         #
 
-        yield self.dut.bus.adr.eq(0x876543)
-        yield self.dut.bus.cyc.eq(1)
-        yield self.dut.bus.stb.eq(1)
-        yield
-        yield self.dut.bus.stb.eq(0)
-        yield
+        ctx.set(self.dut.bus.adr, 0x876543)
+        ctx.set(self.dut.bus.cyc, 1)
+        ctx.set(self.dut.bus.stb, 1)
+        await ctx.tick()
+        ctx.set(self.dut.bus.stb, 0)
+        await ctx.tick()
 
-        yield from self.advance_cycles(20)
+        await ctx.tick().repeat(20)
 
         for x in [0xF, 0xE, 0xD, 0xC, 0xB, 0xA, 0x9, 0x8]:
-            yield self.dut.qspi.d.i.eq(x)
-            yield
+            ctx.set(self.dut.qspi.d.i, x)
+            await ctx.tick()
 
-        yield self.dut.qspi.d.i.eq(0)
-        yield        
+        ctx.set(self.dut.qspi.d.i, 0)
+        await ctx.tick()
 
-        yield self.dut.bus.cyc.eq(0)
-        yield
+        ctx.set(self.dut.bus.cyc, 0)
+        await ctx.tick()
 
-        yield from self.advance_cycles(5)
+        await ctx.tick().repeat(5)
 
 
         #
 
-        yield self.dut.bus.adr.eq(0x876544)
-        yield self.dut.bus.cyc.eq(1)
-        yield self.dut.bus.stb.eq(1)
-        yield
-        yield self.dut.bus.stb.eq(0)   
+        ctx.set(self.dut.bus.adr, 0x876544)
+        ctx.set(self.dut.bus.cyc, 1)
+        ctx.set(self.dut.bus.stb, 1)
+        await ctx.tick()
+        ctx.set(self.dut.bus.stb, 0)
 
         for x in [0x7, 0x6, 0x5, 0x4, 0x3, 0x2, 0x1, 0x0]:
-            yield self.dut.qspi.d.i.eq(x)
-            yield
+            ctx.set(self.dut.qspi.d.i, x)
+            await ctx.tick()
 
-        yield self.dut.qspi.d.i.eq(0)
-        yield
+        ctx.set(self.dut.qspi.d.i, 0)
+        await ctx.tick()
 
-        yield self.dut.bus.cyc.eq(0)
-        yield
+        ctx.set(self.dut.bus.cyc, 0)
+        await ctx.tick()
 
-        yield from self.advance_cycles(5)
+        await ctx.tick().repeat(5)
 
         #
 
-        yield self.dut.bus.adr.eq(0x876546)
-        yield self.dut.bus.cyc.eq(1)
-        yield self.dut.bus.stb.eq(1)
-        yield
-        yield self.dut.bus.stb.eq(0)
-        yield
+        ctx.set(self.dut.bus.adr, 0x876546)
+        ctx.set(self.dut.bus.cyc, 1)
+        ctx.set(self.dut.bus.stb, 1)
+        await ctx.tick()
+        ctx.set(self.dut.bus.stb, 0)
+        await ctx.tick()
 
-        yield from self.advance_cycles(28)
+        await ctx.tick().repeat(28)
 
         for x in [0xC, 0xA, 0xF, 0xE, 0xB, 0xA, 0xB, 0xE]:
-            yield self.dut.qspi.d.i.eq(x)
-            yield
+            ctx.set(self.dut.qspi.d.i, x)
+            await ctx.tick()
 
-        yield self.dut.qspi.d.i.eq(0)
-        yield
+        ctx.set(self.dut.qspi.d.i, 0)
+        await ctx.tick()
 
-        yield self.dut.bus.cyc.eq(0)
-        yield
+        ctx.set(self.dut.bus.cyc, 0)
+        await ctx.tick()
 
-        yield from self.advance_cycles(20)
+        await ctx.tick().repeat(20)

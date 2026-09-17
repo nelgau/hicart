@@ -24,140 +24,139 @@ class CICTest(ModuleTestCase):
             self.dut.bus.data.oe,
         ]
 
-    def initialize_signals(self):
-        yield self.dut.reset        .eq(0)
-        yield self.dut.bus.dclk.i   .eq(1)
-        yield self.dut.bus.data.i   .eq(1)
+    async def initialize_signals(self, ctx):
+        ctx.set(self.dut.reset, 0)
+        ctx.set(self.dut.bus.dclk.i, 1)
+        ctx.set(self.dut.bus.data.i, 1)
 
     @sync_test_case
-    def test_reset(self):    
-        yield from self.wait(20e-6)
+    async def test_reset(self, ctx):
+        await ctx.delay(20e-6)
 
         # Preamble (from CIC)
-        hello1 = yield from self.read_nibble()
-        seed2  = yield from self.read_nibbles(2)
-        
-        yield self.dut.reset.eq(1)
-        yield from self.advance_cycles(10)
-        yield self.dut.reset.eq(0)
+        hello1 = await self.read_nibble(ctx)
+        seed1  = await self.read_nibbles(ctx, 2)
 
-        yield from self.wait(20e-6)
+        ctx.set(self.dut.reset, 1)
+        await ctx.tick().repeat(10)
+        ctx.set(self.dut.reset, 0)
+
+        await ctx.delay(20e-6)
 
         # Preamble (from CIC)
-        hello2 = yield from self.read_nibble()
-        seed2  = yield from self.read_nibbles(2)
+        hello2 = await self.read_nibble(ctx)
+        seed2  = await self.read_nibbles(ctx, 2)
 
-        self.assertEqual(hello2, 0x1)
-        self.assertEqual(seed2, [0xB, 0xD])
+        assert hello2 == 0x1
+        assert seed2 == [0xB, 0xD]
 
     @sync_test_case
-    def test_output(self):
-        yield from self.wait(50e-6)
+    async def test_output(self, ctx):
+        await ctx.delay(50e-6)
 
         # Preamble (from CIC)
 
-        hello = yield from self.read_nibble()
-        seed  = yield from self.read_nibbles(6)
+        hello = await self.read_nibble(ctx)
+        seed  = await self.read_nibbles(ctx, 6)
 
-        self.assertEqual(hello, 0x1)
-        self.assertEqual(seed, [0xB, 0xD, 0x3, 0x9, 0x3, 0xD])
+        assert hello == 0x1
+        assert seed == [0xB, 0xD, 0x3, 0x9, 0x3, 0xD]
 
-        yield from self.wait(70e-6)
-        yield from self.read_bit()
+        await ctx.delay(70e-6)
+        await self.read_bit(ctx)
 
-        checksum = yield from self.read_nibbles(16)
+        checksum = await self.read_nibbles(ctx, 16)
 
-        self.assertEqual(checksum, [
+        assert checksum == [
             0x9, 0x0, 0x4, 0x0, 0xA, 0xE, 0xC, 0xB,
-                0xF, 0xD, 0xA, 0xD, 0xB, 0x2, 0x6, 0x5])
+                0xF, 0xD, 0xA, 0xD, 0xB, 0x2, 0x6, 0x5]
 
         # Initial values (from PIF)
 
-        yield from self.wait(20e-6)
+        await ctx.delay(20e-6)
 
-        yield from self.write_nibble(0xA)
-        yield from self.write_nibble(0x7)
+        await self.write_nibble(ctx, 0xA)
+        await self.write_nibble(ctx, 0x7)
 
         # Command 1 (from PIF)
 
-        yield from self.wait(20e-6)
-        yield from self.write_bit(0)
-        yield from self.write_bit(0)
-        yield from self.wait(200e-6)
+        await ctx.delay(20e-6)
+        await self.write_bit(ctx, 0)
+        await self.write_bit(ctx, 0)
+        await ctx.delay(200e-6)
 
         # Exchange 1 (Bidirectional)
 
-        cmd1_in_bits = yield from self.exchange_bits([0, 1, 1, 0, 1, 1, 0])
-        self.assertEqual(cmd1_in_bits, [1, 1, 1, 0, 1, 0, 1])
+        cmd1_in_bits = await self.exchange_bits(ctx, [0, 1, 1, 0, 1, 1, 0])
+        assert cmd1_in_bits == [1, 1, 1, 0, 1, 0, 1]
 
         # Command 2 (from PIF)
 
-        yield from self.wait(20e-6)
-        yield from self.write_bit(0)
-        yield from self.write_bit(0)
-        yield from self.wait(200e-6)
+        await ctx.delay(20e-6)
+        await self.write_bit(ctx, 0)
+        await self.write_bit(ctx, 0)
+        await ctx.delay(200e-6)
 
         # Exchange 2 (Bidirectional)
 
-        cmd2_in_bits = yield from self.exchange_bits([
+        cmd2_in_bits = await self.exchange_bits(ctx, [
             1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1])
-        self.assertEqual(cmd2_in_bits, [
-            0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0])
+        assert cmd2_in_bits == [
+            0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0]
 
-    def read_bit(self):
-        yield self.dut.bus.dclk.i.eq(0)
-        yield from self.wait(5e-6)
-        
+    async def read_bit(self, ctx):
+        ctx.set(self.dut.bus.dclk.i, 0)
+        await ctx.delay(5e-6)
+
         # As the signal is pulled high externally, the bit is low if oe & ~o.
-        bit = yield (~self.dut.bus.data.oe | self.dut.bus.data.o)
+        bit = ctx.get(~self.dut.bus.data.oe | self.dut.bus.data.o)
 
-        yield self.dut.bus.dclk.i.eq(1)
-        yield from self.wait(5e-6)
+        ctx.set(self.dut.bus.dclk.i, 1)
+        await ctx.delay(5e-6)
 
         return bit
 
-    def read_nibble(self):
+    async def read_nibble(self, ctx ):
         nibble = 0
         for _ in range(4):
             nibble <<= 1
-            nibble |= yield from self.read_bit()
+            nibble |= await self.read_bit(ctx)
 
-        yield from self.wait(10e-6)
+        await ctx.delay(10e-6)
 
         return nibble
 
-    def read_nibbles(self, length):
+    async def read_nibbles(self, ctx, length):
         nibbles = []
         for _ in range(length):
-            nibble = yield from self.read_nibble()
+            nibble = await self.read_nibble(ctx)
             nibbles.append(nibble)
         return nibbles
 
-    def write_bit(self, bit):
+    async def write_bit(self, ctx, bit):
         if bit == 0:
-            yield self.dut.bus.data.i.eq(0)
+            ctx.set(self.dut.bus.data.i, 0)
 
-        yield self.dut.bus.dclk.i.eq(0)
-        yield from self.wait(5e-6)
-        
-        yield self.dut.bus.dclk.i.eq(1)
-        yield from self.wait(1e-6)
-        
-        yield self.dut.bus.data.i.eq(1)
-        yield from self.wait(4e-6)
+        ctx.set(self.dut.bus.dclk.i, 0)
+        await ctx.delay(5e-6)
 
-    def write_nibble(self, nibble):
-        yield from self.write_bit(nibble & 0x8)
-        yield from self.write_bit(nibble & 0x4)
-        yield from self.write_bit(nibble & 0x2)
-        yield from self.write_bit(nibble & 0x1)
+        ctx.set(self.dut.bus.dclk.i, 1)
+        await ctx.delay(1e-6)
 
-        yield from self.wait(10e-6)
+        ctx.set(self.dut.bus.data.i, 1)
+        await ctx.delay(4e-6)
 
-    def exchange_bits(self, out_bits):
+    async def write_nibble(self, ctx, nibble):
+        await self.write_bit(ctx, nibble & 0x8)
+        await self.write_bit(ctx, nibble & 0x4)
+        await self.write_bit(ctx, nibble & 0x2)
+        await self.write_bit(ctx, nibble & 0x1)
+        await ctx.delay(10e-6)
+
+    async def exchange_bits(self, ctx, out_bits):
         in_bits = []
         for out_bit in out_bits:
-            yield from self.write_bit(out_bit)
-            in_bit = yield from self.read_bit()
+            await self.write_bit(ctx, out_bit)
+            in_bit = await self.read_bit(ctx)
             in_bits.append(in_bit)
         return in_bits

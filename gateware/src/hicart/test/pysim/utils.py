@@ -55,37 +55,3 @@ class ModuleTestCase(unittest.TestCase):
                 self.sim.run()
         else:
             self.sim.run()
-
-    @staticmethod
-    def pulse(signal, *, step_after=True):
-        """ Helper method that asserts a signal for a cycle. """
-        yield signal.eq(1)
-        yield
-        yield signal.eq(0)
-
-        if step_after:
-            yield
-
-    @staticmethod
-    def advance_cycles(cycles):
-        """ Helper method that waits for a given number of cycles. """
-        for _ in range(cycles):
-            yield
-
-    @staticmethod
-    def wait_until(strobe, *, timeout=None):
-        """ Helper method that advances time until a strobe signal becomes true. """
-        cycles_passed = 0
-
-        while not (yield strobe):
-            yield
-
-            cycles_passed += 1
-            if timeout and cycles_passed > timeout:
-                raise RuntimeError(f"Timeout waiting for '{strobe.name}' to go high!")
-
-    def wait(self, time):
-        """ Helper method that waits for a given number of seconds. """
-        period = 1 / self.CLOCK_FREQUENCY
-        cycles = math.ceil(time / period)
-        yield from self.advance_cycles(cycles)

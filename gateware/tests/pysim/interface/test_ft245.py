@@ -36,52 +36,53 @@ class FT245InterfaceTest(ModuleTestCase):
         ]
 
     @sync_test_case
-    def test_read(self):
-        yield from self.advance_cycles(2)
+    async def test_read(self, ctx):
+        await ctx.tick().repeat(2)
 
-        yield self.dut.bus.rxf.i.eq(0)
-        yield from self.advance_cycles(2)
+        ctx.set(self.dut.bus.rxf.i, 0)
+        await ctx.tick().repeat(2)
 
-        yield from self.wait_until(~self.dut.bus.rd.o, timeout=20)
-        yield from self.advance_cycles(2)
+        await ctx.tick().until(~self.dut.bus.rd.o)
+        await ctx.tick().repeat(2)
 
-        yield self.dut.bus.rxf.i.eq(1)
-        yield self.dut.bus.d.i.eq(0xA9)
+        ctx.set(self.dut.bus.rxf.i, 1)
+        ctx.set(self.dut.bus.d.i, 0xA9)
 
-        yield from self.wait_until( self.dut.bus.rd.o, timeout=20)
-        yield from self.advance_cycles(2)
-        yield self.dut.bus.rxf.i.eq(1)
-        yield self.dut.bus.d.i.eq(0)
+        await ctx.tick().until(self.dut.bus.rd.o)
+        await ctx.tick().repeat(2)
 
-        self.assertEqual((yield self.dut.rx.payload), 0xA9)
-        self.assertEqual((yield self.dut.rx.valid),   1)
+        ctx.set(self.dut.bus.rxf.i, 1)
+        ctx.set(self.dut.bus.d.i, 0)
 
-        yield self.dut.rx.ready.eq(1)
-        yield
+        assert ctx.get(self.dut.rx.payload) == 0xA9
+        assert ctx.get(self.dut.rx.valid) == 1
 
-        yield self.dut.rx.ready.eq(0)
-        yield        
+        ctx.set(self.dut.rx.ready, 1)
+        await ctx.tick()
 
-        self.assertEqual((yield self.dut.rx.valid), 0)
+        ctx.set(self.dut.rx.ready, 0)
+        await ctx.tick()
+
+        assert ctx.get(self.dut.rx.valid) == 0
 
     @sync_test_case
-    def test_write(self):
-        yield from self.advance_cycles(2)
+    async def test_write(self, ctx):
+        await ctx.tick().repeat(2)
 
-        self.assertEqual((yield self.dut.tx.ready), 1)
+        assert ctx.get(self.dut.tx.ready) == 1
 
-        yield self.dut.tx.payload.eq(0xBB)
-        yield self.dut.tx.valid.eq(1)
-        yield
-        yield self.dut.tx.valid.eq(0)
+        ctx.set(self.dut.tx.payload, 0xBB)
+        ctx.set(self.dut.tx.valid, 1)
+        await ctx.tick()
 
-        yield self.dut.bus.txe.i.eq(0)
-            
-        yield from self.wait_until(~self.dut.bus.wr.o, timeout=20)
+        ctx.set(self.dut.tx.valid, 0)
+        ctx.set(self.dut.bus.txe.i, 0)
 
-        self.assertEqual((yield self.dut.bus.d.o),  0xBB)
-        self.assertEqual((yield self.dut.bus.d.oe), 1)
+        await ctx.tick().until(~self.dut.bus.wr.o)
 
-        yield from self.wait_until( self.dut.bus.wr.o, timeout=20)
+        assert ctx.get(self.dut.bus.d.o) == 0xBB
+        assert ctx.get(self.dut.bus.d.oe) == 1
 
-        self.assertEqual((yield self.dut.bus.d.oe), 0)
+        await ctx.tick().until(self.dut.bus.wr.o)
+
+        assert ctx.get(self.dut.bus.d.oe) == 0
