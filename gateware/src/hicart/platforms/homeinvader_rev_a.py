@@ -23,8 +23,9 @@ class HomeInvaderRevADomainGenerator(Elaboratable):
         m = Module()
 
         configs = [
-            ECP5PLLConfig("sync", freq=80),
-            ECP5PLLConfig("cic",  freq=40),
+            ECP5PLLConfig("sync",       freq=80),
+            ECP5PLLConfig("sync_neg",   freq=80, phase=180),
+            ECP5PLLConfig("cic",        freq=40),
         ]
 
         m.submodules.pll = ECP5PLL(configs)
@@ -33,31 +34,43 @@ class HomeInvaderRevADomainGenerator(Elaboratable):
 
 
 class FlashIO(wiring.Component):
-    qspi_ce:    In(flash.ClockEnableSignature())
-    spi_clk:    Out(1)
+    qspi_ce: In(flash.ClockEnableSignature())
 
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules += Instance("USRMCLK",
-            # Gated clock signal
-            i_USRMCLKI=self.spi_clk,
-            # Active-low output enable (tristate)
-            i_USRMCLKTS=self.qspi_ce.cs_n
+        sck = Signal()
+
+        # Dynamically enable or disable primary clock network.
+        # Disable function will not create glitch and increase the clock latency.
+        m.submodules.dcca = Instance("DCCA",
+            i_CE=self.qspi_ce.sck_en,
+            i_CLKI=ClockSignal("sync_neg"),
+            o_CLKO=sck,
+        )
+
+        # Provides access to configuration flash clock (MCLK)
+        m.submodules.usrmclk = Instance("USRMCLK",
+            i_USRMCLKI=sck,
+            i_USRMCLKTS=Const(0),   # Active-low output enable
         )
 
         qspi_pins = platform.request("qspi_flash")
-        sync_clk = ClockSignal()
 
         m.d.comb += [
             qspi_pins.cs_n.o            .eq(self.qspi_ce.cs_n),
-            self.spi_clk                .eq(Mux(self.qspi_ce.sck_en, ~sync_clk, 1)),
         ]
 
         for i in range(4):
             dq_pin = getattr(qspi_pins, f"dq{i}")
-            m.d.comb += [
+
+            # The flash memory updates on the falling edge.
+            # If we register it on sync_neg, it will be available for rising sync.
+            m.d.sync_neg += [
                 self.qspi_ce.d.i[i]     .eq(dq_pin.i),
+            ]
+
+            m.d.comb += [
                 dq_pin.o                .eq(self.qspi_ce.d.o[i]),
                 dq_pin.oe               .eq(self.qspi_ce.d.oe[i]),
             ]
