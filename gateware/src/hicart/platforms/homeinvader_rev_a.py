@@ -39,19 +39,19 @@ class FlashIO(wiring.Component):
     def elaborate(self, platform):
         m = Module()
 
-        sck = Signal()
+        qspi_sck = Signal()
 
         # Dynamically enable or disable primary clock network.
         # Disable function will not create glitch and increase the clock latency.
         m.submodules.dcca = Instance("DCCA",
             i_CE=self.qspi_ce.sck_en,
             i_CLKI=ClockSignal("sync_neg"),
-            o_CLKO=sck,
+            o_CLKO=qspi_sck,
         )
 
         # Provides access to configuration flash clock (MCLK)
         m.submodules.usrmclk = Instance("USRMCLK",
-            i_USRMCLKI=sck,
+            i_USRMCLKI=qspi_sck,
             i_USRMCLKTS=Const(0),   # Active-low output enable
         )
 
