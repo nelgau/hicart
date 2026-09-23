@@ -31,9 +31,6 @@ class MultiProcessTestCase(unittest.TestCase):
             # Add any user-supplied traces after the clock domains
             all_traces += _flatten_traces(traces)
 
-            for t in all_traces:
-                print(t.name)
-
             vcd_name = trace_name + ".vcd"
             gtkw_name = trace_name + ".gtkw"
             surfer_name = trace_name + ".sucl"
