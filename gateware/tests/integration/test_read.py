@@ -26,12 +26,11 @@ class N64ReadTest(MultiProcessTestCase):
             self.flash_io = flash.SimFlashIO()
 
             self.translator = Translator(sub_bus=self.flash_interface.bus,
-                                            base_addr=0x800000,
-                                            addr_width=24,
-                                            features={"stall"})
+                                            addr_width=23,
+                                            base_addr=0x800000)
 
             self.down_converter = DownConverter(sub_bus=self.translator.bus,
-                                            addr_width=23,
+                                            addr_width=22,
                                             data_width=16,
                                             granularity=8,
                                             features={"stall"})

@@ -25,12 +25,11 @@ class Top(Elaboratable):
         m.submodules.flash_io           = flash_io          = platform.flash_io()
 
         translator = Translator(sub_bus=flash_interface.bus,
-                                base_addr=0x800000,
-                                addr_width=24,
-                                features={"stall"})
+                                addr_width=23,
+                                base_addr=0x800000)
 
         down_converter = DownConverter(sub_bus=translator.bus,
-                                       addr_width=23,
+                                       addr_width=22,
                                        data_width=16,
                                        granularity=8,
                                        features={"stall"})

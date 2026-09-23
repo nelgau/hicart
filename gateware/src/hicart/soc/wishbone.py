@@ -130,7 +130,12 @@ class Translator(wiring.Component):
 
     A resource for accessing a range of addresses on a subordinate bus.
     """
-    def __init__(self, *, sub_bus, base_addr, addr_width, features=frozenset()):
+    def __init__(self, *, sub_bus, addr_width, base_addr, name="translator"):
+        if addr_width > sub_bus.addr_width:
+            raise ValueError("Translator bus cannot be wider than subordinate bus")
+        if base_addr & ((1 << addr_width) - 1) != 0:
+            raise ValueError("Translator bus cannot overlap base address")
+
         self.sub_bus = sub_bus
         self.base_addr = base_addr
 
@@ -140,10 +145,10 @@ class Translator(wiring.Component):
         # slice a resource using a translator, we'd need a way to represent
         # a subset of a resource and that doesn't seem trivial to do.
         memory_map = MemoryMap(addr_width=addr_width, data_width=sub_bus.data_width)
-        memory_map.add_resource(self, size=2**addr_width, name='translator')
+        memory_map.add_resource(self, size=2**addr_width, name=name)
 
         bus_signature = wishbone.Signature(addr_width=addr_width, data_width=sub_bus.data_width,
-            granularity=sub_bus.granularity, features=features)
+            granularity=sub_bus.granularity, features=sub_bus.features)
 
         super().__init__({
             "bus": In(bus_signature)
@@ -153,13 +158,10 @@ class Translator(wiring.Component):
     def elaborate(self, platform):
         m = Module()
 
-        # If the result of the addition is automatically extended to the width
-        # of the subordinate bus, this auxiliary signal is unnecessary.
-        adr_extended = Signal.like(self.sub_bus.adr)
+        base_pattern = Const(self.base_addr >> self.bus.addr_width)
 
         m.d.comb += [
-            adr_extended        .eq(self.bus.adr),
-            self.sub_bus.adr    .eq(adr_extended + self.base_addr),
+            self.sub_bus.adr    .eq(Cat(self.bus.adr, base_pattern)),
 
             self.sub_bus.dat_w  .eq(self.bus.dat_w),
             self.sub_bus.sel    .eq(self.bus.sel),
@@ -171,9 +173,17 @@ class Translator(wiring.Component):
             self.bus.ack        .eq(self.sub_bus.ack),
         ]
 
-        # TODO: Implement other features
-
+        if hasattr(self.bus, "lock"):
+            m.d.comb += self.sub_bus.lock.eq(self.bus.lock)
+        if hasattr(self.bus, "cti"):
+            m.d.comb += self.sub_bus.cti.eq(self.bus.cti)
+        if hasattr(self.bus, "bte"):
+            m.d.comb += self.sub_bus.bte.eq(self.bus.bte)
+        if hasattr(self.bus, "err"):
+            m.d.comb += self.bus.err.eq(self.sub_bus.err)
+        if hasattr(self.bus, "rty"):
+            m.d.comb += self.bus.rty.eq(self.sub_bus.rty)
         if hasattr(self.bus, "stall"):
-            m.d.comb += self.bus.stall.eq(getattr(self.sub_bus, "stall", ~self.sub_bus.ack))
+            m.d.comb += self.bus.stall.eq(self.sub_bus.stall)
 
         return m
