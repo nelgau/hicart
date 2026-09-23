@@ -125,16 +125,13 @@ class DownConverter(wiring.Component):
             self.sub_bus
         ]
 
-class Translator(wiring.Component):
-    """Bus Translator
+class WindowMapper(wiring.Component):
 
-    A resource for accessing a range of addresses on a subordinate bus.
-    """
-    def __init__(self, *, sub_bus, addr_width, base_addr, name="translator"):
+    def __init__(self, *, sub_bus, addr_width, base_addr, name="mapped window"):
         if addr_width > sub_bus.addr_width:
-            raise ValueError("Translator bus cannot be wider than subordinate bus")
+            raise ValueError("Window mapper bus cannot be wider than subordinate bus")
         if base_addr & ((1 << addr_width) - 1) != 0:
-            raise ValueError("Translator bus cannot overlap base address")
+            raise ValueError("Window mapper bus cannot overlap base address")
 
         self.sub_bus = sub_bus
         self.base_addr = base_addr

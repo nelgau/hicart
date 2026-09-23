@@ -6,7 +6,7 @@ from amaranth_soc import wishbone
 from hicart.n64.cic import CIC
 from hicart.n64.pi import WishboneBridge
 from hicart.interface.flash import FlashWishboneInterface
-from hicart.soc.wishbone import DownConverter, Translator
+from hicart.soc.wishbone import DownConverter, WindowMapper
 from hicart.utils.cli import main_runner
 
 
@@ -24,7 +24,7 @@ class Top(Elaboratable):
         m.submodules.flash_interface    = flash_interface   = FlashWishboneInterface()
         m.submodules.flash_io           = flash_io          = platform.flash_io()
 
-        translator = Translator(sub_bus=flash_interface.bus,
+        translator = WindowMapper(sub_bus=flash_interface.bus,
                                 addr_width=23,
                                 base_addr=0x800000)
 

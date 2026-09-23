@@ -6,7 +6,7 @@ from amaranth_soc import wishbone
 from hicart.interface import flash
 from hicart.n64.cartbus import PISignature
 from hicart.n64.pi import WishboneBridge
-from hicart.soc.wishbone import DownConverter, Translator
+from hicart.soc.wishbone import DownConverter, WindowMapper
 from hicart.sim.behavioral.pi import PIInitiatorDriver
 from hicart.sim.behavioral.flash import FlashResponder
 from hicart.sim.testcase import MultiProcessTestCase
@@ -25,7 +25,7 @@ class N64ReadTest(MultiProcessTestCase):
             self.flash_interface = flash.FlashWishboneInterface()
             self.flash_io = flash.SimFlashIO()
 
-            self.translator = Translator(sub_bus=self.flash_interface.bus,
+            self.translator = WindowMapper(sub_bus=self.flash_interface.bus,
                                             addr_width=23,
                                             base_addr=0x800000)
 
