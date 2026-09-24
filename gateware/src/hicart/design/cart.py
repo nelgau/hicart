@@ -6,7 +6,7 @@ from amaranth_soc import wishbone
 from hicart.n64.cic import CIC
 from hicart.n64.pi import WishboneBridge
 from hicart.interface.flash import FlashWishboneInterface
-from hicart.soc.wishbone import DownConverter, WindowMapper
+from hicart.soc.wishbone import WindowMapper
 from hicart.utils.cli import main_runner
 
 
@@ -21,24 +21,15 @@ class Top(Elaboratable):
         m.submodules.cic                = cic               = DomainRenamer("cic")(CIC())
 
         m.submodules.bridge             = bridge            = WishboneBridge()
-        m.submodules.flash_interface    = flash_interface   = FlashWishboneInterface()
+        m.submodules.flash_interface    = flash_interface   = FlashWishboneInterface(data_width=16)
         m.submodules.flash_io           = flash_io          = platform.flash_io()
 
-        translator = WindowMapper(sub_bus=flash_interface.bus,
-                                addr_width=23,
-                                base_addr=0x800000)
-
-        down_converter = DownConverter(sub_bus=translator.bus,
-                                       addr_width=22,
-                                       data_width=16,
-                                       granularity=8,
-                                       features={"stall"})
+        mapper = WindowMapper(flash_interface.bus, addr_width=22, base_addr=0x800000)
 
         decoder = wishbone.Decoder(addr_width=31, data_width=16, granularity=8, features={"stall"})
-        decoder.add(down_converter.bus, addr=0x10000000)
+        decoder.add(mapper.bus, addr=0x10000000)
 
-        m.submodules.translator = translator
-        m.submodules.down_converter = down_converter
+        m.submodules.mapper = mapper
         m.submodules.decoder = decoder
 
         n64_cart = self.n64_cart = platform.request('n64_cart')
@@ -46,9 +37,6 @@ class Top(Elaboratable):
 
         wiring.connect(m, bridge.wb, decoder.bus)
         wiring.connect(m, flash_interface.qspi_ce, flash_io.qspi_ce)
-
-        # wiring.connect(m, cic.bus, n64_cart.cic)
-        # wiring.connect(m, bridge.pi, n64_cart.pi)
 
         m.d.comb += [
             cic.bus.dclk.i          .eq( n64_cart.cic.dclk.i    ),
@@ -77,7 +65,7 @@ class Top(Elaboratable):
             pmod.d.oe               .eq( 1 )
         ]
 
-        m.d.comb += [
+        m.d.sync += [
             pmod.d.o[0]             .eq( n64_cart.cic.dclk.i    ),
             pmod.d.o[1]             .eq( n64_cart.cic.data.i    ),
             pmod.d.o[2]             .eq( n64_cart.nmi.i         ),

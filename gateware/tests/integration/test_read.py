@@ -6,7 +6,7 @@ from amaranth_soc import wishbone
 from hicart.interface import flash
 from hicart.n64.cartbus import PISignature
 from hicart.n64.pi import WishboneBridge
-from hicart.soc.wishbone import DownConverter, WindowMapper
+from hicart.soc.wishbone import WindowMapper
 from hicart.sim.behavioral.pi import PIInitiatorDriver
 from hicart.sim.behavioral.flash import FlashResponder
 from hicart.sim.testcase import MultiProcessTestCase
@@ -22,31 +22,24 @@ class N64ReadTest(MultiProcessTestCase):
 
             self.bridge = WishboneBridge()
 
-            self.flash_interface = flash.FlashWishboneInterface()
+            self.flash_interface = flash.FlashWishboneInterface(data_width=16)
             self.flash_io = flash.SimFlashIO()
 
-            self.translator = WindowMapper(sub_bus=self.flash_interface.bus,
-                                            addr_width=23,
-                                            base_addr=0x800000)
-
-            self.down_converter = DownConverter(sub_bus=self.translator.bus,
-                                            addr_width=22,
-                                            data_width=16,
-                                            granularity=8,
-                                            features={"stall"})
+            self.mapper = WindowMapper(self.flash_interface.bus,
+                                       addr_width=22,
+                                       base_addr=0x800000)
 
         def elaborate(self, platform):
             m = Module()
 
             decoder = wishbone.Decoder(addr_width=31, data_width=16, granularity=8, features={"stall"})
-            decoder.add(self.down_converter.bus, addr=0x10000000)
+            decoder.add(self.mapper.bus, addr=0x10000000)
 
             m.submodules.bridge          = self.bridge
             m.submodules.decoder         = decoder
             m.submodules.flash_interface = self.flash_interface
             m.submodules.flash_io        = self.flash_io
-            m.submodules.translator      = self.translator
-            m.submodules.down_converter  = self.down_converter
+            m.submodules.mapper          = self.mapper
 
             wiring.connect(m, self.bridge.pi, wiring.flipped(self.pi))
             wiring.connect(m, self.bridge.wb, decoder.bus)
@@ -71,6 +64,7 @@ class N64ReadTest(MultiProcessTestCase):
             def assert_read(address, byte, position):
                 offset = (address - 0x10000000) + 0x800000
                 expected_byte = flash_bytes[offset]
+
                 assert byte == expected_byte, f"Incorrect byte 0x{byte:02x} (!= 0x{expected_byte:02x}) " \
                         f"read ({position}) at address 0x{address:08x}, flash offset 0x{offset:06x}"
 
@@ -111,8 +105,7 @@ class N64ReadTest(MultiProcessTestCase):
 
             dut.bridge.wb,
 
-            dut.down_converter.bus,
-            dut.translator.bus,
+            dut.mapper.bus,
             dut.flash_interface.bus,
         ]
 

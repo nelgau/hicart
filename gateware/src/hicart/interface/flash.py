@@ -1,6 +1,7 @@
 from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out
+from amaranth.utils import exact_log2
 from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 
@@ -8,7 +9,7 @@ from amaranth_soc.memory import MemoryMap
 class Signature(wiring.Signature):
     def __init__(self):
         super().__init__({
-            "cs_n": Out(1),
+            "cs_n": Out(1, init=1),
             "sck": Out(1),
             "d": Out(wiring.Signature({
                 "i":    In(4),
@@ -21,7 +22,7 @@ class Signature(wiring.Signature):
 class ClockEnableSignature(wiring.Signature):
     def __init__(self):
         super().__init__({
-            "cs_n": Out(1),
+            "cs_n": Out(1, init=1),
             "sck_en": Out(1),
             "d": Out(wiring.Signature({
                 "i":    In(4),
@@ -58,51 +59,63 @@ class SimFlashIO(wiring.Component):
 
 class FlashInterface(wiring.Component):
 
-    # You can change the data width of the interface by adjusting the lines marked with "data width"
+    def __init__(self, data_width=8):
+        if data_width % 8 != 0:
+            raise ValueError("Data width must be a multiple of eight")
 
-    qspi_ce:    Out(ClockEnableSignature())
+        self.granularity_bits = exact_log2(data_width // 8)
+        self.addr_width = 24 - self.granularity_bits
+        self.data_width = data_width
 
-    start:      In(1)
-    address:    In(24)
-    idle:       Out(1)
-    valid:      Out(1)
-    data:       Out(8)                                                  # Data width
+        super().__init__({
+            "qspi_ce":  Out(ClockEnableSignature()),
 
-    def __init__(self):
-        super().__init__()
+            "start":    In(1),
+            "address":  In(self.addr_width),
+            "idle":     Out(1),
+            "valid":    Out(1),
+            "data":     Out(data_width),
+        })
 
-        self._in_shift  = Signal(32)
-        self._out_shift = Signal(32)
-        self._counter   = Signal(3)
+        self._in_shift      = Signal(data_width)
+        self._out_shift     = Signal(80)
+        self._oe_shift      = Signal(80)
+
+        self._counter       = Signal(5)
+        self._data_counter  = Signal(range(data_width // 4))
 
     def elaborate(self, platform):
         m = Module()
 
-        cs = Signal()
-
         m.d.sync += [
-            self._in_shift[4:]      .eq(self._in_shift[:4]),            # Data width (see _out_shift)
-            self._out_shift[4:]     .eq(self._out_shift[:28]),
-            self._in_shift[0:4]     .eq(self.qspi_ce.d.i),
-            self._out_shift[0:4]    .eq(0),
+            self._in_shift[4:]      .eq(self._in_shift[:-4]),
+            self._in_shift[:4]      .eq(self.qspi_ce.d.i),
+
+            self._out_shift[4:]     .eq(self._out_shift[:-4]),
+            self._out_shift[:4]     .eq(0),
+
+            self._oe_shift[4:]      .eq(self._oe_shift[:-4]),
+            self._oe_shift[:4]      .eq(0),
 
             self.valid              .eq(0),
         ]
 
         m.d.comb += [
-            self.qspi_ce.d.o        .eq(self._out_shift[28:32]),
-            self.data               .eq(self._in_shift),
+            self.qspi_ce.d.o        .eq(self._out_shift[-4:]),
+            self.qspi_ce.d.oe       .eq(self._oe_shift[-4:]),
 
-            self.qspi_ce.cs_n       .eq(~cs),
+            self.data               .eq(self._in_shift),
             self.idle               .eq(0),
         ]
 
-        with m.If(self._counter > 0):
-            m.d.sync += [
-                self._counter       .eq(self._counter - 1)
-            ]
+        with m.If(self._counter != 0):
+            m.d.sync += self._counter.eq(self._counter - 1)
+        with m.If(self._data_counter != 0):
+            m.d.sync += self._data_counter.eq(self._data_counter - 1)
 
-        current_address     = Signal(24)
+
+        request_address = Cat(C(0, self.granularity_bits), self.address)
+        current_address = Signal(24)
 
         with m.FSM():
 
@@ -120,47 +133,43 @@ class FlashInterface(wiring.Component):
                 with m.If(self.start):
                     m.next = "START"
                     m.d.sync += [
-                        current_address         .eq(self.address),
+                        current_address         .eq(request_address),
                     ]
 
             with m.State("START"):
-                m.next = "COMMAND"
+                m.next = "SEND"
                 m.d.sync += [
-                    self._counter               .eq(7),
-                    self._out_shift             .eq(0x11101011),
-                    self.qspi_ce.d.oe           .eq(0x1),
-
-                    cs                          .eq(1),
+                    self._counter               .eq(19),
+                    self.qspi_ce.cs_n           .eq(0),
                     self.qspi_ce.sck_en         .eq(1),
+
+                    self._out_shift[48:80]      .eq(0x11101011),
+                    self._oe_shift[48:80]       .eq(0x11111111),
+
+                    self._out_shift[24:48]      .eq(current_address),
+                    self._oe_shift[24:48]       .eq(0xFFFFFF),
+
+                    self._out_shift[16:24]      .eq(0xF0),
+                    self._oe_shift[16:24]       .eq(0xFF),
+
+                    self._out_shift[0:16]       .eq(0x0000),
+                    self._oe_shift[0:16]        .eq(0x0000),
                 ]
 
-            with m.State("COMMAND"):
-                with m.If(self._counter == 0):
-                    m.next = "ADDRESS"
-                    m.d.sync += [
-                        self._counter           .eq(7),
-                        self._out_shift[8:32]   .eq(current_address),
-                        self._out_shift[0:8]    .eq(0xF0),
-                        self.qspi_ce.d.oe       .eq(0xF),
-                    ]
-
-            with m.State("ADDRESS"):
-                with m.If(self._counter == 0):
-                    m.next = "DUMMY"
-                    m.d.sync += [
-                        self._counter           .eq(3),
-                        self.qspi_ce.d.oe       .eq(0x0),
-                    ]
-
-            with m.State("DUMMY"):
+            with m.State("SEND"):
                 with m.If(self._counter == 0):
                     m.next = "DATA"
                     m.d.sync += [
-                        self._counter           .eq(1),                 # Data width
+                        self._data_counter      .eq(self.data_width // 4 - 1),
                     ]
 
             with m.State("DATA"):
-                with m.If(self._counter == 0):
+                with m.If(self._data_counter & 0x1 == 0):
+                    m.d.sync += [
+                        current_address         .eq(current_address + 1)
+                    ]
+
+                with m.If(self._data_counter == 0):
                     m.next = "WAITING"
                     m.d.sync += [
                         self.valid              .eq(1),
@@ -171,21 +180,18 @@ class FlashInterface(wiring.Component):
                 m.d.comb += self.idle           .eq(1)
 
                 with m.If(self.start):
-                    m.d.sync += [
-                        current_address         .eq(self.address),
-                    ]
-
-                    with m.If(self.address == current_address + 1):
+                    with m.If(current_address == request_address):
                         m.next = "DATA"
                         m.d.sync += [
-                            self._counter       .eq(1),                 # Data width
+                            self._data_counter  .eq(self.data_width // 4 - 1),
                             self.qspi_ce.sck_en .eq(1),
                         ]
                     with m.Else():
                         m.next = "RECOVERY"
                         m.d.sync += [
+                            current_address     .eq(request_address),
                             self._counter       .eq(7),
-                            cs                  .eq(0),
+                            self.qspi_ce.cs_n   .eq(1),
                         ]
 
             with m.State("RECOVERY"):
@@ -196,11 +202,19 @@ class FlashInterface(wiring.Component):
 
 
 class FlashWishboneInterface(wiring.Component):
-    def __init__(self):
-        memory_map = MemoryMap(addr_width=24, data_width=8)
-        memory_map.add_resource(self, size=2**24, name='qspi_flash')
 
-        bus_signature = wishbone.Signature(addr_width=24, data_width=8, features={"stall"})
+    def __init__(self, data_width=8):
+        memory_map = MemoryMap(addr_width=24, data_width=8)
+        memory_map.add_resource(self, size=2**24, name="flash")
+
+        granularity_bits = exact_log2(data_width // 8)
+        addr_width = 24 - granularity_bits
+
+        bus_signature = wishbone.Signature(
+            addr_width=addr_width,
+            data_width=data_width,
+            granularity=8,
+            features={"stall"})
 
         super().__init__({
             "qspi_ce":  Out(ClockEnableSignature()),
@@ -211,7 +225,9 @@ class FlashWishboneInterface(wiring.Component):
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules.interface = interface = FlashInterface()
+        m.submodules.interface = interface = FlashInterface(
+            data_width=self.bus.data_width,
+        )
 
         wiring.connect(m, interface.qspi_ce, wiring.flipped(self.qspi_ce))
 
