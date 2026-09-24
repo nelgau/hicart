@@ -5,7 +5,7 @@
 groups = ["default", "test"]
 strategy = []
 lock_version = "4.5.1"
-content_hash = "sha256:d69f6f3c7437c519e14b6e3b0662fc535af97edb84bf7257f41fa87a90abc55a"
+content_hash = "sha256:9a0a9b3d3d850afafea119ab9dd0499bdd5bc84eb2b2b1fb22fb1ac0812198ee"
 
 [[metadata.targets]]
 requires_python = "~=3.10.0"
@@ -480,7 +480,7 @@ files = [
 
 [[package]]
 name = "yowasp-yosys"
-version = "0.69.0.0.post1233"
+version = "0.68.0.0.post1208"
 requires_python = "~=3.9"
 summary = "Yosys Open SYnthesis Suite"
 dependencies = [
@@ -488,5 +488,5 @@ dependencies = [
     "yowasp-runtime~=1.12",
 ]
 files = [
-    {file = "yowasp_yosys-0.69.0.0.post1233-py3-none-any.whl", hash = "sha256:59284760d6455b764fce5dcf296d2c183b05dc980f59092461deddc9caa09bdd"},
+    {file = "yowasp_yosys-0.68.0.0.post1208-py3-none-any.whl", hash = "sha256:0552936b1482415512e39915a1c0f3ed1135151293440e266064f3f75e90d4a2"},
 ]

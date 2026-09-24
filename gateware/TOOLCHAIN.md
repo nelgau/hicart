@@ -8,3 +8,12 @@ Project Trellis ecppack Version 1.4-45-gbe909ba
 
 Yosys 0.69 (YoWASP)
 NextPNR-ECP5 0.11.1 (YoWASP)
+
+### 2026-09-23
+
+Yosys 0.68 (YoWASP)
+NextPNR-ECP5 0.11.1 (YoWASP)
+
+Reason: Yosys 0.69 optimizes away ~500 LUTs depending on whether a signal, used nowhere
+else, is driven combinationally by a constant bit. If the signal exists and is driven,
+the design builds and runs successfully on the FPGA.
