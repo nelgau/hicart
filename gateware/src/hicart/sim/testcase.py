@@ -78,32 +78,33 @@ def _flatten_traces(traces):
 
 @contextmanager
 def _write_surfer_commands(gtkw_name, surfer_name):
-    yield
+    try:
+        yield
+    finally:
+        kv_pattern = re.compile(r"\[(?P<key>.*?)\]\s*\"?(?P<value>.*?)\"?$")
+        type_pattern = re.compile(r"@(?P<type_id>.*)$")
+        signal_pattern = re.compile(r"(?P<name>.*?)(\[(?P<range>.*?)\])?$")
 
-    kv_pattern = re.compile(r"\[(?P<key>.*?)\]\s*\"?(?P<value>.*?)\"?$")
-    type_pattern = re.compile(r"@(?P<type_id>.*)$")
-    signal_pattern = re.compile(r"(?P<name>.*?)(\[(?P<range>.*?)\])?$")
+        with open(surfer_name, "w") as surfer_file:
+            with open(gtkw_name, "r") as gtkw_file:
+                for line in gtkw_file:
+                    line = line.strip()
 
-    with open(surfer_name, "w") as surfer_file:
-        with open(gtkw_name, "r") as gtkw_file:
-            for line in gtkw_file:
-                line = line.strip()
+                    if not line:
+                        continue
 
-                if not line:
-                    continue
+                    match line[0]:
+                        case "[":
+                            match = kv_pattern.match(line)
+                            key, value = match.group("key", "value")
 
-                match line[0]:
-                    case "[":
-                        match = kv_pattern.match(line)
-                        key, value = match.group("key", "value")
+                            if key == "dumpfile":
+                                surfer_file.write(f"load_file {value}\n")
+                        case "@":
+                            match = type_pattern.match(line)
+                            _ = match.group("type_id")
+                        case _:
+                            match = signal_pattern.match(line)
+                            name, _ = match.group("name", "range")
 
-                        if key == "dumpfile":
-                            surfer_file.write(f"load_file {value}\n")
-                    case "@":
-                        match = type_pattern.match(line)
-                        _ = match.group("type_id")
-                    case _:
-                        match = signal_pattern.match(line)
-                        name, _ = match.group("name", "range")
-
-                        surfer_file.write(f"variable_add {name}\n")
+                            surfer_file.write(f"variable_add {name}\n")
