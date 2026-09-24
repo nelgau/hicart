@@ -8,7 +8,7 @@ from amaranth_soc.memory import MemoryMap
 class Signature(wiring.Signature):
     def __init__(self):
         super().__init__({
-            "cs_n": Out(1),
+            "cs_n": Out(1, init=1),
             "sck": Out(1),
             "d": Out(wiring.Signature({
                 "i":    In(4),
@@ -21,7 +21,7 @@ class Signature(wiring.Signature):
 class ClockEnableSignature(wiring.Signature):
     def __init__(self):
         super().__init__({
-            "cs_n": Out(1),
+            "cs_n": Out(1, init=1),
             "sck_en": Out(1),
             "d": Out(wiring.Signature({
                 "i":    In(4),
@@ -72,32 +72,34 @@ class FlashInterface(wiring.Component):
         super().__init__()
 
         self._in_shift  = Signal(32)
-        self._out_shift = Signal(32)
-        self._counter   = Signal(3)
+        self._out_shift = Signal(80)
+        self._oe_shift  = Signal(80)
+        self._counter   = Signal(5)
 
     def elaborate(self, platform):
         m = Module()
 
-        cs = Signal()
-
         m.d.sync += [
             self._in_shift[4:]      .eq(self._in_shift[:4]),            # Data width (see _out_shift)
-            self._out_shift[4:]     .eq(self._out_shift[:28]),
             self._in_shift[0:4]     .eq(self.qspi_ce.d.i),
+
+            self._out_shift[4:]     .eq(self._out_shift[:76]),
             self._out_shift[0:4]    .eq(0),
+
+            self._oe_shift[4:]      .eq(self._oe_shift[:76]),
+            self._oe_shift[0:4]     .eq(0),
 
             self.valid              .eq(0),
         ]
 
         m.d.comb += [
-            self.qspi_ce.d.o        .eq(self._out_shift[28:32]),
+            self.qspi_ce.d.o        .eq(self._out_shift[76:80]),
+            self.qspi_ce.d.oe       .eq(self._oe_shift[76:80]),
             self.data               .eq(self._in_shift),
-
-            self.qspi_ce.cs_n       .eq(~cs),
             self.idle               .eq(0),
         ]
 
-        with m.If(self._counter > 0):
+        with m.If(self._counter != 0):
             m.d.sync += [
                 self._counter       .eq(self._counter - 1)
             ]
@@ -124,35 +126,27 @@ class FlashInterface(wiring.Component):
                     ]
 
             with m.State("START"):
-                m.next = "COMMAND"
+                m.next = "SEND"
                 m.d.sync += [
-                    self._counter               .eq(7),
-                    self._out_shift             .eq(0x11101011),
-                    self.qspi_ce.d.oe           .eq(0x1),
+                    self._counter               .eq(19),
 
-                    cs                          .eq(1),
+                    self._out_shift[48:80]      .eq(0x11101011),
+                    self._oe_shift[48:80]       .eq(0x11111111),
+
+                    self._out_shift[24:48]      .eq(current_address),
+                    self._oe_shift[24:48]       .eq(0xFFFFFF),
+
+                    self._out_shift[16:24]      .eq(0xF0),
+                    self._oe_shift[16:24]       .eq(0xFF),
+
+                    self._out_shift[0:16]       .eq(0x0000),
+                    self._oe_shift[0:16]        .eq(0x0000),
+
+                    self.qspi_ce.cs_n           .eq(0),
                     self.qspi_ce.sck_en         .eq(1),
                 ]
 
-            with m.State("COMMAND"):
-                with m.If(self._counter == 0):
-                    m.next = "ADDRESS"
-                    m.d.sync += [
-                        self._counter           .eq(7),
-                        self._out_shift[8:32]   .eq(current_address),
-                        self._out_shift[0:8]    .eq(0xF0),
-                        self.qspi_ce.d.oe       .eq(0xF),
-                    ]
-
-            with m.State("ADDRESS"):
-                with m.If(self._counter == 0):
-                    m.next = "DUMMY"
-                    m.d.sync += [
-                        self._counter           .eq(3),
-                        self.qspi_ce.d.oe       .eq(0x0),
-                    ]
-
-            with m.State("DUMMY"):
+            with m.State("SEND"):
                 with m.If(self._counter == 0):
                     m.next = "DATA"
                     m.d.sync += [
@@ -185,7 +179,7 @@ class FlashInterface(wiring.Component):
                         m.next = "RECOVERY"
                         m.d.sync += [
                             self._counter       .eq(7),
-                            cs                  .eq(0),
+                            self.qspi_ce.cs_n   .eq(1),
                         ]
 
             with m.State("RECOVERY"):
