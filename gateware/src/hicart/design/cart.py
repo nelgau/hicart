@@ -39,28 +39,26 @@ class Top(Elaboratable):
         wiring.connect(m, flash_interface.qspi_ce, flash_io.qspi_ce)
 
         wiring.connect(m, bridge.pi, cart_io.pi)
-        wiring.connect(m, cic.bus, cart_io.cic)
+        wiring.connect(m, bridge.sys, cart_io.sys)
 
-        m.d.comb += [
-            cic.reset               .eq( cart_io.reset          ),
-            bridge.reset            .eq( cart_io.reset          ),
+        wiring.connect(m, cic.bus, cart_io.cic)
+        wiring.connect(m, cic.sys, cart_io.sys)
+
+        m.d.sync += [
+            pmod.d.o[0]             .eq( cart_io.cic.dclk       ),
+            pmod.d.o[1]             .eq( cart_io.cic.data.i     ),
+            pmod.d.o[2]             .eq( cart_io.sys.nmi        ),
+            pmod.d.o[3]             .eq( cart_io.pi.read        ),
+            pmod.d.o[4]             .eq( cart_io.pi.ale_l       ),
+            pmod.d.o[5]             .eq( cart_io.pi.ale_h       ),
+            pmod.d.o[6]             .eq( cart_io.si.dclk        ),
+            pmod.d.o[7]             .eq( cart_io.si.data.i      ),
         ]
 
-        m.d.comb += [
+        m.d.sync += [
             leds[0]                 .eq( bridge.wb.cyc          ),
             pmod.d.oe               .eq( 1 )
         ]
-
-        # m.d.sync += [
-        #     pmod.d.o[0]             .eq( n64_cart.cic.dclk.i    ),
-        #     pmod.d.o[1]             .eq( n64_cart.cic.data.i    ),
-        #     pmod.d.o[2]             .eq( n64_cart.nmi.i         ),
-        #     pmod.d.o[3]             .eq( n64_cart.pi.read.i     ),
-        #     pmod.d.o[4]             .eq( n64_cart.pi.ale_l.i    ),
-        #     pmod.d.o[5]             .eq( n64_cart.pi.ale_h.i    ),
-        #     pmod.d.o[6]             .eq( n64_cart.si.dclk.i     ),
-        #     pmod.d.o[7]             .eq( n64_cart.si.data.i     ),
-        # ]
 
         return m
 

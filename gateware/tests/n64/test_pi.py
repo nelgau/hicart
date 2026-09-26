@@ -4,7 +4,7 @@ from amaranth.sim import *
 from amaranth_soc import wishbone
 from amaranth_soc.wishbone.sram import WishboneSRAM
 
-from hicart.n64.cartbus import PISignature
+from hicart.n64.cart import PISignature
 from hicart.n64.pi import WishboneBridge
 from hicart.sim.testcase import MultiProcessTestCase
 
@@ -50,33 +50,33 @@ class WishboneBridgeTest(MultiProcessTestCase):
 
         async def testbench(ctx):
             # Ale_l is active in idle state
-            ctx.set(dut.pi.ale_l.i, 1)
-            ctx.set(dut.pi.ale_h.i, 0)
+            ctx.set(dut.pi.ale_l, 1)
+            ctx.set(dut.pi.ale_h, 0)
             await ctx.tick().repeat(6)
 
             # Latch address
 
-            ctx.set(dut.pi.ale_l.i, 0)
+            ctx.set(dut.pi.ale_l, 0)
             await ctx.tick().repeat(2)
             ctx.set(dut.pi.ad.i, 0x1000)
             await ctx.tick().repeat(2)
-            ctx.set(dut.pi.ale_h.i, 1)
+            ctx.set(dut.pi.ale_h, 1)
             await ctx.tick().repeat(2)
             ctx.set(dut.pi.ad.i, 0x0002)
             await ctx.tick().repeat(2)
-            ctx.set(dut.pi.ale_l.i, 1)
+            ctx.set(dut.pi.ale_l, 1)
             await ctx.tick().repeat(8)
 
             # Read
 
             for i in range(3):
-                ctx.set(dut.pi.read.i, 1)
+                ctx.set(dut.pi.read, 1)
                 await ctx.tick().repeat(6)
 
                 assert ctx.get(dut.pi.ad.o) == dut.ROM_DATA[i + 1]
                 assert ctx.get(dut.pi.ad.oe) == 1
 
-                ctx.set(dut.pi.read.i, 0)
+                ctx.set(dut.pi.read, 0)
                 await ctx.tick().repeat(6)
 
                 assert ctx.get(dut.pi.ad.oe) == 0
@@ -85,10 +85,10 @@ class WishboneBridgeTest(MultiProcessTestCase):
             dut.pi.ad.i,
             dut.pi.ad.o,
             dut.pi.ad.oe,
-            dut.pi.ale_h.i,
-            dut.pi.ale_l.i,
-            dut.pi.read.i,
-            dut.pi.write.i
+            dut.pi.ale_h,
+            dut.pi.ale_l,
+            dut.pi.read,
+            dut.pi.write
         ]
 
         with self.simulate(dut, traces=traces) as sim:

@@ -18,7 +18,7 @@ class CICDriver:
 
     async def begin(self, ctx):
         ctx.set(self.reset_signal, 0)
-        ctx.set(self.bus.dclk.i, 1)
+        ctx.set(self.bus.dclk, 1)
         ctx.set(self.bus.data.i, 1)
 
     async def reset_device(self, ctx):
@@ -57,18 +57,18 @@ class CICDriver:
         return in_bits
 
     async def _read_bit(self, ctx):
-        ctx.set(self.bus.dclk.i, 0)
+        ctx.set(self.bus.dclk, 0)
         await ctx.delay(5e-6)
 
         # As the signal is pulled high externally, the bit is low if oe & ~o.
         bit = ctx.get(~self.bus.data.oe | self.bus.data.o)
 
-        ctx.set(self.bus.dclk.i, 1)
+        ctx.set(self.bus.dclk, 1)
         await ctx.delay(5e-6)
 
         return bit
 
-    async def _read_nibble(self, ctx ):
+    async def _read_nibble(self, ctx):
         nibble = 0
         for _ in range(4):
             nibble <<= 1
@@ -89,10 +89,10 @@ class CICDriver:
         if bit == 0:
             ctx.set(self.bus.data.i, 0)
 
-        ctx.set(self.bus.dclk.i, 0)
+        ctx.set(self.bus.dclk, 0)
         await ctx.delay(5e-6)
 
-        ctx.set(self.bus.dclk.i, 1)
+        ctx.set(self.bus.dclk, 1)
         await ctx.delay(1e-6)
 
         ctx.set(self.bus.data.i, 1)

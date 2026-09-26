@@ -4,7 +4,7 @@ from amaranth.sim import *
 from amaranth_soc import wishbone
 
 from hicart.interface import flash
-from hicart.n64.cartbus import PISignature
+from hicart.n64.cart import PISignature
 from hicart.n64.pi import WishboneBridge
 from hicart.soc.wishbone import WindowMapper
 from hicart.sim.behavioral.pi import PIInitiatorDriver
@@ -92,10 +92,10 @@ class N64ReadTest(MultiProcessTestCase):
             dut.pi.ad.i,
             dut.pi.ad.o,
             dut.pi.ad.oe,
-            dut.pi.ale_h.i,
-            dut.pi.ale_l.i,
-            dut.pi.read.i,
-            dut.pi.write.i,
+            dut.pi.ale_h,
+            dut.pi.ale_l,
+            dut.pi.read,
+            dut.pi.write,
 
             dut.qspi.cs_n,
             dut.qspi.sck,

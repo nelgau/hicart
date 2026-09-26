@@ -11,7 +11,7 @@ from amaranth_soc import wishbone
 from amaranth_soc.wishbone.sram import WishboneSRAM
 from minerva.core import Minerva
 
-from hicart.n64.cartbus import CICSignature
+from hicart.n64.cart import CICSignature, SysSignature
 
 
 class Constants:
@@ -27,7 +27,7 @@ class Constants:
 
 class CIC(wiring.Component):
     bus:    Out(CICSignature)
-    reset:  In(1)
+    sys:    Out(SysSignature)
 
     def __init__(self):
         super().__init__()
@@ -77,12 +77,12 @@ class CIC(wiring.Component):
 
         reset_sync  = Signal()
         m.d.comb += self.cpu.external_interrupt.eq(reset_sync)
-        m.submodules += AsyncFFSynchronizer(self.reset, reset_sync)
+        m.submodules += AsyncFFSynchronizer(self.sys.reset, reset_sync)
 
         wiring.connect(m, self._arbiter.bus, self._decoder.bus)
 
         m.d.comb += [
-            self.gpio.pins[0].i .eq( self.bus.dclk.i        ),
+            self.gpio.pins[0].i .eq( self.bus.dclk          ),
             self.gpio.pins[1].i .eq( self.bus.data.i        ),
             self.bus.data.o     .eq( self.gpio.pins[1].o    ),
             self.bus.data.oe    .eq( self.gpio.pins[1].oe   ),

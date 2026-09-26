@@ -5,13 +5,13 @@ from amaranth.lib.fifo import SyncFIFOBuffered
 from amaranth.lib.wiring import In, Out
 from amaranth_soc import wishbone
 
-from hicart.n64.cartbus import PISignature
+from hicart.n64.cart import PISignature, SysSignature
 
 
 class WishboneBridge(wiring.Component):
     pi:     Out(PISignature)
+    sys:    Out(SysSignature)
     wb:     Out(wishbone.Signature(addr_width=31, data_width=16, granularity=8, features={"stall"}))
-    reset:  In(1)
 
     def elaborate(self, platform=None):
         m = Module()
@@ -24,10 +24,10 @@ class WishboneBridge(wiring.Component):
         write_i_sync = Signal()
         ad_i_sync = Signal(16)
 
-        m.submodules.sync_ale_h = FFSynchronizer(self.pi.ale_h.i,   ale_h_i_sync)
-        m.submodules.sync_ale_l = FFSynchronizer(self.pi.ale_l.i,   ale_l_i_sync)
-        m.submodules.sync_read  = FFSynchronizer(self.pi.read.i,    read_i_sync)
-        m.submodules.sync_write = FFSynchronizer(self.pi.write.i,   write_i_sync)
+        m.submodules.sync_ale_h = FFSynchronizer(self.pi.ale_h,     ale_h_i_sync)
+        m.submodules.sync_ale_l = FFSynchronizer(self.pi.ale_l,     ale_l_i_sync)
+        m.submodules.sync_read  = FFSynchronizer(self.pi.read,      read_i_sync)
+        m.submodules.sync_write = FFSynchronizer(self.pi.write,     write_i_sync)
         m.submodules.sync_ad_i  = FFSynchronizer(self.pi.ad.i,      ad_i_sync, stages=4)
 
         # FIFOs

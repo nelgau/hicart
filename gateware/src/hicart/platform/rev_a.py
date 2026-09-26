@@ -9,7 +9,7 @@ from amaranth.vendor import LatticeECP5Platform
 from amaranth_boards.resources import *
 
 from hicart.interface import flash
-from hicart.n64.cartbus import CICSignature, SISignature, PISignature
+from hicart.n64.cart import *
 from hicart.utils.plat import get_all_resources
 
 from hicart.vendor.ecp5pll import ECP5PLL, ECP5PLLConfig
@@ -38,8 +38,7 @@ class N64CartIO(wiring.Component):
     pi:     In(PISignature)
     si:     In(SISignature)
     cic:    In(CICSignature)
-    reset:  Out(1)
-    nmi:    Out(1)
+    sys:    In(SysSignature)
 
     def elaborate(self, platform):
         m = Module()
@@ -51,26 +50,26 @@ class N64CartIO(wiring.Component):
             self.pi.ad.i            .eq( n64_cart.pi.ad.i       ),
             n64_cart.pi.ad.o        .eq( self.pi.ad.o           ),
             n64_cart.pi.ad.oe       .eq( self.pi.ad.oe          ),
-            self.pi.ale_h.i         .eq( n64_cart.pi.ale_h.i    ),
-            self.pi.ale_l.i         .eq( n64_cart.pi.ale_l.i    ),
-            self.pi.read.i          .eq( n64_cart.pi.read.i     ),
-            self.pi.write.i         .eq( n64_cart.pi.write.i    ),
+            self.pi.ale_h           .eq( n64_cart.pi.ale_h.i    ),
+            self.pi.ale_l           .eq( n64_cart.pi.ale_l.i    ),
+            self.pi.read            .eq( n64_cart.pi.read.i     ),
+            self.pi.write           .eq( n64_cart.pi.write.i    ),
 
             # SI
-            self.si.dclk.i          .eq( n64_cart.si.dclk.i     ),
             self.si.data.i          .eq( n64_cart.si.data.i     ),
             n64_cart.si.data.o      .eq( self.si.data.o         ),
             n64_cart.si.data.oe     .eq( self.si.data.oe        ),
+            self.si.dclk            .eq( n64_cart.si.dclk.i     ),
 
             # CIC
-            self.cic.dclk.i         .eq( n64_cart.cic.dclk.i    ),
             self.cic.data.i         .eq( n64_cart.cic.data.i    ),
             n64_cart.cic.data.o     .eq( self.cic.data.o        ),
             n64_cart.cic.data.oe    .eq( self.cic.data.oe       ),
+            self.cic.dclk           .eq( n64_cart.cic.dclk.i    ),
 
-            # Sideband
-            self.reset              .eq( n64_cart.reset.i       ),
-            self.nmi                .eq( n64_cart.nmi.i         ),
+            # System
+            self.sys.reset          .eq( n64_cart.reset.i       ),
+            self.sys.nmi            .eq( n64_cart.nmi.i         ),
         ]
 
         return m
@@ -215,6 +214,7 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
     def toolchain_prepare(self, fragment, name, **kwargs):
         overrides = {
             "synth_opts": "-abc9",
+            "nextpnr_opts": "--seed 1",
             "ecppack_opts": "--compress --freq 38.8",
         }
         return super().toolchain_prepare(fragment, name, **overrides, **kwargs)

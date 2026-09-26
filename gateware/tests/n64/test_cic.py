@@ -16,7 +16,7 @@ class CICTest(MultiProcessTestCase):
 
     def test_reset(self):
         dut = CIC()
-        driver = CICDriver(dut.bus, dut.reset)
+        driver = CICDriver(dut.bus, dut.sys.reset)
 
         async def testbench(ctx):
             await driver.begin(ctx)
@@ -42,11 +42,11 @@ class CICTest(MultiProcessTestCase):
                     0xF, 0xD, 0xA, 0xD, 0xB, 0x2, 0x6, 0x5]
 
         traces = [
-            dut.reset,
-            dut.bus.dclk.i,
+            dut.bus.dclk,
             dut.bus.data.i,
             dut.bus.data.o,
             dut.bus.data.oe,
+            dut.sys.reset,
         ]
 
         with self.simulate(dut, traces=traces) as sim:
@@ -55,7 +55,7 @@ class CICTest(MultiProcessTestCase):
 
     def test_output(self):
         dut = CIC()
-        driver = CICDriver(dut.bus, dut.reset)
+        driver = CICDriver(dut.bus, dut.sys.reset)
 
         async def testbench(ctx):
             hello, seed, checksum = await driver.receive_preamble(ctx)
@@ -84,11 +84,11 @@ class CICTest(MultiProcessTestCase):
                     0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0]
 
         traces = [
-            dut.reset,
-            dut.bus.dclk.i,
+            dut.bus.dclk,
             dut.bus.data.i,
             dut.bus.data.o,
             dut.bus.data.oe,
+            dut.sys.reset,
         ]
 
         with self.simulate(dut, traces=traces) as sim:
