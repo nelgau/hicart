@@ -22,12 +22,3 @@ CICSignature = wiring.Signature({
     "dclk":     Out(pin_signature(1, "i")),
     "data":     Out(pin_signature(1, "io")),
 })
-
-CartBusSignature = wiring.Signature({
-    "pi":       Out(PISignature),
-    "si":       Out(SISignature),
-    "cic":      Out(CICSignature),
-
-    "reset":    Out(pin_signature(1, "i")),
-    "nmi":      Out(pin_signature(1, "i")),
-})

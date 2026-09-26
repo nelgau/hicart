@@ -9,6 +9,7 @@ from amaranth.vendor import LatticeECP5Platform
 from amaranth_boards.resources import *
 
 from hicart.interface import flash
+from hicart.n64.cartbus import CICSignature, SISignature, PISignature
 from hicart.utils.plat import get_all_resources
 
 from hicart.vendor.ecp5pll import ECP5PLL, ECP5PLLConfig
@@ -29,6 +30,48 @@ class HomeInvaderRevADomainGenerator(Elaboratable):
         ]
 
         m.submodules.pll = ECP5PLL(configs)
+
+        return m
+
+
+class N64CartIO(wiring.Component):
+    pi:     In(PISignature)
+    si:     In(SISignature)
+    cic:    In(CICSignature)
+    reset:  Out(1)
+    nmi:    Out(1)
+
+    def elaborate(self, platform):
+        m = Module()
+
+        n64_cart = platform.request("n64_cart")
+
+        m.d.comb += [
+            # PI
+            self.pi.ad.i            .eq( n64_cart.pi.ad.i       ),
+            n64_cart.pi.ad.o        .eq( self.pi.ad.o           ),
+            n64_cart.pi.ad.oe       .eq( self.pi.ad.oe          ),
+            self.pi.ale_h.i         .eq( n64_cart.pi.ale_h.i    ),
+            self.pi.ale_l.i         .eq( n64_cart.pi.ale_l.i    ),
+            self.pi.read.i          .eq( n64_cart.pi.read.i     ),
+            self.pi.write.i         .eq( n64_cart.pi.write.i    ),
+
+            # SI
+            self.si.dclk.i          .eq( n64_cart.si.dclk.i     ),
+            self.si.data.i          .eq( n64_cart.si.data.i     ),
+            n64_cart.si.data.o      .eq( self.si.data.o         ),
+            n64_cart.si.data.oe     .eq( self.si.data.oe        ),
+
+            # CIC
+            self.cic.dclk.i         .eq( n64_cart.cic.dclk.i    ),
+            self.cic.data.i         .eq( n64_cart.cic.data.i    ),
+            n64_cart.cic.data.o     .eq( self.cic.data.o        ),
+            n64_cart.cic.data.oe    .eq( self.cic.data.oe       ),
+
+            # Sideband
+            self.reset              .eq( n64_cart.reset.i       ),
+            self.nmi                .eq( n64_cart.nmi.i         ),
+        ]
 
         return m
 
@@ -86,6 +129,7 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
 
     clock_domain_generator = HomeInvaderRevADomainGenerator
     flash_io = FlashIO
+    cart_io = N64CartIO
 
     resources = [
         Resource("clk12", 0, Pins("J16", dir="i"),

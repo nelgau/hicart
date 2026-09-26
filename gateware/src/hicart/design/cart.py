@@ -23,6 +23,7 @@ class Top(Elaboratable):
         m.submodules.bridge             = bridge            = WishboneBridge()
         m.submodules.flash_interface    = flash_interface   = FlashWishboneInterface(data_width=16)
         m.submodules.flash_io           = flash_io          = platform.flash_io()
+        m.submodules.cart_io            = cart_io           = platform.cart_io()
 
         mapper = WindowMapper(flash_interface.bus, addr_width=22, base_addr=0x800000)
 
@@ -32,32 +33,17 @@ class Top(Elaboratable):
         m.submodules.mapper = mapper
         m.submodules.decoder = decoder
 
-        n64_cart = self.n64_cart = platform.request('n64_cart')
         pmod     = self.pmod     = platform.request('pmod')
 
         wiring.connect(m, bridge.wb, decoder.bus)
         wiring.connect(m, flash_interface.qspi_ce, flash_io.qspi_ce)
 
-        m.d.comb += [
-            cic.bus.dclk.i          .eq( n64_cart.cic.dclk.i    ),
-            cic.bus.data.i          .eq( n64_cart.cic.data.i    ),
-            n64_cart.cic.data.o     .eq( cic.bus.data.o         ),
-            n64_cart.cic.data.oe    .eq( cic.bus.data.oe        ),
-        ]
+        wiring.connect(m, bridge.pi, cart_io.pi)
+        wiring.connect(m, cic.bus, cart_io.cic)
 
         m.d.comb += [
-            bridge.pi.ad.i          .eq( n64_cart.pi.ad.i       ),
-            n64_cart.pi.ad.o        .eq( bridge.pi.ad.o         ),
-            n64_cart.pi.ad.oe       .eq( bridge.pi.ad.oe        ),
-            bridge.pi.ale_h.i       .eq( n64_cart.pi.ale_h.i    ),
-            bridge.pi.ale_l.i       .eq( n64_cart.pi.ale_l.i    ),
-            bridge.pi.read.i        .eq( n64_cart.pi.read.i     ),
-            bridge.pi.write.i       .eq( n64_cart.pi.write.i    ),
-        ]
-
-        m.d.comb += [
-            cic.reset               .eq( n64_cart.reset.i       ),
-            bridge.reset            .eq( n64_cart.reset.i       ),
+            cic.reset               .eq( cart_io.reset          ),
+            bridge.reset            .eq( cart_io.reset          ),
         ]
 
         m.d.comb += [
@@ -65,16 +51,16 @@ class Top(Elaboratable):
             pmod.d.oe               .eq( 1 )
         ]
 
-        m.d.sync += [
-            pmod.d.o[0]             .eq( n64_cart.cic.dclk.i    ),
-            pmod.d.o[1]             .eq( n64_cart.cic.data.i    ),
-            pmod.d.o[2]             .eq( n64_cart.nmi.i         ),
-            pmod.d.o[3]             .eq( n64_cart.pi.read.i     ),
-            pmod.d.o[4]             .eq( n64_cart.pi.ale_l.i    ),
-            pmod.d.o[5]             .eq( n64_cart.pi.ale_h.i    ),
-            pmod.d.o[6]             .eq( n64_cart.si.dclk.i     ),
-            pmod.d.o[7]             .eq( n64_cart.si.data.i     ),
-        ]
+        # m.d.sync += [
+        #     pmod.d.o[0]             .eq( n64_cart.cic.dclk.i    ),
+        #     pmod.d.o[1]             .eq( n64_cart.cic.data.i    ),
+        #     pmod.d.o[2]             .eq( n64_cart.nmi.i         ),
+        #     pmod.d.o[3]             .eq( n64_cart.pi.read.i     ),
+        #     pmod.d.o[4]             .eq( n64_cart.pi.ale_l.i    ),
+        #     pmod.d.o[5]             .eq( n64_cart.pi.ale_h.i    ),
+        #     pmod.d.o[6]             .eq( n64_cart.si.dclk.i     ),
+        #     pmod.d.o[7]             .eq( n64_cart.si.data.i     ),
+        # ]
 
         return m
 
