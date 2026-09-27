@@ -1,34 +1,30 @@
-from amaranth import Signal, Module, Cat, Elaboratable, Record
-from amaranth.hdl.rec import DIR_FANIN, DIR_FANOUT
+from amaranth import *
+from amaranth.lib import wiring, stream
+from amaranth.lib.wiring import In, Out
 from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 
 from hicart.utils.io import delay
 
 
-class HyperBus(Record):
-    """ Record representing an HyperBus (DDR-ish connection for HyperRAM). """
-
-    def __init__(self):
-        super().__init__([
-            ('clk', 1, DIR_FANOUT),
-            ('dq',
-                ('i', 8, DIR_FANIN),
-                ('o', 8, DIR_FANOUT),
-                ('e', 1, DIR_FANOUT),
-            ),
-            ('rwds',
-                ('i', 1, DIR_FANIN),
-                ('o', 1, DIR_FANOUT),
-                ('e', 1, DIR_FANOUT),
-            ),
-            ('cs',     1, DIR_FANOUT),
-            ('reset',  1, DIR_FANOUT)
-        ])
+HyperRAMSignature = wiring.Signature({
+    "clk": Out(1),
+    "dq": Out(wiring.Signature({
+        "i": In(8),
+        "o": Out(8),
+        "oe": Out(1),
+    })),
+    "rwds": Out(wiring.Signature({
+        "i": In(1),
+        "o": Out(1),
+        "oe": Out(1),
+    })),
+    "cs": Out(1),
+    "reset": Out(1),
+})
 
 
-
-class HyperRAMController(Elaboratable):
+class HyperRAMController(wiring.Component):
     """ Gateware interface to HyperRAM series self-refreshing DRAM chips.
 
     I/O port:
@@ -49,11 +45,29 @@ class HyperRAMController(Elaboratable):
         O: idle             -- High whenever the transmitter is idle (and thus we can start a new piece of data.)
         O: new_data_ready   -- Strobe that indicates when new data is ready for reading
     """
+    bus:                Out(HyperRAMSignature)
+    reset:              In(1)
+
+    # Control signals.
+    address:            In(32)
+    register_space:     In(1)
+    perform_write:      In(1)
+    single_page:        In(1)
+    start_transfer:     In(1)
+    final_word:         In(1)
+
+    # Status signals.
+    idle:               Out(1)
+    new_data_ready:     Out(1)
+
+    # Data signals.
+    read_data:          Out(16)
+    write_data:         In(16)
 
     LOW_LATENCY_EDGES  = 6
     HIGH_LATENCY_EDGES = 14
 
-    def __init__(self, *, bus, in_skew=None, out_skew=None, clock_skew=None):
+    def __init__(self, *, in_skew=None, out_skew=None, clock_skew=None):
         """
         Parmeters:
             bus           -- The RAM record that should be connected to this RAM chip.
@@ -61,32 +75,11 @@ class HyperRAMController(Elaboratable):
                              Can be provided as a single delay number, or an interable of eight
                              delays to separately delay each of the input lines.
         """
+        super().__init__()
 
         self.in_skew    = in_skew
         self.out_skew   = out_skew
         self.clock_skew = clock_skew
-
-        #
-        # I/O port.
-        #
-        self.bus              = bus
-        self.reset            = Signal()
-
-        # Control signals.
-        self.address          = Signal(32)
-        self.register_space   = Signal()
-        self.perform_write    = Signal()
-        self.single_page      = Signal()
-        self.start_transfer   = Signal()
-        self.final_word       = Signal()
-
-        # Status signals.
-        self.idle             = Signal()
-        self.new_data_ready   = Signal()
-
-        # Data signals.
-        self.read_data        = Signal(16)
-        self.write_data       = Signal(16)
 
 
     def elaborate(self, platform):
@@ -377,35 +370,37 @@ class HyperRAMController(Elaboratable):
         return m
 
 
-class HyperRAMWishboneController(Elaboratable):
+class WishboneHyperRAMController(wiring.Component):
+    bus: Out(HyperRAMSignature)
+    wb: In(wishbone.Signature(addr_width=32, data_width=16, features={"stall"}))
 
     def __init__(self):
-        self.hbus = HyperBus()
-
-        self.wbus = wishbone.Interface(addr_width=32, data_width=16, features={"stall"})
+        super().__init__()
 
         memory_map = MemoryMap(addr_width=32, data_width=16)
         memory_map.add_resource(self, size=2**32, name='hyperram')
-        self.wbus.memory_map = memory_map
+        self.wb.memory_map = memory_map
 
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules.inner = inner = HyperRAMController(self.hbus)
+        m.submodules.inner = inner = HyperRAMController()
+
+        wiring.connect(m, inner.bus, wiring.flipped(self.bus))
 
         m.d.comb += [
-            inner.start_transfer    .eq(self.wbus.cyc & self.wbus.stb),
-            inner.address           .eq(self.wbus.adr),
-            inner.perform_write     .eq(self.wbus.we),
-            inner.write_data        .eq(self.wbus.dat_w),
+            inner.start_transfer    .eq(self.wb.cyc & self.wb.stb),
+            inner.address           .eq(self.wb.adr),
+            inner.perform_write     .eq(self.wb.we),
+            inner.write_data        .eq(self.wb.dat_w),
 
             inner.register_space    .eq(0),
             inner.single_page       .eq(0),
             inner.final_word        .eq(1),
 
-            self.wbus.stall         .eq(~inner.idle),
-            self.wbus.dat_r         .eq(inner.read_data),
-            self.wbus.ack           .eq(inner.new_data_ready),
+            self.wb.stall           .eq(~inner.idle),
+            self.wb.dat_r           .eq(inner.read_data),
+            self.wb.ack             .eq(inner.new_data_ready),
         ]
 
         return m
