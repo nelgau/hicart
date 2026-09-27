@@ -216,31 +216,28 @@ class PrefetchingWishboneBridge(wiring.Component):
 
         read_fifo_reset = Signal()
         read_enabled = Signal()
-
-        base_address = Signal(32)
         read_address = Signal(32)
 
         read_fifo = ResetInserter(read_fifo_reset)(SyncFIFOBuffered(width=16, depth=4))
         m.submodules.read_fifo = read_fifo
 
-        m.d.comb += read_fifo_reset.eq(0)
-
         # Seq
 
-        m.d.comb += read_enabled.eq(self.seq.cyc)
         m.d.comb += read_fifo_reset.eq(~self.seq.cyc)
 
         with m.If(self.seq.cyc):
-            m.d.sync += base_address.eq(self.seq.adr)
+            with m.If(~read_enabled):
+                m.d.sync += read_address.eq(self.seq.adr)
+                m.d.sync += read_enabled.eq(1)
+        with m.Else():
+            m.d.sync += read_enabled.eq(0)
 
-        with m.If(self.seq.stb):
-            with m.If(self.seq.we):
+        # Writes also consume from the read fifo to keep it consistent
+        with m.If(~self.seq.ack & self.seq.stb):
+            with m.If(read_fifo.r_rdy):
+                m.d.sync += self.seq.dat_r.eq(read_fifo.r_data)
                 m.d.sync += self.seq.ack.eq(1)
-            with m.Else():
-                with m.If(~self.seq.ack & read_fifo.r_rdy):
-                    m.d.sync += self.seq.dat_r.eq(read_fifo.r_data)
-                    m.d.sync += self.seq.ack.eq(1)
-                    m.d.sync += read_fifo.r_en.eq(1)
+                m.d.sync += read_fifo.r_en.eq(1)
 
         with m.If(self.seq.ack):
             m.d.sync += self.seq.ack.eq(0)
@@ -249,9 +246,8 @@ class PrefetchingWishboneBridge(wiring.Component):
         # Wishbone
 
         with m.If(read_enabled & ~shim.intr_bus.cyc):
-            m.d.sync += read_address.eq(base_address)
-
             with m.If(read_fifo.w_rdy):
+                m.d.sync += shim.intr_bus.adr.eq(read_address),
                 m.d.sync += shim.intr_bus.cyc.eq(1)
                 m.d.sync += shim.intr_bus.stb.eq(1)
                 m.d.sync += shim.intr_bus.we.eq(0)
@@ -262,8 +258,6 @@ class PrefetchingWishboneBridge(wiring.Component):
             m.d.sync += read_address.eq(read_address + 1)
 
         m.d.comb += [
-            shim.intr_bus.adr.eq(read_address),
-
             read_fifo.w_en.eq(self.wb.ack),
             read_fifo.w_data.eq(self.wb.dat_r),
         ]
@@ -312,7 +306,6 @@ class SeqbusDriver:
             await ctx.tick()
 
         for i in range(count):
-            ctx.set(self.bus.adr, current_address)
             ctx.set(self.bus.stb, 1)
             await ctx.tick()
 
@@ -323,6 +316,7 @@ class SeqbusDriver:
             await ctx.tick()
 
             current_address += 1
+            ctx.set(self.bus.adr, current_address)
 
             if delay > 0 and i < count - 1:
                 ctx.set(self.bus.stb, 0)
@@ -335,6 +329,29 @@ class SeqbusDriver:
         await ctx.tick()
 
         return result
+
+    async def write_once(self, ctx, address, data, initial_delay=0):
+        ctx.set(self.bus.adr, address)
+        ctx.set(self.bus.cyc, 1)
+
+        for _ in range(initial_delay):
+            await ctx.tick()
+
+        ctx.set(self.bus.stb, 1)
+        ctx.set(self.bus.we, 1)
+        ctx.set(self.bus.dat_w, data)
+        await ctx.tick()
+
+        while not ctx.get(self.bus.ack):
+            await ctx.tick()
+
+        await ctx.tick()
+
+        ctx.set(self.bus.cyc, 0)
+        ctx.set(self.bus.stb, 0)
+        ctx.set(self.bus.we, 0)
+        ctx.set(self.bus.dat_w, 0)
+        await ctx.tick()
 
 
 class SeqbusResponder:

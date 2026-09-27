@@ -89,7 +89,7 @@ class DecoderTest(MultiProcessTestCase):
 
 class PrefetchingWishboneBridgeTest(MultiProcessTestCase):
 
-    def test_basic(self):
+    def test_read(self):
         dut = seqbus.PrefetchingWishboneBridge(addr_width=31, data_width=16, granularity=8, features={"stall"})
 
         sub_responder = WishbonePipelinedResponder(dut.wb, initial=0xFACE, delay=2)
@@ -103,15 +103,40 @@ class PrefetchingWishboneBridgeTest(MultiProcessTestCase):
 
             await ctx.tick()
 
-            # Read command
             result = await intr_driver.read_sequential(ctx, 0x40000000, 10, initial_delay=40, delay=5)
             assert result == [0xFACE + i for i in range(10)]
 
             await ctx.tick().repeat(10)
+            sub_responder.counter = 0xFACE
 
-            # Read command
             result = await intr_driver.read_sequential(ctx, 0x40000000, 10, initial_delay=40, delay=5)
-            assert result == [0xFADB + i for i in range(10)]
+            assert result == [0xFACE + i for i in range(10)]
+
+        traces = [
+            dut.seq,
+            dut.wb,
+        ]
+
+        with self.simulate(dut, traces=traces) as sim:
+            sim.add_clock(1.0 / 100e6, domain="sync")
+            sim.add_process(sub_process)
+            sim.add_testbench(intr_testbench)
+
+    def test_write(self):
+        dut = seqbus.PrefetchingWishboneBridge(addr_width=31, data_width=16, granularity=8, features={"stall"})
+
+        sub_responder = WishbonePipelinedResponder(dut.wb, initial=0xFACE, delay=2)
+        intr_driver = seqbus.SeqbusDriver(dut.seq)
+
+        async def sub_process(ctx):
+            await sub_responder.run(ctx)
+
+        async def intr_testbench(ctx):
+            await intr_driver.begin(ctx)
+
+            await ctx.tick()
+
+            await intr_driver.write_once(ctx, 0x40000000, 0xFACE, initial_delay=2)
 
         traces = [
             dut.seq,

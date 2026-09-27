@@ -233,7 +233,7 @@ class WishbonePipelinedResponder:
         self.delay = delay
         self.max_outstanding = max_outstanding
 
-        self.counter = initial
+        self._counter = initial
         self.stalled = False
 
         self._reset_pipeline()
@@ -277,6 +277,14 @@ class WishbonePipelinedResponder:
             ctx.set(self.bus.dat_r, result)
 
     @property
+    def counter(self):
+        return self._counter
+
+    @counter.setter
+    def counter(self, value):
+        self._counter = value
+
+    @property
     def num_accepted_tasks(self):
         return sum(t is not None for t in self.pipeline)
 
@@ -287,6 +295,6 @@ class WishbonePipelinedResponder:
         if task.is_write:
             return 0
         else:
-            result = self.counter
-            self.counter += 1
+            result = self._counter
+            self._counter += 1
             return result
