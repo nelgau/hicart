@@ -10,8 +10,8 @@ class FT245InterfaceTest(MultiProcessTestCase):
     def test_read(self):
         dut = FT245Controller()
 
-        dut.bus.rxf = Signal(reset=1)
-        dut.bus.txe = Signal(reset=1)
+        dut.bus.rxf = Signal(init=1)
+        dut.bus.txe = Signal(init=1)
 
         async def testbench(ctx):
             await ctx.tick().repeat(2)
@@ -67,8 +67,8 @@ class FT245InterfaceTest(MultiProcessTestCase):
     def test_write(self):
         dut = FT245Controller()
 
-        dut.bus.rxf.i = Signal(reset=1)
-        dut.bus.txe.i = Signal(reset=1)
+        dut.bus.rxf.i = Signal(init=1)
+        dut.bus.txe.i = Signal(init=1)
 
         async def testbench(ctx):
             await ctx.tick().repeat(2)

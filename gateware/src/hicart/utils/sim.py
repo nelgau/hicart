@@ -74,7 +74,7 @@ def _flatten_traces(traces):
             for t in iter_interface(trace):
                 all_signals.append(t)
         else:
-            raise TypeError("Trace is not a singal, record, or interface.")
+            raise TypeError("Trace is not a signal, record, or interface.")
 
     return all_signals
 

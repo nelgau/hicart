@@ -17,7 +17,7 @@ class Top(Elaboratable):
 
         wiring.connect(m, flash_ctrl.bus, flash_io.bus)
 
-        address = Signal(24, reset=0x800000)
+        address = Signal(24, init=0x800000)
         counter = Signal(24)
 
         with m.FSM():

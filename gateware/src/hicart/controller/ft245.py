@@ -51,14 +51,14 @@ class FT245Controller(wiring.Component):
         txe = Signal()
 
         m.submodules += [
-            FFSynchronizer(self.bus.d.i, din, reset=0),
-            FFSynchronizer(self.bus.rxf, rxf, reset=1),
-            FFSynchronizer(self.bus.txe, txe, reset=1),
+            FFSynchronizer(self.bus.d.i, din, init=0),
+            FFSynchronizer(self.bus.rxf, rxf, init=1),
+            FFSynchronizer(self.bus.txe, txe, init=1),
         ]
 
-        count = Signal(8, reset=0)      # FIXME: Size this more appropriately later!
-        rd = Signal(reset=1)
-        wr = Signal(reset=1)
+        count = Signal(8, init=0)      # FIXME: Size this more appropriately later!
+        rd = Signal(init=1)
+        wr = Signal(init=1)
 
         m.d.sync += [
             self._rx_fifo.w_en.eq(0),

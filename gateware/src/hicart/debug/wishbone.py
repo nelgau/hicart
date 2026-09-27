@@ -20,7 +20,7 @@ class StreamWishboneCommander(wiring.Component):
     def elaborate(self, platform):
         m = Module()
 
-        count = Signal(8, reset=0)      # FIXME: Size this more appropriately later!
+        count = Signal(8, init=0)      # FIXME: Size this more appropriately later!
 
         address = Signal(32)
         perform_write = Signal()
