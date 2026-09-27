@@ -1,20 +1,21 @@
 import struct
 
 from amaranth import *
-from amaranth.lib import wiring
+from amaranth.lib import wiring, stream
+from amaranth.lib.wiring import In, Out
 from amaranth_soc import wishbone
 
 from hicart.controller.ft245 import FT245Controller
-from hicart.soc.stream import BasicStream
 
 
-class StreamWishboneCommander(Elaboratable):
+class StreamWishboneCommander(wiring.Component):
 
     def __init__(self):
-        self.bus = wishbone.Interface(addr_width=32, data_width=32, features={"stall"})
-
-        self.source = BasicStream(8)
-        self.sink = BasicStream(8)
+        super().__init__({
+            "bus": Out(wishbone.Signature(addr_width=32, data_width=32, features={"stall"})),
+            "source": In(stream.Signature(8)),
+            "sink": Out(stream.Signature(8)),
+        })
 
     def elaborate(self, platform):
         m = Module()
@@ -146,20 +147,15 @@ class StreamWishboneCommander(Elaboratable):
 
         return m
 
-    def ports(self):
-        return [
-            self.bus,
-            self.source,
-            self.sink
-        ]
 
+class FT245WishboneCommander(wiring.Component):
 
-class FT245WishboneCommander(Elaboratable):
-
-    def __init__(self, domain='sync'):
+    def __init__(self, domain="sync"):
         self.domain = domain
 
-        self.bus = wishbone.Interface(addr_width=32, data_width=32, features={"stall"})
+        super().__init__({
+            "bus": Out(wishbone.Signature(addr_width=32, data_width=32, features={"stall"}))
+        })
 
     def elaborate(self, platform):
         m = Module()
@@ -169,12 +165,9 @@ class FT245WishboneCommander(Elaboratable):
         m.submodules.comm       = comm      = StreamWishboneCommander()
 
         wiring.connect(m, iface.bus, ft245_io.bus)
+        wiring.connect(m, iface.rx, comm.source)
+        wiring.connect(m, iface.tx, comm.sink)
         wiring.connect(m, comm.bus, wiring.flipped(self.bus))
-
-        m.d.comb += [
-            iface.rx    .connect(comm.source),
-            comm.sink   .connect(iface.tx),
-        ]
 
         # Convert our sync domain to the domain requested by the user, if necessary.
         if self.domain != "sync":

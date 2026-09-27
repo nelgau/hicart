@@ -1,17 +1,20 @@
 from amaranth import *
-from amaranth.lib import wiring
+from amaranth.lib import wiring, stream
+from amaranth.lib.wiring import In, Out
 
 from hicart.controller.ft245 import FT245Controller
-from hicart.soc.stream import BasicStream, ByteDownConverter
+from hicart.soc.stream import ByteDownConverter
 
 
-class FT245Streamer(Elaboratable):
+class FT245Streamer(wiring.Component):
 
     def __init__(self, byte_width, domain="sync"):
         self.byte_width = byte_width
         self.domain = domain
 
-        self.stream = BasicStream(width=8 * byte_width)
+        super().__init__({
+            "stream": In(stream.Signature(8 * byte_width))
+        })
 
     def elaborate(self, platform):
         m = Module()
@@ -20,12 +23,9 @@ class FT245Streamer(Elaboratable):
         m.submodules.iface      = iface     = FT245Controller()
         m.submodules.dc         = dc        = ByteDownConverter(byte_width=self.byte_width)
 
+        wiring.connect(m, wiring.flipped(self.stream), dc.source)
+        wiring.connect(m, dc.sink, iface.tx)
         wiring.connect(m, iface.bus, ft245_io.bus)
-
-        m.d.comb += [
-            self.stream     .connect(dc.source),
-            dc.sink         .connect(iface.tx),
-        ]
 
         # Convert our sync domain to the domain requested by the user, if necessary.
         if self.domain != "sync":

@@ -1,10 +1,8 @@
 from amaranth import *
-from amaranth.lib import wiring
+from amaranth.lib import wiring, stream
 from amaranth.lib.cdc import FFSynchronizer
 from amaranth.lib.fifo import SyncFIFO
 from amaranth.lib.wiring import In, Out
-
-from hicart.soc.stream import BasicStream
 
 
 FT245Signature = wiring.Signature({
@@ -33,12 +31,11 @@ class Timings:
 
 class FT245Controller(wiring.Component):
     bus: Out(FT245Signature)
+    tx: In(stream.Signature(8))
+    rx: Out(stream.Signature(8))
 
     def __init__(self):
         super().__init__()
-
-        self.rx = BasicStream(8)
-        self.tx = BasicStream(8)
 
         self._rx_fifo = SyncFIFO(width=8, depth=1)
         self._tx_fifo = SyncFIFO(width=8, depth=1)

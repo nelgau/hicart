@@ -798,10 +798,9 @@ class HomeInvaderILA(Elaboratable):
             dc.source.payload   .eq(ila.stream.payload),
             dc.source.valid     .eq(ila.stream.valid),
             ila.stream.ready    .eq(dc.source.ready),
-
-            dc.sink             .connect(iface.tx),
         ]
 
+        wiring.connect(m, dc.sink, iface.tx)
         wiring.connect(m, iface.bus, ft245_io.bus)
 
         # Convert our sync domain to the domain requested by the user, if necessary.

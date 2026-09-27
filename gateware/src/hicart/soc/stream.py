@@ -1,24 +1,17 @@
 from amaranth import *
-from amaranth.hdl.rec import DIR_FANIN, DIR_FANOUT
+from amaranth.lib import wiring, stream
+from amaranth.lib.wiring import In, Out
 
 
-class BasicStream(Record):
-
-    def __init__(self, width):
-        super().__init__([
-            ('payload',     width,  DIR_FANOUT),
-            ('valid',       1,      DIR_FANOUT),
-            ('ready',       1,      DIR_FANIN)
-        ])
-
-
-class ByteDownConverter(Elaboratable):
+class ByteDownConverter(wiring.Component):
 
     def __init__(self, byte_width):
         self.byte_width = byte_width
 
-        self.source = BasicStream(width=8 * byte_width)
-        self.sink   = BasicStream(width=8)
+        super().__init__({
+            "source": In(stream.Signature(8 * byte_width)),
+            "sink": Out(stream.Signature(8)),
+        })
 
     def elaborate(self, platform):
         m = Module()

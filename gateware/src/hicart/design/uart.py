@@ -23,11 +23,11 @@ class Top(Elaboratable):
         pmod     = platform.request("pmod")
 
         wiring.connect(m, iface.bus, ft245_io.bus)
+        wiring.connect(m, iface.tx, dc.sink)
 
         m.d.comb += [
             dc.source.payload   .eq(0x12345678),
             dc.source.valid     .eq(dc.source.ready),
-            dc.sink             .connect(iface.tx),
         ]
 
         m.d.comb += [

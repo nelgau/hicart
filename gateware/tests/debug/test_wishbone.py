@@ -43,7 +43,13 @@ class StreamWishboneCommanderTest(MultiProcessTestCase):
             # Write command
             await sink_driver.consume(ctx)
 
-        with self.simulate(dut, traces=dut.ports()) as sim:
+        traces = [
+            dut.bus,
+            dut.source,
+            dut.sink,
+        ]
+
+        with self.simulate(dut, traces=traces) as sim:
             sim.add_clock(1.0 / 100e6, domain="sync")
             sim.add_process(target_process)
             sim.add_testbench(source_testbench)
