@@ -76,7 +76,7 @@ class WindowMapper(wiring.Component):
         return m
 
 
-class WishboneInitiatorDriver:
+class WishbonePipelinedDriver:
 
     def __init__(self, bus):
         self.bus = bus
@@ -109,11 +109,10 @@ class WishboneInitiatorDriver:
 
         return result
 
-    async def read_sequential(self, ctx, count, start_address, stride):
+    async def read_sequential(self, ctx, start_address, count, stride=1):
         address = start_address
         stb_count = 0
         ack_count = 0
-        cycles = 0
         result = []
 
         ctx.set(self.bus.cyc, 1)
@@ -137,18 +136,13 @@ class WishboneInitiatorDriver:
 
             await ctx.tick()
 
-            cycles += 1
-            if cycles > 250:
-                result = None
-                break
-
         ctx.set(self.bus.cyc, 0)
         await ctx.tick()
 
         return result
 
 
-class WishboneTargetResponder:
+class WishbonePipelinedResponder:
 
     @dataclass
     class _Task:

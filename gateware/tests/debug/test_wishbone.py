@@ -2,7 +2,7 @@ from amaranth.sim import *
 
 from hicart.debug.wishbone import StreamWishboneCommander
 from hicart.soc.stream import StreamDriver
-from hicart.soc.wishbone import WishboneTargetResponder
+from hicart.soc.wishbone import WishbonePipelinedResponder
 from hicart.utils.sim import MultiProcessTestCase
 
 
@@ -11,7 +11,7 @@ class StreamWishboneCommanderTest(MultiProcessTestCase):
     def test_simple(self):
         dut = StreamWishboneCommander()
 
-        target_responder = WishboneTargetResponder(dut.bus, initial=0xFEEDFACE, delay=1, max_outstanding=1)
+        target_responder = WishbonePipelinedResponder(dut.bus, initial=0xFEEDFACE, delay=1, max_outstanding=1)
         source_driver = StreamDriver(dut.source)
         sink_driver = StreamDriver(dut.sink)
 
