@@ -7,7 +7,7 @@ from hicart.controller import flash
 from hicart.n64.cart import PISignature
 from hicart.n64.pi import WishboneBridge, PIInitiatorDriver
 from hicart.soc.wishbone import WindowMapper
-from hicart.sim.testcase import MultiProcessTestCase
+from hicart.utils.sim import MultiProcessTestCase
 
 
 class N64ReadTest(MultiProcessTestCase):

@@ -1,7 +1,7 @@
 from amaranth.sim import *
 
 from hicart.soc.stream import ByteDownConverter
-from hicart.sim.testcase import MultiProcessTestCase
+from hicart.utils.sim import MultiProcessTestCase
 
 
 class ByteDownConverterTest(MultiProcessTestCase):

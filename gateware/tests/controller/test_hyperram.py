@@ -2,7 +2,7 @@ from amaranth import *
 from amaranth.sim import *
 
 from hicart.controller.hyperram import HyperRAMController
-from hicart.sim.testcase import MultiProcessTestCase
+from hicart.utils.sim import MultiProcessTestCase
 
 
 class TestHyperRAMInterface(MultiProcessTestCase):

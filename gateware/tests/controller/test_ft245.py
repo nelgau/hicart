@@ -2,7 +2,7 @@ from amaranth import *
 from amaranth.sim import *
 
 from hicart.controller.ft245 import FT245Controller
-from hicart.sim.testcase import MultiProcessTestCase
+from hicart.utils.sim import MultiProcessTestCase
 4
 
 class FT245InterfaceTest(MultiProcessTestCase):

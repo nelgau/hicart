@@ -6,7 +6,7 @@ from amaranth_soc.wishbone.sram import WishboneSRAM
 
 from hicart.n64.cart import PISignature
 from hicart.n64.pi import WishboneBridge
-from hicart.sim.testcase import MultiProcessTestCase
+from hicart.utils.sim import MultiProcessTestCase
 
 
 class WishboneBridgeTest(MultiProcessTestCase):

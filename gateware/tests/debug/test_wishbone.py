@@ -3,7 +3,7 @@ from amaranth.sim import *
 from hicart.debug.wishbone import StreamWishboneCommander
 from hicart.soc.stream import StreamDriver
 from hicart.soc.wishbone import WishboneTargetResponder
-from hicart.sim.testcase import MultiProcessTestCase
+from hicart.utils.sim import MultiProcessTestCase
 
 
 class StreamWishboneCommanderTest(MultiProcessTestCase):

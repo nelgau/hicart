@@ -1,7 +1,7 @@
 from amaranth.sim import *
 
 from hicart.controller.flash import FlashController, WishboneFlashController
-from hicart.sim.testcase import MultiProcessTestCase
+from hicart.utils.sim import MultiProcessTestCase
 
 
 class FlashInterfaceTest(MultiProcessTestCase):

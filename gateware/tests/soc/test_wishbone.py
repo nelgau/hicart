@@ -3,7 +3,7 @@ from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 
 from hicart.soc.wishbone import WindowMapper
-from hicart.sim.testcase import MultiProcessTestCase
+from hicart.utils.sim import MultiProcessTestCase
 
 
 class WindowMapperTest(MultiProcessTestCase):

@@ -4,7 +4,7 @@ import pytest
 from amaranth.sim import *
 
 from hicart.n64.cic import CIC, CICDriver
-from hicart.sim.testcase import MultiProcessTestCase
+from hicart.utils.sim import MultiProcessTestCase
 
 
 @pytest.mark.skipif(
