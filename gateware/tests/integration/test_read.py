@@ -20,10 +20,10 @@ class N64ReadTest(MultiProcessTestCase):
 
             self.bridge = WishboneBridge()
 
-            self.flash_interface = flash.WishboneFlashController(data_width=16)
+            self.flash_ctrl = flash.WishboneFlashController(data_width=16)
             self.flash_io = flash.SimFlashIO()
 
-            self.mapper = WindowMapper(self.flash_interface.wb,
+            self.mapper = WindowMapper(self.flash_ctrl.wb,
                                        addr_width=22,
                                        base_addr=0x800000)
 
@@ -33,15 +33,15 @@ class N64ReadTest(MultiProcessTestCase):
             decoder = wishbone.Decoder(addr_width=31, data_width=16, granularity=8, features={"stall"})
             decoder.add(self.mapper.bus, addr=0x10000000)
 
-            m.submodules.bridge          = self.bridge
-            m.submodules.decoder         = decoder
-            m.submodules.flash_interface = self.flash_interface
-            m.submodules.flash_io        = self.flash_io
-            m.submodules.mapper          = self.mapper
+            m.submodules.bridge     = self.bridge
+            m.submodules.decoder    = decoder
+            m.submodules.flash_ctrl = self.flash_ctrl
+            m.submodules.flash_io   = self.flash_io
+            m.submodules.mapper     = self.mapper
 
             wiring.connect(m, self.bridge.pi, wiring.flipped(self.pi))
             wiring.connect(m, self.bridge.wb, decoder.bus)
-            wiring.connect(m, self.flash_interface.bus, self.flash_io.bus)
+            wiring.connect(m, self.flash_ctrl.bus, self.flash_io.bus)
             wiring.connect(m, self.flash_io.port, wiring.flipped(self.qspi))
 
             return m
@@ -103,7 +103,7 @@ class N64ReadTest(MultiProcessTestCase):
 
             dut.bridge.wb,
             dut.mapper.bus,
-            dut.flash_interface.wb,
+            dut.flash_ctrl.wb,
         ]
 
         with self.simulate(dut, traces=traces) as sim:
