@@ -5,10 +5,8 @@ from amaranth_soc import wishbone
 
 from hicart.controller import flash
 from hicart.n64.cart import PISignature
-from hicart.n64.pi import WishboneBridge
+from hicart.n64.pi import WishboneBridge, PIInitiatorDriver
 from hicart.soc.wishbone import WindowMapper
-from hicart.sim.behavioral.pi import PIInitiatorDriver
-from hicart.sim.behavioral.flash import FlashResponder
 from hicart.sim.testcase import MultiProcessTestCase
 
 
@@ -72,11 +70,11 @@ class N64ReadTest(MultiProcessTestCase):
                 assert_read(address + 0, value >> 8,    "HIGH")
                 assert_read(address + 1, value & 0xFF,  "LOW")
 
-        flash = FlashResponder(dut.qspi, flash_bytes)
+        flr = flash.FlashResponder(dut.qspi, flash_bytes)
         pi = PIInitiatorDriver(dut.pi)
 
         async def flash_process(ctx):
-            await flash.run(ctx)
+            await flr.run(ctx)
 
         async def pi_process(ctx):
             await pi.begin(ctx)

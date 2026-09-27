@@ -1,8 +1,8 @@
 from amaranth.sim import *
 
 from hicart.debug.wishbone import StreamWishboneCommander
-from hicart.sim.behavioral.stream import StreamDriver
-from hicart.sim.behavioral.wishbone import WishboneTargetResponder
+from hicart.soc.stream import StreamDriver
+from hicart.soc.wishbone import WishboneTargetResponder
 from hicart.sim.testcase import MultiProcessTestCase
 
 

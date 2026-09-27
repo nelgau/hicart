@@ -3,8 +3,7 @@ import pytest
 
 from amaranth.sim import *
 
-from hicart.n64.cic import CIC
-from hicart.sim.behavioral.cic import CICCommand, CICDriver
+from hicart.n64.cic import CIC, CICDriver
 from hicart.sim.testcase import MultiProcessTestCase
 
 
@@ -70,14 +69,14 @@ class CICTest(MultiProcessTestCase):
             await driver.send_initial_values(ctx, 0xA, 0x7)
 
             # Command 1
-            await driver.send_command(ctx, CICCommand.COMPARE)
+            await driver.send_command(ctx, CICDriver.Command.COMPARE)
             cmd1_in_bits = await driver.exchange_for_compare(ctx, [
                     0, 1, 1, 0, 1, 1, 0])
             assert cmd1_in_bits == [
                     1, 1, 1, 0, 1, 0, 1]
 
             # Command 2
-            await driver.send_command(ctx, CICCommand.COMPARE)
+            await driver.send_command(ctx, CICDriver.Command.COMPARE)
             cmd2_in_bits = await driver.exchange_for_compare(ctx, [
                     1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1])
             assert cmd2_in_bits == [
