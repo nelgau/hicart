@@ -1,10 +1,8 @@
 from amaranth import *
-from amaranth.lib import wiring, stream
+from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out
 from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
-
-from hicart.utils.io import delay
 
 
 HyperRAMSignature = wiring.Signature({
@@ -90,14 +88,14 @@ class HyperRAMController(wiring.Component):
         #
 
         if self.in_skew is not None:
-            data_in = delay(m, self.bus.dq.i, self.in_skew)
+            data_in = _delay(m, self.bus.dq.i, self.in_skew)
         else:
             data_in = self.bus.dq.i
 
         data_oe = self.bus.dq.oe
         if self.out_skew is not None:
             data_out = Signal.like(self.bus.dq.o)
-            delay(m, data_out, self.out_skew, out=self.bus.dq.o)
+            _delay(m, data_out, self.out_skew, out=self.bus.dq.o)
         else:
             data_out = self.bus.dq.o
 
@@ -110,7 +108,7 @@ class HyperRAMController(wiring.Component):
 
         if self.clock_skew is not None:
             out_clock = Signal()
-            delay(m, out_clock, self.clock_skew, out=self.bus.clk)
+            _delay(m, out_clock, self.clock_skew, out=self.bus.clk)
         else:
             out_clock = self.bus.clk
 
@@ -404,3 +402,49 @@ class WishboneHyperRAMController(wiring.Component):
         ]
 
         return m
+
+
+def _delay(m, signal, interval, *, out=None):
+    """ Creates a delayed copy of a given I/O signal.
+
+    Currently only works at the FPGA's I/O boundary, and only on ECP5s.
+
+    Parameters:
+        signal -- The signal to be delayed. Must be either an I/O
+                  signal connected directly to a platform resource.
+        delay  -- Delay, in arbitrary units. These units will vary
+                  from unit to unit, but seem to be around 300ps on
+                  most ECP5 FPGAs. On ECP5s, maxes out at 127.
+        out    -- The signal to received the delayed signal; or
+                  None ot have a signal created for you.
+
+    Returns:
+        delayed -- The delayed signal. Will be equivalent to 'out'
+                   if provided; or a new signal otherwise.
+    """
+
+    # If we're not being passed our output signal, create one.
+    if out is None:
+        out = Signal.like(signal)
+
+    # If we have more than one signal, call this function on each
+    # of the subsignals.
+    if len(signal) > 1:
+
+        # If we have a vector of signals, but a integer delay,
+        # convert that integer to a vector of same-valued delays.
+        if isinstance(interval, int):
+            interval = [interval] * len(signal)
+
+        return Cat(delay(m, s, d, out=o) for s, d, o in zip(signal, interval, out))
+
+    #
+    # Base case: create a delayed version of the relevant signal.
+    #
+    m.submodules += Instance("DELAYG",
+        i_A=signal,
+        o_Z=out,
+        p_DEL_VALUE=interval
+    )
+
+    return out
