@@ -2,9 +2,13 @@ from contextlib import contextmanager
 
 from amaranth import *
 from amaranth.lib import wiring
+from amaranth.lib.fifo import SyncFIFOBuffered
 from amaranth.lib.wiring import In, Out, flipped
 from amaranth.utils import exact_log2
+from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
+
+from hicart.soc.wishbone import WishboneFeatureShim
 
 
 class Signature(wiring.Signature):
@@ -115,6 +119,7 @@ class Interface(wiring.PureInterface):
     def __repr__(self):
         return f"seqbus.Interface({self.signature!r})"
 
+
 class Decoder(wiring.Component):
 
     def __init__(self, *, addr_width, data_width, granularity=None, alignment=0, name=None):
@@ -179,6 +184,89 @@ class Decoder(wiring.Component):
                         self.bus.dat_r.eq(sub_bus.dat_r),
                         self.bus.ack.eq(sub_bus.ack)
                     ]
+
+        return m
+
+
+class PrefetchingWishboneBridge(wiring.Component):
+    """Bridge from Seq to Wishbone that prefetches as soon as the cycle begins.
+
+    This component silently discards writes.
+    """
+    def __init__(self, addr_width, data_width, granularity=None, features=frozenset()):
+        if granularity is None:
+            granularity = data_width
+
+        super().__init__({
+            "seq": In(Signature(addr_width=addr_width, data_width=data_width,
+                                granularity=granularity)),
+            "wb": Out(wishbone.Signature(addr_width=addr_width, data_width=data_width,
+                                         granularity=granularity, features=features)),
+        })
+
+    def elaborate(self, platform):
+        m = Module()
+
+        shim = WishboneFeatureShim(self.wb.addr_width, self.wb.data_width,
+                                   self.wb.granularity, intr_features=frozenset(),
+                                   sub_features=self.wb.features)
+        m.submodules.shim = shim
+
+        wiring.connect(m, shim.sub_bus, flipped(self.wb))
+
+        read_fifo_reset = Signal()
+        read_enabled = Signal()
+
+        base_address = Signal(32)
+        read_address = Signal(32)
+
+        read_fifo = ResetInserter(read_fifo_reset)(SyncFIFOBuffered(width=16, depth=4))
+        m.submodules.read_fifo = read_fifo
+
+        m.d.comb += read_fifo_reset.eq(0)
+
+        # Seq
+
+        m.d.comb += read_enabled.eq(self.seq.cyc)
+        m.d.comb += read_fifo_reset.eq(~self.seq.cyc)
+
+        with m.If(self.seq.cyc):
+            m.d.sync += base_address.eq(self.seq.adr)
+
+        with m.If(self.seq.stb):
+            with m.If(self.seq.we):
+                m.d.sync += self.seq.ack.eq(1)
+            with m.Else():
+                with m.If(~self.seq.ack & read_fifo.r_rdy):
+                    m.d.sync += self.seq.dat_r.eq(read_fifo.r_data)
+                    m.d.sync += self.seq.ack.eq(1)
+                    m.d.sync += read_fifo.r_en.eq(1)
+
+        with m.If(self.seq.ack):
+            m.d.sync += self.seq.ack.eq(0)
+            m.d.sync += read_fifo.r_en.eq(0)
+
+        # Wishbone
+
+        with m.If(read_enabled & ~shim.intr_bus.cyc):
+            m.d.sync += read_address.eq(base_address)
+
+            with m.If(read_fifo.w_rdy):
+                m.d.sync += shim.intr_bus.cyc.eq(1)
+                m.d.sync += shim.intr_bus.stb.eq(1)
+                m.d.sync += shim.intr_bus.we.eq(0)
+
+        with m.If(self.wb.ack):
+            m.d.sync += shim.intr_bus.cyc.eq(0)
+            m.d.sync += shim.intr_bus.stb.eq(0)
+            m.d.sync += read_address.eq(read_address + 1)
+
+        m.d.comb += [
+            shim.intr_bus.adr.eq(read_address),
+
+            read_fifo.w_en.eq(self.wb.ack),
+            read_fifo.w_data.eq(self.wb.dat_r),
+        ]
 
         return m
 

@@ -76,6 +76,78 @@ class WindowMapper(wiring.Component):
         return m
 
 
+class WishboneFeatureShim(wiring.Component):
+    """A connector for Wishbone bus interfaces with mismatching features.
+
+    This class was borrowed from Amaranth's SOC library, where it's private.
+    """
+    def __init__(self, addr_width, data_width, granularity=None, intr_features=frozenset(),
+                 sub_features=frozenset()):
+        super().__init__({
+            "intr_bus": In(wishbone.Signature(addr_width=addr_width, data_width=data_width,
+                                     granularity=granularity, features=intr_features)),
+            "sub_bus": Out(wishbone.Signature(addr_width=addr_width, data_width=data_width,
+                                     granularity=granularity, features=sub_features))})
+
+    def elaborate(self, platform):
+        m = Module()
+
+        m.d.comb += [
+            self.sub_bus.cyc.eq(self.intr_bus.cyc),
+            self.sub_bus.stb.eq(self.intr_bus.stb),
+            self.sub_bus.adr.eq(self.intr_bus.adr),
+            self.sub_bus.sel.eq(self.intr_bus.sel),
+            self.sub_bus.we.eq(self.intr_bus.we),
+            self.sub_bus.dat_w.eq(self.intr_bus.dat_w),
+            self.intr_bus.dat_r.eq(self.sub_bus.dat_r)
+        ]
+        if hasattr(self.sub_bus, "lock"):
+            m.d.comb += self.sub_bus.lock.eq(getattr(self.intr_bus, "lock", self.intr_bus.cyc))
+        if hasattr(self.sub_bus, "cti"):
+            m.d.comb += self.sub_bus.cti.eq(getattr(self.intr_bus, "cti", wishbone.CycleType.CLASSIC))
+        if hasattr(self.sub_bus, "bte"):
+            m.d.comb += self.sub_bus.bte.eq(getattr(self.intr_bus, "bte", wishbone.BurstTypeExt.LINEAR))
+        if hasattr(self.intr_bus, "err"):
+            m.d.comb += self.intr_bus.err.eq(getattr(self.sub_bus, "err", 0))
+        if hasattr(self.intr_bus, "rty"):
+            m.d.comb += self.intr_bus.rty.eq(getattr(self.sub_bus, "rty", 0))
+
+        # If the initiator doesn't have ERR or RTY, connect them to ACK.
+        intr_ack_fanin = self.sub_bus.ack
+        if hasattr(self.sub_bus, "err") and not hasattr(self.intr_bus, "err"):
+            intr_ack_fanin |= self.sub_bus.err
+        if hasattr(self.sub_bus, "rty") and not hasattr(self.intr_bus, "rty"):
+            intr_ack_fanin |= self.sub_bus.rty
+        m.d.comb += self.intr_bus.ack.eq(intr_ack_fanin)
+
+        sub_ack_err_rty = self.sub_bus.ack \
+                        | getattr(self.sub_bus, "err", 0) \
+                        | getattr(self.sub_bus, "rty", 0)
+
+        if hasattr(self.intr_bus, "stall") and hasattr(self.sub_bus, "stall"):
+            # Pipelined initiator to pipelined subordinate.
+            m.d.comb += self.intr_bus.stall.eq(self.sub_bus.stall)
+        elif hasattr(self.intr_bus, "stall"):
+            # Pipelined initiator to standard subordinate.
+            m.d.comb += self.intr_bus.stall.eq(self.intr_bus.cyc & ~sub_ack_err_rty)
+        elif hasattr(self.sub_bus, "stall"):
+            # Standard initiator to pipelined subordinate.
+            # In pipelined mode, a new transfer is initiated every clock cycle where STB is high
+            # and STALL is low. To accomodate a standard mode initiator, STB is limited to a one-
+            # clock pulse until the subordinate asserts ACK, ERR or RTY.
+            with m.FSM():
+                with m.State("IDLE"):
+                    m.d.comb += self.sub_bus.stb.eq(self.intr_bus.stb)
+                    with m.If(self.intr_bus.cyc & self.intr_bus.stb & ~self.sub_bus.stall):
+                        m.next = "BUSY"
+                with m.State("BUSY"):
+                    m.d.comb += self.sub_bus.stb.eq(0)
+                    with m.If(~self.intr_bus.cyc | sub_ack_err_rty):
+                        m.next = "IDLE"
+
+        return m
+
+
 class WishbonePipelinedDriver:
 
     def __init__(self, bus):
