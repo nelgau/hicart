@@ -164,9 +164,9 @@ class FT245WishboneCommander(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
+        m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
         m.submodules.iface      = iface     = FT245Interface()
         m.submodules.comm       = comm      = StreamWishboneCommander()
-        m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
 
         wiring.connect(m, iface.bus, ft245_io.bus)
         wiring.connect(m, comm.bus, wiring.flipped(self.bus))

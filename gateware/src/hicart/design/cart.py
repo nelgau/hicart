@@ -18,12 +18,12 @@ class Top(Elaboratable):
         leds = platform.get_leds()
 
         m.submodules.car                                    = platform.clock_domain_generator()
-        m.submodules.cic                = cic               = DomainRenamer("cic")(CIC())
-
-        m.submodules.bridge             = bridge            = WishboneBridge()
-        m.submodules.flash_interface    = flash_interface   = FlashWishboneInterface(data_width=16)
         m.submodules.flash_io           = flash_io          = platform.flash_io()
         m.submodules.cart_io            = cart_io           = platform.cart_io()
+
+        m.submodules.cic                = cic               = DomainRenamer("cic")(CIC())
+        m.submodules.bridge             = bridge            = WishboneBridge()
+        m.submodules.flash_interface    = flash_interface   = FlashWishboneInterface(data_width=16)
 
         mapper = WindowMapper(flash_interface.bus, addr_width=22, base_addr=0x800000)
 

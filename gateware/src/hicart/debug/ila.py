@@ -789,10 +789,10 @@ class HomeInvaderILA(Elaboratable):
     def elaborate(self, platform):
         m  = Module()
 
-        m.submodules.ila        = ila       = self.ila
+        m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
         m.submodules.iface      = iface     = FT245Interface()
         m.submodules.dc         = dc        = ByteDownConverter(byte_width=self.bytes_per_sample)
-        m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
+        m.submodules.ila        = ila       = self.ila
 
         m.d.comb += [
             dc.source.payload   .eq(ila.stream.payload),

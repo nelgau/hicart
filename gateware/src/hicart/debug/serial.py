@@ -16,9 +16,9 @@ class FT245Streamer(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
+        m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
         m.submodules.iface      = iface     = FT245Interface()
         m.submodules.dc         = dc        = ByteDownConverter(byte_width=self.byte_width)
-        m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
 
         wiring.connect(m, iface.bus, ft245_io.bus)
 
