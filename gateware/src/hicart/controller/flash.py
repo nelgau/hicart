@@ -6,7 +6,7 @@ from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 
 
-Signature = wiring.Signature({
+FlashSignature = wiring.Signature({
     "cs_n": Out(1, init=1),
     "sck_en": Out(1),
     "d": Out(wiring.Signature({
@@ -29,7 +29,7 @@ QSPISignature = wiring.Signature({
 
 
 class SimFlashIO(wiring.Component):
-    bus: In(Signature)
+    bus: In(FlashSignature)
     port: Out(QSPISignature)
 
     def elaborate(self, platform):
@@ -64,7 +64,7 @@ class FlashController(wiring.Component):
         self.data_width = data_width
 
         super().__init__({
-            "bus":      Out(Signature),
+            "bus":      Out(FlashSignature),
 
             "start":    In(1),
             "address":  In(self.addr_width),
@@ -213,7 +213,7 @@ class WishboneFlashController(wiring.Component):
             features={"stall"})
 
         super().__init__({
-            "bus":  Out(Signature),
+            "bus":  Out(FlashSignature),
             "wb":   In(wb_signature),
         })
         self.wb.memory_map = memory_map

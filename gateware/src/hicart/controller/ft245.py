@@ -7,7 +7,7 @@ from amaranth.lib.wiring import In, Out
 from hicart.soc.stream import BasicStream
 
 
-Signature = wiring.Signature({
+FT245Signature = wiring.Signature({
     "d":        Out(wiring.Signature({
         "i":    In(8),
         "o":    Out(8),
@@ -32,7 +32,7 @@ class Timings:
 
 
 class FT245Controller(wiring.Component):
-    bus: Out(Signature)
+    bus: Out(FT245Signature)
 
     def __init__(self):
         super().__init__()

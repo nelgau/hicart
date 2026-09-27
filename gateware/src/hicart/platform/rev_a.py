@@ -76,7 +76,7 @@ class N64CartIO(wiring.Component):
 
 
 class FT245IO(wiring.Component):
-    bus: In(ft245.Signature)
+    bus: In(ft245.FT245Signature)
 
     def elaborate(self, platform):
         m = Module()
@@ -101,7 +101,7 @@ class FT245IO(wiring.Component):
 
 
 class FlashIO(wiring.Component):
-    bus: In(flash.Signature)
+    bus: In(flash.FlashSignature)
     sck: Out(1)
 
     def elaborate(self, platform):
