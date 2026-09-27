@@ -5,7 +5,7 @@ from amaranth_soc import wishbone
 
 from hicart.n64.cic import CIC
 from hicart.n64.pi import WishboneBridge
-from hicart.interface.flash import FlashWishboneInterface
+from hicart.interface.flash import WishboneFlashInterface
 from hicart.soc.wishbone import WindowMapper
 from hicart.utils.cli import main_runner
 
@@ -23,9 +23,9 @@ class Top(Elaboratable):
 
         m.submodules.cic                = cic               = DomainRenamer("cic")(CIC())
         m.submodules.bridge             = bridge            = WishboneBridge()
-        m.submodules.flash_interface    = flash_interface   = FlashWishboneInterface(data_width=16)
+        m.submodules.flash_interface    = flash_interface   = WishboneFlashInterface(data_width=16)
 
-        mapper = WindowMapper(flash_interface.bus, addr_width=22, base_addr=0x800000)
+        mapper = WindowMapper(flash_interface.wb, addr_width=22, base_addr=0x800000)
 
         decoder = wishbone.Decoder(addr_width=31, data_width=16, granularity=8, features={"stall"})
         decoder.add(mapper.bus, addr=0x10000000)
@@ -36,7 +36,7 @@ class Top(Elaboratable):
         pmod     = self.pmod     = platform.request("pmod")
 
         wiring.connect(m, bridge.wb, decoder.bus)
-        wiring.connect(m, flash_interface.qspi_ce, flash_io.qspi_ce)
+        wiring.connect(m, flash_interface.bus, flash_io.bus)
 
         wiring.connect(m, bridge.pi, cart_io.pi)
         wiring.connect(m, bridge.sys, cart_io.sys)

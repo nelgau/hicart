@@ -101,33 +101,34 @@ class FT245IO(wiring.Component):
 
 
 class FlashIO(wiring.Component):
-    qspi_ce: In(flash.ClockEnableSignature())
-    qspi_sck: Out(1)
+    bus: In(flash.Signature)
+    sck: Out(1)
 
     def elaborate(self, platform):
         m = Module()
 
-        qspi_sck = Signal()
+        neg_clk = ClockSignal("sync_neg")
+        spi_sck = Signal()
 
         # Dynamically enable or disable primary clock network.
         # Disable function will not create glitch and increase the clock latency.
         m.submodules.dcca = Instance("DCCA",
-            i_CE=self.qspi_ce.sck_en,
-            i_CLKI=ClockSignal("sync_neg"),
-            o_CLKO=qspi_sck,
+            i_CE=self.bus.sck_en,
+            i_CLKI=neg_clk,
+            o_CLKO=spi_sck,
         )
 
         # Provides access to configuration flash clock (MCLK)
         m.submodules.usrmclk = Instance("USRMCLK",
-            i_USRMCLKI=qspi_sck,
+            i_USRMCLKI=spi_sck,
             i_USRMCLKTS=Const(0),   # Active-low output enable
         )
 
         qspi_pins = platform.request("qspi_flash")
 
         m.d.comb += [
-            qspi_pins.cs_n.o            .eq(self.qspi_ce.cs_n),
-            self.qspi_sck               .eq(qspi_sck)
+            qspi_pins.cs_n.o    .eq(self.bus.cs_n),
+            self.sck            .eq(spi_sck)
         ]
 
         for i in range(4):
@@ -136,12 +137,12 @@ class FlashIO(wiring.Component):
             # The flash memory updates on the falling edge.
             # If we register it on sync_neg, it will be available for rising sync.
             m.d.sync_neg += [
-                self.qspi_ce.d.i[i]     .eq(dq_pin.i),
+                self.bus.d.i[i] .eq(dq_pin.i),
             ]
 
             m.d.comb += [
-                dq_pin.o                .eq(self.qspi_ce.d.o[i]),
-                dq_pin.oe               .eq(self.qspi_ce.d.oe[i]),
+                dq_pin.o        .eq(self.bus.d.o[i]),
+                dq_pin.oe       .eq(self.bus.d.oe[i]),
             ]
 
         return m
@@ -243,7 +244,7 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
     def toolchain_prepare(self, fragment, name, **kwargs):
         overrides = {
             "synth_opts": "-abc9",
-            "nextpnr_opts": "--seed 0",
+            "nextpnr_opts": "--seed 1",
             "ecppack_opts": "--compress --freq 38.8",
         }
         return super().toolchain_prepare(fragment, name, **overrides, **kwargs)

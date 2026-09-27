@@ -6,35 +6,31 @@ from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 
 
-class Signature(wiring.Signature):
-    def __init__(self):
-        super().__init__({
-            "cs_n": Out(1, init=1),
-            "sck": Out(1),
-            "d": Out(wiring.Signature({
-                "i":    In(4),
-                "o":    Out(4),
-                "oe":   Out(4),
-            }))
-        })
+Signature = wiring.Signature({
+    "cs_n": Out(1, init=1),
+    "sck_en": Out(1),
+    "d": Out(wiring.Signature({
+        "i":    In(4),
+        "o":    Out(4),
+        "oe":   Out(4),
+    }))
+})
 
 
-class ClockEnableSignature(wiring.Signature):
-    def __init__(self):
-        super().__init__({
-            "cs_n": Out(1, init=1),
-            "sck_en": Out(1),
-            "d": Out(wiring.Signature({
-                "i":    In(4),
-                "o":    Out(4),
-                "oe":   Out(4),
-            }))
-        })
+QSPISignature = wiring.Signature({
+    "cs_n": Out(1, init=1),
+    "sck": Out(1),
+    "d": Out(wiring.Signature({
+        "i":    In(4),
+        "o":    Out(4),
+        "oe":   Out(4),
+    }))
+})
 
 
 class SimFlashIO(wiring.Component):
-    qspi_ce: In(ClockEnableSignature())
-    qspi: Out(Signature())
+    bus: In(Signature)
+    port: Out(QSPISignature)
 
     def elaborate(self, platform):
         m = Module()
@@ -43,15 +39,15 @@ class SimFlashIO(wiring.Component):
         m.d.comb += sync_neg.clk.eq(~ClockSignal())
 
         m.d.comb += [
-            self.qspi.cs_n      .eq(self.qspi_ce.cs_n),
-            self.qspi.sck       .eq(self.qspi_ce.sck_en & sync_neg.clk),
+            self.port.cs_n  .eq(self.bus.cs_n),
+            self.port.sck   .eq(self.bus.sck_en & sync_neg.clk),
 
-            self.qspi.d.o       .eq(self.qspi_ce.d.o),
-            self.qspi.d.oe      .eq(self.qspi_ce.d.oe),
+            self.port.d.o   .eq(self.bus.d.o),
+            self.port.d.oe  .eq(self.bus.d.oe),
         ]
 
         m.d.sync_neg += [
-            self.qspi_ce.d.i    .eq(self.qspi.d.i),
+            self.bus.d.i    .eq(self.port.d.i),
         ]
 
         return m
@@ -68,7 +64,7 @@ class FlashInterface(wiring.Component):
         self.data_width = data_width
 
         super().__init__({
-            "qspi_ce":  Out(ClockEnableSignature()),
+            "bus":      Out(Signature),
 
             "start":    In(1),
             "address":  In(self.addr_width),
@@ -89,7 +85,7 @@ class FlashInterface(wiring.Component):
 
         m.d.sync += [
             self._in_shift[4:]      .eq(self._in_shift[:-4]),
-            self._in_shift[:4]      .eq(self.qspi_ce.d.i),
+            self._in_shift[:4]      .eq(self.bus.d.i),
 
             self._out_shift[4:]     .eq(self._out_shift[:-4]),
             self._out_shift[:4]     .eq(0),
@@ -101,8 +97,8 @@ class FlashInterface(wiring.Component):
         ]
 
         m.d.comb += [
-            self.qspi_ce.d.o        .eq(self._out_shift[-4:]),
-            self.qspi_ce.d.oe       .eq(self._oe_shift[-4:]),
+            self.bus.d.o            .eq(self._out_shift[-4:]),
+            self.bus.d.oe           .eq(self._oe_shift[-4:]),
 
             self.data               .eq(self._in_shift),
             self.idle               .eq(0),
@@ -140,8 +136,8 @@ class FlashInterface(wiring.Component):
                 m.next = "SEND"
                 m.d.sync += [
                     self._counter               .eq(19),
-                    self.qspi_ce.cs_n           .eq(0),
-                    self.qspi_ce.sck_en         .eq(1),
+                    self.bus.cs_n               .eq(0),
+                    self.bus.sck_en             .eq(1),
 
                     self._out_shift[48:80]      .eq(0x11101011),
                     self._oe_shift[48:80]       .eq(0x11111111),
@@ -173,7 +169,7 @@ class FlashInterface(wiring.Component):
                     m.next = "WAITING"
                     m.d.sync += [
                         self.valid              .eq(1),
-                        self.qspi_ce.sck_en     .eq(0),
+                        self.bus.sck_en         .eq(0),
                     ]
 
             with m.State("WAITING"):
@@ -184,14 +180,14 @@ class FlashInterface(wiring.Component):
                         m.next = "DATA"
                         m.d.sync += [
                             self._data_counter  .eq(self.data_width // 4 - 1),
-                            self.qspi_ce.sck_en .eq(1),
+                            self.bus.sck_en     .eq(1),
                         ]
                     with m.Else():
                         m.next = "RECOVERY"
                         m.d.sync += [
                             current_address     .eq(request_address),
                             self._counter       .eq(7),
-                            self.qspi_ce.cs_n   .eq(1),
+                            self.bus.cs_n       .eq(1),
                         ]
 
             with m.State("RECOVERY"):
@@ -201,7 +197,7 @@ class FlashInterface(wiring.Component):
         return m
 
 
-class FlashWishboneInterface(wiring.Component):
+class WishboneFlashInterface(wiring.Component):
 
     def __init__(self, data_width=8):
         memory_map = MemoryMap(addr_width=24, data_width=8)
@@ -210,34 +206,34 @@ class FlashWishboneInterface(wiring.Component):
         granularity_bits = exact_log2(data_width // 8)
         addr_width = 24 - granularity_bits
 
-        bus_signature = wishbone.Signature(
+        wb_signature = wishbone.Signature(
             addr_width=addr_width,
             data_width=data_width,
             granularity=8,
             features={"stall"})
 
         super().__init__({
-            "qspi_ce":  Out(ClockEnableSignature()),
-            "bus":      In(bus_signature),
+            "bus":  Out(Signature),
+            "wb":   In(wb_signature),
         })
-        self.bus.memory_map = memory_map
+        self.wb.memory_map = memory_map
 
     def elaborate(self, platform):
         m = Module()
 
         m.submodules.interface = interface = FlashInterface(
-            data_width=self.bus.data_width,
+            data_width=self.wb.data_width,
         )
 
-        wiring.connect(m, interface.qspi_ce, wiring.flipped(self.qspi_ce))
+        wiring.connect(m, interface.bus, wiring.flipped(self.bus))
 
         m.d.comb += [
-            interface.start         .eq(self.bus.cyc & self.bus.stb),
-            interface.address       .eq(self.bus.adr),
+            interface.start         .eq(self.wb.cyc & self.wb.stb),
+            interface.address       .eq(self.wb.adr),
 
-            self.bus.stall          .eq(~interface.idle),
-            self.bus.dat_r          .eq(interface.data),
-            self.bus.ack            .eq(interface.valid),
+            self.wb.stall           .eq(~interface.idle),
+            self.wb.dat_r           .eq(interface.data),
+            self.wb.ack             .eq(interface.valid),
         ]
 
         return m

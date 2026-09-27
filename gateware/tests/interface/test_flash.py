@@ -1,6 +1,6 @@
 from amaranth.sim import *
 
-from hicart.interface.flash import FlashInterface, FlashWishboneInterface
+from hicart.interface.flash import FlashInterface, WishboneFlashInterface
 from hicart.sim.testcase import MultiProcessTestCase
 
 
@@ -23,10 +23,10 @@ class FlashInterfaceTest(MultiProcessTestCase):
             await ctx.tick().repeat(20)
 
             for x in [0xF, 0xE, 0xD, 0xC, 0xB, 0xA, 0x9, 0x8]:
-                ctx.set(dut.qspi_ce.d.i, x)
+                ctx.set(dut.bus.d.i, x)
                 await ctx.tick()
 
-            ctx.set(dut.qspi_ce.d.i, 0)
+            ctx.set(dut.bus.d.i, 0)
             await ctx.tick()
 
             await ctx.tick().repeat(5)
@@ -39,10 +39,10 @@ class FlashInterfaceTest(MultiProcessTestCase):
             ctx.set(dut.start, 0)
 
             for x in [0x7, 0x6, 0x5, 0x4, 0x3, 0x2, 0x1, 0x0]:
-                ctx.set(dut.qspi_ce.d.i, x)
+                ctx.set(dut.bus.d.i, x)
                 await ctx.tick()
 
-            ctx.set(dut.qspi_ce.d.i, 0)
+            ctx.set(dut.bus.d.i, 0)
             await ctx.tick()
 
             await ctx.tick().repeat(5)
@@ -58,20 +58,20 @@ class FlashInterfaceTest(MultiProcessTestCase):
             await ctx.tick().repeat(28)
 
             for x in [0xC, 0xA, 0xF, 0xE, 0xB, 0xA, 0xB, 0xE]:
-                ctx.set(dut.qspi_ce.d.i, x)
+                ctx.set(dut.bus.d.i, x)
                 await ctx.tick()
 
-            ctx.set(dut.qspi_ce.d.i, 0)
+            ctx.set(dut.bus.d.i, 0)
             await ctx.tick()
 
             await ctx.tick().repeat(20)
 
         traces = [
-            dut.qspi_ce.cs_n,
-            dut.qspi_ce.sck_en,
-            dut.qspi_ce.d.i,
-            dut.qspi_ce.d.o,
-            dut.qspi_ce.d.oe,
+            dut.bus.cs_n,
+            dut.bus.sck_en,
+            dut.bus.d.i,
+            dut.bus.d.o,
+            dut.bus.d.oe,
 
             dut.start,
             dut.address,
@@ -89,33 +89,33 @@ class FlashInterfaceTest(MultiProcessTestCase):
             sim.add_testbench(testbench)
 
 
-class FlashWishboneInterfaceTest(MultiProcessTestCase):
+class WishboneFlashInterfaceTest(MultiProcessTestCase):
 
     def test_basic(self):
-        dut = FlashWishboneInterface()
+        dut = WishboneFlashInterface()
 
         async def testbench(ctx):
             await ctx.tick().repeat(10)
 
             #
 
-            ctx.set(dut.bus.adr, 0x876543)
-            ctx.set(dut.bus.cyc, 1)
-            ctx.set(dut.bus.stb, 1)
+            ctx.set(dut.wb.adr, 0x876543)
+            ctx.set(dut.wb.cyc, 1)
+            ctx.set(dut.wb.stb, 1)
             await ctx.tick()
-            ctx.set(dut.bus.stb, 0)
+            ctx.set(dut.wb.stb, 0)
             await ctx.tick()
 
             await ctx.tick().repeat(20)
 
             for x in [0xF, 0xE, 0xD, 0xC, 0xB, 0xA, 0x9, 0x8]:
-                ctx.set(dut.qspi_ce.d.i, x)
+                ctx.set(dut.bus.d.i, x)
                 await ctx.tick()
 
-            ctx.set(dut.qspi_ce.d.i, 0)
+            ctx.set(dut.bus.d.i, 0)
             await ctx.tick()
 
-            ctx.set(dut.bus.cyc, 0)
+            ctx.set(dut.wb.cyc, 0)
             await ctx.tick()
 
             await ctx.tick().repeat(5)
@@ -123,60 +123,60 @@ class FlashWishboneInterfaceTest(MultiProcessTestCase):
 
             #
 
-            ctx.set(dut.bus.adr, 0x876544)
-            ctx.set(dut.bus.cyc, 1)
-            ctx.set(dut.bus.stb, 1)
+            ctx.set(dut.wb.adr, 0x876544)
+            ctx.set(dut.wb.cyc, 1)
+            ctx.set(dut.wb.stb, 1)
             await ctx.tick()
-            ctx.set(dut.bus.stb, 0)
+            ctx.set(dut.wb.stb, 0)
 
             for x in [0x7, 0x6, 0x5, 0x4, 0x3, 0x2, 0x1, 0x0]:
-                ctx.set(dut.qspi_ce.d.i, x)
+                ctx.set(dut.bus.d.i, x)
                 await ctx.tick()
 
-            ctx.set(dut.qspi_ce.d.i, 0)
+            ctx.set(dut.bus.d.i, 0)
             await ctx.tick()
 
-            ctx.set(dut.bus.cyc, 0)
+            ctx.set(dut.wb.cyc, 0)
             await ctx.tick()
 
             await ctx.tick().repeat(5)
 
             #
 
-            ctx.set(dut.bus.adr, 0x876546)
-            ctx.set(dut.bus.cyc, 1)
-            ctx.set(dut.bus.stb, 1)
+            ctx.set(dut.wb.adr, 0x876546)
+            ctx.set(dut.wb.cyc, 1)
+            ctx.set(dut.wb.stb, 1)
             await ctx.tick()
-            ctx.set(dut.bus.stb, 0)
+            ctx.set(dut.wb.stb, 0)
             await ctx.tick()
 
             await ctx.tick().repeat(28)
 
             for x in [0xC, 0xA, 0xF, 0xE, 0xB, 0xA, 0xB, 0xE]:
-                ctx.set(dut.qspi_ce.d.i, x)
+                ctx.set(dut.bus.d.i, x)
                 await ctx.tick()
 
-            ctx.set(dut.qspi_ce.d.i, 0)
+            ctx.set(dut.bus.d.i, 0)
             await ctx.tick()
 
-            ctx.set(dut.bus.cyc, 0)
+            ctx.set(dut.wb.cyc, 0)
             await ctx.tick()
 
             await ctx.tick().repeat(20)
 
         traces = [
-            dut.qspi_ce.cs_n,
-            dut.qspi_ce.sck_en,
-            dut.qspi_ce.d.i,
-            dut.qspi_ce.d.o,
-            dut.qspi_ce.d.oe,
+            dut.bus.cs_n,
+            dut.bus.sck_en,
+            dut.bus.d.i,
+            dut.bus.d.o,
+            dut.bus.d.oe,
 
-            dut.bus.cyc,
-            dut.bus.stb,
-            dut.bus.stall,
-            dut.bus.ack,
-            dut.bus.adr,
-            dut.bus.dat_r
+            dut.wb.cyc,
+            dut.wb.stb,
+            dut.wb.stall,
+            dut.wb.ack,
+            dut.wb.adr,
+            dut.wb.dat_r
         ]
 
         with self.simulate(dut, traces=traces) as sim:

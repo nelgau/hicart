@@ -18,14 +18,14 @@ class N64ReadTest(MultiProcessTestCase):
 
         def __init__(self):
             self.pi = PISignature.create()
-            self.qspi = flash.Signature().create()
+            self.qspi = flash.QSPISignature.create()
 
             self.bridge = WishboneBridge()
 
-            self.flash_interface = flash.FlashWishboneInterface(data_width=16)
+            self.flash_interface = flash.WishboneFlashInterface(data_width=16)
             self.flash_io = flash.SimFlashIO()
 
-            self.mapper = WindowMapper(self.flash_interface.bus,
+            self.mapper = WindowMapper(self.flash_interface.wb,
                                        addr_width=22,
                                        base_addr=0x800000)
 
@@ -43,8 +43,8 @@ class N64ReadTest(MultiProcessTestCase):
 
             wiring.connect(m, self.bridge.pi, wiring.flipped(self.pi))
             wiring.connect(m, self.bridge.wb, decoder.bus)
-            wiring.connect(m, self.flash_interface.qspi_ce, self.flash_io.qspi_ce)
-            wiring.connect(m, self.flash_io.qspi, wiring.flipped(self.qspi))
+            wiring.connect(m, self.flash_interface.bus, self.flash_io.bus)
+            wiring.connect(m, self.flash_io.port, wiring.flipped(self.qspi))
 
             return m
 
@@ -104,9 +104,8 @@ class N64ReadTest(MultiProcessTestCase):
             dut.qspi.d.oe,
 
             dut.bridge.wb,
-
             dut.mapper.bus,
-            dut.flash_interface.bus,
+            dut.flash_interface.wb,
         ]
 
         with self.simulate(dut, traces=traces) as sim:
