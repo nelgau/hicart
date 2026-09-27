@@ -11,17 +11,16 @@ from abc import ABCMeta, abstractmethod
 from functools import reduce
 
 from amaranth import *
-from amaranth.hdl.rec import Record
 from amaranth.lib import wiring
 from amaranth.lib.cdc import FFSynchronizer
 from amaranth.lib.fifo import AsyncFIFOBuffered
 from amaranth.lib.memory import Memory
+from amaranth.lib.wiring import In, Out
 from vcd import VCDWriter
 from vcd.gtkw import GTKWSave
 
 from hicart.controller.ft245 import FT245Controller
 from hicart.soc.stream import ByteDownConverter
-
 
 #
 # General Components
@@ -211,42 +210,19 @@ class bits:
                 value |= 1
         return self.__class__(value, self._len_)
 
+
 # Derived from Luna (Great Scott Gadgets).
 
-class StreamInterface(Record):
-    """ Simple record implementing a unidirectional data stream.
-
-    Attributes
-    -----------
-    valid: Signal(), from originator
-        Indicates that the current payload bytes are valid pieces of the current transaction.
-    first: Signal(), from originator
-        Indicates that the payload byte is the first byte of a new packet.
-    last: Signal(), from originator
-        Indicates that the payload byte is the last byte of the current packet.
-    payload: Signal(payload_width), from originator
-        The data payload to be transmitted.
-
-    ready: Signal(), from receiver
-        Indicates that the receiver will accept the payload byte at the next active
-        clock edge. Can be de-asserted to put backpressure on the transmitter.
-
-    Parameters
-    ----------
-    payload_width: int
-        The width of the stream's payload, in bits.
-    """
-
+class StreamSignature(wiring.Signature):
     def __init__(self, payload_width=8):
-        super().__init__([
-            ('valid',    1),
-            ('ready',    1),
+        super().__init__({
+            "payload": Out(payload_width),
+            "first": Out(1),
+            "last": Out(1),
+            "valid": Out(1),
+            "ready": In(1),
+        })
 
-            ('first',    1),
-            ('last',     1),
-
-            ('payload',  payload_width),
-        ])
 
 class IntegratedLogicAnalyzer(Elaboratable):
     """ Super-simple integrated-logic-analyzer generator class for LUNA.
@@ -458,7 +434,7 @@ class StreamILA(Elaboratable):
         #
         # I/O port
         #
-        self.stream  = StreamInterface(payload_width=self.bits_per_sample)
+        self.stream  = StreamSignature(payload_width=self.bits_per_sample).create()
         self.trigger = Signal()
 
 
@@ -474,7 +450,7 @@ class StreamILA(Elaboratable):
         if self._o_domain == self.domain:
             in_domain_stream = self.stream
         else:
-            in_domain_stream = StreamInterface(payload_width=self.bits_per_sample)
+            in_domain_stream = StreamSignature(payload_width=self.bits_per_sample).create()
 
         # Count where we are in the current transmission.
         current_sample_number = Signal(range(0, ila.sample_depth))
