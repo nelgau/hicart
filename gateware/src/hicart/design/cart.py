@@ -15,8 +15,6 @@ class Top(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
-        leds = platform.get_leds()
-
         m.submodules.car                        = platform.clock_domain_generator()
         m.submodules.flash_io   = flash_io      = platform.flash_io()
         m.submodules.cart_io    = cart_io       = platform.cart_io()
@@ -33,8 +31,6 @@ class Top(Elaboratable):
         m.submodules.mapper = mapper
         m.submodules.decoder = decoder
 
-        pmod     = self.pmod     = platform.request("pmod")
-
         wiring.connect(m, bridge.wb, decoder.bus)
         wiring.connect(m, flash_ctrl.bus, flash_io.bus)
 
@@ -43,6 +39,9 @@ class Top(Elaboratable):
 
         wiring.connect(m, cic.bus, cart_io.cic)
         wiring.connect(m, cic.sys, cart_io.sys)
+
+        pmod = platform.request("pmod")
+        leds = platform.request("leds")
 
         m.d.sync += [
             pmod.d.o[0]             .eq( cart_io.cic.dclk       ),
@@ -53,11 +52,9 @@ class Top(Elaboratable):
             pmod.d.o[5]             .eq( cart_io.pi.ale_h       ),
             pmod.d.o[6]             .eq( cart_io.si.dclk        ),
             pmod.d.o[7]             .eq( cart_io.si.data.i      ),
-            pmod.d.oe               .eq( 1 )
-        ]
+            pmod.d.oe               .eq( 1 ),
 
-        m.d.sync += [
-            leds[0]                 .eq( bridge.wb.cyc          ),
+            leds.d.o[0]             .eq( bridge.wb.cyc          ),
         ]
 
         return m

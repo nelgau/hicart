@@ -11,7 +11,7 @@ class Top(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
-        leds = platform.get_leds()
+        leds = platform.request("leds")
 
         m.submodules.car         = platform.clock_domain_generator()
         m.submodules.comm = comm = FT245WishboneCommander()
@@ -21,7 +21,7 @@ class Top(Elaboratable):
             m.d.sync += comm.bus.ack.eq(1)
 
             with m.If(comm.bus.we):
-                m.d.sync += leds.eq(comm.bus.dat_w[0:8])
+                m.d.sync += leds.d.o.eq(comm.bus.dat_w[0:8])
 
         m.d.comb += [
             comm.bus.dat_r.eq(comm.bus.adr + 0x45)

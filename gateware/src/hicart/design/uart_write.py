@@ -13,24 +13,21 @@ class Top(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
+        leds = platform.request("leds")
+
         m.submodules.car                    = platform.clock_domain_generator()
         m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
         m.submodules.iface      = iface     = FT245Controller()
-
-        leds = platform.get_leds()
 
         wiring.connect(m, iface.bus, ft245_io.bus)
 
         data_in = Signal(8)
 
         m.d.comb += iface.rx.ready.eq(1)
+        m.d.comb += leds.d.o.eq(data_in)
 
         with m.If(iface.rx.valid):
             m.d.sync += data_in.eq(iface.rx.payload)
-
-        m.d.comb += [
-            leds.eq(data_in)
-        ]
 
         return m
 

@@ -5,7 +5,7 @@
 groups = ["default", "test"]
 strategy = []
 lock_version = "4.5.1"
-content_hash = "sha256:9a0a9b3d3d850afafea119ab9dd0499bdd5bc84eb2b2b1fb22fb1ac0812198ee"
+content_hash = "sha256:2991f5575ac5064e18dfb85d6fc44e26c522d5774fb350125dcc271b1a21f26f"
 
 [[metadata.targets]]
 requires_python = "~=3.10.0"
@@ -23,18 +23,6 @@ dependencies = [
     "importlib-resources; python_version < \"3.9\"",
     "jschon~=0.11.1",
     "pyvcd<0.5,>=0.2.2",
-]
-
-[[package]]
-name = "amaranth-boards"
-version = "0.1.dev238"
-requires_python = "~=3.8"
-git = "https://github.com/amaranth-lang/amaranth-boards.git"
-ref = "91ffa38e"
-revision = "91ffa38e788a691464a6873d44537eece72ef76e"
-summary = "Board and connector definitions for Amaranth HDL"
-dependencies = [
-    "amaranth<0.5,>=0.3",
 ]
 
 [[package]]

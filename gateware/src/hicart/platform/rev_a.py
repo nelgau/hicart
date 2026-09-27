@@ -6,11 +6,9 @@ from amaranth.build import *
 from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out
 from amaranth.vendor import LatticeECP5Platform
-from amaranth_boards.resources import *
 
 from hicart.controller import flash, ft245
 from hicart.n64.cart import *
-from hicart.utils.plat import get_all_resources
 
 from hicart.vendor.ecp5pll import ECP5PLL, ECP5PLLConfig
 
@@ -153,6 +151,7 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
     package     = "BG256"
     speed       = "6"
     default_clk = "clk12"
+    connectors = []
 
     clock_domain_generator = HomeInvaderRevADomainGenerator
 
@@ -221,19 +220,13 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
         ),
 
         Resource("pmod", 0,
-            Subsignal("d",        Pins("C4 C5 C6 C7 D4 D5 D6 D7", dir="io"))
+            Subsignal("d",          Pins("C4 C5 C6 C7 D4 D5 D6 D7", dir="io"))
         ),
 
-        *LEDResources(pins="C16 B16 C15 B15 E15 C14 D14 E14",
-            attrs=Attrs(IO_TYPE="LVCMOS33")),
+        Resource("leds", 0,
+            Subsignal("d",          Pins("C16 B16 C15 B15 E15 C14 D14 E14", dir="o")),
+        )
     ]
-
-    connectors = [
-        Connector("pmod", 0, "C4 C5 C6 C7 - - D4 D5 D6 D7 - -")
-    ]
-
-    def get_leds(self):
-        return Cat([l.o for l in get_all_resources(self, 'led')])
 
     @property
     def required_tools(self):
