@@ -2,22 +2,25 @@ from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.cdc import FFSynchronizer
 from amaranth.lib.fifo import SyncFIFO
-from amaranth.lib.wiring import In, Out, Signature
+from amaranth.lib.wiring import In, Out
 
 from hicart.soc.stream import BasicStream
-from hicart.utils.plat import pin_signature
 
 
-FT245Signature = Signature({
-    "d":        Out(pin_signature(8, "io")),
-    "rxf":      Out(pin_signature(1, "i")),
-    "txe":      Out(pin_signature(1, "i")),
-    "rd":       Out(pin_signature(1, "o")),
-    "wr":       Out(pin_signature(1, "o")),
-    "siwu":     Out(pin_signature(1, "o")),
+Signature = wiring.Signature({
+    "d":        Out(wiring.Signature({
+        "i":    In(8),
+        "o":    Out(8),
+        "oe":   Out(1),
+    })),
+    "rxf":      In(1),
+    "txe":      In(1),
+    "rd":       Out(1),
+    "wr":       Out(1),
+    "siwu":     Out(1),
     # Only used in synchronous mode.
-    "clkout":   Out(pin_signature(1, "i")),
-    "oe":       Out(pin_signature(1, "o")),
+    "clkout":   In(1),
+    "oe":       Out(1),
 })
 
 
@@ -29,7 +32,7 @@ class Timings:
 
 
 class FT245Interface(wiring.Component):
-    bus: Out(FT245Signature)
+    bus: Out(Signature)
 
     def __init__(self):
         super().__init__()
@@ -51,9 +54,9 @@ class FT245Interface(wiring.Component):
         txe = Signal()
 
         m.submodules += [
-            FFSynchronizer(self.bus.d.i,   din, reset=0),
-            FFSynchronizer(self.bus.rxf.i, rxf, reset=1),
-            FFSynchronizer(self.bus.txe.i, txe, reset=1),
+            FFSynchronizer(self.bus.d.i, din, reset=0),
+            FFSynchronizer(self.bus.rxf, rxf, reset=1),
+            FFSynchronizer(self.bus.txe, txe, reset=1),
         ]
 
         count = Signal(8, reset=0)      # FIXME: Size this more appropriately later!
@@ -117,8 +120,8 @@ class FT245Interface(wiring.Component):
                     ]
 
         m.d.comb += [
-            self.bus.rd.o           .eq(rd),
-            self.bus.wr.o           .eq(wr),
+            self.bus.rd             .eq(rd),
+            self.bus.wr             .eq(wr),
         ]
 
         m.d.comb += [

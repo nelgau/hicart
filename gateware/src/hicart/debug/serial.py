@@ -7,7 +7,7 @@ from hicart.soc.stream import BasicStream, ByteDownConverter
 
 class FT245Streamer(Elaboratable):
 
-    def __init__(self, byte_width, domain='sync'):
+    def __init__(self, byte_width, domain="sync"):
         self.byte_width = byte_width
         self.domain = domain
 
@@ -16,12 +16,11 @@ class FT245Streamer(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules.iface = iface = FT245Interface()
-        m.submodules.dc    = dc    = ByteDownConverter(byte_width=self.byte_width)
+        m.submodules.iface      = iface     = FT245Interface()
+        m.submodules.dc         = dc        = ByteDownConverter(byte_width=self.byte_width)
+        m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
 
-        usb_fifo = platform.request('usb_fifo')
-
-        wiring.connect(m, iface.bus, usb_fifo)
+        wiring.connect(m, iface.bus, ft245_io.bus)
 
         m.d.comb += [
             self.stream     .connect(dc.source),
@@ -42,7 +41,7 @@ class FT245Reader():
 
         import pyftdi.serialext
 
-        self._port = pyftdi.serialext.serial_for_url('ftdi://ftdi:2232h:FT5RTNBA/1', baudrate=3000000)
+        self._port = pyftdi.serialext.serial_for_url("ftdi://ftdi:2232h:FT5RTNBA/1", baudrate=3000000)
         self._port.reset_input_buffer()
 
     def run(self):

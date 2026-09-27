@@ -13,13 +13,13 @@ class Top(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules.car           = platform.clock_domain_generator()
-        m.submodules.iface = iface = FT245Interface()
+        m.submodules.car                    = platform.clock_domain_generator()
+        m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
+        m.submodules.iface      = iface     = FT245Interface()
 
-        usb_fifo = platform.request('usb_fifo')
         leds = platform.get_leds()
 
-        wiring.connect(m, iface.bus, usb_fifo)
+        wiring.connect(m, iface.bus, ft245_io.bus)
 
         data_in = Signal(8)
 
@@ -36,16 +36,16 @@ class Top(Elaboratable):
 
 
 def write_serial():
-    port = pyftdi.serialext.serial_for_url('ftdi://ftdi:2232h:FT5RTNBA/1', baudrate=3000000)
+    port = pyftdi.serialext.serial_for_url("ftdi://ftdi:2232h:FT5RTNBA/1", baudrate=3000000)
     port.reset_input_buffer()
 
     def do_write(string):
-        port.write(string.encode('utf-8'))
+        port.write(string.encode("utf-8"))
 
     while True:
-        do_write('3')
+        do_write("3")
         time.sleep(0.25)
-        do_write('x')
+        do_write("x")
         time.sleep(0.25)
 
 if __name__ == "__main__":

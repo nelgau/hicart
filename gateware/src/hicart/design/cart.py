@@ -33,7 +33,7 @@ class Top(Elaboratable):
         m.submodules.mapper = mapper
         m.submodules.decoder = decoder
 
-        pmod     = self.pmod     = platform.request('pmod')
+        pmod     = self.pmod     = platform.request("pmod")
 
         wiring.connect(m, bridge.wb, decoder.bus)
         wiring.connect(m, flash_interface.qspi_ce, flash_io.qspi_ce)

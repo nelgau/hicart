@@ -57,7 +57,7 @@ class CIC(wiring.Component):
 
         with open("../firmware/firmware.bin", "rb") as f:
             rom_bytes = f.read()
-            rom_data = [x[0] for x in struct.iter_unpack('<L', rom_bytes)]
+            rom_data = [x[0] for x in struct.iter_unpack("<L", rom_bytes)]
 
         self.rom.init = rom_data
 

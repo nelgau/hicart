@@ -15,14 +15,14 @@ class Top(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules.car           = platform.clock_domain_generator()
-        m.submodules.iface = iface = FT245Interface()
-        m.submodules.dc    = dc    = ByteDownConverter(byte_width=4)
+        m.submodules.car                    = platform.clock_domain_generator()
+        m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
+        m.submodules.iface      = iface     = FT245Interface()
+        m.submodules.dc         = dc        = ByteDownConverter(byte_width=4)
 
-        usb_fifo = platform.request('usb_fifo')
-        pmod     = platform.request('pmod')
+        pmod     = platform.request("pmod")
 
-        wiring.connect(m, iface.bus, usb_fifo)
+        wiring.connect(m, iface.bus, ft245_io.bus)
 
         m.d.comb += [
             dc.source.payload   .eq(0x12345678),
@@ -32,11 +32,11 @@ class Top(Elaboratable):
 
         m.d.comb += [
             pmod.d.o[0]         .eq(iface.tx.ready),
-            pmod.d.o[1]         .eq(usb_fifo.d.oe),
-            pmod.d.o[2]         .eq(usb_fifo.rxf.i),
-            pmod.d.o[3]         .eq(usb_fifo.txe.i),
-            pmod.d.o[4]         .eq(usb_fifo.rd.o),
-            pmod.d.o[5]         .eq(usb_fifo.wr.o),
+            pmod.d.o[1]         .eq(iface.bus.d.oe),
+            pmod.d.o[2]         .eq(iface.bus.rxf),
+            pmod.d.o[3]         .eq(iface.bus.txe),
+            pmod.d.o[4]         .eq(iface.bus.rd),
+            pmod.d.o[5]         .eq(iface.bus.wr),
             pmod.d.o[6]         .eq(ClockSignal()),
             pmod.d.o[7]         .eq(ResetSignal()),
             pmod.d.oe           .eq(1),
@@ -46,7 +46,7 @@ class Top(Elaboratable):
 
 
 def read_serial():
-    port = pyftdi.serialext.serial_for_url('ftdi://ftdi:2232h:FT5RTNBA/1', baudrate=3000000)
+    port = pyftdi.serialext.serial_for_url("ftdi://ftdi:2232h:FT5RTNBA/1", baudrate=3000000)
     port.reset_input_buffer()
 
     while True:

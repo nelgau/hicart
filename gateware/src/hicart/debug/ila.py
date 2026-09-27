@@ -789,11 +789,10 @@ class HomeInvaderILA(Elaboratable):
     def elaborate(self, platform):
         m  = Module()
 
-        m.submodules.ila   = ila   = self.ila
-        m.submodules.iface = iface = FT245Interface()
-        m.submodules.dc    = dc    = ByteDownConverter(byte_width=self.bytes_per_sample)
-
-        usb_fifo = platform.request('usb_fifo')
+        m.submodules.ila        = ila       = self.ila
+        m.submodules.iface      = iface     = FT245Interface()
+        m.submodules.dc         = dc        = ByteDownConverter(byte_width=self.bytes_per_sample)
+        m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
 
         m.d.comb += [
             dc.source.payload   .eq(ila.stream.payload),
@@ -803,21 +802,7 @@ class HomeInvaderILA(Elaboratable):
             dc.sink             .connect(iface.tx),
         ]
 
-        # wiring.connect(m, iface.bus, usb_fifo)
-
-        m.d.comb += [
-            iface.bus.d.i       .eq(usb_fifo.d.i),
-            iface.bus.rxf.i     .eq(usb_fifo.rxf.i),
-            iface.bus.txe.i     .eq(usb_fifo.txe.i),
-            iface.bus.clkout.i  .eq(usb_fifo.clkout.i),
-
-            usb_fifo.d.o        .eq(iface.bus.d.o),
-            usb_fifo.d.oe       .eq(iface.bus.d.oe),
-            usb_fifo.rd.o       .eq(iface.bus.rd.o),
-            usb_fifo.wr.o       .eq(iface.bus.wr.o),
-            usb_fifo.siwu.o     .eq(iface.bus.siwu.o),
-            usb_fifo.oe.o       .eq(iface.bus.oe.o),
-        ]
+        wiring.connect(m, iface.bus, ft245_io.bus)
 
         # Convert our sync domain to the domain requested by the user, if necessary.
         if self.domain != "sync":
@@ -880,6 +865,5 @@ class HomeInvaderILAFrontend(ILAFrontend):
             # subprocess.run(["gtkwave", "-f", vcd_filename, "-a", gtkw_filename])
             subprocess.run(["surfer", vcd_filename])
         finally:
-            print("Warning: VCD/GTKW left on filesystem. See ILA source code.")
-            # os.remove(vcd_filename)
-            # os.remove(gtkw_filename)
+            os.remove(vcd_filename)
+            os.remove(gtkw_filename)

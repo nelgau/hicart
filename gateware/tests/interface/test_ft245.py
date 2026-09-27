@@ -10,25 +10,25 @@ class FT245InterfaceTest(MultiProcessTestCase):
     def test_read(self):
         dut = FT245Interface()
 
-        dut.bus.rxf.i = Signal(reset=1)
-        dut.bus.txe.i = Signal(reset=1)
+        dut.bus.rxf = Signal(reset=1)
+        dut.bus.txe = Signal(reset=1)
 
         async def testbench(ctx):
             await ctx.tick().repeat(2)
 
-            ctx.set(dut.bus.rxf.i, 0)
+            ctx.set(dut.bus.rxf, 0)
             await ctx.tick().repeat(2)
 
-            await ctx.tick().until(~dut.bus.rd.o)
+            await ctx.tick().until(~dut.bus.rd)
             await ctx.tick().repeat(2)
 
-            ctx.set(dut.bus.rxf.i, 1)
+            ctx.set(dut.bus.rxf, 1)
             ctx.set(dut.bus.d.i, 0xA9)
 
-            await ctx.tick().until(dut.bus.rd.o)
+            await ctx.tick().until(dut.bus.rd)
             await ctx.tick().repeat(2)
 
-            ctx.set(dut.bus.rxf.i, 1)
+            ctx.set(dut.bus.rxf, 1)
             ctx.set(dut.bus.d.i, 0)
 
             assert ctx.get(dut.rx.payload) == 0xA9
@@ -46,10 +46,10 @@ class FT245InterfaceTest(MultiProcessTestCase):
             dut.bus.d.i,
             dut.bus.d.o,
             dut.bus.d.oe,
-            dut.bus.rxf.i,
-            dut.bus.txe.i,
-            dut.bus.rd.o,
-            dut.bus.wr.o,
+            dut.bus.rxf,
+            dut.bus.txe,
+            dut.bus.rd,
+            dut.bus.wr,
 
             dut.rx.payload,
             dut.rx.valid,
@@ -80,14 +80,14 @@ class FT245InterfaceTest(MultiProcessTestCase):
             await ctx.tick()
 
             ctx.set(dut.tx.valid, 0)
-            ctx.set(dut.bus.txe.i, 0)
+            ctx.set(dut.bus.txe, 0)
 
-            await ctx.tick().until(~dut.bus.wr.o)
+            await ctx.tick().until(~dut.bus.wr)
 
             assert ctx.get(dut.bus.d.o) == 0xBB
             assert ctx.get(dut.bus.d.oe) == 1
 
-            await ctx.tick().until(dut.bus.wr.o)
+            await ctx.tick().until(dut.bus.wr)
 
             assert ctx.get(dut.bus.d.oe) == 0
 
@@ -95,10 +95,10 @@ class FT245InterfaceTest(MultiProcessTestCase):
             dut.bus.d.i,
             dut.bus.d.o,
             dut.bus.d.oe,
-            dut.bus.rxf.i,
-            dut.bus.txe.i,
-            dut.bus.rd.o,
-            dut.bus.wr.o,
+            dut.bus.rxf,
+            dut.bus.txe,
+            dut.bus.rd,
+            dut.bus.wr,
 
             dut.rx.payload,
             dut.rx.valid,

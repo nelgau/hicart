@@ -35,33 +35,33 @@ def run_remote():
 
     time.sleep(1)
 
-    # while True:
-    #     result = remote.read(0x11)
-    #     print(f'{result:08X}')
-    #     time.sleep(0.25)
+    while True:
+        result = remote.read(0x11)
+        print(f"{result:08X}")
+        time.sleep(0.25)
 
-    #     result = remote.read(0x22)
-    #     print(f'{result:08X}')
-    #     time.sleep(0.25)
+        result = remote.read(0x22)
+        print(f"{result:08X}")
+        time.sleep(0.25)
 
-    #     remote.write(0x11, 0x00000099)
-    #     time.sleep(0.25)
+        remote.write(0x11, 0x00000099)
+        time.sleep(0.25)
 
-    #     remote.write(0x22, 0x00000066)
-    #     time.sleep(0.25)
+        remote.write(0x22, 0x00000066)
+        time.sleep(0.25)
 
-    count = 10000
-    start_time = time.time()
+    # count = 10000
+    # start_time = time.time()
 
-    for i in range(count):
-        #remote.write(0x22, 0x00000066)
-        remote.read(0x22)
+    # for i in range(count):
+    #     #remote.write(0x22, 0x00000066)
+    #     remote.read(0x22)
 
-    end_time = time.time()
-    total_time = end_time - start_time
-    rate = count / total_time
+    # end_time = time.time()
+    # total_time = end_time - start_time
+    # rate = count / total_time
 
-    print(f"{total_time:.2f} seconds ({rate:.2f} ops/sec)")
+    # print(f"{total_time:.2f} seconds ({rate:.2f} ops/sec)")
 
 if __name__ == "__main__":
     main_runner(Top(), do_program=True)

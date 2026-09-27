@@ -2,8 +2,6 @@ import itertools
 
 from amaranth import *
 from amaranth.build import *
-from amaranth.lib import wiring
-from amaranth.lib.wiring import In, Out
 
 
 def get_all_resources(platform, name):
@@ -14,28 +12,3 @@ def get_all_resources(platform, name):
         except ResourceError:
             break
     return resources
-
-
-def pin_signature(width, dir):
-    members = {}
-    if dir in ("i", "io"):
-        members["i"] = In(width)
-    if dir in ("o", "oe", "io"):
-        members["o"] = Out(width)
-    if dir in ("oe", "io"):
-        members["oe"] = Out(1)
-    return wiring.Signature(members)
-
-
-def forward_interface(self, m, from_bus, to_bus):
-    # FIXME: Extend for nested interfaces.
-    members = to_bus.signature.members
-    for name in members:
-        from_value = getattr(from_bus, name)
-        to_value = getattr(to_bus, name)
-
-        flow = members[name].flow
-        if flow == In:
-            m.d.comb += from_value.eq(to_value)
-        elif flow == Out:
-            m.d.comb += to_value.eq(from_value)

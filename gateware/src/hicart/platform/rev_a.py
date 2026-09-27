@@ -8,7 +8,7 @@ from amaranth.lib.wiring import In, Out
 from amaranth.vendor import LatticeECP5Platform
 from amaranth_boards.resources import *
 
-from hicart.interface import flash
+from hicart.interface import flash, ft245
 from hicart.n64.cart import *
 from hicart.utils.plat import get_all_resources
 
@@ -75,8 +75,34 @@ class N64CartIO(wiring.Component):
         return m
 
 
+class FT245IO(wiring.Component):
+    bus: In(ft245.Signature)
+
+    def elaborate(self, platform):
+        m = Module()
+
+        usb_ft245 = platform.request("usb_fifo")
+
+        m.d.comb += [
+            self.bus.d.i        .eq(usb_ft245.d.i),
+            self.bus.rxf        .eq(usb_ft245.rxf.i),
+            self.bus.txe        .eq(usb_ft245.txe.i),
+            self.bus.clkout     .eq(usb_ft245.clkout.i),
+
+            usb_ft245.d.o       .eq(self.bus.d.o),
+            usb_ft245.d.oe      .eq(self.bus.d.oe),
+            usb_ft245.rd.o      .eq(self.bus.rd),
+            usb_ft245.wr.o      .eq(self.bus.wr),
+            usb_ft245.siwu.o    .eq(self.bus.siwu),
+            usb_ft245.oe.o      .eq(self.bus.oe),
+        ]
+
+        return m
+
+
 class FlashIO(wiring.Component):
     qspi_ce: In(flash.ClockEnableSignature())
+    qspi_sck: Out(1)
 
     def elaborate(self, platform):
         m = Module()
@@ -101,6 +127,7 @@ class FlashIO(wiring.Component):
 
         m.d.comb += [
             qspi_pins.cs_n.o            .eq(self.qspi_ce.cs_n),
+            self.qspi_sck               .eq(qspi_sck)
         ]
 
         for i in range(4):
@@ -127,8 +154,10 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
     default_clk = "clk12"
 
     clock_domain_generator = HomeInvaderRevADomainGenerator
-    flash_io = FlashIO
+
     cart_io = N64CartIO
+    ft245_io = FT245IO
+    flash_io = FlashIO
 
     resources = [
         Resource("clk12", 0, Pins("J16", dir="i"),
@@ -214,7 +243,7 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
     def toolchain_prepare(self, fragment, name, **kwargs):
         overrides = {
             "synth_opts": "-abc9",
-            "nextpnr_opts": "--seed 1",
+            "nextpnr_opts": "--seed 2",
             "ecppack_opts": "--compress --freq 38.8",
         }
         return super().toolchain_prepare(fragment, name, **overrides, **kwargs)

@@ -68,12 +68,12 @@ class Top(Elaboratable):
 
 
 
-        pmod = platform.request('pmod')
+        pmod = platform.request("pmod")
 
         m.d.comb += [
-            pmod.d.o[0].eq(ClockSignal('sync')),
+            pmod.d.o[0].eq(ClockSignal("sync")),
             pmod.d.o[1].eq(flash_io.qspi_ce.cs_n),
-            pmod.d.o[2].eq(flash_io.spi_clk),
+            pmod.d.o[2].eq(flash_io.qspi_sck),
 
             pmod.d.o[3].eq(flash_io.qspi_ce.d.i[0]),
             pmod.d.o[4].eq(flash_io.qspi_ce.d.i[1]),

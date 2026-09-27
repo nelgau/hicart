@@ -164,12 +164,11 @@ class FT245WishboneCommander(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules.iface = iface = FT245Interface()
-        m.submodules.comm  = comm  = StreamWishboneCommander()
+        m.submodules.iface      = iface     = FT245Interface()
+        m.submodules.comm       = comm      = StreamWishboneCommander()
+        m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
 
-        usb_fifo = platform.request('usb_fifo')
-
-        wiring.connect(m, iface.bus, usb_fifo)
+        wiring.connect(m, iface.bus, ft245_io.bus)
         wiring.connect(m, comm.bus, wiring.flipped(self.bus))
 
         m.d.comb += [
@@ -189,16 +188,16 @@ class FT245WishboneRemote:
     def __init__(self):
         import pyftdi.serialext
 
-        self._port = pyftdi.serialext.serial_for_url('ftdi://ftdi:2232h:FT5RTNBA/1', baudrate=3000000)
+        self._port = pyftdi.serialext.serial_for_url("ftdi://ftdi:2232h:FT5RTNBA/1", baudrate=3000000)
         self._port.reset_input_buffer()
 
     def read(self, address):
-        self._port.write(struct.pack('>B', 0x10))
-        self._port.write(struct.pack('>L', address))
+        self._port.write(struct.pack(">B", 0x10))
+        self._port.write(struct.pack(">L", address))
         # self._port.flush()
 
-        data = struct.unpack('>L', self._port.read(4))[0]
-        ack  = struct.unpack('>B', self._port.read(1))[0]
+        data = struct.unpack(">L", self._port.read(4))[0]
+        ack  = struct.unpack(">B", self._port.read(1))[0]
 
         if ack != 0xDD:
             print(f"Got bad response! 0x{ack:02X}")
@@ -206,12 +205,12 @@ class FT245WishboneRemote:
         return data
 
     def write(self, address, data):
-        self._port.write(struct.pack('>B', 0x11))
-        self._port.write(struct.pack('>L', address))
-        self._port.write(struct.pack('>L', data))
+        self._port.write(struct.pack(">B", 0x11))
+        self._port.write(struct.pack(">L", address))
+        self._port.write(struct.pack(">L", data))
         # self._port.flush()
 
-        ack  = struct.unpack('>B', self._port.read(1))[0]
+        ack  = struct.unpack(">B", self._port.read(1))[0]
 
         if ack != 0xDD:
             print(f"Got bad response! 0x{ack:02X}")
