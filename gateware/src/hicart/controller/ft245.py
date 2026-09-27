@@ -31,7 +31,7 @@ class Timings:
     RD_WAIT_CYCLES  = 5
 
 
-class FT245Interface(wiring.Component):
+class FT245Controller(wiring.Component):
     bus: Out(Signature)
 
     def __init__(self):

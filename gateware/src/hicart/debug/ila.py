@@ -19,7 +19,7 @@ from amaranth.lib.memory import Memory
 from vcd import VCDWriter
 from vcd.gtkw import GTKWSave
 
-from hicart.interface.ft245 import FT245Interface
+from hicart.controller.ft245 import FT245Controller
 from hicart.soc.stream import ByteDownConverter
 
 
@@ -790,7 +790,7 @@ class HomeInvaderILA(Elaboratable):
         m  = Module()
 
         m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
-        m.submodules.iface      = iface     = FT245Interface()
+        m.submodules.iface      = iface     = FT245Controller()
         m.submodules.dc         = dc        = ByteDownConverter(byte_width=self.bytes_per_sample)
         m.submodules.ila        = ila       = self.ila
 

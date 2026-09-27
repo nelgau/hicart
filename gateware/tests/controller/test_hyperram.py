@@ -1,7 +1,7 @@
 from amaranth import *
 from amaranth.sim import *
 
-from hicart.interface.hyperram import HyperRAMInterface
+from hicart.controller.hyperram import HyperRAMController
 from hicart.sim.testcase import MultiProcessTestCase
 
 
@@ -18,7 +18,7 @@ class TestHyperRAMInterface(MultiProcessTestCase):
             ("reset", 1)
         ])
 
-        dut = HyperRAMInterface(bus=ram_signals)
+        dut = HyperRAMController(bus=ram_signals)
 
         async def testbench(ctx):
             # Before we transact, CS should be de-asserted, and RWDS and DQ should be undriven.
@@ -110,7 +110,7 @@ class TestHyperRAMInterface(MultiProcessTestCase):
             ("reset", 1)
         ])
 
-        dut = HyperRAMInterface(bus=ram_signals)
+        dut = HyperRAMController(bus=ram_signals)
 
         async def testbench(ctx):
             # Before we transact, CS should be de-asserted, and RWDS and DQ should be undriven.

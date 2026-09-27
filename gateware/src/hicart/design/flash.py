@@ -2,7 +2,7 @@ from amaranth import *
 from amaranth.lib import wiring
 
 from hicart.debug.serial import FT245Streamer, FT245Reader
-from hicart.interface.flash import WishboneFlashInterface
+from hicart.controller.flash import WishboneFlashController
 from hicart.utils.cli import main_runner
 
 
@@ -11,11 +11,11 @@ class Top(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules.car                                    = platform.clock_domain_generator()
-        m.submodules.flash_io           = flash_io          = platform.flash_io()
-        m.submodules.flash_interface    = flash_interface   = WishboneFlashInterface()
+        m.submodules.car                        = platform.clock_domain_generator()
+        m.submodules.flash_io   = flash_io      = platform.flash_io()
+        m.submodules.flash_ctrl = flash_ctrl    = WishboneFlashController()
 
-        wiring.connect(m, flash_interface.bus, flash_io.bus)
+        wiring.connect(m, flash_ctrl.bus, flash_io.bus)
 
         address = Signal(24, reset=0x800000)
         counter = Signal(24)
@@ -36,16 +36,16 @@ class Top(Elaboratable):
                 m.next = "BEGIN"
 
             with m.State("BEGIN"):
-                m.d.comb += flash_interface.wb.cyc  .eq(1)
-                m.d.comb += flash_interface.wb.stb  .eq(1)
+                m.d.comb += flash_ctrl.wb.cyc  .eq(1)
+                m.d.comb += flash_ctrl.wb.stb  .eq(1)
 
-                with m.If(~flash_interface.wb.stall):
+                with m.If(~flash_ctrl.wb.stall):
                     m.next = "RUNNING"
 
             with m.State("RUNNING"):
-                m.d.comb += flash_interface.wb.cyc  .eq(1)
+                m.d.comb += flash_ctrl.wb.cyc  .eq(1)
 
-                with m.If(flash_interface.wb.ack):
+                with m.If(flash_ctrl.wb.ack):
                     m.next = "DELAY"
 
                     m.d.sync += [
@@ -53,16 +53,14 @@ class Top(Elaboratable):
                     ]
 
         m.d.comb += [
-            flash_interface.wb.adr     .eq(address)
+            flash_ctrl.wb.adr     .eq(address)
         ]
-
-
 
         m.submodules.streamer = streamer = FT245Streamer(byte_width=4)
 
         m.d.comb += [
-            streamer.stream.payload     .eq(flash_interface.wb.dat_r),
-            streamer.stream.valid       .eq(flash_interface.wb.ack)
+            streamer.stream.payload     .eq(flash_ctrl.wb.dat_r),
+            streamer.stream.valid       .eq(flash_ctrl.wb.ack)
         ]
 
         pmod = platform.request("pmod")

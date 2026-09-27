@@ -2,7 +2,7 @@ from amaranth import *
 from amaranth.lib import wiring
 import pyftdi.serialext
 
-from hicart.interface.ft245 import FT245Interface
+from hicart.controller.ft245 import FT245Controller
 from hicart.soc.stream import ByteDownConverter
 from hicart.utils.cli import main_runner
 
@@ -17,7 +17,7 @@ class Top(Elaboratable):
 
         m.submodules.car                    = platform.clock_domain_generator()
         m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
-        m.submodules.iface      = iface     = FT245Interface()
+        m.submodules.iface      = iface     = FT245Controller()
         m.submodules.dc         = dc        = ByteDownConverter(byte_width=4)
 
         pmod     = platform.request("pmod")

@@ -4,7 +4,7 @@ from amaranth import *
 from amaranth.lib import wiring
 from amaranth_soc import wishbone
 
-from hicart.interface.ft245 import FT245Interface
+from hicart.controller.ft245 import FT245Controller
 from hicart.soc.stream import BasicStream
 
 
@@ -165,7 +165,7 @@ class FT245WishboneCommander(Elaboratable):
         m = Module()
 
         m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
-        m.submodules.iface      = iface     = FT245Interface()
+        m.submodules.iface      = iface     = FT245Controller()
         m.submodules.comm       = comm      = StreamWishboneCommander()
 
         wiring.connect(m, iface.bus, ft245_io.bus)

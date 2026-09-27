@@ -1,13 +1,13 @@
 from amaranth.sim import *
 
-from hicart.interface.flash import FlashInterface, WishboneFlashInterface
+from hicart.controller.flash import FlashController, WishboneFlashController
 from hicart.sim.testcase import MultiProcessTestCase
 
 
 class FlashInterfaceTest(MultiProcessTestCase):
 
     def test_basic(self):
-        dut = FlashInterface()
+        dut = FlashController()
 
         async def testbench(ctx):
             await ctx.tick().repeat(10)
@@ -92,7 +92,7 @@ class FlashInterfaceTest(MultiProcessTestCase):
 class WishboneFlashInterfaceTest(MultiProcessTestCase):
 
     def test_basic(self):
-        dut = WishboneFlashInterface()
+        dut = WishboneFlashController()
 
         async def testbench(ctx):
             await ctx.tick().repeat(10)

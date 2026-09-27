@@ -8,7 +8,7 @@ from amaranth.lib.wiring import In, Out
 from amaranth.vendor import LatticeECP5Platform
 from amaranth_boards.resources import *
 
-from hicart.interface import flash, ft245
+from hicart.controller import flash, ft245
 from hicart.n64.cart import *
 from hicart.utils.plat import get_all_resources
 

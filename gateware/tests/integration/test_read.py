@@ -3,7 +3,7 @@ from amaranth.lib import wiring
 from amaranth.sim import *
 from amaranth_soc import wishbone
 
-from hicart.interface import flash
+from hicart.controller import flash
 from hicart.n64.cart import PISignature
 from hicart.n64.pi import WishboneBridge
 from hicart.soc.wishbone import WindowMapper
@@ -22,7 +22,7 @@ class N64ReadTest(MultiProcessTestCase):
 
             self.bridge = WishboneBridge()
 
-            self.flash_interface = flash.WishboneFlashInterface(data_width=16)
+            self.flash_interface = flash.WishboneFlashController(data_width=16)
             self.flash_io = flash.SimFlashIO()
 
             self.mapper = WindowMapper(self.flash_interface.wb,

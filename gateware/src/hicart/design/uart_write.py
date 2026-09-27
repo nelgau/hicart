@@ -4,7 +4,7 @@ from amaranth import *
 from amaranth.lib import wiring
 import pyftdi.serialext
 
-from hicart.interface.ft245 import FT245Interface
+from hicart.controller.ft245 import FT245Controller
 from hicart.utils.cli import main_runner
 
 
@@ -15,7 +15,7 @@ class Top(Elaboratable):
 
         m.submodules.car                    = platform.clock_domain_generator()
         m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
-        m.submodules.iface      = iface     = FT245Interface()
+        m.submodules.iface      = iface     = FT245Controller()
 
         leds = platform.get_leds()
 

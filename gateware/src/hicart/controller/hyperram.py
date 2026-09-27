@@ -28,7 +28,7 @@ class HyperBus(Record):
 
 
 
-class HyperRAMInterface(Elaboratable):
+class HyperRAMController(Elaboratable):
     """ Gateware interface to HyperRAM series self-refreshing DRAM chips.
 
     I/O port:
@@ -377,7 +377,7 @@ class HyperRAMInterface(Elaboratable):
         return m
 
 
-class HyperRAMWishboneInterface(Elaboratable):
+class HyperRAMWishboneController(Elaboratable):
 
     def __init__(self):
         self.hbus = HyperBus()
@@ -391,21 +391,21 @@ class HyperRAMWishboneInterface(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules.iface = iface = HyperRAMInterface(self.hbus)
+        m.submodules.inner = inner = HyperRAMController(self.hbus)
 
         m.d.comb += [
-            iface.start_transfer        .eq(self.wbus.cyc & self.wbus.stb),
-            iface.address               .eq(self.wbus.adr),
-            iface.perform_write         .eq(self.wbus.we),
-            iface.write_data            .eq(self.wbus.dat_w),
+            inner.start_transfer    .eq(self.wbus.cyc & self.wbus.stb),
+            inner.address           .eq(self.wbus.adr),
+            inner.perform_write     .eq(self.wbus.we),
+            inner.write_data        .eq(self.wbus.dat_w),
 
-            iface.register_space        .eq(0),
-            iface.single_page           .eq(0),
-            iface.final_word            .eq(1),
+            inner.register_space    .eq(0),
+            inner.single_page       .eq(0),
+            inner.final_word        .eq(1),
 
-            self.wbus.stall             .eq(~iface.idle),
-            self.wbus.dat_r             .eq(iface.read_data),
-            self.wbus.ack               .eq(iface.new_data_ready),
+            self.wbus.stall         .eq(~inner.idle),
+            self.wbus.dat_r         .eq(inner.read_data),
+            self.wbus.ack           .eq(inner.new_data_ready),
         ]
 
         return m

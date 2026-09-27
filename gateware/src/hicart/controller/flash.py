@@ -53,7 +53,7 @@ class SimFlashIO(wiring.Component):
         return m
 
 
-class FlashInterface(wiring.Component):
+class FlashController(wiring.Component):
 
     def __init__(self, data_width=8):
         if data_width % 8 != 0:
@@ -197,7 +197,7 @@ class FlashInterface(wiring.Component):
         return m
 
 
-class WishboneFlashInterface(wiring.Component):
+class WishboneFlashController(wiring.Component):
 
     def __init__(self, data_width=8):
         memory_map = MemoryMap(addr_width=24, data_width=8)
@@ -221,19 +221,19 @@ class WishboneFlashInterface(wiring.Component):
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules.interface = interface = FlashInterface(
+        m.submodules.inner = inner = FlashController(
             data_width=self.wb.data_width,
         )
 
-        wiring.connect(m, interface.bus, wiring.flipped(self.bus))
+        wiring.connect(m, inner.bus, wiring.flipped(self.bus))
 
         m.d.comb += [
-            interface.start         .eq(self.wb.cyc & self.wb.stb),
-            interface.address       .eq(self.wb.adr),
+            inner.start     .eq(self.wb.cyc & self.wb.stb),
+            inner.address   .eq(self.wb.adr),
 
-            self.wb.stall           .eq(~interface.idle),
-            self.wb.dat_r           .eq(interface.data),
-            self.wb.ack             .eq(interface.valid),
+            self.wb.stall   .eq(~inner.idle),
+            self.wb.dat_r   .eq(inner.data),
+            self.wb.ack     .eq(inner.valid),
         ]
 
         return m

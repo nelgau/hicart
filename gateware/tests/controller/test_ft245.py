@@ -1,14 +1,14 @@
 from amaranth import *
 from amaranth.sim import *
 
-from hicart.interface.ft245 import FT245Interface
+from hicart.controller.ft245 import FT245Controller
 from hicart.sim.testcase import MultiProcessTestCase
 4
 
 class FT245InterfaceTest(MultiProcessTestCase):
 
     def test_read(self):
-        dut = FT245Interface()
+        dut = FT245Controller()
 
         dut.bus.rxf = Signal(reset=1)
         dut.bus.txe = Signal(reset=1)
@@ -65,7 +65,7 @@ class FT245InterfaceTest(MultiProcessTestCase):
             sim.add_testbench(testbench)
 
     def test_write(self):
-        dut = FT245Interface()
+        dut = FT245Controller()
 
         dut.bus.rxf.i = Signal(reset=1)
         dut.bus.txe.i = Signal(reset=1)
