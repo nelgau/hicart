@@ -246,7 +246,3 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
         ecpprog = os.environ.get("ECPPROG", "ecpprog")
         with products.extract("{}.bit".format(name)) as bitstream_filename:
             subprocess.check_call([ecpprog, "-d", "s:0x0403:0x6010:FT5YLSVU", "-I", "B", "-S", bitstream_filename])
-
-if __name__ == "__main__":
-    from amaranth_boards.test.blinky import *
-    HomeInvaderRevAPlatform().build(Blinky(), do_program=True)
