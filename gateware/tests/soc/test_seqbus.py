@@ -1,5 +1,8 @@
 from amaranth import *
+from amaranth.lib import wiring
+from amaranth.lib.wiring import flipped
 from amaranth.sim import *
+from amaranth_soc import wishbone
 from amaranth_soc.memory import MemoryMap
 
 from hicart.soc import seqbus
@@ -90,9 +93,12 @@ class DecoderTest(MultiProcessTestCase):
 class PrefetchingWishboneBridgeTest(MultiProcessTestCase):
 
     def test_read(self):
-        dut = seqbus.PrefetchingWishboneBridge(addr_width=31, data_width=16, granularity=8, features={"stall"})
+        sub_bus = flipped(wishbone.Interface(addr_width=31, data_width=16, granularity=8, features={"stall"}))
+        sub_bus.memory_map = MemoryMap(addr_width=32, data_width=8)
 
-        sub_responder = WishbonePipelinedResponder(dut.wb, initial=0xFACE, delay=2)
+        dut = seqbus.PrefetchingWishboneBridge(sub_bus)
+
+        sub_responder = WishbonePipelinedResponder(sub_bus, initial=0xFACE, delay=2)
         intr_driver = seqbus.SeqbusDriver(dut.seq)
 
         async def sub_process(ctx):
@@ -114,7 +120,7 @@ class PrefetchingWishboneBridgeTest(MultiProcessTestCase):
 
         traces = [
             dut.seq,
-            dut.wb,
+            sub_bus,
         ]
 
         with self.simulate(dut, traces=traces) as sim:
@@ -123,9 +129,12 @@ class PrefetchingWishboneBridgeTest(MultiProcessTestCase):
             sim.add_testbench(intr_testbench)
 
     def test_write(self):
-        dut = seqbus.PrefetchingWishboneBridge(addr_width=31, data_width=16, granularity=8, features={"stall"})
+        sub_bus = flipped(wishbone.Interface(addr_width=31, data_width=16, granularity=8, features={"stall"}))
+        sub_bus.memory_map = MemoryMap(addr_width=32, data_width=8)
 
-        sub_responder = WishbonePipelinedResponder(dut.wb, initial=0xFACE, delay=2)
+        dut = seqbus.PrefetchingWishboneBridge(sub_bus)
+
+        sub_responder = WishbonePipelinedResponder(sub_bus, initial=0xFACE, delay=2)
         intr_driver = seqbus.SeqbusDriver(dut.seq)
 
         async def sub_process(ctx):

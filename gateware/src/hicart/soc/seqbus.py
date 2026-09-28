@@ -45,7 +45,7 @@ class Signature(wiring.Signature):
             "cyc":      Out(1),
             "stb":      Out(1),
             "we":       Out(1),
-            "ack":      Out(1),
+            "ack":      In(1),
         })
 
     @property
@@ -193,16 +193,18 @@ class PrefetchingWishboneBridge(wiring.Component):
 
     This component silently discards writes.
     """
-    def __init__(self, addr_width, data_width, granularity=None, features=frozenset()):
-        if granularity is None:
-            granularity = data_width
-
+    def __init__(self, wb):
+        self.wb = wb
         super().__init__({
-            "seq": In(Signature(addr_width=addr_width, data_width=data_width,
-                                granularity=granularity)),
-            "wb": Out(wishbone.Signature(addr_width=addr_width, data_width=data_width,
-                                         granularity=granularity, features=features)),
+            "seq": In(Signature(addr_width=wb.addr_width,
+                                data_width=wb.data_width,
+                                granularity=wb.granularity)),
         })
+        granularity_bits = exact_log2(wb.data_width // wb.granularity)
+        effective_addr_width = wb.addr_width + granularity_bits
+        self.seq.memory_map = MemoryMap(addr_width=max(1, effective_addr_width),
+                                        data_width=wb.granularity)
+
 
     def elaborate(self, platform):
         m = Module()
@@ -212,7 +214,7 @@ class PrefetchingWishboneBridge(wiring.Component):
                                    sub_features=self.wb.features)
         m.submodules.shim = shim
 
-        wiring.connect(m, shim.sub_bus, flipped(self.wb))
+        wiring.connect(m, shim.sub_bus, self.wb)
 
         read_fifo_reset = Signal()
         read_enabled = Signal()
