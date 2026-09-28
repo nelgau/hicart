@@ -237,7 +237,7 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
     def toolchain_prepare(self, fragment, name, **kwargs):
         overrides = {
             "synth_opts": "-abc9",
-            "nextpnr_opts": "--seed 0",
+            "nextpnr_opts": "--seed 1",
             "ecppack_opts": "--compress --freq 38.8",
         }
         return super().toolchain_prepare(fragment, name, **overrides, **kwargs)
