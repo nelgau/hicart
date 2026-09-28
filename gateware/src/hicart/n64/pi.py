@@ -1,7 +1,6 @@
 from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.cdc import FFSynchronizer
-from amaranth.lib.fifo import SyncFIFOBuffered
 from amaranth.lib.wiring import In, Out
 
 from hicart.n64.cart import PISignature

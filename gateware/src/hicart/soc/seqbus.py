@@ -188,13 +188,11 @@ class Decoder(wiring.Component):
         return m
 
 
-class PrefetchingWishboneBridge(wiring.Component):
-    """Bridge from Seq to Wishbone that prefetches as soon as the cycle begins.
+class WishboneBridge(wiring.Component):
 
-    This component silently discards writes.
-    """
     def __init__(self, wb):
         self.wb = wb
+
         super().__init__({
             "seq": In(Signature(addr_width=wb.addr_width,
                                 data_width=wb.data_width,
@@ -205,6 +203,47 @@ class PrefetchingWishboneBridge(wiring.Component):
         self.seq.memory_map = MemoryMap(addr_width=max(1, effective_addr_width),
                                         data_width=wb.granularity)
 
+    def elaborate(self, platform):
+        m = Module()
+
+        shim = WishboneFeatureShim(self.wb.addr_width, self.wb.data_width,
+                                   self.wb.granularity, intr_features=frozenset(),
+                                   sub_features=self.wb.features)
+        m.submodules.shim = shim
+
+        wiring.connect(m, shim.sub_bus, self.wb)
+
+        m.d.comb += [
+            shim.intr_bus.adr.eq(self.seq.adr),
+            shim.intr_bus.dat_w.eq(self.seq.dat_w),
+            shim.intr_bus.sel.eq(self.seq.sel),
+            shim.intr_bus.cyc.eq(self.seq.cyc),
+            shim.intr_bus.stb.eq(self.seq.stb),
+            shim.intr_bus.we.eq(self.seq.we),
+
+            self.seq.dat_r.eq(shim.intr_bus.dat_r),
+            self.seq.ack.eq(shim.intr_bus.ack),
+        ]
+
+        return m
+
+class PrefetchingWishboneBridge(wiring.Component):
+    """Bridge from Seq to Wishbone that prefetches as soon as the cycle begins.
+
+    This component silently discards writes.
+    """
+    def __init__(self, wb):
+        self.wb = wb
+
+        super().__init__({
+            "seq": In(Signature(addr_width=wb.addr_width,
+                                data_width=wb.data_width,
+                                granularity=wb.granularity)),
+        })
+        granularity_bits = exact_log2(wb.data_width // wb.granularity)
+        effective_addr_width = wb.addr_width + granularity_bits
+        self.seq.memory_map = MemoryMap(addr_width=max(1, effective_addr_width),
+                                        data_width=wb.granularity)
 
     def elaborate(self, platform):
         m = Module()
@@ -339,8 +378,11 @@ class SeqbusDriver:
         for _ in range(initial_delay):
             await ctx.tick()
 
+        sel = C(1).replicate(len(self.bus.sel))
+
         ctx.set(self.bus.stb, 1)
         ctx.set(self.bus.we, 1)
+        ctx.set(self.bus.sel, sel)
         ctx.set(self.bus.dat_w, data)
         await ctx.tick()
 
@@ -352,6 +394,7 @@ class SeqbusDriver:
         ctx.set(self.bus.cyc, 0)
         ctx.set(self.bus.stb, 0)
         ctx.set(self.bus.we, 0)
+        ctx.set(self.bus.sel, 0)
         ctx.set(self.bus.dat_w, 0)
         await ctx.tick()
 
