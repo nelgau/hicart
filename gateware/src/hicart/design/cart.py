@@ -1,11 +1,11 @@
 from amaranth import *
 from amaranth.lib import wiring
 from amaranth.build import *
-from amaranth_soc import wishbone
 
 from hicart.n64.cic import CIC
-from hicart.n64.pi import WishboneBridge
-from hicart.controller.flash import WishboneFlashController
+from hicart.n64.pi import PISeqBridge
+from hicart.controller import flash
+from hicart.soc import seqbus
 from hicart.soc.wishbone import WindowMapper
 from hicart.utils.cli import main_runner
 
@@ -15,30 +15,48 @@ class Top(Elaboratable):
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules.car                        = platform.clock_domain_generator()
-        m.submodules.flash_io   = flash_io      = platform.flash_io()
-        m.submodules.cart_io    = cart_io       = platform.cart_io()
+        # Platform
 
-        m.submodules.cic        = cic           = DomainRenamer("cic")(CIC())
-        m.submodules.bridge     = bridge        = WishboneBridge()
-        m.submodules.flash_ctrl = flash_ctrl    = WishboneFlashController(data_width=16)
+        cdg  = platform.clock_domain_generator()
+        flash_io = platform.flash_io()
+        cart_io = platform.cart_io()
+
+        m.submodules.cdg = cdg
+        m.submodules.flash_io = flash_io
+        m.submodules.cart_io = cart_io
+
+        # Flash
+
+        flash_ctrl = flash.WishboneFlashController(data_width=16)
 
         mapper = WindowMapper(flash_ctrl.wb, addr_width=22, base_addr=0x800000)
+        fetcher = seqbus.PrefetchingWishboneBridge(mapper.bus)
 
-        decoder = wishbone.Decoder(addr_width=31, data_width=16, granularity=8, features={"stall"})
-        decoder.add(mapper.bus, addr=0x10000000)
+        decoder = seqbus.Decoder(addr_width=31, data_width=16, granularity=8)
+        decoder.add(fetcher.seq, addr=0x10000000)
 
-        m.submodules.mapper = mapper
-        m.submodules.decoder = decoder
-
-        wiring.connect(m, bridge.wb, decoder.bus)
-        wiring.connect(m, flash_ctrl.bus, flash_io.bus)
+        bridge = PISeqBridge()
 
         wiring.connect(m, bridge.pi, cart_io.pi)
-        wiring.connect(m, bridge.sys, cart_io.sys)
+        wiring.connect(m, bridge.seq, decoder.bus)
+        wiring.connect(m, flash_ctrl.bus, flash_io.bus)
+
+        m.submodules.flash_ctrl = flash_ctrl
+        m.submodules.mapper = mapper
+        m.submodules.fetcher = fetcher
+        m.submodules.decoder = decoder
+        m.submodules.bridge = bridge
+
+        # CIC
+
+        cic = DomainRenamer("cic")(CIC())
 
         wiring.connect(m, cic.bus, cart_io.cic)
         wiring.connect(m, cic.sys, cart_io.sys)
+
+        m.submodules.cic = cic
+
+        # Debug
 
         pmod = platform.request("pmod")
         leds = platform.request("leds")
@@ -54,7 +72,7 @@ class Top(Elaboratable):
             pmod.d.o[7]             .eq( cart_io.si.data.i      ),
             pmod.d.oe               .eq( 1 ),
 
-            leds.d.o[0]             .eq( bridge.wb.cyc          ),
+            leds.d.o[0]             .eq( bridge.seq.cyc         ),
         ]
 
         return m
