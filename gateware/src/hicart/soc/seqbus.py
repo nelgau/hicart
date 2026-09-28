@@ -232,8 +232,9 @@ class PrefetchingWishboneBridge(wiring.Component):
 
     This component silently discards writes.
     """
-    def __init__(self, wb):
+    def __init__(self, wb, depth=4):
         self.wb = wb
+        self.depth = depth
 
         super().__init__({
             "seq": In(Signature(addr_width=wb.addr_width,
@@ -259,7 +260,8 @@ class PrefetchingWishboneBridge(wiring.Component):
         read_enabled = Signal()
         read_address = Signal(32)
 
-        read_fifo = ResetInserter(read_fifo_reset)(SyncFIFOBuffered(width=16, depth=4))
+        read_fifo = SyncFIFOBuffered(width=self.wb.data_width, depth=self.depth)
+        read_fifo = ResetInserter(read_fifo_reset)(read_fifo)
         m.submodules.read_fifo = read_fifo
 
         # Seq
