@@ -1,57 +1,58 @@
 from amaranth.sim import *
 
-from hicart.n64.pi import PISeqBridge
+from hicart.n64.pi import PISeqBridge, PIInitiatorDriver
 from hicart.soc import seqbus
 from hicart.utils.sim import MultiProcessTestCase
 
 
 class PISeqBridgeTest(MultiProcessTestCase):
 
-    def test_basic(self):
+    def test_read(self):
         dut = PISeqBridge()
 
         sub_responder = seqbus.SeqbusResponder(dut.seq, initial=0xFACE, delay=1)
+        intr_driver = PIInitiatorDriver(dut.pi)
 
         async def sub_process(ctx):
             await sub_responder.run(ctx)
 
         async def intr_testbench(ctx):
-            # Ale_l is active in idle state
-            ctx.set(dut.pi.ale_l, 1)
-            ctx.set(dut.pi.ale_h, 0)
-            await ctx.tick().repeat(6)
+            await intr_driver.begin(ctx)
 
-            # Latch address
+            count = 2
+            result = await intr_driver.read_burst_slow(ctx, 0x10000000, count)
 
-            ctx.set(dut.pi.ale_l, 0)
-            await ctx.tick().repeat(2)
-            ctx.set(dut.pi.ad.i, 0x1000)
-            await ctx.tick().repeat(2)
-            ctx.set(dut.pi.ale_h, 1)
-            await ctx.tick().repeat(2)
-            ctx.set(dut.pi.ad.i, 0x0002)
-            await ctx.tick().repeat(2)
-            ctx.set(dut.pi.ale_l, 1)
-            await ctx.tick().repeat(8)
+            for i in range(count):
+                assert result[i][0] == 0x10000000 + 2 * i
+                assert result[i][1] == 0xFACE + i
 
-            # Read
+        traces = [
+            dut.pi,
+            dut.seq,
+        ]
 
-            for i in range(3):
-                ctx.set(dut.pi.read, 1)
-                await ctx.tick().repeat(6)
+        with self.simulate(dut, traces=traces) as sim:
+            sim.add_clock(1.0 / 80e6, domain="sync")
+            sim.add_process(sub_process)
+            sim.add_testbench(intr_testbench)
 
-                assert ctx.get(dut.pi.ad.o) == 0xFACE + i
-                assert ctx.get(dut.pi.ad.oe) == 1
+    def test_write(self):
+        dut = PISeqBridge()
 
-                ctx.set(dut.pi.read, 0)
-                await ctx.tick().repeat(6)
+        sub_responder = seqbus.SeqbusResponder(dut.seq, initial=0xFACE, delay=1)
+        intr_driver = PIInitiatorDriver(dut.pi)
 
-                assert ctx.get(dut.pi.ad.oe) == 0
+        async def sub_process(ctx):
+            await sub_responder.run(ctx)
 
-            # Ale_l is active in idle state
-            ctx.set(dut.pi.ale_l, 1)
-            ctx.set(dut.pi.ale_h, 0)
-            await ctx.tick().repeat(6)
+        async def intr_testbench(ctx):
+            await intr_driver.begin(ctx)
+
+            await intr_driver.write_burst(ctx, 0x10000000, [0xCAFE])
+            result = await intr_driver.read_burst_slow(ctx, 0x10000000, 1)
+
+            assert result[0][0] == 0x10000000
+            assert result[0][1] == 0xCAFE
 
         traces = [
             dut.pi,

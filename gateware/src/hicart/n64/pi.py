@@ -90,9 +90,9 @@ class PISeqBridge(wiring.Component):
                 m.d.sync += self.seq.we.eq(do_write)
 
         with m.If(self.seq.ack | self.seq.err):
+            m.d.sync += current_address.eq(current_address + 2)
             m.d.sync += self.seq.stb.eq(0)
             m.d.sync += self.seq.we.eq(0)
-            m.d.sync += current_address.eq(current_address + 2)
 
             with m.If(~self.seq.we):
                 m.d.sync += self.pi.ad.o.eq(Mux(self.seq.ack, self.seq.dat_r, 0))
@@ -132,7 +132,10 @@ class PIInitiatorDriver:
             ctx.set(self.pi.read, 1)
             await ctx.delay(304e-9)
 
-            word = ctx.get(self.pi.ad.o)
+            ad_o = ctx.get(self.pi.ad.o)
+            ad_oe = ctx.get(self.pi.ad.oe)
+            word = ad_o if ad_oe else 0
+
             ctx.set(self.pi.read, 0)
             await ctx.delay(64e-9)
 
@@ -166,9 +169,12 @@ class PIInitiatorDriver:
             ctx.set(self.pi.read, 1)
             await ctx.delay(304e-9)
 
-            word = ctx.get(self.pi.ad.o)
+            ad_o = ctx.get(self.pi.ad.o)
+            ad_oe = ctx.get(self.pi.ad.oe)
+            word = ad_o if ad_oe else 0
+
             ctx.set(self.pi.read, 0)
-            await ctx.delay(416e-9)
+            await ctx.delay(64e-9)
 
             result.append((address, word))
             address += 2
@@ -177,6 +183,35 @@ class PIInitiatorDriver:
         await ctx.delay(32e-9)
 
         return result
+
+    async def write_burst(self, ctx, start_address, values):
+        if not values:
+            raise ValueError("Burst must have at least one value");
+
+        ctx.set(self.pi.ale_l, 0)
+        await ctx.delay(20e-9)
+        ctx.set(self.pi.ad.i, (start_address >> 16) & 0xFFFF)
+        await ctx.delay(92e-9)
+        ctx.set(self.pi.ale_h, 1)
+        await ctx.delay(20e-9)
+        ctx.set(self.pi.ad.i, start_address & 0xFFFF)
+        await ctx.delay(92e-9)
+        ctx.set(self.pi.ale_l, 1)
+        await ctx.delay(1040e-9)
+
+        for curr_val, next_val in zip(values, (*values, 0)):
+            ctx.set(self.pi.ad.i, curr_val & 0xFFFF)
+            ctx.set(self.pi.write, 1)
+            await ctx.delay(304e-9)
+
+            ctx.set(self.pi.write, 0)
+            await ctx.delay(8e-9)
+
+            ctx.set(self.pi.ad.i, next_val & 0xFFFF)
+            await ctx.delay(56e-9)
+
+        ctx.set(self.pi.ale_h, 0)
+        await ctx.delay(32e-9)
 
     async def exit_cycle(self, ctx):
         ctx.set(self.pi.ale_l, 1)

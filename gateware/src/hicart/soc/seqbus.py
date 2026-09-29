@@ -459,7 +459,9 @@ class SeqbusResponder:
 
                 result = 0
 
-                if not we:
+                if we:
+                    self.counter = dat_w
+                else:
                     result = self.counter
                     self.counter += 1
 
