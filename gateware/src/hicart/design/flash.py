@@ -13,11 +13,11 @@ class Top(Elaboratable):
 
         m.submodules.car                        = platform.clock_domain_generator()
         m.submodules.flash_io   = flash_io      = platform.flash_io()
-        m.submodules.flash_ctrl = flash_ctrl    = WishboneFlashController()
+        m.submodules.flash_ctrl = flash_ctrl    = WishboneFlashController(data_width=16)
 
         wiring.connect(m, flash_ctrl.bus, flash_io.bus)
 
-        address = Signal(24, init=0x800000)
+        address = Signal(24, init=0x400000)
         counter = Signal(24)
 
         with m.FSM():
@@ -56,7 +56,7 @@ class Top(Elaboratable):
             flash_ctrl.wb.adr     .eq(address)
         ]
 
-        m.submodules.streamer = streamer = FT245Streamer(byte_width=4)
+        m.submodules.streamer = streamer = FT245Streamer(byte_width=2)
 
         m.d.comb += [
             streamer.stream.payload     .eq(flash_ctrl.wb.dat_r),
@@ -83,4 +83,4 @@ class Top(Elaboratable):
 
 if __name__ == "__main__":
     main_runner(Top(), do_program=True)
-    FT245Reader(4).run()
+    FT245Reader(byte_width=2).run()

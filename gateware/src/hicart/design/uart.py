@@ -1,46 +1,45 @@
 from amaranth import *
-from amaranth.lib import wiring
 import pyftdi.serialext
 
-from hicart.controller.ft245 import FT245Controller
-from hicart.soc.stream import ByteDownConverter
+from hicart.debug.serial import FT245Streamer
 from hicart.utils.cli import main_runner
 
 
 class Top(Elaboratable):
 
-    def __init__(self):
-        pass
-
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules.car                    = platform.clock_domain_generator()
-        m.submodules.ft245_io   = ft245_io  = platform.ft245_io()
-        m.submodules.iface      = iface     = FT245Controller()
-        m.submodules.dc         = dc        = ByteDownConverter(byte_width=4)
+        cdg = platform.clock_domain_generator()
+        streamer = FT245Streamer(byte_width=2)
 
-        pmod     = platform.request("pmod")
+        m.submodules.cdg = cdg
+        m.submodules.streamer = streamer
 
-        wiring.connect(m, iface.bus, ft245_io.bus)
-        wiring.connect(m, iface.tx, dc.sink)
+        delay_counter = Signal(24)
+        data_counter = Signal(2)
 
-        m.d.comb += [
-            dc.source.payload   .eq(0x12345678),
-            dc.source.valid     .eq(dc.source.ready),
-        ]
+        with m.If(delay_counter != 0):
+            m.d.sync += delay_counter.eq(delay_counter - 1)
 
-        m.d.comb += [
-            pmod.d.o[0]         .eq(iface.tx.ready),
-            pmod.d.o[1]         .eq(iface.bus.d.oe),
-            pmod.d.o[2]         .eq(iface.bus.rxf),
-            pmod.d.o[3]         .eq(iface.bus.txe),
-            pmod.d.o[4]         .eq(iface.bus.rd),
-            pmod.d.o[5]         .eq(iface.bus.wr),
-            pmod.d.o[6]         .eq(ClockSignal()),
-            pmod.d.o[7]         .eq(ResetSignal()),
-            pmod.d.oe           .eq(1),
-        ]
+        with m.If(delay_counter == 0):
+            with m.If(~streamer.stream.valid):
+                m.d.sync += data_counter.eq(data_counter + 1)
+                m.d.sync += streamer.stream.valid.eq(1)
+
+                with m.Switch(data_counter):
+                    with m.Case(0):
+                        m.d.sync += streamer.stream.payload.eq(0x8037)
+                    with m.Case(1):
+                        m.d.sync += streamer.stream.payload.eq(0x1240)
+                    with m.Case(2):
+                        m.d.sync += streamer.stream.payload.eq(0x0000)
+                    with m.Case(3):
+                        m.d.sync += streamer.stream.payload.eq(0x000f)
+
+        with m.If(streamer.stream.ready & streamer.stream.valid):
+            m.d.sync += delay_counter.eq(10000000)
+            m.d.sync += streamer.stream.valid.eq(0)
 
         return m
 
@@ -50,8 +49,9 @@ def read_serial():
     port.reset_input_buffer()
 
     while True:
-        b = port.read()
-        print(f"0x{b[0]:02x}")
+        data = port.read(size=2)
+        value = int.from_bytes(data, byteorder="little")
+        print(f"0x{value:04x}")
 
 if __name__ == "__main__":
     main_runner(Top(), do_program=True)

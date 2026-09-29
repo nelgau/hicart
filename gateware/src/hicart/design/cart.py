@@ -64,12 +64,12 @@ class Top(Elaboratable):
         m.d.sync += [
             pmod.d.o[0]             .eq( cart_io.cic.dclk       ),
             pmod.d.o[1]             .eq( cart_io.cic.data.i     ),
-            pmod.d.o[2]             .eq( cart_io.sys.nmi        ),
-            pmod.d.o[3]             .eq( cart_io.pi.read        ),
-            pmod.d.o[4]             .eq( cart_io.pi.ale_l       ),
-            pmod.d.o[5]             .eq( cart_io.pi.ale_h       ),
-            pmod.d.o[6]             .eq( cart_io.si.dclk        ),
-            pmod.d.o[7]             .eq( cart_io.si.data.i      ),
+            pmod.d.o[2]             .eq( cart_io.sys.reset      ),
+            pmod.d.o[3]             .eq( cart_io.sys.nmi        ),
+            pmod.d.o[4]             .eq( cart_io.pi.read        ),
+            pmod.d.o[5]             .eq( cart_io.pi.ale_l       ),
+            pmod.d.o[6]             .eq( cart_io.pi.ale_h       ),
+            pmod.d.o[7]             .eq( cart_io.si.dclk        ),
             pmod.d.oe               .eq( 1 ),
 
             leds.d.o[0]             .eq( bridge.seq.cyc         ),
