@@ -132,13 +132,9 @@ class FlashIO(wiring.Component):
         for i in range(4):
             dq_pin = getattr(qspi_pins, f"dq{i}")
 
-            # The flash memory updates on the falling edge.
-            # If we register it on sync_neg, it will be available for rising sync.
-            m.d.sync_neg += [
-                self.bus.d.i[i] .eq(dq_pin.i),
-            ]
-
             m.d.comb += [
+                self.bus.d.i[i] .eq(dq_pin.i),
+
                 dq_pin.o        .eq(self.bus.d.o[i]),
                 dq_pin.oe       .eq(self.bus.d.oe[i]),
             ]
@@ -237,7 +233,7 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
     def toolchain_prepare(self, fragment, name, **kwargs):
         overrides = {
             "synth_opts": "-abc9",
-            "nextpnr_opts": "--seed 1",
+            "nextpnr_opts": "--seed 0",
             "ecppack_opts": "--compress --freq 38.8",
         }
         return super().toolchain_prepare(fragment, name, **overrides, **kwargs)
