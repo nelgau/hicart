@@ -75,7 +75,7 @@ class Top(Elaboratable):
         pmod = platform.request("pmod")
         leds = platform.request("leds")
 
-        m.d.sync += [
+        m.d.comb += [
             pmod.d.o[0]             .eq( cart_io.pi.read        ),
             pmod.d.o[1]             .eq( cart_io.pi.write       ),
             pmod.d.o[2]             .eq( cart_io.pi.ale_l       ),
