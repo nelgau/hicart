@@ -23,7 +23,7 @@ FT245Signature = wiring.Signature({
 
 
 class Timings:
-    WR_SETUP_CYCLES = 3
+    WR_SETUP_CYCLES = 8
     WR_PULSE_CYCLES = 7
     RD_PULSE_CYCLES = 8
     RD_WAIT_CYCLES  = 5
@@ -91,7 +91,7 @@ class FT245Controller(wiring.Component):
 
                         m.next = "WRITE"
                         m.d.sync += [
-                            count               .eq(Timings.RD_PULSE_CYCLES - 1),
+                            count               .eq(Timings.WR_SETUP_CYCLES - 1),
                             self._tx_fifo.r_en  .eq(1),
                             self.bus.d.o        .eq(self._tx_fifo.r_data),
                             self.bus.d.oe       .eq(1)
