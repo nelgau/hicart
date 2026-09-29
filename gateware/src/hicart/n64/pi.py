@@ -1,10 +1,10 @@
 from amaranth import *
 from amaranth.lib import wiring
-from amaranth.lib.cdc import FFSynchronizer
 from amaranth.lib.wiring import In, Out
 
 from hicart.n64.cart import PISignature
 from hicart.soc import seqbus
+from hicart.utils.misc import FFDelay
 
 
 class PISeqBridge(wiring.Component):
@@ -46,45 +46,57 @@ class PISeqBridge(wiring.Component):
 
         # Operations
 
-        last_read_sync = Signal()
-        read_op = Signal()
+        read_delayed = Signal()
+        write_delayed = Signal()
 
-        m.d.sync += last_read_sync.eq(self.pi.read)
-        m.d.comb += read_op.eq(self.pi.read & ~last_read_sync)
+        last_read = Signal()
+        last_write = Signal()
 
-        with m.If(~self.pi.read):
+        do_read = Signal()
+        do_write = Signal()
+
+        m.submodules += [
+            FFDelay(self.pi.read, read_delayed, stages=1),
+            FFDelay(self.pi.write, write_delayed, stages=1),
+        ]
+
+        m.d.sync += last_read.eq(read_delayed)
+        m.d.sync += last_write.eq(write_delayed)
+
+        m.d.comb += do_read.eq(read_delayed & ~last_read)
+        m.d.comb += do_write.eq(write_delayed & ~last_write)
+
+        with m.If(~read_delayed):
             m.d.sync += self.pi.ad.oe.eq(0)
 
         # Seq bus
 
         current_address = Signal(32)
 
+        m.d.comb += self.seq.sel.eq(Const(1).replicate(2))
         m.d.comb += self.seq.adr.eq(current_address[1:32])
-        m.d.comb += self.seq.sel.eq(Value.cast(1).replicate(2))
+        m.d.comb += self.seq.dat_w.eq(self.pi.ad.i)
 
-        with m.FSM():
-            with m.State("IDLE"):
-                with m.If(valid_address):
-                    m.next = "CYCLE"
-                    m.d.sync += self.seq.cyc.eq(1)
-                    m.d.sync += current_address.eq(base_address)
+        with m.If(~self.seq.cyc):
+            with m.If(valid_address):
+                m.d.sync += self.seq.cyc.eq(1)
+                m.d.sync += current_address.eq(base_address)
 
-            with m.State("CYCLE"):
-                with m.If(~valid_address):
-                    m.next = "IDLE"
-                    m.d.sync += self.seq.cyc.eq(0)
-                with m.Elif(read_op):
-                    m.next = "READ"
-                    m.d.sync += self.seq.stb.eq(1)
-                    m.d.sync += self.seq.we.eq(0)
+        with m.If(self.seq.cyc):
+            with m.If(~valid_address):
+                m.d.sync += self.seq.cyc.eq(0)
+            with m.Elif(do_read | do_write):
+                m.d.sync += self.seq.stb.eq(1)
+                m.d.sync += self.seq.we.eq(do_write)
 
-            with m.State("READ"):
-                with m.If(self.seq.ack):
-                    m.next = "CYCLE"
-                    m.d.sync += self.seq.stb.eq(0)
-                    m.d.sync += current_address.eq(current_address + 2)
-                    m.d.sync += self.pi.ad.o.eq(self.seq.dat_r)
-                    m.d.sync += self.pi.ad.oe.eq(1)
+        with m.If(self.seq.ack | self.seq.err):
+            m.d.sync += self.seq.stb.eq(0)
+            m.d.sync += self.seq.we.eq(0)
+            m.d.sync += current_address.eq(current_address + 2)
+
+            with m.If(~self.seq.we):
+                m.d.sync += self.pi.ad.o.eq(Mux(self.seq.ack, self.seq.dat_r, 0))
+                m.d.sync += self.pi.ad.oe.eq(1)
 
         return m
 

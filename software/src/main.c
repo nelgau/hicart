@@ -11,12 +11,17 @@ int main(void)
 
     printf("Hello world!\n");
 
+    uint32_t counter = 0;
+
     while(1) {
-        uint64_t until_ms = get_ticks_ms() + 1000;
-        while (get_ticks_ms() < until_ms) {}
+        io_write(0x1FFF0000, counter);
+        counter++;
 
-        printf(".\n");
+        wait_ms(500);
 
-        io_write(0x1FFF0000, 0xFFFF0000);
+        uint32_t value = io_read(0x1FFF0000);
+        printf("%d\n", (int)value);
+
+        wait_ms(500);
     }
 }
