@@ -14,20 +14,6 @@ class PISeqBridge(wiring.Component):
     def elaborate(self, platform):
         m = Module()
 
-        # Synchronization
-
-        ale_h_i_sync = Signal()
-        ale_l_i_sync = Signal()
-        read_i_sync = Signal()
-        write_i_sync = Signal()
-        ad_i_sync = Signal(16)
-
-        m.submodules.sync_ale_h = FFSynchronizer(self.pi.ale_h, ale_h_i_sync)
-        m.submodules.sync_ale_l = FFSynchronizer(self.pi.ale_l, ale_l_i_sync)
-        m.submodules.sync_read  = FFSynchronizer(self.pi.read,  read_i_sync)
-        m.submodules.sync_write = FFSynchronizer(self.pi.write, write_i_sync)
-        m.submodules.sync_ad_i  = FFSynchronizer(self.pi.ad.i,  ad_i_sync, stages=4)
-
         # Address
 
         base_address = Signal(32)
@@ -35,26 +21,26 @@ class PISeqBridge(wiring.Component):
 
         with m.FSM():                       #   ALE_L       ALE_H
             with m.State("INIT"):           #   Inactive    Inactive
-                with m.If(ale_l_i_sync):
+                with m.If(self.pi.ale_l):
                     m.next = "A"
 
             with m.State("A"):              #   Active      Inactive
-                with m.If(~ale_l_i_sync):
+                with m.If(~self.pi.ale_l):
                     m.next = "B"
 
             with m.State("B"):              #   Inactive    Inactive
-                with m.If(ale_h_i_sync):
+                with m.If(self.pi.ale_h):
                     m.next = "C"
-                    m.d.sync += base_address[16:32].eq(ad_i_sync)
+                    m.d.sync += base_address[16:32].eq(self.pi.ad.i)
 
             with m.State("C"):              #   Inactive    Active
-                with m.If(ale_l_i_sync):
+                with m.If(self.pi.ale_l):
                     m.next = "VALID"
-                    m.d.sync += base_address[0:16].eq(ad_i_sync[0:16])
+                    m.d.sync += base_address[0:16].eq(self.pi.ad.i[0:16])
                     m.d.sync += valid_address.eq(1)
 
             with m.State("VALID"):          #   Active      Active
-                with m.If(~ale_h_i_sync):
+                with m.If(~self.pi.ale_h):
                     m.d.sync += valid_address.eq(0)
                     m.next = "A"
 
@@ -63,10 +49,10 @@ class PISeqBridge(wiring.Component):
         last_read_sync = Signal()
         read_op = Signal()
 
-        m.d.sync += last_read_sync.eq(read_i_sync)
-        m.d.comb += read_op.eq(read_i_sync & ~last_read_sync)
+        m.d.sync += last_read_sync.eq(self.pi.read)
+        m.d.comb += read_op.eq(self.pi.read & ~last_read_sync)
 
-        with m.If(~read_i_sync):
+        with m.If(~self.pi.read):
             m.d.sync += self.pi.ad.oe.eq(0)
 
         # Seq bus

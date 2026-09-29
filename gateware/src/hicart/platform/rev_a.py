@@ -3,7 +3,7 @@ import subprocess
 
 from amaranth import *
 from amaranth.build import *
-from amaranth.lib import wiring
+from amaranth.lib import cdc, wiring
 from amaranth.lib.wiring import In, Out
 from amaranth.vendor import LatticeECP5Platform
 
@@ -43,15 +43,29 @@ class N64CartIO(wiring.Component):
 
         n64_cart = platform.request("n64_cart")
 
+        pi_ad_i_ff = Signal(16)
+        pi_ale_h_ff = Signal()
+        pi_ale_l_ff = Signal()
+        pi_read_ff = Signal()
+        pi_write_ff = Signal()
+
+        m.submodules += [
+            cdc.FFSynchronizer(n64_cart.pi.ad.i, pi_ad_i_ff),
+            cdc.FFSynchronizer(n64_cart.pi.ale_h.i, pi_ale_h_ff),
+            cdc.FFSynchronizer(n64_cart.pi.ale_l.i, pi_ale_l_ff),
+            cdc.FFSynchronizer(n64_cart.pi.read.i, pi_read_ff),
+            cdc.FFSynchronizer(n64_cart.pi.write.i, pi_write_ff),
+        ]
+
         m.d.comb += [
             # PI
-            self.pi.ad.i            .eq( n64_cart.pi.ad.i       ),
+            self.pi.ad.i            .eq( pi_ad_i_ff             ),
             n64_cart.pi.ad.o        .eq( self.pi.ad.o           ),
             n64_cart.pi.ad.oe       .eq( self.pi.ad.oe          ),
-            self.pi.ale_h           .eq( n64_cart.pi.ale_h.i    ),
-            self.pi.ale_l           .eq( n64_cart.pi.ale_l.i    ),
-            self.pi.read            .eq( n64_cart.pi.read.i     ),
-            self.pi.write           .eq( n64_cart.pi.write.i    ),
+            self.pi.ale_h           .eq( pi_ale_h_ff            ),
+            self.pi.ale_l           .eq( pi_ale_l_ff            ),
+            self.pi.read            .eq( pi_read_ff             ),
+            self.pi.write           .eq( pi_write_ff            ),
 
             # SI
             self.si.data.i          .eq( n64_cart.si.data.i     ),
