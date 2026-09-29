@@ -133,10 +133,10 @@ class FlashIO(wiring.Component):
             dq_pin = getattr(qspi_pins, f"dq{i}")
 
             m.d.comb += [
-                self.bus.d.i[i] .eq(dq_pin.i),
-
                 dq_pin.o        .eq(self.bus.d.o[i]),
                 dq_pin.oe       .eq(self.bus.d.oe[i]),
+
+                self.bus.d.i[i] .eq(dq_pin.i),
             ]
 
         return m

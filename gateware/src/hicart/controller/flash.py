@@ -44,9 +44,7 @@ class SimFlashIO(wiring.Component):
 
             self.port.d.o   .eq(self.bus.d.o),
             self.port.d.oe  .eq(self.bus.d.oe),
-        ]
 
-        m.d.sync_neg += [
             self.bus.d.i    .eq(self.port.d.i),
         ]
 
