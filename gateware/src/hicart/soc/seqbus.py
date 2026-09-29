@@ -46,6 +46,7 @@ class Signature(wiring.Signature):
             "stb":      Out(1),
             "we":       Out(1),
             "ack":      In(1),
+            "err":      In(1),
         })
 
     @property
@@ -165,6 +166,9 @@ class Decoder(wiring.Component):
     def elaborate(self, platform):
         m = Module()
 
+        matched = Signal()
+        sub_err = Signal()
+
         with m.Switch(self.bus.adr):
             for sub_map, sub_name, (sub_pattern, ratio) in self.bus.memory_map.window_patterns():
                 sub_bus = self._subs[sub_map]
@@ -174,7 +178,7 @@ class Decoder(wiring.Component):
                     sub_bus.dat_w.eq(self.bus.dat_w),
                     sub_bus.sel.eq(Cat(sel.replicate(ratio) for sel in self.bus.sel)),
                     sub_bus.we.eq(self.bus.we),
-                    sub_bus.stb.eq(self.bus.stb)
+                    sub_bus.stb.eq(self.bus.stb),
                 ]
 
                 granularity_bits = exact_log2(self.bus.data_width // self.bus.granularity)
@@ -182,8 +186,12 @@ class Decoder(wiring.Component):
                     m.d.comb += [
                         sub_bus.cyc.eq(self.bus.cyc),
                         self.bus.dat_r.eq(sub_bus.dat_r),
-                        self.bus.ack.eq(sub_bus.ack)
+                        self.bus.ack.eq(sub_bus.ack),
+                        sub_err.eq(sub_bus.err),
+                        matched.eq(1),
                     ]
+
+        m.d.comb += self.bus.err.eq(self.bus.stb & Mux(matched, sub_err, 1))
 
         return m
 
@@ -308,6 +316,10 @@ class PrefetchingWishboneBridge(wiring.Component):
         return m
 
 
+class DriverBusError(Exception):
+    pass
+
+
 class SeqbusDriver:
 
     def __init__(self, bus):
@@ -326,8 +338,11 @@ class SeqbusDriver:
         ctx.set(self.bus.stb, 1)
         await ctx.tick()
 
-        while not ctx.get(self.bus.ack):
+        while not ctx.get(self.bus.ack | self.bus.err):
             await ctx.tick()
+
+        if ctx.get(self.bus.err):
+            raise DriverBusError()
 
         result = ctx.get(self.bus.dat_r)
         await ctx.tick()
@@ -352,8 +367,11 @@ class SeqbusDriver:
             ctx.set(self.bus.stb, 1)
             await ctx.tick()
 
-            while not ctx.get(self.bus.ack):
+            while not ctx.get(self.bus.ack | self.bus.err):
                 await ctx.tick()
+
+            if ctx.get(self.bus.err):
+                raise DriverBusError()
 
             result.append(ctx.get(self.bus.dat_r))
             await ctx.tick()
