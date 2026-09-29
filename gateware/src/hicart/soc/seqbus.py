@@ -210,6 +210,8 @@ class WishboneBridge(wiring.Component):
         effective_addr_width = wb.addr_width + granularity_bits
         self.seq.memory_map = MemoryMap(addr_width=max(1, effective_addr_width),
                                         data_width=wb.granularity)
+        self.seq.memory_map.add_window(wb.memory_map)
+        self.seq.memory_map.freeze()
 
     def elaborate(self, platform):
         m = Module()
@@ -253,6 +255,8 @@ class PrefetchingWishboneBridge(wiring.Component):
         effective_addr_width = wb.addr_width + granularity_bits
         self.seq.memory_map = MemoryMap(addr_width=max(1, effective_addr_width),
                                         data_width=wb.granularity)
+        self.seq.memory_map.add_window(wb.memory_map)
+        self.seq.memory_map.freeze()
 
     def elaborate(self, platform):
         m = Module()

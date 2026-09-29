@@ -30,7 +30,7 @@ class Top(Elaboratable):
 
         flash_ctrl = flash.WishboneFlashController(data_width=16)
 
-        mapper = WindowMapper(flash_ctrl.wb, addr_width=22, base_addr=0x800000)
+        mapper = WindowMapper(flash_ctrl.wb, addr_width=22, base_addr=0x800000, name="flash")
         fetcher = seqbus.PrefetchingWishboneBridge(mapper.bus)
 
         wiring.connect(m, flash_ctrl.bus, flash_io.bus)

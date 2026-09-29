@@ -198,9 +198,6 @@ class FlashController(wiring.Component):
 class WishboneFlashController(wiring.Component):
 
     def __init__(self, data_width=8):
-        memory_map = MemoryMap(addr_width=24, data_width=8)
-        memory_map.add_resource(self, size=2**24, name="flash")
-
         granularity_bits = exact_log2(data_width // 8)
         addr_width = 24 - granularity_bits
 
@@ -214,7 +211,9 @@ class WishboneFlashController(wiring.Component):
             "bus":  Out(FlashSignature),
             "wb":   In(wb_signature),
         })
-        self.wb.memory_map = memory_map
+        self.wb.memory_map = MemoryMap(addr_width=24, data_width=8)
+        self.wb.memory_map.add_resource(self, size=2**24, name="flash")
+        self.wb.memory_map.freeze()
 
     def elaborate(self, platform):
         m = Module()

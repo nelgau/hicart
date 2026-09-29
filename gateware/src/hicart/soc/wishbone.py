@@ -10,7 +10,7 @@ from amaranth_soc import wishbone
 
 class WindowMapper(wiring.Component):
 
-    def __init__(self, sub_bus, *, addr_width, base_addr, name="mapped window"):
+    def __init__(self, sub_bus, *, addr_width, base_addr, name="mapped"):
         if addr_width > sub_bus.addr_width:
             raise ValueError("Window mapper bus cannot be wider than subordinate bus")
 
@@ -24,15 +24,6 @@ class WindowMapper(wiring.Component):
         self.base_addr = base_addr
         self._base_pattern = Const(self.base_addr >> effective_addr_width)
 
-        # FIXME: It would be possible to implement this so that the resources
-        # on the subordinate bus are visible, removing the need to create this
-        # hacky placeholder resource. Unfortunately, because it's possible to
-        # slice a resource using a window mapper, we'd need a way to represent
-        # a subset of a resource and that doesn't seem trivial to do.
-        map_addr_width = max(1, effective_addr_width)
-        memory_map = MemoryMap(addr_width=map_addr_width, data_width=sub_bus.granularity)
-        memory_map.add_resource(self, size=2**addr_width, name=name)
-
         bus_signature = wishbone.Signature(
             addr_width=addr_width,
             data_width=sub_bus.data_width,
@@ -42,7 +33,15 @@ class WindowMapper(wiring.Component):
         super().__init__({
             "bus": In(bus_signature)
         })
-        self.bus.memory_map = memory_map
+        # FIXME: It would be possible to implement this so that the resources
+        # on the subordinate bus are visible, removing the need to create this
+        # hacky placeholder resource. Unfortunately, because it's possible to
+        # slice a resource using a window mapper, we'd need a way to represent
+        # a subset of a resource and that doesn't seem trivial to do.
+        map_addr_width = max(1, effective_addr_width)
+        self.bus.memory_map = MemoryMap(addr_width=map_addr_width, data_width=sub_bus.granularity)
+        self.bus.memory_map.add_resource(self, size=2**addr_width, name=name)
+        self.bus.memory_map.freeze()
 
     def elaborate(self, platform):
         m = Module()
