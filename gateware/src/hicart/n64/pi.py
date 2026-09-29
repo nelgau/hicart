@@ -11,6 +11,9 @@ class PISeqBridge(wiring.Component):
     pi: Out(PISignature)
     seq: Out(seqbus.Signature(addr_width=31, data_width=16, granularity=8))
 
+    READ_DELAY = 1
+    WRITE_DELAY = 2
+
     def elaborate(self, platform):
         m = Module()
 
@@ -56,8 +59,8 @@ class PISeqBridge(wiring.Component):
         do_write = Signal()
 
         m.submodules += [
-            FFDelay(self.pi.read, read_delayed, stages=1),
-            FFDelay(self.pi.write, write_delayed, stages=1),
+            FFDelay(self.pi.read, read_delayed, stages=self.READ_DELAY),
+            FFDelay(self.pi.write, write_delayed, stages=self.WRITE_DELAY),
         ]
 
         m.d.sync += last_read.eq(read_delayed)
