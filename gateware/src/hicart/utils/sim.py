@@ -45,6 +45,25 @@ class MultiProcessTestCase(unittest.TestCase):
             sim.run()
 
 
+def run_in_domain(coro, *, domain):
+    async def wrapped(ctx):
+        await coro(DefaultDomainContext(ctx, domain))
+    return wrapped
+
+
+class DefaultDomainContext:
+    def __init__(self, ctx, domain):
+        self._ctx = ctx
+        self._domain = domain
+
+    def tick(self, domain=None, **kwargs):
+        tick_domain = self._domain if domain is None else domain
+        return self._ctx.tick(tick_domain, **kwargs)
+
+    def __getattr__(self, name):
+        return getattr(self._ctx, name)
+
+
 def _flatten_traces(traces):
     all_signals = []
 

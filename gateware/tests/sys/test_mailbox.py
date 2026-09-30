@@ -7,7 +7,7 @@ from amaranth_soc.csr.wishbone import WishboneCSRBridge
 
 from hicart.soc.wishbone import WishboneClassicDriver
 from hicart.sys.mailbox import CommandMailbox
-from hicart.utils.sim import MultiProcessTestCase
+from hicart.utils.sim import MultiProcessTestCase, run_in_domain
 
 
 class CommandMailboxTest(MultiProcessTestCase):
@@ -50,7 +50,7 @@ class CommandMailboxTest(MultiProcessTestCase):
         dut = self.DUT()
 
         host_driver = WishboneClassicDriver(dut.host_bus)
-        sys_driver = WishboneClassicDriver(dut.sys_bus, domain="sys")
+        sys_driver = WishboneClassicDriver(dut.sys_bus)
 
         async def host_testbench(ctx):
             await host_driver.begin(ctx)
@@ -72,9 +72,10 @@ class CommandMailboxTest(MultiProcessTestCase):
 
             while True:
                 result_low = await host_driver.read_once(ctx, 0x0)
-                result_high = await host_driver.read_once(ctx, 0x1)
+                _ = await host_driver.read_once(ctx, 0x1)
 
                 if not result_low & 0x1:
+                    # Check for error bit
                     assert result_low & 0x2
                     break
 
@@ -83,20 +84,23 @@ class CommandMailboxTest(MultiProcessTestCase):
 
         async def sys_testbench(ctx):
             await sys_driver.begin(ctx)
-            await ctx.tick("sys")
+            await ctx.tick()
 
             while True:
                 result = await sys_driver.read_once(ctx, 0x0)
-
                 if result & 0x1:
                     break
 
-            await ctx.tick("sys").repeat(10)
+            assert await sys_driver.read_once(ctx, 0x1) == 0xFACE0000   # Command
+            assert await sys_driver.read_once(ctx, 0x2) == 0x00340012   # Arg 1
+            assert await sys_driver.read_once(ctx, 0x3) == 0x00780056   # Arg 2
+
+            await ctx.tick().repeat(10)
 
             # Set error
             await sys_driver.write_once(ctx, 0x0, 0x0002)
 
-            await ctx.tick("sys").repeat(50)
+            await ctx.tick().repeat(50)
 
         traces = [
             dut.host_bus
@@ -104,6 +108,6 @@ class CommandMailboxTest(MultiProcessTestCase):
 
         with self.simulate(dut, traces=traces) as sim:
             sim.add_clock(1.0 / 100e6, domain="sync")
-            sim.add_clock(1.0 / 10e6, domain="sys")
+            sim.add_clock(1.0 / 40e6, domain="sys")
             sim.add_testbench(host_testbench)
-            sim.add_testbench(sys_testbench, )
+            sim.add_testbench(run_in_domain(sys_testbench, domain="sys"))

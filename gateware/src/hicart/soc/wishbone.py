@@ -149,9 +149,8 @@ class WishboneFeatureShim(wiring.Component):
 
 class WishboneClassicDriver:
 
-    def __init__(self, bus, *, domain="sync"):
+    def __init__(self, bus):
         self.bus = bus
-        self._domain = domain
 
     async def begin(self, ctx):
         pass
@@ -166,11 +165,11 @@ class WishboneClassicDriver:
         ctx.set(self.bus.we, 0)
 
         while not ctx.get(self.bus.ack):
-            await ctx.tick(self._domain)
+            await ctx.tick()
 
         result = ctx.get(self.bus.dat_r)
 
-        await ctx.tick(self._domain)
+        await ctx.tick()
 
         ctx.set(self.bus.adr, 0)
         ctx.set(self.bus.dat_w, 0)
@@ -180,7 +179,7 @@ class WishboneClassicDriver:
         ctx.set(self.bus.stb, 0)
         ctx.set(self.bus.we, 0)
 
-        await ctx.tick(self._domain)
+        await ctx.tick()
 
         return result
 
@@ -194,9 +193,9 @@ class WishboneClassicDriver:
         ctx.set(self.bus.we, 1)
 
         while not ctx.get(self.bus.ack):
-            await ctx.tick(self._domain)
+            await ctx.tick()
 
-        await ctx.tick(self._domain)
+        await ctx.tick()
 
         ctx.set(self.bus.adr, 0)
         ctx.set(self.bus.dat_w, 0)
@@ -206,7 +205,7 @@ class WishboneClassicDriver:
         ctx.set(self.bus.stb, 0)
         ctx.set(self.bus.we, 0)
 
-        await ctx.tick(self._domain)
+        await ctx.tick()
 
 
 class WishbonePipelinedDriver:
