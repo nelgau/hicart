@@ -16,8 +16,8 @@ from hicart.n64.cart import CICSignature, CtlSignature
 
 
 class CIC(wiring.Component):
-    bus:    Out(CICSignature)
-    ctl:    Out(CtlSignature)
+    bus: Out(CICSignature)
+    ctl: Out(CtlSignature)
 
     class Constants:
         RESET_ADDR = 0x00000000

@@ -147,6 +147,68 @@ class WishboneFeatureShim(wiring.Component):
         return m
 
 
+class WishboneClassicDriver:
+
+    def __init__(self, bus, *, domain="sync"):
+        self.bus = bus
+        self._domain = domain
+
+    async def begin(self, ctx):
+        pass
+
+    async def read_once(self, ctx, address):
+        ctx.set(self.bus.adr, address)
+        ctx.set(self.bus.dat_w, 0)
+        ctx.set(self.bus.sel, C(1).replicate(len(self.bus.sel)))
+
+        ctx.set(self.bus.cyc, 1)
+        ctx.set(self.bus.stb, 1)
+        ctx.set(self.bus.we, 0)
+
+        while not ctx.get(self.bus.ack):
+            await ctx.tick(self._domain)
+
+        await ctx.tick(self._domain)
+
+        result = ctx.get(self.bus.dat_r)
+
+        ctx.set(self.bus.adr, 0)
+        ctx.set(self.bus.dat_w, 0)
+        ctx.set(self.bus.sel, 0)
+
+        ctx.set(self.bus.cyc, 0)
+        ctx.set(self.bus.stb, 0)
+        ctx.set(self.bus.we, 0)
+
+        await ctx.tick(self._domain)
+
+        return result
+
+    async def write_once(self, ctx, address, value):
+        ctx.set(self.bus.adr, address)
+        ctx.set(self.bus.dat_w, value)
+        ctx.set(self.bus.sel, C(1).replicate(len(self.bus.sel)))
+
+        ctx.set(self.bus.cyc, 1)
+        ctx.set(self.bus.stb, 1)
+        ctx.set(self.bus.we, 1)
+
+        while not ctx.get(self.bus.ack):
+            await ctx.tick(self._domain)
+
+        await ctx.tick(self._domain)
+
+        ctx.set(self.bus.adr, 0)
+        ctx.set(self.bus.dat_w, 0)
+        ctx.set(self.bus.sel, 0)
+
+        ctx.set(self.bus.cyc, 0)
+        ctx.set(self.bus.stb, 0)
+        ctx.set(self.bus.we, 0)
+
+        await ctx.tick(self._domain)
+
+
 class WishbonePipelinedDriver:
 
     def __init__(self, bus):
@@ -157,10 +219,11 @@ class WishbonePipelinedDriver:
 
     async def read_once(self, ctx, address):
         ctx.set(self.bus.cyc, 1)
-        ctx.set(self.bus.we, 0)
 
-        ctx.set(self.bus.stb, 1)
         ctx.set(self.bus.adr, address)
+        ctx.set(self.bus.sel, C(1).replicate(len(self.bus.sel)))
+        ctx.set(self.bus.stb, 1)
+        ctx.set(self.bus.we, 0)
 
         while ctx.get(self.bus.stall):
             await ctx.tick()
@@ -187,12 +250,13 @@ class WishbonePipelinedDriver:
         result = []
 
         ctx.set(self.bus.cyc, 1)
-        ctx.set(self.bus.we, 0)
 
         while ack_count < count:
             if stb_count < count:
                 ctx.set(self.bus.adr, address)
+                ctx.set(self.bus.sel, C(1).replicate(len(self.bus.sel)))
                 ctx.set(self.bus.stb, 1)
+                ctx.set(self.bus.we, 0)
 
                 if not ctx.get(self.bus.stall):
                     address += stride
