@@ -168,9 +168,9 @@ class WishboneClassicDriver:
         while not ctx.get(self.bus.ack):
             await ctx.tick(self._domain)
 
-        await ctx.tick(self._domain)
-
         result = ctx.get(self.bus.dat_r)
+
+        await ctx.tick(self._domain)
 
         ctx.set(self.bus.adr, 0)
         ctx.set(self.bus.dat_w, 0)
