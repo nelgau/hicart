@@ -33,7 +33,7 @@ CICSignature = wiring.Signature({
     "dclk":     In(1),
 })
 
-SysSignature = wiring.Signature({
+CtlSignature = wiring.Signature({
     "reset":    In(1),
     "nmi":      In(1),
 })

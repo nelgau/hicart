@@ -66,7 +66,7 @@ class Top(Elaboratable):
         cic = DomainRenamer("cic")(CIC())
 
         wiring.connect(m, cic.bus, cart_io.cic)
-        wiring.connect(m, cic.sys, cart_io.sys)
+        wiring.connect(m, cic.ctl, cart_io.ctl)
 
         m.submodules.cic = cic
 

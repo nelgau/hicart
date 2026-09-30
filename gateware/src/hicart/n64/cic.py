@@ -12,12 +12,12 @@ from amaranth_soc import wishbone
 from amaranth_soc.wishbone.sram import WishboneSRAM
 from minerva.core import Minerva
 
-from hicart.n64.cart import CICSignature, SysSignature
+from hicart.n64.cart import CICSignature, CtlSignature
 
 
 class CIC(wiring.Component):
     bus:    Out(CICSignature)
-    sys:    Out(SysSignature)
+    ctl:    Out(CtlSignature)
 
     class Constants:
         RESET_ADDR = 0x00000000
@@ -77,7 +77,7 @@ class CIC(wiring.Component):
 
         reset_sync  = Signal()
         m.d.comb += self.cpu.external_interrupt.eq(reset_sync)
-        m.submodules += AsyncFFSynchronizer(self.sys.reset, reset_sync)
+        m.submodules += AsyncFFSynchronizer(self.ctl.reset, reset_sync)
 
         wiring.connect(m, self._arbiter.bus, self._decoder.bus)
 

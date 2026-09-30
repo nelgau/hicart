@@ -36,7 +36,7 @@ class N64CartIO(wiring.Component):
     pi:     In(PISignature)
     si:     In(SISignature)
     cic:    In(CICSignature)
-    sys:    In(SysSignature)
+    ctl:    In(CtlSignature)
 
     def elaborate(self, platform):
         m = Module()
@@ -80,8 +80,8 @@ class N64CartIO(wiring.Component):
             self.cic.dclk           .eq( n64_cart.cic.dclk.i    ),
 
             # System
-            self.sys.reset          .eq( n64_cart.reset.i       ),
-            self.sys.nmi            .eq( n64_cart.nmi.i         ),
+            self.ctl.reset          .eq( n64_cart.reset.i       ),
+            self.ctl.nmi            .eq( n64_cart.nmi.i         ),
         ]
 
         return m
