@@ -70,14 +70,25 @@ class CommandMailboxTest(MultiProcessTestCase):
 
             await ctx.tick().repeat(10)
 
+            result_low = None
+            result_high = None
+
             while True:
                 result_low = await host_driver.read_once(ctx, 0x0)
                 _ = await host_driver.read_once(ctx, 0x1)
 
                 if not result_low & 0x1:
-                    # Check for error bit
-                    assert result_low & 0x2
                     break
+
+            # Check for error bit
+            assert result_low & 0x2
+
+            # Result
+            result_low = await host_driver.read_once(ctx, 0x8)
+            result_high = await host_driver.read_once(ctx, 0x9)
+
+            assert result_low == 0xCAFE
+            assert result_high == 0x1234
 
             await ctx.tick()
 
