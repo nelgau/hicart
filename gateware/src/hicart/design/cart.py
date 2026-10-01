@@ -3,7 +3,6 @@ from amaranth.lib import wiring
 
 from hicart.host.subsystem import HostSubsystem
 from hicart.sys.subsystem import SysSubsystem
-from hicart.n64.cic import CIC
 from hicart.utils.cli import main_runner
 
 
@@ -24,8 +23,13 @@ class Top(Elaboratable):
 
         # Subsystems
 
-        host_subsystem = DomainRenamer("sync")(HostSubsystem())
-        sys_subsystem = DomainRenamer("cic")(SysSubsystem())
+        host_subsystem = HostSubsystem()
+        sys_subsystem = SysSubsystem()
+
+        host_subsystem.mailbox_bus = sys_subsystem.mailbox_bus
+
+        host_subsystem = DomainRenamer("sync")(host_subsystem)
+        sys_subsystem = DomainRenamer("cic")(sys_subsystem)
 
         m.submodules.host_subsystem = host_subsystem
         m.submodules.sys_subsystem = sys_subsystem

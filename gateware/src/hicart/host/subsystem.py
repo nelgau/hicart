@@ -1,6 +1,8 @@
 from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out, flipped
+from amaranth_soc import csr, wishbone
+from amaranth_soc.csr.wishbone import WishboneCSRBridge
 from amaranth_soc.wishbone.sram import WishboneSRAM
 
 from hicart.n64 import cart
@@ -16,8 +18,33 @@ class HostSubsystem(wiring.Component):
 
     access: Out(1)
 
+    def __init__(self):
+        super().__init__()
+        self._mailbox_bus = None
+
+    @property
+    def mailbox_bus(self):
+        return self._mailbox_bus
+
+    @mailbox_bus.setter
+    def mailbox_bus(self, bus):
+        self._mailbox_bus = bus
+
     def elaborate(self, platform):
         m = Module()
+
+        # MCU Mailbox
+
+        if self.mailbox_bus is None:
+            raise ValueError("Host cannot be elaborated without a mailbox bus")
+
+        csr_bridge = WishboneCSRBridge(self.mailbox_bus, data_width=16)
+        m.submodules.csr_bridge = csr_bridge
+
+        # SRAM
+
+        sram = WishboneSRAM(size=0x1000, data_width=16, granularity=8)
+        m.submodules.sram = sram
 
         # Flash
 
@@ -31,28 +58,32 @@ class HostSubsystem(wiring.Component):
 
         wiring.connect(m, flash_ctrl.bus, flipped(self.flash))
 
-        # SRAM
+        # Seqbus-Wishbone Bridge and Decoder
 
-        sram = WishboneSRAM(size=0x1000, data_width=16, granularity=8)
-        sram_b = seqbus.WishboneBridge(sram.wb_bus)
+        wb_decoder = wishbone.Decoder(addr_width=20, data_width=16, granularity=8)
 
-        m.submodules.sram = sram
-        m.submodules.sram_b = sram_b
+        wb_decoder.add(csr_bridge.wb_bus, addr=0x00000)
+        wb_decoder.add(sram.wb_bus, addr=0xF0000)
 
-        # Bridge and Decoder
+        wb_bridge = seqbus.WishboneBridge(wb_decoder.bus)
 
-        decoder = seqbus.Decoder(addr_width=31, data_width=16, granularity=8)
-        decoder.add(fetcher.seq, addr=0x10000000)
-        decoder.add(sram_b.seq, addr=0x1FFF0000)
+        m.submodules.wb_decoder = wb_decoder
+        m.submodules.wb_bridge = wb_bridge
 
-        bridge = PISeqBridge()
+        # PI-SeqBus Bridge and Decoder
 
-        m.submodules.decoder = decoder
-        m.submodules.bridge = bridge
+        seq_decoder = seqbus.Decoder(addr_width=31, data_width=16, granularity=8)
+        seq_bridge = PISeqBridge()
 
-        wiring.connect(m, bridge.pi, flipped(self.cart_pi))
-        wiring.connect(m, bridge.seq, decoder.bus)
+        seq_decoder.add(fetcher.seq, addr=0x10000000)
+        seq_decoder.add(wb_bridge.seq, addr=0x1FF00000)
 
-        m.d.comb += self.access.eq(bridge.seq.cyc)
+        m.submodules.seq_decoder = seq_decoder
+        m.submodules.seq_bridge = seq_bridge
+
+        wiring.connect(m, seq_bridge.pi, flipped(self.cart_pi))
+        wiring.connect(m, seq_bridge.seq, seq_decoder.bus)
+
+        m.d.comb += self.access.eq(seq_bridge.seq.cyc)
 
         return m

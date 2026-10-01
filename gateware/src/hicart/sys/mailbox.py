@@ -6,6 +6,8 @@ from amaranth_soc import csr
 
 
 class CommandMailbox(wiring.Component):
+    host_bus: In(csr.Signature(addr_width=8, data_width=8))
+    sys_bus: In(csr.Signature(addr_width=8, data_width=8))
 
     class HostHandshake(csr.Register, access="r"):
         def __init__(self, data_width):
@@ -64,10 +66,7 @@ class CommandMailbox(wiring.Component):
         self._host_bridge = DomainRenamer(host_domain)(csr.Bridge(host_regs.as_memory_map()))
         self._sys_bridge = DomainRenamer(sys_domain)(csr.Bridge(sys_regs.as_memory_map()))
 
-        super().__init__({
-            "host_bus": In(csr.Signature(addr_width=8, data_width=8)),
-            "sys_bus": In(csr.Signature(addr_width=8, data_width=8)),
-        })
+        super().__init__()
         self.host_bus.memory_map = self._host_bridge.bus.memory_map
         self.sys_bus.memory_map = self._sys_bridge.bus.memory_map
 

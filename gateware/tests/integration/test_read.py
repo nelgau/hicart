@@ -2,6 +2,8 @@ from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out, flipped
 from amaranth.sim import *
+from amaranth_soc import csr
+from amaranth_soc.memory import MemoryMap
 
 from hicart.host.subsystem import HostSubsystem
 from hicart.controller import flash
@@ -24,6 +26,11 @@ class N64ReadTest(MultiProcessTestCase):
 
             m.submodules.flash_io = flash_io
             m.submodules.host_subsystem = host_subsystem
+
+            mailbox_bus = csr.Signature(addr_width=8, data_width=8).create()
+            mailbox_bus.memory_map = MemoryMap(addr_width=8, data_width=8)
+
+            host_subsystem.mailbox_bus = mailbox_bus
 
             wiring.connect(m, host_subsystem.cart_pi, flipped(self.pi))
             wiring.connect(m, host_subsystem.flash, flash_io.bus)
