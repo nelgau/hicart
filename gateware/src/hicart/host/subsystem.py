@@ -11,7 +11,7 @@ from hicart.soc.wishbone import WindowMapper
 
 
 class HostSubsystem(wiring.Component):
-    pi: Out(cart.PISignature)
+    cart_pi: Out(cart.PISignature)
     flash: Out(flash.FlashSignature)
 
     access: Out(1)
@@ -50,7 +50,7 @@ class HostSubsystem(wiring.Component):
         m.submodules.decoder = decoder
         m.submodules.bridge = bridge
 
-        wiring.connect(m, bridge.pi, flipped(self.pi))
+        wiring.connect(m, bridge.pi, flipped(self.cart_pi))
         wiring.connect(m, bridge.seq, decoder.bus)
 
         m.d.comb += self.access.eq(bridge.seq.cyc)

@@ -1,8 +1,8 @@
 from amaranth import *
 from amaranth.lib import wiring
-from amaranth.build import *
 
 from hicart.host.subsystem import HostSubsystem
+from hicart.sys.subsystem import SysSubsystem
 from hicart.n64.cic import CIC
 from hicart.utils.cli import main_runner
 
@@ -22,23 +22,21 @@ class Top(Elaboratable):
         m.submodules.flash_io = flash_io
         m.submodules.cart_io = cart_io
 
-        # Host Subsystem
+        # Subsystems
 
         host_subsystem = DomainRenamer("sync")(HostSubsystem())
+        sys_subsystem = DomainRenamer("cic")(SysSubsystem())
+
         m.submodules.host_subsystem = host_subsystem
-
-        # CIC
-
-        cic = DomainRenamer("cic")(CIC())
-        m.submodules.cic = cic
+        m.submodules.sys_subsystem = sys_subsystem
 
         # Connections
 
-        wiring.connect(m, host_subsystem.pi, cart_io.pi)
+        wiring.connect(m, host_subsystem.cart_pi, cart_io.pi)
         wiring.connect(m, host_subsystem.flash, flash_io.bus)
 
-        wiring.connect(m, cic.bus, cart_io.cic)
-        wiring.connect(m, cic.ctl, cart_io.ctl)
+        wiring.connect(m, sys_subsystem.cart_cic, cart_io.cic)
+        wiring.connect(m, sys_subsystem.cart_ctl, cart_io.ctl)
 
         # Debug
 

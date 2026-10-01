@@ -25,7 +25,7 @@ class N64ReadTest(MultiProcessTestCase):
             m.submodules.flash_io = flash_io
             m.submodules.host_subsystem = host_subsystem
 
-            wiring.connect(m, host_subsystem.pi, flipped(self.pi))
+            wiring.connect(m, host_subsystem.cart_pi, flipped(self.pi))
             wiring.connect(m, host_subsystem.flash, flash_io.bus)
             wiring.connect(m, flash_io.port, flipped(self.qspi))
 
