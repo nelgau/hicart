@@ -80,4 +80,7 @@ class HostSubsystem(wiring.Component):
 
         m.d.comb += self.access.eq(seq_bridge.seq.cyc)
 
+        for ri in seq_decoder.bus.memory_map.all_resources():
+            print(f"{ri.path} {ri.start:08x} {ri.end:08x}")
+
         return m
