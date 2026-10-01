@@ -24,7 +24,7 @@ class Top(Elaboratable):
 
         # Subsystems
 
-        crossing = Crossing()
+        crossing = Crossing(host_domain="sync", sys_domain="cic")
 
         host_subsystem = HostSubsystem(crossing=crossing)
         sys_subsystem = SysSubsystem(crossing=crossing)
