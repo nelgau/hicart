@@ -1,48 +1,33 @@
 from amaranth import *
 from amaranth.lib import wiring
+from amaranth.lib.wiring import In, Out, flipped
 from amaranth.sim import *
 
+from hicart.host.subsystem import HostSubsystem
 from hicart.controller import flash
 from hicart.n64.cart import PISignature
-from hicart.n64.pi import PISeqBridge, PIInitiatorDriver
-from hicart.soc import seqbus
-from hicart.soc.wishbone import WindowMapper
+from hicart.n64.pi import PIInitiatorDriver
 from hicart.utils.sim import MultiProcessTestCase
 
 
 class N64ReadTest(MultiProcessTestCase):
 
-    class DUT(Elaboratable):
-
-        def __init__(self):
-            self.pi = PISignature.create()
-            self.qspi = flash.QSPISignature.create()
-
-            self.flash_io = flash.SimFlashIO()
-            self.flash_ctrl = flash.WishboneFlashController(data_width=16)
-
-            self.mapper = WindowMapper(self.flash_ctrl.wb, addr_width=22, base_addr=0x800000)
-            self.fetcher = seqbus.PrefetchingWishboneBridge(self.mapper.bus)
-
-            self.decoder = seqbus.Decoder(addr_width=31, data_width=16, granularity=8)
-            self.decoder.add(self.fetcher.seq, addr=0x10000000)
-
-            self.bridge = PISeqBridge()
+    class DUT(wiring.Component):
+        pi: Out(PISignature)
+        qspi: Out(flash.QSPISignature)
 
         def elaborate(self, platform):
             m = Module()
 
-            wiring.connect(m, self.bridge.pi, wiring.flipped(self.pi))
-            wiring.connect(m, self.bridge.seq, self.decoder.bus)
-            wiring.connect(m, self.flash_ctrl.bus, self.flash_io.bus)
-            wiring.connect(m, self.flash_io.port, wiring.flipped(self.qspi))
+            flash_io = flash.SimFlashIO()
+            host_subsystem = HostSubsystem()
 
-            m.submodules.flash_io   = self.flash_io
-            m.submodules.flash_ctrl = self.flash_ctrl
-            m.submodules.mapper     = self.mapper
-            m.submodules.fetcher    = self.fetcher
-            m.submodules.decoder    = self.decoder
-            m.submodules.bridge     = self.bridge
+            m.submodules.flash_io = flash_io
+            m.submodules.host_subsystem = host_subsystem
+
+            wiring.connect(m, host_subsystem.pi, flipped(self.pi))
+            wiring.connect(m, host_subsystem.flash, flash_io.bus)
+            wiring.connect(m, flash_io.port, flipped(self.qspi))
 
             return m
 
@@ -100,11 +85,6 @@ class N64ReadTest(MultiProcessTestCase):
             dut.qspi.d.i,
             dut.qspi.d.o,
             dut.qspi.d.oe,
-
-            dut.bridge.seq,
-            dut.fetcher.seq,
-            dut.mapper.bus,
-            dut.flash_ctrl.wb,
         ]
 
         with self.simulate(dut, traces=traces) as sim:
