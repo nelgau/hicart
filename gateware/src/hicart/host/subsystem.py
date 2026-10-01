@@ -1,7 +1,7 @@
 from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out, flipped
-from amaranth_soc import csr, wishbone
+from amaranth_soc import wishbone
 from amaranth_soc.csr.wishbone import WishboneCSRBridge
 from amaranth_soc.wishbone.sram import WishboneSRAM
 
@@ -60,7 +60,7 @@ class HostSubsystem(wiring.Component):
 
         # Seqbus-Wishbone Bridge and Decoder
 
-        wb_decoder = wishbone.Decoder(addr_width=20, data_width=16, granularity=8)
+        wb_decoder = wishbone.Decoder(addr_width=19, data_width=16, granularity=8)
 
         wb_decoder.add(csr_bridge.wb_bus, addr=0x00000)
         wb_decoder.add(sram.wb_bus, addr=0xF0000)
