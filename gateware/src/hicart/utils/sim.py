@@ -45,7 +45,7 @@ class MultiProcessTestCase(unittest.TestCase):
             sim.run()
 
 
-def run_in_domain(coro, *, domain):
+def in_domain(coro, *, domain):
     async def wrapped(ctx):
         await coro(DefaultDomainContext(ctx, domain))
     return wrapped

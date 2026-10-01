@@ -7,7 +7,7 @@ from amaranth_soc.csr.wishbone import WishboneCSRBridge
 
 from hicart.soc.wishbone import WishboneClassicDriver
 from hicart.sys.mailbox import CommandMailbox
-from hicart.utils.sim import MultiProcessTestCase, run_in_domain
+from hicart.utils.sim import MultiProcessTestCase, in_domain
 
 
 class CommandMailboxTest(MultiProcessTestCase):
@@ -79,8 +79,7 @@ class CommandMailboxTest(MultiProcessTestCase):
                     assert result_low & 0x2
                     break
 
-            await ctx.tick().repeat(10)
-
+            await ctx.tick()
 
         async def sys_testbench(ctx):
             await sys_driver.begin(ctx)
@@ -95,12 +94,12 @@ class CommandMailboxTest(MultiProcessTestCase):
             assert await sys_driver.read_once(ctx, 0x2) == 0x00340012   # Arg 1
             assert await sys_driver.read_once(ctx, 0x3) == 0x00780056   # Arg 2
 
-            await ctx.tick().repeat(10)
+            await ctx.tick()
 
             # Set error
             await sys_driver.write_once(ctx, 0x0, 0x0002)
 
-            await ctx.tick().repeat(50)
+            await ctx.tick()
 
         traces = [
             dut.host_bus
@@ -110,4 +109,4 @@ class CommandMailboxTest(MultiProcessTestCase):
             sim.add_clock(1.0 / 100e6, domain="sync")
             sim.add_clock(1.0 / 40e6, domain="sys")
             sim.add_testbench(host_testbench)
-            sim.add_testbench(run_in_domain(sys_testbench, domain="sys"))
+            sim.add_testbench(in_domain(sys_testbench, domain="sys"))
