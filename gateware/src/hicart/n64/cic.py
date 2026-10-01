@@ -34,26 +34,36 @@ class CIC(wiring.Component):
 
         self.cpu = Minerva(reset_address=self.Constants.RESET_ADDR)
 
-        self._arbiter = wishbone.Arbiter(addr_width=30, data_width=32, granularity=8, features={"cti", "bte"})
-        self._decoder = wishbone.Decoder(addr_width=30, data_width=32, granularity=8, features={"cti", "bte"})
+        self.arbiter = wishbone.Arbiter(addr_width=30, data_width=32, granularity=8, features={"cti", "bte"})
+        self.decoder = wishbone.Decoder(addr_width=30, data_width=32, granularity=8, features={"cti", "bte"})
 
-        self._arbiter.add(self.cpu.ibus)
-        self._arbiter.add(self.cpu.dbus)
+        self.arbiter.add(self.cpu.ibus)
+        self.arbiter.add(self.cpu.dbus)
+
+        # ROM
 
         self.rom = WishboneSRAM(size=self.Constants.ROM_SIZE, data_width=32, granularity=8, writable=False)
-        self._decoder.add(self.rom.wb_bus, addr=self.Constants.ROM_ADDR, name="rom")
+
+        # RAM
 
         self.ram = WishboneSRAM(size=self.Constants.RAM_SIZE, data_width=32, granularity=8)
-        self._decoder.add(self.ram.wb_bus, addr=self.Constants.RAM_ADDR, name="ram")
 
-        self._csr_decoder = csr.Decoder(addr_width=8, data_width=8)
+        # CSR
+
+        self.csr_decoder = csr.Decoder(addr_width=8, data_width=8)
 
         self.gpio = gpio.Peripheral(pin_count=2, addr_width=8, data_width=8, input_stages=2)
-        self._csr_decoder.add(self.gpio.bus, name="gpio")
+        self.csr_decoder.add(self.gpio.bus, name="gpio")
 
-        self._csr_bridge = WishboneCSRBridge(self._csr_decoder.bus, data_width=32)
+        self.csr_bridge = WishboneCSRBridge(self.csr_decoder.bus, data_width=32)
 
-        self._decoder.add(self._csr_bridge.wb_bus, addr=self.Constants.GPIO_ADDR, name="csr")
+        # Decoder
+
+        self.decoder.add(self.rom.wb_bus, addr=self.Constants.ROM_ADDR, name="rom")
+        self.decoder.add(self.ram.wb_bus, addr=self.Constants.RAM_ADDR, name="ram")
+        self.decoder.add(self.csr_bridge.wb_bus, addr=self.Constants.GPIO_ADDR, name="csr")
+
+        # Firmware
 
         with open("../firmware/firmware.bin", "rb") as f:
             rom_bytes = f.read()
@@ -64,22 +74,18 @@ class CIC(wiring.Component):
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules.arbiter = self._arbiter
         m.submodules.cpu     = self.cpu
+        m.submodules.arbiter = self.arbiter
+        m.submodules.decoder = self.decoder
 
-        m.submodules.decoder = self._decoder
         m.submodules.rom     = self.rom
         m.submodules.ram     = self.ram
 
-        m.submodules.csr_bridge     = self._csr_bridge
-        m.submodules.csr_decoder    = self._csr_decoder
+        m.submodules.csr_bridge     = self.csr_bridge
+        m.submodules.csr_decoder    = self.csr_decoder
         m.submodules.gpio           = self.gpio
 
-        reset_sync  = Signal()
-        m.d.comb += self.cpu.external_interrupt.eq(reset_sync)
-        m.submodules += AsyncFFSynchronizer(self.ctl.reset, reset_sync)
-
-        wiring.connect(m, self._arbiter.bus, self._decoder.bus)
+        wiring.connect(m, self.arbiter.bus, self.decoder.bus)
 
         m.d.comb += [
             self.gpio.pins[0].i .eq( self.bus.dclk          ),
@@ -87,6 +93,10 @@ class CIC(wiring.Component):
             self.bus.data.o     .eq( self.gpio.pins[1].o    ),
             self.bus.data.oe    .eq( self.gpio.pins[1].oe   ),
         ]
+
+        reset_sync  = Signal()
+        m.d.comb += self.cpu.external_interrupt.eq(reset_sync)
+        m.submodules += AsyncFFSynchronizer(self.ctl.reset, reset_sync)
 
         return m
 

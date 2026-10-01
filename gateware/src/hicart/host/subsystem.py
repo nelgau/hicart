@@ -1,7 +1,7 @@
 from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out, flipped
-from amaranth_soc import wishbone
+from amaranth_soc import csr, wishbone
 from amaranth_soc.csr.wishbone import WishboneCSRBridge
 from amaranth_soc.wishbone.sram import WishboneSRAM
 
@@ -18,27 +18,21 @@ class HostSubsystem(wiring.Component):
 
     access: Out(1)
 
-    def __init__(self):
+    def __init__(self, *, crossing):
+        self.crossing = crossing
         super().__init__()
-        self._mailbox_bus = None
-
-    @property
-    def mailbox_bus(self):
-        return self._mailbox_bus
-
-    @mailbox_bus.setter
-    def mailbox_bus(self, bus):
-        self._mailbox_bus = bus
 
     def elaborate(self, platform):
         m = Module()
 
         # MCU Mailbox
 
-        if self.mailbox_bus is None:
-            raise ValueError("Host cannot be elaborated without a mailbox bus")
+        csr_decoder = csr.Decoder(addr_width=8, data_width=8)
+        csr_decoder.add(self.crossing.mailbox.host_bus, name="mailbox")
 
-        csr_bridge = WishboneCSRBridge(self.mailbox_bus, data_width=16)
+        csr_bridge = WishboneCSRBridge(csr_decoder.bus, data_width=16)
+
+        m.submodules.csr_decoder = csr_decoder
         m.submodules.csr_bridge = csr_bridge
 
         # SRAM

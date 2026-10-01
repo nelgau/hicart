@@ -9,6 +9,7 @@ from hicart.host.subsystem import HostSubsystem
 from hicart.controller import flash
 from hicart.n64.cart import PISignature
 from hicart.n64.pi import PIInitiatorDriver
+from hicart.sys.crossing import Crossing
 from hicart.utils.sim import MultiProcessTestCase
 
 
@@ -22,15 +23,12 @@ class N64ReadTest(MultiProcessTestCase):
             m = Module()
 
             flash_io = flash.SimFlashIO()
-            host_subsystem = HostSubsystem()
+            crossing = Crossing()
+            host_subsystem = HostSubsystem(crossing=crossing)
 
             m.submodules.flash_io = flash_io
+            m.submodules.crossing = crossing
             m.submodules.host_subsystem = host_subsystem
-
-            mailbox_bus = csr.Signature(addr_width=8, data_width=8).create()
-            mailbox_bus.memory_map = MemoryMap(addr_width=8, data_width=8)
-
-            host_subsystem.mailbox_bus = mailbox_bus
 
             wiring.connect(m, host_subsystem.cart_pi, flipped(self.pi))
             wiring.connect(m, host_subsystem.flash, flash_io.bus)
