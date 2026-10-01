@@ -47,6 +47,7 @@ class CommandMailbox(wiring.Component):
         self._host_command_reg      = host_regs.add("Command",      self.ValueRW(32))
         self._host_arg1_reg         = host_regs.add("Arg1",         self.ValueRW(32))
         self._host_arg2_reg         = host_regs.add("Arg2",         self.ValueRW(32))
+        self._host_result_reg       = host_regs.add("Result",       self.ValueR(32))
 
         # Sys
 
@@ -56,6 +57,7 @@ class CommandMailbox(wiring.Component):
         self._sys_command_reg       = sys_regs.add("Command",       self.ValueR(32))
         self._sys_arg1_reg          = sys_regs.add("Arg1",          self.ValueR(32))
         self._sys_arg2_reg          = sys_regs.add("Arg2",          self.ValueR(32))
+        self._sys_result_reg        = sys_regs.add("Result",        self.ValueRW(32))
 
         # Bridges
 
@@ -86,9 +88,9 @@ class CommandMailbox(wiring.Component):
 
         host_busy = Signal()
         host_error = Signal()
+        host_result = Signal(32)
 
         sys_pending = Signal()
-
         sys_command = Signal(32)
         sys_arg1 = Signal(32)
         sys_arg2 = Signal(32)
@@ -110,11 +112,13 @@ class CommandMailbox(wiring.Component):
             m.d[self._host_domain] += [
                 host_busy.eq(0),
                 host_error.eq(self._sys_handshake_reg.f.error.data),
+                host_result.eq(self._sys_result_reg.f.value.data),
             ]
 
         m.d.comb += [
             self._host_handshake_reg.f.busy.r_data.eq(host_busy),
             self._host_handshake_reg.f.error.r_data.eq(host_error),
+            self._host_result_reg.f.value.r_data.eq(host_result),
         ]
 
         # Sys
@@ -140,7 +144,6 @@ class CommandMailbox(wiring.Component):
 
         m.d.comb += [
             self._sys_handshake_reg.f.pending.r_data.eq(sys_pending),
-
             self._sys_command_reg.f.value.r_data.eq(sys_command),
             self._sys_arg1_reg.f.value.r_data.eq(sys_arg1),
             self._sys_arg2_reg.f.value.r_data.eq(sys_arg2),

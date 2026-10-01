@@ -96,7 +96,10 @@ class CommandMailboxTest(MultiProcessTestCase):
 
             await ctx.tick()
 
-            # Set error
+            # Result
+            await sys_driver.write_once(ctx, 0x4, 0x1234CAFE)
+
+            # Done with error bit set
             await sys_driver.write_once(ctx, 0x0, 0x0002)
 
             await ctx.tick()
