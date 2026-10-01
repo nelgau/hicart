@@ -1,3 +1,11 @@
+// **** ADDED BY HICART ****
+
+#include <riscv.h>
+
+
+
+// *************************
+
 /**************************************************************
  * Generic CIC implementation for N64                         *
  * ---------------------------------------------------------- *
@@ -18,7 +26,7 @@
 
 #define GET_REGION() (REGION_NTSC)
 
-/* SEEDs */ 
+/* SEEDs */
 
 // 6102/7101
 #define CIC6102_SEED 0x3F
@@ -437,6 +445,15 @@ void ClearRam(void)
 
 int main(void)
 {
+    // **** ADDED BY HICART ****
+
+    // Enable IRQ0 and machine interrupts
+    irq_setmask(0x1);
+    irq_setie(0x1);
+
+    // *************************
+
+
     unsigned char isPal;
 
     // ClearRam();
@@ -455,10 +472,10 @@ int main(void)
 
     // encode and send the checksum
     WriteChecksum();
-    
+
     // init the ram corresponding to the region
     InitRam(isPal);
-    
+
     // read the initial values from the PIF
     _CicMem[0x01] = ReadNibble();
     _CicMem[0x11] = ReadNibble();
@@ -493,3 +510,12 @@ int main(void)
         }
     }
 }
+
+// **** ADDED BY HICART ****
+
+void isr(void)
+{
+    reset();
+}
+
+// *************************

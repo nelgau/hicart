@@ -9,7 +9,7 @@ _start:
 _reset_vector:
     # Initialize the stack
     la sp, __stack_top
-    
+
     # Set the vector for interrupt handling
     la t0, trap_vector
     csrw mtvec, t0
@@ -18,7 +18,7 @@ _reset_vector:
     # initialize bss
 
     ##
-    # TODO: Abstract 
+    # TODO: Abstract
     ##
 
     # Enable external interrupts
@@ -26,7 +26,7 @@ _reset_vector:
     csrs mie, t0
 
     # Invoke program
-    call boot
+    call main
 
     # Halt
 1:  j 1b
@@ -70,6 +70,6 @@ trap_vector:
     lw t4, 13*4(sp)
     lw t5, 14*4(sp)
     lw t6, 15*4(sp)
-    addi sp, sp, 16*4    
+    addi sp, sp, 16*4
 
     mret

@@ -21,7 +21,7 @@ class CIC(wiring.Component):
 
     class Constants:
         RESET_ADDR = 0x00000000
-        GPIO_ADDR = 0x00006000
+        CSR_ADDR = 0x00006000
 
         ROM_ADDR = 0x00000000
         ROM_SIZE = 0x1000
@@ -61,11 +61,11 @@ class CIC(wiring.Component):
 
         self.decoder.add(self.rom.wb_bus, addr=self.Constants.ROM_ADDR, name="rom")
         self.decoder.add(self.ram.wb_bus, addr=self.Constants.RAM_ADDR, name="ram")
-        self.decoder.add(self.csr_bridge.wb_bus, addr=self.Constants.GPIO_ADDR, name="csr")
+        self.decoder.add(self.csr_bridge.wb_bus, addr=self.Constants.CSR_ADDR, name="csr")
 
         # Firmware
 
-        with open("../firmware/firmware.bin", "rb") as f:
+        with open("../firmware/cic/build/cic.bin", "rb") as f:
             rom_bytes = f.read()
             rom_data = [x[0] for x in struct.iter_unpack("<L", rom_bytes)]
 

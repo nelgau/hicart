@@ -2,8 +2,10 @@ INSTALL_STAMP := .install.stamp
 PDM := $(shell command -v pdm 2> /dev/null)
 
 PACKAGE_ROOT := src/hicart
-SRCS := $(shell find $(PACKAGE_ROOT) -name "*.py")
 BITSTREAM := build/top.bit
+
+SRCS := $(shell find $(PACKAGE_ROOT) -name "*.py")
+FIRMWARE_BINS := ../firmware/cic/build/cic.bin ../firmware/mcu/build/mcu.bin
 
 .DEFAULT_GOAL := help
 
@@ -59,8 +61,11 @@ run: send
 test: $(INSTALL_STAMP)
 	$(PDM) run pytest
 
-$(BITSTREAM): $(INSTALL_STAMP) $(SRCS) ../firmware/firmware.bin
+$(BITSTREAM): $(INSTALL_STAMP) $(SRCS) $(FIRMWARE_BINS)
 	$(PDM) run python -m hicart.design.cart
 
-../firmware/firmware.bin:
-	$(MAKE) -C ../firmware
+../firmware/cic/build/cic.bin:
+	$(MAKE) -C ../firmware/cic
+
+../firmware/mcu/build/mcu.bin:
+	$(MAKE) -C ../firmware/mcu
