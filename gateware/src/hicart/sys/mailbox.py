@@ -87,8 +87,8 @@ class CommandMailbox(wiring.Component):
         m.submodules.done_doorbell = done_doorbell
 
         m.d.comb += [
-            send_doorbell.i.eq(self._host_command_reg.element.w_stb),
-            done_doorbell.i.eq(self._sys_handshake_reg.element.w_stb),
+            send_doorbell.i.eq(0),
+            done_doorbell.i.eq(0),
         ]
 
         # Host
@@ -97,7 +97,8 @@ class CommandMailbox(wiring.Component):
         host_error = Signal()
         host_result = Signal(32)
 
-        with m.If(self._host_command_reg.element.w_stb):
+        with m.If(self._host_command_reg.element.w_stb & ~host_busy):
+            m.d.comb += send_doorbell.i.eq(1)
             m.d[self._host_domain] += [
                 host_busy.eq(1),
                 host_error.eq(0),
@@ -123,7 +124,8 @@ class CommandMailbox(wiring.Component):
         sys_arg1 = Signal(32)
         sys_arg2 = Signal(32)
 
-        with m.If(self._sys_handshake_reg.element.w_stb):
+        with m.If(self._sys_handshake_reg.element.w_stb & sys_pending):
+            m.d.comb += done_doorbell.i.eq(1)
             m.d[self._sys_domain] += [
                 sys_pending.eq(0),
             ]
