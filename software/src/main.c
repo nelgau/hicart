@@ -12,22 +12,12 @@
 #define HANDSHAKE_BUSY      0x1
 #define HANDSHAKE_ERROR     0x2
 
-#define WORD_SWAP(x)       ((((x) & 0xFFFF) << 16) | ((x) >> 16))
-
-uint32_t read_reg(uint32_t address) {
-    return WORD_SWAP(io_read(address));
-}
-
-void write_reg(uint32_t address, uint32_t data) {
-    io_write(address, WORD_SWAP(data));
-}
-
 void print_regs(void) {
-    uint32_t handshake  = read_reg(REG_HANDSHAKE);
-    uint32_t command    = read_reg(REG_COMMAND);
-    uint32_t arg1       = read_reg(REG_ARG1);
-    uint32_t arg2       = read_reg(REG_ARG2);
-    uint32_t result     = read_reg(REG_RESULT);
+    uint32_t handshake  = io_read(REG_HANDSHAKE);
+    uint32_t command    = io_read(REG_COMMAND);
+    uint32_t arg1       = io_read(REG_ARG1);
+    uint32_t arg2       = io_read(REG_ARG2);
+    uint32_t result     = io_read(REG_RESULT);
 
     printf("REGS: %08lx %08lx %08lx %08lx %08lx\n", handshake, command, arg1, arg2, result);
 }
@@ -44,12 +34,16 @@ int main(void)
     uint32_t counter = 0;
 
     while(1) {
-        write_reg(REG_ARG1, counter);
-        write_reg(REG_COMMAND, 0xFFFFEEEE);
+        io_write(REG_ARG1, counter);
+        io_write(REG_COMMAND, 0xFFFFEEEE);
 
-        while(read_reg(REG_HANDSHAKE) & HANDSHAKE_BUSY) {}
+        // print_regs();
 
-        uint32_t value = read_reg(REG_RESULT);
+        while(io_read(REG_HANDSHAKE) & HANDSHAKE_BUSY) {}
+
+        // print_regs();
+
+        uint32_t value = io_read(REG_RESULT);
         printf("%10ld %10ld %10ld\n", counter, value, value - counter);
 
         wait_ms(500);

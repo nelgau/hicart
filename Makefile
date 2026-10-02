@@ -1,4 +1,4 @@
-TESTROM := roms/sm64.z64
+TESTROM ?= roms/sm64.z64
 
 .PHONY: send-gateware
 send-gateware:
