@@ -5,6 +5,7 @@ from amaranth.sim import *
 from amaranth_soc import wishbone
 from amaranth_soc.csr.wishbone import WishboneCSRBridge
 
+from hicart.soc import csr_ext
 from hicart.soc.wishbone import WishboneClassicDriver
 from hicart.sys.mailbox import CommandMailbox
 from hicart.utils.sim import MultiProcessTestCase, in_domain
@@ -17,13 +18,16 @@ class CommandMailboxTest(MultiProcessTestCase):
         def __init__(self):
             self.mailbox = CommandMailbox(sys_domain="sys")
 
-            self.host_bridge = WishboneCSRBridge(self.mailbox.host_bus, data_width=16)
+            self.host_bridge = csr_ext.WishboneCSRBridge(self.mailbox.host_bus, data_width=16, byteorder="big")
             self.host_decoder = wishbone.Decoder(addr_width=31, data_width=16, granularity=8)
             self.host_decoder.add(self.host_bridge.wb_bus, addr=0x0)
 
-            self.sys_bridge = DomainRenamer("sys")(WishboneCSRBridge(self.mailbox.sys_bus, data_width=32))
-            self.sys_decoder = DomainRenamer("sys")(wishbone.Decoder(addr_width=30, data_width=32, granularity=8))
+            self.sys_bridge = WishboneCSRBridge(self.mailbox.sys_bus, data_width=32)
+            self.sys_decoder = wishbone.Decoder(addr_width=30, data_width=32, granularity=8)
             self.sys_decoder.add(self.sys_bridge.wb_bus, addr=0x0)
+
+            self.sys_bridge = DomainRenamer("sys")(self.sys_bridge)
+            self.sys_decoder = DomainRenamer("sys")(self.sys_decoder)
 
             super().__init__({
                 "host_bus": In(wishbone.Signature(addr_width=31, data_width=16, granularity=8)),
@@ -56,17 +60,17 @@ class CommandMailboxTest(MultiProcessTestCase):
             await host_driver.begin(ctx)
             await ctx.tick()
 
-            # Arg 1
-            await host_driver.write_once(ctx, 0x4, 0x0012)
-            await host_driver.write_once(ctx, 0x5, 0x0034)
+            # Arg 1 -- Big Endian
+            await host_driver.write_once(ctx, 0x4, 0x0034)
+            await host_driver.write_once(ctx, 0x5, 0x0012)
 
-            # Arg 2
-            await host_driver.write_once(ctx, 0x6, 0x0056)
-            await host_driver.write_once(ctx, 0x7, 0x0078)
+            # Arg 2 -- Big Endian
+            await host_driver.write_once(ctx, 0x6, 0x0078)
+            await host_driver.write_once(ctx, 0x7, 0x0056)
 
-            # Command
-            await host_driver.write_once(ctx, 0x2, 0x0000)
-            await host_driver.write_once(ctx, 0x3, 0xFACE)
+            # Command -- Big Endian
+            await host_driver.write_once(ctx, 0x2, 0xFACE)
+            await host_driver.write_once(ctx, 0x3, 0x0000)
 
             await ctx.tick().repeat(10)
 
@@ -74,8 +78,9 @@ class CommandMailboxTest(MultiProcessTestCase):
             result_high = None
 
             while True:
-                result_low = await host_driver.read_once(ctx, 0x0)
-                _ = await host_driver.read_once(ctx, 0x1)
+                # Handshake -- Big Endian
+                result_high = await host_driver.read_once(ctx, 0x0)
+                result_low = await host_driver.read_once(ctx, 0x1)
 
                 if not result_low & 0x1:
                     break
@@ -83,9 +88,9 @@ class CommandMailboxTest(MultiProcessTestCase):
             # Check for error bit
             assert result_low & 0x2
 
-            # Result
-            result_low = await host_driver.read_once(ctx, 0x8)
-            result_high = await host_driver.read_once(ctx, 0x9)
+            # Result -- Big Endian
+            result_high = await host_driver.read_once(ctx, 0x8)
+            result_low = await host_driver.read_once(ctx, 0x9)
 
             assert result_low == 0xCAFE
             assert result_high == 0x1234

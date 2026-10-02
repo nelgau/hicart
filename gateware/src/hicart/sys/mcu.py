@@ -9,6 +9,8 @@ from amaranth_soc import wishbone
 from amaranth_soc.wishbone.sram import WishboneSRAM
 from minerva.core import Minerva
 
+from hicart.soc import csr_ext
+
 
 class MCU(Elaboratable):
 
@@ -48,7 +50,7 @@ class MCU(Elaboratable):
         self.csr_decoder = csr.Decoder(addr_width=8, data_width=8)
         self.csr_decoder.add(mailbox_bus, name="mailbox")
 
-        self.csr_bridge = WishboneCSRBridge(self.csr_decoder.bus, data_width=32)
+        self.csr_bridge = csr_ext.WishboneCSRBridge(self.csr_decoder.bus, data_width=32, byteorder="little")
 
         # Decoder
 

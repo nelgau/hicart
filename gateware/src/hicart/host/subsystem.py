@@ -2,13 +2,12 @@ from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out, flipped
 from amaranth_soc import csr, wishbone
-from amaranth_soc.csr.wishbone import WishboneCSRBridge
 from amaranth_soc.wishbone.sram import WishboneSRAM
 
 from hicart.n64 import cart
 from hicart.n64.pi import PISeqBridge
 from hicart.controller import flash
-from hicart.soc import seqbus
+from hicart.soc import csr_ext, seqbus
 from hicart.soc.wishbone import WindowMapper
 
 
@@ -30,7 +29,7 @@ class HostSubsystem(wiring.Component):
         csr_decoder = csr.Decoder(addr_width=8, data_width=8)
         csr_decoder.add(self.crossing.mailbox.host_bus, name="mailbox")
 
-        csr_bridge = WishboneCSRBridge(csr_decoder.bus, data_width=16)
+        csr_bridge = csr_ext.WishboneCSRBridge(csr_decoder.bus, data_width=16, byteorder="big")
 
         m.submodules.csr_decoder = csr_decoder
         m.submodules.csr_bridge = csr_bridge

@@ -4,6 +4,8 @@ from amaranth.lib.wiring import In, Out, flipped
 from amaranth.utils import exact_log2
 from amaranth_soc import csr
 
+from hicart.soc import csr_ext
+
 
 class CommandMailbox(wiring.Component):
     host_bus: In(csr.Signature(addr_width=8, data_width=8))
@@ -63,8 +65,11 @@ class CommandMailbox(wiring.Component):
 
         # Bridges
 
-        self._host_bridge = DomainRenamer(host_domain)(csr.Bridge(host_regs.as_memory_map()))
-        self._sys_bridge = DomainRenamer(sys_domain)(csr.Bridge(sys_regs.as_memory_map()))
+        self._host_bridge = csr_ext.Bridge(host_regs.as_memory_map(), byteorder="big")
+        self._sys_bridge = csr_ext.Bridge(sys_regs.as_memory_map(), byteorder="little")
+
+        self._host_bridge = DomainRenamer(host_domain)(self._host_bridge)
+        self._sys_bridge = DomainRenamer(sys_domain)(self._sys_bridge)
 
         super().__init__()
         self.host_bus.memory_map = self._host_bridge.bus.memory_map
