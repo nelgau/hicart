@@ -28,9 +28,8 @@ BUILD  ?= build
 ARCH    := -march=rv32i_zicsr -mabi=ilp32
 CFLAGS  += $(ARCH) -Os -fno-builtin -I include -I $(RUNTIME)
 ASFLAGS += $(ARCH) -I $(RUNTIME)
-# -L . lets link.ld's "INCLUDE memory.ld" find this program's memory.ld.
-# --no-warn-rwx-segments needs binutils 2.39 or newer; drop it if ld rejects it.
-LDFLAGS += -b elf32-littleriscv -nostdlib -L . -T $(RUNTIME)/link.ld --no-warn-rwx-segments
+LDFLAGS += -b elf32-littleriscv -nostdlib -L . -T $(RUNTIME)/link.ld
+LDFLAGS += --no-warn-rwx-segments --orphan-handling=warn
 
 SRCS := $(wildcard src/*.c) $(wildcard src/*.S)
 OBJS := $(patsubst src/%,$(BUILD)/%.o,$(SRCS)) $(BUILD)/runtime/crt0.S.o

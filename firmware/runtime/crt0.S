@@ -10,25 +10,42 @@ _reset_vector:
     # Initialize the stack
     la sp, __stack_top
 
+    # Initialize the global pointer
+    .option push
+    .option norelax
+    la gp, __global_pointer$
+    .option pop
+
     # Set the vector for interrupt handling
     la t0, trap_vector
     csrw mtvec, t0
 
-    # initialize data
-    # initialize bss
-
-    ##
-    # TODO: Abstract
-    ##
+    # Copy .data from ROM to RAM
+    la t0, _data_load
+    la t1, _data
+    la t2, _edata
+1:  bgeu t1, t2, 2f
+    lw t3, 0(t0)
+    sw t3, 0(t1)
+    addi t0, t0, 4
+    addi t1, t1, 4
+    j 1b
+2:
+    # Zero .bss
+    la t0, _bss
+    la t1, _ebss
+3:  bgeu t0, t1, 4f
+    sw zero, 0(t0)
+    addi t0, t0, 4
+    j 3b
+4:
 
     # Enable external interrupts
     li t0, MIE_MEIE
     csrs mie, t0
 
-    # Invoke program
     call main
 
-    # Halt
 1:  j 1b
 
 trap_vector:

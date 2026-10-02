@@ -3,19 +3,24 @@ INCLUDE memory.ld
 SECTIONS
 {
     .text : {
-        KEEP(*(.init));
-        *(.text);
-        *(.rodata);
+        KEEP(*crt0.S.o(.init))
+        KEEP(*(.init))
+        *(.text .text.*)
+        *(.rodata .rodata.* .srodata .srodata.*)
         . = ALIGN(4);
     } > ROM
 
     .data : {
         . = ALIGN(4);
         _data = . ;
-        *(.data);
+        *(.data .data.*)
+        __global_pointer$ = . + 0x800;
+        *(.sdata .sdata.*)
         . = ALIGN(4);
         _edata = . ;
     } > RAM AT > ROM
+
+    _data_load = LOADADDR(.data);
 
     .fill : {
         FILL(0x00);
@@ -26,7 +31,9 @@ SECTIONS
     .bss (NOLOAD) : {
         . = ALIGN(4);
         _bss = . ;
-        *(.bss);
+        *(.sbss .sbss.*)
+        *(.bss .bss.*)
+        *(COMMON)
         . = ALIGN(4);
         _ebss = . ;
     } > RAM
@@ -39,4 +46,7 @@ SECTIONS
     } > RAM
 
     _end = . ;
+
+    .riscv.attributes 0 : { *(.riscv.attributes) }
+    /DISCARD/ : { *(.comment) *(.note.GNU-stack) }
 }
