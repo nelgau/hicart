@@ -10,7 +10,6 @@ from hicart.utils.sim import MultiProcessTestCase
 
 
 class _NoStorageMockRegister(wiring.Component):
-    _MustUse__silence = True
     def __init__(self, width, access):
         super().__init__({"element": In(csr.Element.Signature(width, access))})
 
@@ -130,7 +129,13 @@ class MultiplexerLittleEndianTestCase(MultiProcessTestCase):
                     self.assertEqual(ctx.get(reg_16_rw.element.w_stb), 1)
                     self.assertEqual(ctx.get(reg_16_rw.element.w_data), 0xbb66)
 
-                with self.simulate(dut) as sim:
+                m = Module()
+                m.submodules.reg_4_r = reg_4_r
+                m.submodules.reg_8_w = reg_8_w
+                m.submodules.reg_16_rw = reg_16_rw
+                m.submodules.dut = dut
+
+                with self.simulate(m) as sim:
                     sim.add_clock(1e-6)
                     sim.add_testbench(testbench)
 
@@ -167,7 +172,11 @@ class MultiplexerLittleEndianAlignedTestCase(MultiProcessTestCase):
                     self.assertEqual(ctx.get(reg_20_rw.element.w_stb), 1)
                     self.assertEqual(ctx.get(reg_20_rw.element.w_data), 0x3aa55)
 
-                with self.simulate(dut) as sim:
+                m = Module()
+                m.submodules.reg_20_rw = reg_20_rw
+                m.submodules.dut = dut
+
+                with self.simulate(m) as sim:
                     sim.add_clock(1e-6)
                     sim.add_testbench(testbench)
 
@@ -434,7 +443,13 @@ class MultiplexerBigEndianTestCase(MultiProcessTestCase):
                     self.assertEqual(ctx.get(reg_16_rw.element.w_stb), 1)
                     self.assertEqual(ctx.get(reg_16_rw.element.w_data), 0x66bb)
 
-                with self.simulate(dut) as sim:
+                m = Module()
+                m.submodules.reg_4_r = reg_4_r
+                m.submodules.reg_8_w = reg_8_w
+                m.submodules.reg_16_rw = reg_16_rw
+                m.submodules.dut = dut
+
+                with self.simulate(m) as sim:
                     sim.add_clock(1e-6)
                     sim.add_testbench(testbench)
 
@@ -471,7 +486,11 @@ class MultiplexerBigEndianAlignedTestCase(MultiProcessTestCase):
                     self.assertEqual(ctx.get(reg_20_rw.element.w_stb), 1)
                     self.assertEqual(ctx.get(reg_20_rw.element.w_data), 0xa33dd)
 
-                with self.simulate(dut) as sim:
+                m = Module()
+                m.submodules.reg_20_rw = reg_20_rw
+                m.submodules.dut = dut
+
+                with self.simulate(m) as sim:
                     sim.add_clock(1e-6)
                     sim.add_testbench(testbench)
 
