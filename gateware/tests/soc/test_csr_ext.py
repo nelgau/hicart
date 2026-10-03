@@ -11,7 +11,9 @@ from hicart.utils.sim import MultiProcessTestCase
 
 class _NoStorageMockRegister(wiring.Component):
     def __init__(self, width, access):
-        super().__init__({"element": In(csr.Element.Signature(width, access))})
+        super().__init__({
+            "element": In(csr.Element.Signature(width, access))
+        })
 
     def elaborate(self, platform):
         return Module()
@@ -39,9 +41,6 @@ class _StorageMockRegister(wiring.Component):
             m.d.sync += self.data.eq(self.element.w_data)
 
         return m
-
-    def __repr__(self):
-        return f"_StorageMockRegister('{self._name}')"
 
 
 # Original test cases from Amaranth SOC
