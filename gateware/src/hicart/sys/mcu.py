@@ -4,7 +4,6 @@ from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out
 from amaranth_soc import csr
-from amaranth_soc.csr.wishbone import WishboneCSRBridge
 from amaranth_soc import wishbone
 from amaranth_soc.wishbone.sram import WishboneSRAM
 from minerva.core import Minerva

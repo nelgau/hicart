@@ -7,7 +7,7 @@ from hicart.utils.sim import MultiProcessTestCase
 class FlashInterfaceTest(MultiProcessTestCase):
 
     def test_basic(self):
-        dut = FlashController()
+        dut = FlashController(byteorder="big")
 
         async def testbench(ctx):
             await ctx.tick().repeat(10)
@@ -92,7 +92,7 @@ class FlashInterfaceTest(MultiProcessTestCase):
 class WishboneFlashInterfaceTest(MultiProcessTestCase):
 
     def test_basic(self):
-        dut = WishboneFlashController()
+        dut = WishboneFlashController(byteorder="big")
 
         async def testbench(ctx):
             await ctx.tick().repeat(10)

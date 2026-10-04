@@ -41,7 +41,7 @@ class HostSubsystem(wiring.Component):
 
         # Flash
 
-        flash_ctrl = flash.WishboneFlashController(data_width=16)
+        flash_ctrl = flash.WishboneFlashController(data_width=16, byteorder="big")
         mapper = WindowMapper(flash_ctrl.wb, addr_width=22, base_addr=0x800000, name="flash")
         fetcher = seqbus.PrefetchingWishboneBridge(mapper.bus)
 

@@ -53,9 +53,13 @@ class SimFlashIO(wiring.Component):
 
 class FlashController(wiring.Component):
 
-    def __init__(self, data_width=8):
+    def __init__(self, *, data_width=8, byteorder="little"):
         if data_width % 8 != 0:
             raise ValueError("Data width must be a multiple of eight")
+        if byteorder not in ("little", "big"):
+            raise ValueError("Byte order must be either little or big")
+        if byteorder == "little":
+            raise NotImplementedError
 
         self.granularity_bits = exact_log2(data_width // 8)
         self.addr_width = 24 - self.granularity_bits
@@ -197,7 +201,16 @@ class FlashController(wiring.Component):
 
 class WishboneFlashController(wiring.Component):
 
-    def __init__(self, data_width=8):
+    def __init__(self, data_width=8, byteorder="little"):
+        if data_width % 8 != 0:
+            raise ValueError("Data width must be a multiple of eight")
+        if byteorder not in ("little", "big"):
+            raise ValueError("Byte order must be either little or big")
+        if byteorder == "little":
+            raise NotImplementedError
+
+        self._byteorder = byteorder
+
         granularity_bits = exact_log2(data_width // 8)
         addr_width = 24 - granularity_bits
 
@@ -220,6 +233,7 @@ class WishboneFlashController(wiring.Component):
 
         m.submodules.inner = inner = FlashController(
             data_width=self.wb.data_width,
+            byteorder=self._byteorder,
         )
 
         wiring.connect(m, inner.bus, wiring.flipped(self.bus))
