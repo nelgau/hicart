@@ -90,3 +90,8 @@ trap_vector:
     addi sp, sp, 16*4
 
     mret
+
+    .weak isr
+isr:
+1:
+    j 1b
