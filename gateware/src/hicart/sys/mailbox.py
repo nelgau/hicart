@@ -84,8 +84,12 @@ class CommandMailbox(wiring.Component):
         wiring.connect(m, flipped(self.host_bus), self._host_bridge.bus)
         wiring.connect(m, flipped(self.sys_bus), self._sys_bridge.bus)
 
-        send_doorbell = cdc.PulseSynchronizer(i_domain=self._host_domain, o_domain=self._sys_domain)
-        done_doorbell = cdc.PulseSynchronizer(i_domain=self._sys_domain, o_domain=self._host_domain)
+        send_doorbell = cdc.PulseSynchronizer(i_domain=self._host_domain,
+                                              o_domain=self._sys_domain,
+                                              stages=4)
+        done_doorbell = cdc.PulseSynchronizer(i_domain=self._sys_domain,
+                                              o_domain=self._host_domain,
+                                              stages=4)
 
         m.submodules.send_doorbell = send_doorbell
         m.submodules.done_doorbell = done_doorbell
