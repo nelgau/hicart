@@ -13,7 +13,7 @@ class Top(Elaboratable):
 
         m.submodules.car                        = platform.clock_domain_generator()
         m.submodules.flash_io   = flash_io      = platform.flash_io()
-        m.submodules.flash_ctrl = flash_ctrl    = WishboneFlashController(data_width=16)
+        m.submodules.flash_ctrl = flash_ctrl    = WishboneFlashController(data_width=16, byteorder="big")
 
         wiring.connect(m, flash_ctrl.bus, flash_io.bus)
 
