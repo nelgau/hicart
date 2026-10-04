@@ -26,9 +26,9 @@ while [[ $# -gt 0 ]] ; do
   esac
 done
 
-if [[ -z ${IBOOT_G2_HOSTNAME:-} ]] ; then
+if [[ -z ${IBOOT_N64:-} ]] ; then
     if [[ -z $silent ]] ; then
-        echo "No hostname given. Please set IBOOT_G2_HOSTNAME env var."
+        echo "No hostname given. Please set IBOOT_N64 env var."
         exit 1
     else
         exit 0
@@ -40,4 +40,4 @@ if [[ -z $state ]] ; then
     exit 1
 fi
 
-curl -sS "http://${IBOOT_G2_HOSTNAME}/?s=${state}" > /dev/null
+curl -sS "http://${IBOOT_N64}/?s=${state}" > /dev/null
