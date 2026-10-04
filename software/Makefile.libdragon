@@ -1,5 +1,6 @@
 V = 0
 SOURCE_DIR = src
+INCLUDE_DIR = include
 BUILD_DIR = build
 
 LIBDRAGON_PREVIEW = 2
@@ -7,6 +8,8 @@ include $(N64_INST)/include/n64.mk
 
 SRCS = $(wildcard $(SOURCE_DIR)/*.c)
 OBJS = $(SRCS:$(SOURCE_DIR)/%.c=$(BUILD_DIR)/%.o)
+
+N64_C_AND_CXX_FLAGS += -I$(INCLUDE_DIR)
 
 .PHONY: all
 all: hicart.z64
