@@ -7,7 +7,7 @@ from amaranth.lib import cdc, wiring
 from amaranth.lib.wiring import In, Out
 from amaranth.vendor import LatticeECP5Platform
 
-from hicart.controller import flash, ft245
+from hicart.controller import flash, ft245, sd
 from hicart.n64.cart import *
 
 from hicart.vendor.ecp5pll import ECP5PLL, ECP5PLLConfig
@@ -87,6 +87,76 @@ class N64CartIO(wiring.Component):
         return m
 
 
+class FlashIO(wiring.Component):
+    bus: In(flash.FlashSignature)
+    sck: Out(1)
+
+    def elaborate(self, platform):
+        m = Module()
+
+        neg_clk = ClockSignal("sync_neg")
+        spi_sck = Signal()
+
+        # Dynamically enable or disable primary clock network.
+        # Disable function will not create glitch and increase the clock latency.
+        m.submodules.dcca = Instance("DCCA",
+            i_CE=self.bus.sck_en,
+            i_CLKI=neg_clk,
+            o_CLKO=spi_sck,
+        )
+
+        # Provides access to configuration flash clock (MCLK)
+        m.submodules.usrmclk = Instance("USRMCLK",
+            i_USRMCLKI=spi_sck,
+            i_USRMCLKTS=Const(0),   # Active-low output enable
+        )
+
+        qspi_flash = platform.request("qspi_flash")
+
+        m.d.comb += [
+            qspi_flash.cs_n.o   .eq(self.bus.cs_n),
+            self.sck            .eq(spi_sck)
+        ]
+
+        for i in range(4):
+            dq_pin = getattr(qspi_flash, f"dq{i}")
+            m.d.comb += [
+                dq_pin.o        .eq(self.bus.d.o[i]),
+                dq_pin.oe       .eq(self.bus.d.oe[i]),
+                self.bus.d.i[i] .eq(dq_pin.i),
+            ]
+
+        return m
+
+
+class SDCardIO(wiring.Component):
+    bus: In(sd.SBBusSignature())
+
+    def elaborate(self, platform):
+        m = Module()
+
+        sd_card = platform.request("sd_card")
+
+        card_present = Signal()
+        m.submodules += cdc.FFSynchronizer(~sd_card.cd_n.i, card_present)
+
+        m.d.comb += [
+            sd_card.clk.o           .eq(self.bus.clk),
+            sd_card.cmd.o           .eq(self.bus.cmd),
+            self.bus.card_present   .eq(card_present),
+        ]
+
+        for i in range(4):
+            dat_pin = getattr(sd_card, f"dat{i}")
+            m.d.comb += [
+                dat_pin.o           .eq(self.bus.dat.o[i]),
+                dat_pin.oe          .eq(self.bus.dat.oe[i]),
+                self.bus.dat.i[i]   .eq(dat_pin.i),
+            ]
+
+        return m
+
+
 class FT245IO(wiring.Component):
     bus: In(ft245.FT245Signature)
 
@@ -112,50 +182,6 @@ class FT245IO(wiring.Component):
         return m
 
 
-class FlashIO(wiring.Component):
-    bus: In(flash.FlashSignature)
-    sck: Out(1)
-
-    def elaborate(self, platform):
-        m = Module()
-
-        neg_clk = ClockSignal("sync_neg")
-        spi_sck = Signal()
-
-        # Dynamically enable or disable primary clock network.
-        # Disable function will not create glitch and increase the clock latency.
-        m.submodules.dcca = Instance("DCCA",
-            i_CE=self.bus.sck_en,
-            i_CLKI=neg_clk,
-            o_CLKO=spi_sck,
-        )
-
-        # Provides access to configuration flash clock (MCLK)
-        m.submodules.usrmclk = Instance("USRMCLK",
-            i_USRMCLKI=spi_sck,
-            i_USRMCLKTS=Const(0),   # Active-low output enable
-        )
-
-        qspi_pins = platform.request("qspi_flash")
-
-        m.d.comb += [
-            qspi_pins.cs_n.o    .eq(self.bus.cs_n),
-            self.sck            .eq(spi_sck)
-        ]
-
-        for i in range(4):
-            dq_pin = getattr(qspi_pins, f"dq{i}")
-
-            m.d.comb += [
-                dq_pin.o        .eq(self.bus.d.o[i]),
-                dq_pin.oe       .eq(self.bus.d.oe[i]),
-
-                self.bus.d.i[i] .eq(dq_pin.i),
-            ]
-
-        return m
-
-
 class HomeInvaderRevAPlatform(LatticeECP5Platform):
     device      = "LFE5U-12F"
     package     = "BG256"
@@ -166,8 +192,9 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
     clock_domain_generator = HomeInvaderRevADomainGenerator
 
     cart_io = N64CartIO
-    ft245_io = FT245IO
     flash_io = FlashIO
+    card_io = SDCardIO
+    ft245_io = FT245IO
 
     resources = [
         Resource("clk12", 0, Pins("J16", dir="i"),
@@ -197,6 +224,37 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
             Attrs(IO_TYPE="LVCMOS33", SLEWRATE="SLOW")
         ),
 
+        Resource("ram", 0,
+            Subsignal("clk",        DiffPairs("J1", "J2", dir="o"), Attrs(IO_TYPE="LVCMOS18D")),
+            Subsignal("dq",         Pins("C1 F2 B2 C3 B1 D3 E1 F3", dir="io")),
+            Subsignal("rwds",       Pins("D1", dir="io")),
+            Subsignal("cs",         PinsN("K1", dir="o")),
+            Subsignal("reset",      PinsN("K2", dir="o")),
+
+            Attrs(IO_TYPE="LVCMOS18", SLEWRATE="FAST")
+        ),
+
+        Resource("qspi_flash", 0,
+            # SCK is accessed by instancing the USRMCLK block.
+            Subsignal("cs_n",       Pins("N8", dir="o"), Attrs(PULLMODE="UP")),
+            Subsignal("dq0",        Pins("T8", dir="io")),
+            Subsignal("dq1",        Pins("T7", dir="io")),
+            Subsignal("dq2",        Pins("M7", dir="io")),
+            Subsignal("dq3",        Pins("N7", dir="io")),
+        ),
+
+        Resource("sd_card", 0,
+            Subsignal("clk",        Pins("N1", dir="o")),
+            Subsignal("cmd",        Pins("N3", dir="o")),
+            Subsignal("dat0",       Pins("M2", dir="io")),
+            Subsignal("dat1",       Pins("M1", dir="io")),
+            Subsignal("dat2",       Pins("P2", dir="io")),
+            Subsignal("dat3",       Pins("P1", dir="io")),
+            Subsignal("cd_n",       Pins("R1", dir="i")),
+
+            Attrs(IO_TYPE="LVCMOS33", SLEWRATE="SLOW"),
+        ),
+
         Resource("usb_fifo", 0,
             Subsignal("d",        Pins("L15 M16 M15 N16 N14 P16 P15 R16", dir="io")),
             Subsignal("rxf",      Pins("R15", dir="i"), Attrs(PULLMODE="NONE")),
@@ -208,25 +266,6 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
             # Only used in synchronous mode.
             Subsignal("clkout",   Pins("L16", dir="i")),
             Subsignal("oe",       Pins("T13", dir="o"))
-        ),
-
-        Resource("qspi_flash", 0,
-            # Subsignal("sck",       Pins("R14", dir="o")),
-            Subsignal("cs_n",       Pins("N8", dir="o"), Attrs(PULLMODE="UP")),
-            Subsignal("dq0",        Pins("T8", dir="io")),
-            Subsignal("dq1",        Pins("T7", dir="io")),
-            Subsignal("dq2",        Pins("M7", dir="io")),
-            Subsignal("dq3",        Pins("N7", dir="io")),
-        ),
-
-        Resource("ram", 0,
-            Subsignal("clk",        DiffPairs("J1", "J2", dir="o"), Attrs(IO_TYPE="LVCMOS18D")),
-            Subsignal("dq",         Pins("C1 F2 B2 C3 B1 D3 E1 F3", dir="io")),
-            Subsignal("rwds",       Pins("D1", dir="io")),
-            Subsignal("cs",         PinsN("K1", dir="o")),
-            Subsignal("reset",      PinsN("K2", dir="o")),
-
-            Attrs(IO_TYPE="LVCMOS18", SLEWRATE="FAST")
         ),
 
         Resource("pmod", 0,

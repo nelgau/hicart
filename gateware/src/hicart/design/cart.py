@@ -15,12 +15,14 @@ class Top(Elaboratable):
         # Platform
 
         cdg  = platform.clock_domain_generator()
-        flash_io = platform.flash_io()
         cart_io = platform.cart_io()
+        flash_io = platform.flash_io()
+        card_io = platform.card_io()
 
         m.submodules.cdg = cdg
-        m.submodules.flash_io = flash_io
         m.submodules.cart_io = cart_io
+        m.submodules.flash_io = flash_io
+        m.submodules.card_io = card_io
 
         # Subsystems
 
@@ -50,17 +52,18 @@ class Top(Elaboratable):
         leds = platform.request("leds")
 
         m.d.comb += [
-            pmod.d.o[0]             .eq( cart_io.pi.ale_l       ),
-            pmod.d.o[1]             .eq( cart_io.pi.ale_h       ),
-            pmod.d.o[2]             .eq( cart_io.pi.read        ),
-            pmod.d.o[3]             .eq( cart_io.pi.ad.oe       ),
-            pmod.d.o[4]             .eq( cart_io.pi.ad.i[15]    ),
-            pmod.d.o[5]             .eq( cart_io.pi.ad.i[14]    ),
-            pmod.d.o[6]             .eq( cart_io.pi.ad.i[13]    ),
-            pmod.d.o[7]             .eq( cart_io.pi.ad.i[12]    ),
+            pmod.d.o[0]             .eq( cart_io.pi.ale_l           ),
+            pmod.d.o[1]             .eq( cart_io.pi.ale_h           ),
+            pmod.d.o[2]             .eq( cart_io.pi.read            ),
+            pmod.d.o[3]             .eq( cart_io.pi.ad.oe           ),
+            pmod.d.o[4]             .eq( cart_io.pi.ad.i[15]        ),
+            pmod.d.o[5]             .eq( cart_io.pi.ad.i[14]        ),
+            pmod.d.o[6]             .eq( cart_io.pi.ad.i[13]        ),
+            pmod.d.o[7]             .eq( cart_io.pi.ad.i[12]        ),
             pmod.d.oe               .eq( 1 ),
 
-            leds.d.o[0]             .eq( host_subsystem.access  ),
+            leds.d.o[0]             .eq( host_subsystem.access      ),
+            leds.d.o[7]             .eq( card_io.bus.card_present   ),
         ]
 
         return m
