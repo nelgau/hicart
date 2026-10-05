@@ -79,7 +79,7 @@ class N64CartIO(wiring.Component):
             n64_cart.cic.data.oe    .eq( self.cic.data.oe       ),
             self.cic.dclk           .eq( n64_cart.cic.dclk.i    ),
 
-            # System
+            # Control
             self.ctl.reset          .eq( n64_cart.reset.i       ),
             self.ctl.nmi            .eq( n64_cart.nmi.i         ),
         ]

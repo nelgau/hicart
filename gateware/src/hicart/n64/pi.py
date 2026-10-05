@@ -8,10 +8,13 @@ from hicart.utils.misc import FFDelay
 
 
 class PISeqBridge(wiring.Component):
+
+    # N.B. The control signals (e.g., ale_l, ale_h, read, write) need to be inverted!
+
     pi: Out(PISignature)
     seq: Out(seqbus.Signature(addr_width=31, data_width=16, granularity=8))
 
-    # Delays at 80 Mhz
+    # Delays for 80 Mhz
 
     READ_DELAY = 0
     WRITE_DELAY = 2 # ~25 ns
