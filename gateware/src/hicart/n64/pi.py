@@ -11,8 +11,11 @@ class PISeqBridge(wiring.Component):
     pi: Out(PISignature)
     seq: Out(seqbus.Signature(addr_width=31, data_width=16, granularity=8))
 
-    READ_DELAY = 1
-    WRITE_DELAY = 2
+    # Delays at 80 Mhz
+
+    READ_DELAY = 0
+    WRITE_DELAY = 2 # ~25 ns
+    OE_TIMEOUT = 7  # ~100 ns
 
     def elaborate(self, platform):
         m = Module()
@@ -69,9 +72,6 @@ class PISeqBridge(wiring.Component):
         m.d.comb += do_read.eq(read_delayed & ~last_read)
         m.d.comb += do_write.eq(write_delayed & ~last_write)
 
-        with m.If(~read_delayed):
-            m.d.sync += self.pi.ad.oe.eq(0)
-
         # Seq bus
 
         current_address = Signal(32)
@@ -100,6 +100,18 @@ class PISeqBridge(wiring.Component):
             with m.If(~self.seq.we):
                 m.d.sync += self.pi.ad.o.eq(Mux(self.seq.ack, self.seq.dat_r, 0))
                 m.d.sync += self.pi.ad.oe.eq(1)
+
+        # Tri-state
+
+        oe_counter = Signal(range(self.OE_TIMEOUT + 1))
+
+        with m.If(oe_counter != 0):
+            m.d.sync += oe_counter.eq(oe_counter - 1)
+        with m.If(read_delayed):
+            m.d.sync += oe_counter.eq(self.OE_TIMEOUT)
+
+        with m.If(~valid_address | (oe_counter == 0)):
+            m.d.sync += self.pi.ad.oe.eq(0)
 
         return m
 
