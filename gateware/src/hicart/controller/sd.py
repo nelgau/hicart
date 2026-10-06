@@ -3,7 +3,7 @@ from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out
 
 
-class SBBusSignature(wiring.Signature):
+class SDBusSignature(wiring.Signature):
     def __init__(self):
         super().__init__({
             "clk": Out(1),
