@@ -510,12 +510,3 @@ int main(void)
         }
     }
 }
-
-// **** ADDED BY HICART ****
-
-void isr(void)
-{
-    reset();
-}
-
-// *************************

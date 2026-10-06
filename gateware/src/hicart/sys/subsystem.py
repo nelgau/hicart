@@ -1,5 +1,5 @@
 from amaranth import *
-from amaranth.lib import wiring
+from amaranth.lib import cdc, wiring
 from amaranth.lib.wiring import In, Out, flipped
 
 from hicart.n64.cart import CICSignature, CtlSignature
@@ -30,8 +30,8 @@ class SysSubsystem(wiring.Component):
         # CIC
 
         m.submodules.cic = self.cic
+        m.submodules += cdc.AsyncFFSynchronizer(self.cart_ctl.reset, self.cic.reset)
 
         wiring.connect(m, self.cic.bus, flipped(self.cart_cic))
-        wiring.connect(m, self.cic.ctl, flipped(self.cart_ctl))
 
         return m

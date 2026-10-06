@@ -4,7 +4,6 @@ import struct
 from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out
-from amaranth.lib.cdc import AsyncFFSynchronizer
 from amaranth_soc import csr
 from amaranth_soc import gpio
 from amaranth_soc.csr.wishbone import WishboneCSRBridge
@@ -17,7 +16,7 @@ from hicart.n64.cart import CICSignature, CtlSignature
 
 class CIC(wiring.Component):
     bus: Out(CICSignature)
-    ctl: Out(CtlSignature)
+    reset: In(1)
 
     class Constants:
         RESET_ADDR = 0x00000000
@@ -94,9 +93,7 @@ class CIC(wiring.Component):
             self.bus.data.oe    .eq( self.gpio.pins[1].oe   ),
         ]
 
-        reset_sync  = Signal()
-        m.d.comb += self.cpu.external_interrupt.eq(reset_sync)
-        m.submodules += AsyncFFSynchronizer(self.ctl.reset, reset_sync)
+        m = ResetInserter(self.reset)(m)
 
         return m
 
