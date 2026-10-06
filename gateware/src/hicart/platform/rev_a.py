@@ -121,9 +121,9 @@ class FlashIO(wiring.Component):
         for i in range(4):
             dq_pin = getattr(qspi_flash, f"dq{i}")
             m.d.comb += [
+                self.bus.d.i[i] .eq(dq_pin.i),
                 dq_pin.o        .eq(self.bus.d.o[i]),
                 dq_pin.oe       .eq(self.bus.d.oe[i]),
-                self.bus.d.i[i] .eq(dq_pin.i),
             ]
 
         return m
@@ -142,16 +142,20 @@ class SDCardIO(wiring.Component):
 
         m.d.comb += [
             sd_card.clk.o           .eq(self.bus.clk),
-            sd_card.cmd.o           .eq(self.bus.cmd),
+
+            self.bus.cmd.i          .eq(sd_card.cmd.i),
+            sd_card.cmd.o           .eq(self.bus.cmd.o),
+            sd_card.cmd.oe          .eq(self.bus.cmd.oe),
+
             self.bus.card_present   .eq(card_present),
         ]
 
         for i in range(4):
             dat_pin = getattr(sd_card, f"dat{i}")
             m.d.comb += [
+                self.bus.dat.i[i]   .eq(dat_pin.i),
                 dat_pin.o           .eq(self.bus.dat.o[i]),
                 dat_pin.oe          .eq(self.bus.dat.oe[i]),
-                self.bus.dat.i[i]   .eq(dat_pin.i),
             ]
 
         return m
@@ -245,7 +249,7 @@ class HomeInvaderRevAPlatform(LatticeECP5Platform):
 
         Resource("sd_card", 0,
             Subsignal("clk",        Pins("N1", dir="o")),
-            Subsignal("cmd",        Pins("N3", dir="o")),
+            Subsignal("cmd",        Pins("N3", dir="io")),
             Subsignal("dat0",       Pins("M2", dir="io")),
             Subsignal("dat1",       Pins("M1", dir="io")),
             Subsignal("dat2",       Pins("P2", dir="io")),
