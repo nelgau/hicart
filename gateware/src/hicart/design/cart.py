@@ -45,6 +45,7 @@ class Top(Elaboratable):
 
         wiring.connect(m, sys_subsystem.cart_cic, cart_io.cic)
         wiring.connect(m, sys_subsystem.cart_ctl, cart_io.ctl)
+        wiring.connect(m, sys_subsystem.sd_bus, card_io.bus)
 
         # Debug
 
@@ -52,14 +53,14 @@ class Top(Elaboratable):
         leds = platform.request("leds")
 
         m.d.comb += [
-            pmod.d.o[0]             .eq( cart_io.pi.ale_l           ),
-            pmod.d.o[1]             .eq( cart_io.pi.ale_h           ),
-            pmod.d.o[2]             .eq( cart_io.pi.read            ),
-            pmod.d.o[3]             .eq( cart_io.pi.ad.oe           ),
-            pmod.d.o[4]             .eq( cart_io.pi.ad.i[15]        ),
-            pmod.d.o[5]             .eq( cart_io.pi.ad.i[14]        ),
-            pmod.d.o[6]             .eq( cart_io.pi.ad.i[13]        ),
-            pmod.d.o[7]             .eq( cart_io.pi.ad.i[12]        ),
+            pmod.d.o[0]             .eq( card_io.bus.clk            ),
+            pmod.d.o[1]             .eq( card_io.bus.cmd.i          ),
+            pmod.d.o[2]             .eq( card_io.bus.cmd.o          ),
+            pmod.d.o[3]             .eq( card_io.bus.cmd.oe         ),
+            pmod.d.o[4]             .eq( card_io.bus.dat.i[0]       ),
+            pmod.d.o[5]             .eq( 0                          ),
+            pmod.d.o[6]             .eq( 0                          ),
+            pmod.d.o[7]             .eq( 0                          ),
             pmod.d.oe               .eq( 1 ),
 
             leds.d.o[0]             .eq( host_subsystem.access      ),
