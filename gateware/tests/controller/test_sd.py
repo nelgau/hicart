@@ -164,6 +164,16 @@ class TestCmdTx(MultiProcessTestCase):
 
 class TestCmdRx(MultiProcessTestCase):
 
+    async def _send_frame(self, ctx, sd_clk, sd_cmd_i, frame):
+        for byte in frame:
+            for i in reversed(range(8)):
+                bit = (byte >> i) & 0x1
+                await ctx.negedge(sd_clk)
+                ctx.set(sd_cmd_i, bit)
+
+        await ctx.negedge(sd_clk)
+        ctx.set(sd_cmd_i, 1)
+
     def test_timeout(self):
         clocker = sd.Clocker()
         dut = sd.CmdRx()
@@ -192,24 +202,6 @@ class TestCmdRx(MultiProcessTestCase):
             sim.add_clock(1.0 / 100e6)
             sim.add_testbench(testbench)
 
-    def _make_card_bench(self, dut, clocker, message):
-        async def bench(ctx):
-            ctx.set(dut.sd_cmd_i, 1)
-
-            for _ in range(10):
-                await ctx.posedge(clocker.sd_clk)
-
-            for byte in message:
-                for i in reversed(range(8)):
-                    bit = (byte >> i) & 0x1
-                    await ctx.negedge(clocker.sd_clk)
-                    ctx.set(dut.sd_cmd_i, bit)
-
-            await ctx.negedge(clocker.sd_clk)
-            ctx.set(dut.sd_cmd_i, 1)
-
-        return bench
-
     def test_short(self):
         clocker = sd.Clocker()
         dut = sd.CmdRx()
@@ -221,8 +213,15 @@ class TestCmdRx(MultiProcessTestCase):
         m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
         m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
 
-        message = [0x08, 0x00, 0x00, 0x01, 0xaa, 0x13]
-        card = self._make_card_bench(dut, clocker, message)
+        frame = [0x08, 0x00, 0x00, 0x01, 0xaa, 0x13]
+
+        async def card(ctx):
+            ctx.set(dut.sd_cmd_i, 1)
+
+            for _ in range(10):
+                await ctx.posedge(clocker.sd_clk)
+
+            await self._send_frame(ctx, clocker.sd_clk, dut.sd_cmd_i, frame)
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
@@ -260,8 +259,15 @@ class TestCmdRx(MultiProcessTestCase):
         m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
         m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
 
-        message = [0x08, 0x00, 0x00, 0x01, 0xaa, 0x13]
-        card = self._make_card_bench(dut, clocker, message)
+        frame = [0x08, 0x00, 0x00, 0x01, 0xaa, 0x13]
+
+        async def card(ctx):
+            ctx.set(dut.sd_cmd_i, 1)
+
+            for _ in range(10):
+                await ctx.posedge(clocker.sd_clk)
+
+            await self._send_frame(ctx, clocker.sd_clk, dut.sd_cmd_i, frame)
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
@@ -299,8 +305,15 @@ class TestCmdRx(MultiProcessTestCase):
         m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
         m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
 
-        message = [0x48, 0x00, 0x00, 0x01, 0xaa, 0x13]
-        card = self._make_card_bench(dut, clocker, message)
+        frame = [0x48, 0x00, 0x00, 0x01, 0xaa, 0x13]
+
+        async def card(ctx):
+            ctx.set(dut.sd_cmd_i, 1)
+
+            for _ in range(10):
+                await ctx.posedge(clocker.sd_clk)
+
+            await self._send_frame(ctx, clocker.sd_clk, dut.sd_cmd_i, frame)
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
@@ -338,8 +351,15 @@ class TestCmdRx(MultiProcessTestCase):
         m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
         m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
 
-        message = [0x08, 0x00, 0x00, 0x01, 0xaa, 0x23]
-        card = self._make_card_bench(dut, clocker, message)
+        frame = [0x08, 0x00, 0x00, 0x01, 0xaa, 0x23]
+
+        async def card(ctx):
+            ctx.set(dut.sd_cmd_i, 1)
+
+            for _ in range(10):
+                await ctx.posedge(clocker.sd_clk)
+
+            await self._send_frame(ctx, clocker.sd_clk, dut.sd_cmd_i, frame)
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
@@ -377,8 +397,15 @@ class TestCmdRx(MultiProcessTestCase):
         m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
         m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
 
-        message = [0x08, 0x00, 0x00, 0x01, 0xaa, 0x12]
-        card = self._make_card_bench(dut, clocker, message)
+        frame = [0x08, 0x00, 0x00, 0x01, 0xaa, 0x12]
+
+        async def card(ctx):
+            ctx.set(dut.sd_cmd_i, 1)
+
+            for _ in range(10):
+                await ctx.posedge(clocker.sd_clk)
+
+            await self._send_frame(ctx, clocker.sd_clk, dut.sd_cmd_i, frame)
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
@@ -416,9 +443,16 @@ class TestCmdRx(MultiProcessTestCase):
         m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
         m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
 
-        message = [0x3f, 0x03, 0x53, 0x44, 0x53, 0x55, 0x30, 0x38,
-                   0x47, 0x80, 0x12, 0x34, 0x56, 0x78, 0x01, 0x86, 0xe7]
-        card = self._make_card_bench(dut, clocker, message)
+        frame = [0x3f, 0x03, 0x53, 0x44, 0x53, 0x55, 0x30, 0x38,
+                 0x47, 0x80, 0x12, 0x34, 0x56, 0x78, 0x01, 0x86, 0xe7]
+
+        async def card(ctx):
+            ctx.set(dut.sd_cmd_i, 1)
+
+            for _ in range(10):
+                await ctx.posedge(clocker.sd_clk)
+
+            await self._send_frame(ctx, clocker.sd_clk, dut.sd_cmd_i, frame)
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
@@ -456,9 +490,16 @@ class TestCmdRx(MultiProcessTestCase):
         m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
         m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
 
-        message = [0x7f, 0x03, 0x53, 0x44, 0x53, 0x55, 0x30, 0x38,
-                   0x47, 0x80, 0x12, 0x34, 0x56, 0x78, 0x01, 0x86, 0xe7]
-        card = self._make_card_bench(dut, clocker, message)
+        frame = [0x7f, 0x03, 0x53, 0x44, 0x53, 0x55, 0x30, 0x38,
+                 0x47, 0x80, 0x12, 0x34, 0x56, 0x78, 0x01, 0x86, 0xe7]
+
+        async def card(ctx):
+            ctx.set(dut.sd_cmd_i, 1)
+
+            for _ in range(10):
+                await ctx.posedge(clocker.sd_clk)
+
+            await self._send_frame(ctx, clocker.sd_clk, dut.sd_cmd_i, frame)
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
@@ -496,9 +537,16 @@ class TestCmdRx(MultiProcessTestCase):
         m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
         m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
 
-        message = [0x3f, 0x03, 0x53, 0x44, 0x53, 0x55, 0x30, 0x38,
-                   0x47, 0x80, 0x12, 0x34, 0x56, 0x78, 0x01, 0x86, 0xf7]
-        card = self._make_card_bench(dut, clocker, message)
+        frame = [0x3f, 0x03, 0x53, 0x44, 0x53, 0x55, 0x30, 0x38,
+                 0x47, 0x80, 0x12, 0x34, 0x56, 0x78, 0x01, 0x86, 0xf7]
+
+        async def card(ctx):
+            ctx.set(dut.sd_cmd_i, 1)
+
+            for _ in range(10):
+                await ctx.posedge(clocker.sd_clk)
+
+            await self._send_frame(ctx, clocker.sd_clk, dut.sd_cmd_i, frame)
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
@@ -536,9 +584,16 @@ class TestCmdRx(MultiProcessTestCase):
         m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
         m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
 
-        message = [0x3f, 0x03, 0x53, 0x44, 0x53, 0x55, 0x30, 0x38,
-                   0x47, 0x80, 0x12, 0x34, 0x56, 0x78, 0x01, 0x86, 0xe6]
-        card = self._make_card_bench(dut, clocker, message)
+        frame = [0x3f, 0x03, 0x53, 0x44, 0x53, 0x55, 0x30, 0x38,
+                 0x47, 0x80, 0x12, 0x34, 0x56, 0x78, 0x01, 0x86, 0xe6]
+
+        async def card(ctx):
+            ctx.set(dut.sd_cmd_i, 1)
+
+            for _ in range(10):
+                await ctx.posedge(clocker.sd_clk)
+
+            await self._send_frame(ctx, clocker.sd_clk, dut.sd_cmd_i, frame)
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
