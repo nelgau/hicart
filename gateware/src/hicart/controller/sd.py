@@ -1,6 +1,10 @@
 from amaranth import *
-from amaranth.lib import crc, enum, wiring
+from amaranth.lib import crc, enum, stream, wiring
 from amaranth.lib.wiring import In, Out
+
+
+CRC7_SD_CMD  = crc.catalog.CRC7_MMC
+CRC16_SD_DAT = crc.catalog.CRC16_XMODEM
 
 
 class SDBusSignature(wiring.Signature):
@@ -90,17 +94,17 @@ class CmdTx(wiring.Component):
 
         # State machine
 
-        m.d.sync += bit_shifted.eq(0)
         m.d.sync += self.done.eq(0)
+        m.d.sync += bit_shifted.eq(0)
 
         with m.FSM():
 
             with m.State("IDLE"):
                 with m.If(self.start):
-                    m.next = "WAIT"
+                    m.next = "WAIT_START"
                     m.d.comb += crc7.start.eq(1)
 
-            with m.State("WAIT"):
+            with m.State("WAIT_START"):
                 with m.If(self.sd_clk_falling):
                     m.next = "RUN"
                     m.d.sync += self.sd_cmd_oe.eq(1)
@@ -173,7 +177,7 @@ class CmdRx(wiring.Component):
 
         # CRC
 
-        crc7 = crc.catalog.CRC7_MMC(data_width=1).create()
+        crc7 = CRC7_SD_CMD(data_width=1).create()
         m.submodules.crc7 = crc7
 
         m.d.comb += crc7.data.eq(in_shift[0])
@@ -181,14 +185,14 @@ class CmdRx(wiring.Component):
 
         # State machine
 
-        m.d.sync += bit_shifted.eq(0)
         m.d.sync += self.done.eq(0)
+        m.d.sync += bit_shifted.eq(0)
 
         with m.FSM():
 
             with m.State("IDLE"):
                 with m.If(self.start):
-                    m.next = "WAIT"
+                    m.next = "WAIT_START"
                     m.d.sync += self.cmd_index.eq(0)
                     m.d.sync += self.cmd_resp.eq(0)
 
@@ -200,7 +204,7 @@ class CmdRx(wiring.Component):
                     m.d.sync += timeout_counter.eq(0)
                     m.d.comb += crc7.start.eq(1)
 
-            with m.State("WAIT"):
+            with m.State("WAIT_START"):
                 with m.If(self.sd_clk_rising):
                     m.d.sync += timeout_counter.eq(timeout_counter + 1)
                     with m.If(timeout_counter == 63):
@@ -218,7 +222,7 @@ class CmdRx(wiring.Component):
 
             with m.State("RUN"):
                 with m.If(self.sd_clk_rising):
-                    m.d.sync += in_shift.eq(Cat(self.sd_cmd_i, in_shift[0:7]))
+                    m.d.sync += in_shift.eq(Cat(self.sd_cmd_i, in_shift[:7]))
                     m.d.sync += bit_index.eq(bit_index + 1)
                     m.d.sync += bit_shifted.eq(1)
 
@@ -248,7 +252,7 @@ class CmdRx(wiring.Component):
 
                             with m.Switch(byte_index):
                                 with m.Case(0):
-                                    m.d.sync += self.cmd_index.eq(in_shift[0:6])
+                                    m.d.sync += self.cmd_index.eq(in_shift[:6])
                                     m.d.sync += crc_digesting.eq(1)
                                     finalize_first_byte()
                                 with m.Case(15):
@@ -265,7 +269,7 @@ class CmdRx(wiring.Component):
 
                             with m.Switch(byte_index):
                                 with m.Case(0):
-                                    m.d.sync += self.cmd_index.eq(in_shift[0:6])
+                                    m.d.sync += self.cmd_index.eq(in_shift[:6])
                                     finalize_first_byte()
                                 with m.Case(4):
                                     m.d.sync += crc_digesting.eq(0)
@@ -354,7 +358,7 @@ class CmdUnit(wiring.Component):
                         m.next = "RX"
                         m.d.sync += cmd_rx.start.eq(1)
                     with m.Elif(self.wait_not_busy):
-                        m.next = "WAIT"
+                        m.next = "WAIT_NOT_BUSY"
                     with m.Else():
                         m.next = "IDLE"
                         m.d.sync += self.done.eq(1)
@@ -362,16 +366,147 @@ class CmdUnit(wiring.Component):
             with m.State("RX"):
                 with m.If(cmd_rx.done):
                     with m.If(self.wait_not_busy):
-                        m.next = "WAIT"
+                        m.next = "WAIT_NOT_BUSY"
                     with m.Else():
                         m.next = "IDLE"
                         m.d.sync += self.done.eq(1)
 
-            with m.State("WAIT"):
+            with m.State("WAIT_NOT_BUSY"):
                 with m.If(self.sd_clk_rising):
                     with m.If(self.sd_dat0_i):
                         m.next = "IDLE"
                         m.d.sync += self.done.eq(1)
+
+        return m
+
+
+class DatRx(wiring.Component):
+    start: In(1)
+    done: Out(1)
+
+    sd_dat_i: In(4)
+
+    sd_clk_rising: In(1)
+    sd_clk_falling: In(1)
+
+    block_length: In(10)
+    block_count: In(8)
+
+    source: Out(stream.Signature(8, always_ready=True))
+
+    crc_err: Out(1)
+    end_err: Out(1)
+    timeout: Out(1)
+
+    def elaborate(self, platform):
+        m = Module()
+
+        in_shift = Signal(8)
+
+        block_index = Signal(8)
+        byte_index = Signal(10)
+        nibble_index = Signal(range(2))
+
+        crc_start = Signal()
+        crc_digest = Signal()
+        crc_finalize = Signal()
+        crc_index = Signal(range(16))
+        crc_shifts = [Signal(16, name=f"crc_shift_{i}") for i in range(4)]
+
+        timeout_counter = Signal()
+
+        # Output
+
+        m.d.comb += self.source.payload.eq(in_shift)
+
+        # CRC
+
+        crc_units = []
+        for i in range(4):
+            crc_unit = CRC16_SD_DAT(data_width=1).create()
+            crc_units.append(crc_unit)
+
+            m.submodules[f"crc_{i}"] = crc_unit
+
+            m.d.comb += crc_unit.start.eq(crc_start)
+            m.d.comb += crc_unit.valid.eq(crc_digest)
+            m.d.comb += crc_unit.data.eq(self.sd_dat_i[i])
+
+            with m.If(crc_finalize):
+                m.d.sync += crc_shifts[i].eq(crc_units[i].crc)
+
+        # State machine
+
+        m.d.sync += self.done.eq(0)
+        m.d.sync += self.source.valid.eq(0)
+        m.d.sync += crc_finalize.eq(0)
+
+        with m.FSM():
+
+            with m.State("IDLE"):
+                with m.If(self.start):
+                    m.next = "WAIT_START"
+                    m.d.sync += self.crc_err.eq(0)
+                    m.d.sync += self.end_err.eq(0)
+                    m.d.sync += self.timeout.eq(0)
+
+                    m.d.sync += block_index.eq(0)
+                    m.d.sync += byte_index.eq(0)
+                    m.d.sync += nibble_index.eq(0)
+
+                    m.d.sync += timeout_counter.eq(0)
+
+            with m.State("WAIT_START"):
+                with m.If(self.sd_clk_rising):
+                    # Handle timeout
+
+                    with m.If(~self.sd_dat_i):
+                        m.next = "DATA"
+                        m.d.sync += timeout_counter.eq(0)
+                        m.d.comb += crc_start.eq(1)
+
+            with m.State("DATA"):
+                with m.If(self.sd_clk_rising):
+                    m.d.sync += in_shift.eq(Cat(self.sd_dat_i, in_shift[:4]))
+                    m.d.sync += nibble_index.eq(nibble_index + 1)
+                    m.d.comb += crc_digest.eq(1)
+
+                    with m.If(nibble_index == 1):
+                        m.d.sync += nibble_index.eq(0)
+                        m.d.sync += byte_index.eq(byte_index + 1)
+                        m.d.sync += self.source.valid.eq(1)
+
+                        with m.If(byte_index == self.block_length - 1):
+                            m.next = "CRC"
+                            m.d.sync += crc_index.eq(0)
+                            m.d.sync += crc_finalize.eq(1)
+
+            with m.State("CRC"):
+                with m.If(self.sd_clk_rising):
+                    m.d.sync += crc_index.eq(crc_index + 1)
+
+                    for i in range(4):
+                        m.d.sync += crc_shifts[i].eq(Cat(C(0), crc_shifts[i][:15]))
+
+                        with m.If(self.sd_dat_i[i] != crc_shifts[i][15]):
+                            m.d.sync += self.crc_err.eq(1)
+
+                    with m.If(crc_index == 15):
+                        m.next = "END"
+
+            with m.State("END"):
+                with m.If(self.sd_clk_rising):
+                    m.d.sync += block_index.eq(block_index + 1)
+
+                    with m.If(~self.sd_dat_i):
+                        m.d.sync += self.end_err.eq(1)
+
+                    with m.If(block_index == self.block_count - 1):
+                        m.next = "IDLE"
+                        m.d.sync += self.done.eq(1)
+                    with m.Else():
+                        m.next = "WAIT_START"
+                        m.d.sync += byte_index.eq(0)
 
         return m
 

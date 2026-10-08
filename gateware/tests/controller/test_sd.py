@@ -1,4 +1,5 @@
 from amaranth import *
+from amaranth.lib import crc
 from amaranth.sim import *
 
 from hicart.controller import sd
@@ -153,6 +154,7 @@ class TestCmdRx(MultiProcessTestCase):
 
             await ctx.negedge(clocker.sd_clk)
             ctx.set(dut.sd_cmd_i, 1)
+
         return bench
 
     def test_short(self):
@@ -470,6 +472,166 @@ class TestCmdRx(MultiProcessTestCase):
             sim.add_clock(1.0 / 100e6)
             sim.add_testbench(card)
             sim.add_testbench(control)
+
+
+class TestDataRx(MultiProcessTestCase):
+
+    def _build_message(self, data_bytes):
+        block_bits = [[] for _ in range(4)]
+
+        for byte in data_bytes:
+            def put_bits(nibble):
+                for i in range(4):
+                    block_bits[i].append((nibble >> i) & 0x1)
+            put_bits((byte >> 4) & 0xf)
+            put_bits(byte & 0xf)
+
+        crc_params = sd.CRC16_SD_DAT(data_width=1)
+        crc_bits = [[] for _ in range(4)]
+
+        for i in range(4):
+            crc = crc_params.compute(block_bits[i])
+            for j in reversed(range(16)):
+                crc_bits[i].append((crc >> j) & 0x1)
+
+        message_bits = [[] for _ in range(4)]
+
+        for i in range(4):
+            message_bits[i].append(0)
+            message_bits[i] += block_bits[i]
+            message_bits[i] += crc_bits[i]
+            message_bits[i].append(1)
+
+        message_nibbles = []
+
+        for nibble_bits in zip(*message_bits):
+            message_nibbles.append(sum([b << i for i, b in enumerate(nibble_bits)]))
+
+        return message_nibbles
+
+    async def _send_block(self, ctx, sd_clk, sd_dat_i, data_bytes):
+        message_nibbles = self._build_message(data_bytes)
+
+        for nibble in message_nibbles:
+            await ctx.negedge(sd_clk)
+            ctx.set(sd_dat_i, nibble)
+
+        await ctx.negedge(sd_clk)
+        ctx.set(sd_dat_i, 0xf)
+
+    def test_block(self):
+        clocker = sd.Clocker()
+        dut = sd.DatRx()
+
+        m = Module()
+        m.submodules.clocker = clocker
+        m.submodules.dut = dut
+
+        m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
+        m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
+
+        num_bytes = 512
+        data_bytes = [i % 256 for i in range(num_bytes)]
+
+        async def card(ctx):
+            ctx.set(dut.sd_dat_i, 0xf)
+
+            for _ in range(10):
+                await ctx.posedge(clocker.sd_clk)
+
+            await self._send_block(ctx, clocker.sd_clk, dut.sd_dat_i, data_bytes)
+
+        async def control(ctx):
+            ctx.set(clocker.enable, 1)
+            ctx.set(clocker.divisor, 1)
+
+            ctx.set(dut.block_length, num_bytes)
+            ctx.set(dut.block_count, 1)
+            ctx.set(dut.start, 1)
+
+            await ctx.tick()
+            ctx.set(dut.start, 0)
+
+            await ctx.tick().until(dut.done)
+
+            assert ctx.get(dut.crc_err) == 0
+            assert ctx.get(dut.end_err) == 0
+            assert ctx.get(dut.timeout) == 0
+
+        async def stream(ctx):
+            recv_bytes = []
+            for _ in range(num_bytes):
+                payload, = await ctx.tick().sample(dut.source.payload).until(dut.source.valid)
+                recv_bytes.append(payload)
+
+            assert recv_bytes == data_bytes
+
+        with self.simulate(m) as sim:
+            sim.add_clock(1.0 / 100e6)
+            sim.add_testbench(card)
+            sim.add_testbench(control)
+            sim.add_testbench(stream)
+
+    def test_multi_block(self):
+        clocker = sd.Clocker()
+        dut = sd.DatRx()
+
+        m = Module()
+        m.submodules.clocker = clocker
+        m.submodules.dut = dut
+
+        m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
+        m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
+
+        num_blocks = 2
+        num_bytes = 512
+
+        blocks = []
+        for i in range(num_blocks):
+            blocks.append([(j * (i + 1)) % 256 for j in range(num_bytes)])
+
+        async def card(ctx):
+            ctx.set(dut.sd_dat_i, 0xf)
+
+            for _ in range(10):
+                await ctx.posedge(clocker.sd_clk)
+
+            for data_bytes in blocks:
+                await self._send_block(ctx, clocker.sd_clk, dut.sd_dat_i, data_bytes)
+
+        async def control(ctx):
+            ctx.set(clocker.enable, 1)
+            ctx.set(clocker.divisor, 1)
+
+            ctx.set(dut.block_length, num_bytes)
+            ctx.set(dut.block_count, num_blocks)
+            ctx.set(dut.start, 1)
+
+            await ctx.tick()
+            ctx.set(dut.start, 0)
+
+            await ctx.tick().until(dut.done)
+
+            assert ctx.get(dut.crc_err) == 0
+            assert ctx.get(dut.end_err) == 0
+            assert ctx.get(dut.timeout) == 0
+
+        async def stream(ctx):
+            recv_blocks = []
+            for _ in range(num_blocks):
+                recv_bytes = []
+                for _ in range(num_bytes):
+                    payload, = await ctx.tick().sample(dut.source.payload).until(dut.source.valid)
+                    recv_bytes.append(payload)
+                recv_blocks.append(recv_bytes)
+
+            assert recv_blocks == blocks
+
+        with self.simulate(m) as sim:
+            sim.add_clock(1.0 / 100e6)
+            sim.add_testbench(card)
+            sim.add_testbench(control)
+            sim.add_testbench(stream)
 
 
 class TestSDSequencer(MultiProcessTestCase):
