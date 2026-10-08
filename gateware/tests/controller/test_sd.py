@@ -476,7 +476,7 @@ class TestCmdRx(MultiProcessTestCase):
 
 class TestDataRx(MultiProcessTestCase):
 
-    def _build_message(self, data_bytes):
+    def _build_frame(self, data_bytes):
         block_bits = [[] for _ in range(4)]
 
         for byte in data_bytes:
@@ -494,25 +494,21 @@ class TestDataRx(MultiProcessTestCase):
             for j in reversed(range(16)):
                 crc_bits[i].append((crc >> j) & 0x1)
 
-        message_bits = [[] for _ in range(4)]
-
+        frame_bits = [[] for _ in range(4)]
         for i in range(4):
-            message_bits[i].append(0)
-            message_bits[i] += block_bits[i]
-            message_bits[i] += crc_bits[i]
-            message_bits[i].append(1)
+            frame_bits[i].append(0)
+            frame_bits[i] += block_bits[i]
+            frame_bits[i] += crc_bits[i]
+            frame_bits[i].append(1)
 
-        message_nibbles = []
+        frame = []
+        for nibble_bits in zip(*frame_bits):
+            frame.append(sum([b << i for i, b in enumerate(nibble_bits)]))
 
-        for nibble_bits in zip(*message_bits):
-            message_nibbles.append(sum([b << i for i, b in enumerate(nibble_bits)]))
+        return frame
 
-        return message_nibbles
-
-    async def _send_block(self, ctx, sd_clk, sd_dat_i, data_bytes):
-        message_nibbles = self._build_message(data_bytes)
-
-        for nibble in message_nibbles:
+    async def _send_frame(self, ctx, sd_clk, sd_dat_i, frame):
+        for nibble in frame:
             await ctx.negedge(sd_clk)
             ctx.set(sd_dat_i, nibble)
 
@@ -539,7 +535,8 @@ class TestDataRx(MultiProcessTestCase):
             for _ in range(10):
                 await ctx.posedge(clocker.sd_clk)
 
-            await self._send_block(ctx, clocker.sd_clk, dut.sd_dat_i, data_bytes)
+            frame = self._build_frame(data_bytes)
+            await self._send_frame(ctx, clocker.sd_clk, dut.sd_dat_i, frame)
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
@@ -572,6 +569,100 @@ class TestDataRx(MultiProcessTestCase):
             sim.add_testbench(control)
             sim.add_testbench(stream)
 
+    def test_block_crc_err(self):
+        clocker = sd.Clocker()
+        dut = sd.DatRx()
+
+        m = Module()
+        m.submodules.clocker = clocker
+        m.submodules.dut = dut
+
+        m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
+        m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
+
+        num_bytes = 512
+        data_bytes = [i % 256 for i in range(num_bytes)]
+
+        async def card(ctx):
+            ctx.set(dut.sd_dat_i, 0xf)
+
+            for _ in range(10):
+                await ctx.posedge(clocker.sd_clk)
+
+            frame = self._build_frame(data_bytes)
+            frame[-2] ^= 0x1
+
+            await self._send_frame(ctx, clocker.sd_clk, dut.sd_dat_i, frame)
+
+        async def control(ctx):
+            ctx.set(clocker.enable, 1)
+            ctx.set(clocker.divisor, 1)
+
+            ctx.set(dut.block_length, num_bytes)
+            ctx.set(dut.block_count, 1)
+            ctx.set(dut.start, 1)
+
+            await ctx.tick()
+            ctx.set(dut.start, 0)
+
+            await ctx.tick().until(dut.done)
+
+            assert ctx.get(dut.crc_err) == 1
+            assert ctx.get(dut.end_err) == 0
+            assert ctx.get(dut.timeout) == 0
+
+        with self.simulate(m) as sim:
+            sim.add_clock(1.0 / 100e6)
+            sim.add_testbench(card)
+            sim.add_testbench(control)
+
+    def test_block_end_err(self):
+        clocker = sd.Clocker()
+        dut = sd.DatRx()
+
+        m = Module()
+        m.submodules.clocker = clocker
+        m.submodules.dut = dut
+
+        m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
+        m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
+
+        num_bytes = 512
+        data_bytes = [i % 256 for i in range(num_bytes)]
+
+        async def card(ctx):
+            ctx.set(dut.sd_dat_i, 0xf)
+
+            for _ in range(10):
+                await ctx.posedge(clocker.sd_clk)
+
+            frame = self._build_frame(data_bytes)
+            frame[-1] ^= 0x1
+
+            await self._send_frame(ctx, clocker.sd_clk, dut.sd_dat_i, frame)
+
+        async def control(ctx):
+            ctx.set(clocker.enable, 1)
+            ctx.set(clocker.divisor, 1)
+
+            ctx.set(dut.block_length, num_bytes)
+            ctx.set(dut.block_count, 1)
+            ctx.set(dut.start, 1)
+
+            await ctx.tick()
+            ctx.set(dut.start, 0)
+
+            await ctx.tick().until(dut.done)
+
+            assert ctx.get(dut.crc_err) == 0
+            assert ctx.get(dut.end_err) == 1
+            assert ctx.get(dut.timeout) == 0
+
+        with self.simulate(m) as sim:
+            sim.add_clock(1.0 / 100e6)
+            sim.add_testbench(card)
+            sim.add_testbench(control)
+
     def test_multi_block(self):
         clocker = sd.Clocker()
         dut = sd.DatRx()
@@ -597,7 +688,8 @@ class TestDataRx(MultiProcessTestCase):
                 await ctx.posedge(clocker.sd_clk)
 
             for data_bytes in blocks:
-                await self._send_block(ctx, clocker.sd_clk, dut.sd_dat_i, data_bytes)
+                frame = self._build_frame(data_bytes)
+                await self._send_frame(ctx, clocker.sd_clk, dut.sd_dat_i, frame)
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
