@@ -58,9 +58,9 @@ class Top(Elaboratable):
             pmod.d.o[2]             .eq( card_io.bus.cmd.o          ),
             pmod.d.o[3]             .eq( card_io.bus.cmd.oe         ),
             pmod.d.o[4]             .eq( card_io.bus.dat.i[0]       ),
-            pmod.d.o[5]             .eq( 0                          ),
-            pmod.d.o[6]             .eq( 0                          ),
-            pmod.d.o[7]             .eq( 0                          ),
+            pmod.d.o[5]             .eq( card_io.bus.dat.i[1]       ),
+            pmod.d.o[6]             .eq( card_io.bus.dat.i[2]       ),
+            pmod.d.o[7]             .eq( card_io.bus.dat.i[3]       ),
             pmod.d.oe               .eq( 1 ),
 
             leds.d.o[0]             .eq( host_subsystem.access      ),

@@ -55,15 +55,14 @@ class Clocker(wiring.Component):
 
 
 class CmdTx(wiring.Component):
+    start: In(1)
+    done: Out(1)
+
     sd_cmd_o: Out(1)
     sd_cmd_oe: Out(1)
 
     sd_clk_rising: In(1)
     sd_clk_falling: In(1)
-
-    start: In(1)
-    busy: Out(1)
-    done: Out(1)
 
     cmd_index: In(6)
     cmd_arg: In(32)
@@ -72,8 +71,14 @@ class CmdTx(wiring.Component):
         m = Module()
 
         out_shift = Signal(8, init=0xFF)
+
         byte_index = Signal(range(6))
         bit_index = Signal(range(8))
+        bit_shifted = Signal()
+
+        # Output
+
+        m.d.comb += self.sd_cmd_o.eq(out_shift[7])
 
         # CRC
 
@@ -81,29 +86,30 @@ class CmdTx(wiring.Component):
         m.submodules.crc7 = crc7
 
         m.d.comb += crc7.data.eq(out_shift[7])
+        m.d.comb += crc7.valid.eq(bit_shifted)
 
         # State machine
 
-        m.d.sync += crc7.valid.eq(0)
+        m.d.sync += bit_shifted.eq(0)
         m.d.sync += self.done.eq(0)
 
-        with m.FSM() as fsm:
-            m.d.comb += self.busy.eq(~fsm.ongoing("IDLE"))
+        with m.FSM():
 
             with m.State("IDLE"):
                 with m.If(self.start):
-                    m.next = "WAIT_FALLING"
+                    m.next = "WAIT"
+                    m.d.comb += crc7.start.eq(1)
 
-            with m.State("WAIT_FALLING"):
+            with m.State("WAIT"):
                 with m.If(self.sd_clk_falling):
                     m.next = "RUN"
-                    m.d.sync += out_shift.eq(Cat(self.cmd_index, Const(1, 2))),
                     m.d.sync += self.sd_cmd_oe.eq(1)
-                    m.d.comb += crc7.start.eq(1)
+                    m.d.sync += out_shift.eq(Cat(self.cmd_index, C(1, 2))),
+                    m.d.sync += bit_shifted.eq(1)
 
             with m.State("RUN"):
                 with m.If(self.sd_clk_falling):
-                    m.d.sync += crc7.valid.eq(1)
+                    m.d.sync += bit_shifted.eq(1)
 
                     with m.If(bit_index == 7):
                         m.d.sync += bit_index.eq(0)
@@ -121,7 +127,7 @@ class CmdTx(wiring.Component):
                             with m.Case(4):
                                 m.d.sync += out_shift.eq(Cat(1, crc7.crc))
 
-                            with m.Default():
+                            with m.Case(5):
                                 m.next = "IDLE"
                                 m.d.sync += self.sd_cmd_oe.eq(0)
                                 m.d.sync += byte_index.eq(0)
@@ -131,24 +137,160 @@ class CmdTx(wiring.Component):
                         m.d.sync += out_shift.eq(Cat(0, out_shift[0:7]))
                         m.d.sync += bit_index.eq(bit_index + 1)
 
-        # Output
+        return m
 
-        m.d.comb += self.sd_cmd_o.eq(out_shift[7])
+
+class CmdRx(wiring.Component):
+    start: In(1)
+    done: Out(1)
+
+    sd_cmd_i: In(1)
+
+    sd_clk_rising: In(1)
+    sd_clk_falling: In(1)
+
+    long_response: In(1)
+
+    cmd_index: Out(6)
+    cmd_resp: Out(128)
+
+    dir_err: Out(1)
+    crc_err: Out(1)
+    end_err: Out(1)
+    timeout: Out(1)
+
+    def elaborate(self, platform):
+        m = Module()
+
+        in_shift = Signal(8)
+
+        byte_index = Signal(range(17))
+        bit_index = Signal(range(8))
+        bit_shifted = Signal()
+        crc_digesting = Signal()
+
+        timeout_counter = Signal(range(64))
+
+        # CRC
+
+        crc7 = crc.catalog.CRC7_MMC(data_width=1).create()
+        m.submodules.crc7 = crc7
+
+        m.d.comb += crc7.data.eq(in_shift[0])
+        m.d.comb += crc7.valid.eq(crc_digesting & bit_shifted)
+
+        # State machine
+
+        m.d.sync += bit_shifted.eq(0)
+        m.d.sync += self.done.eq(0)
+
+        with m.FSM():
+
+            with m.State("IDLE"):
+                with m.If(self.start):
+                    m.next = "WAIT"
+                    m.d.sync += self.cmd_index.eq(0)
+                    m.d.sync += self.cmd_resp.eq(0)
+
+                    m.d.sync += self.dir_err.eq(0)
+                    m.d.sync += self.crc_err.eq(0)
+                    m.d.sync += self.end_err.eq(0)
+                    m.d.sync += self.timeout.eq(0)
+
+                    m.d.sync += timeout_counter.eq(0)
+                    m.d.comb += crc7.start.eq(1)
+
+            with m.State("WAIT"):
+                with m.If(self.sd_clk_rising):
+                    m.d.sync += timeout_counter.eq(timeout_counter + 1)
+                    with m.If(timeout_counter == 63):
+                        m.next = "IDLE"
+                        m.d.sync += self.done.eq(1)
+                        m.d.sync += self.timeout.eq(1)
+
+                    with m.Elif(~self.sd_cmd_i):
+                        m.next = "RUN"
+                        m.d.sync += in_shift.eq(Cat(self.sd_cmd_i, C(0, 7)))
+                        m.d.sync += bit_shifted.eq(1)
+
+                        with m.If(~self.long_response):
+                            m.d.sync += crc_digesting.eq(1)
+
+            with m.State("RUN"):
+                with m.If(self.sd_clk_rising):
+                    m.d.sync += in_shift.eq(Cat(self.sd_cmd_i, in_shift[0:7]))
+                    m.d.sync += bit_index.eq(bit_index + 1)
+                    m.d.sync += bit_shifted.eq(1)
+
+                    with m.If(bit_index == 7):
+                        m.d.sync += bit_index.eq(0)
+                        m.d.sync += byte_index.eq(byte_index + 1)
+
+                        def finalize_first_byte():
+                            with m.If(in_shift[6]):
+                                m.d.sync += self.dir_err.eq(1)
+
+                        def finalize_last_byte():
+                            m.next = "IDLE"
+                            m.d.sync += byte_index.eq(0)
+                            m.d.sync += self.done.eq(1)
+
+                            with m.If(in_shift[1:8] != crc7.crc):
+                                m.d.sync += self.crc_err.eq(1)
+                            with m.If(~in_shift[0]):
+                                m.d.sync += self.end_err.eq(1)
+
+                        def latch_resp_byte(index):
+                            segment = slice(index * 8, (index + 1) * 8)
+                            m.d.sync += self.cmd_resp[segment].eq(in_shift)
+
+                        with m.If(self.long_response):
+
+                            with m.Switch(byte_index):
+                                with m.Case(0):
+                                    m.d.sync += self.cmd_index.eq(in_shift[0:6])
+                                    m.d.sync += crc_digesting.eq(1)
+                                    finalize_first_byte()
+                                with m.Case(15):
+                                    m.d.sync += crc_digesting.eq(0)
+                                with m.Case(16):
+                                    finalize_last_byte()
+
+                            with m.Switch(byte_index):
+                                for i in range(16):
+                                    with m.Case(i + 1):
+                                        latch_resp_byte(15 - i)
+
+                        with m.Else():
+
+                            with m.Switch(byte_index):
+                                with m.Case(0):
+                                    m.d.sync += self.cmd_index.eq(in_shift[0:6])
+                                    finalize_first_byte()
+                                with m.Case(4):
+                                    m.d.sync += crc_digesting.eq(0)
+                                with m.Case(5):
+                                    finalize_last_byte()
+
+                            with m.Switch(byte_index):
+                                for i in range(4):
+                                    with m.Case(i + 1):
+                                        latch_resp_byte(3 - i)
 
         return m
 
 
 class CmdUnit(wiring.Component):
+    start: In(1)
+    done: Out(1)
+
     sd_cmd_i: In(1)
     sd_cmd_o: Out(1)
     sd_cmd_oe: Out(1)
+    sd_dat0_i: In(1)
 
     sd_clk_rising: In(1)
     sd_clk_falling: In(1)
-
-    start: In(1)
-    busy: Out(1)
-    done: Out(1)
 
     cmd_index: In(6)
     cmd_arg: In(32)
@@ -177,15 +319,31 @@ class CmdUnit(wiring.Component):
             cmd_tx.cmd_arg          .eq(self.cmd_arg),
         ]
 
+        # RX
+
+        cmd_rx = CmdRx()
+        m.submodules.cmd_rx = cmd_rx
+
+        m.d.comb += [
+            cmd_rx.sd_cmd_i         .eq(self.sd_cmd_i),
+
+            cmd_rx.sd_clk_rising    .eq(self.sd_clk_rising),
+            cmd_rx.sd_clk_falling   .eq(self.sd_clk_falling),
+
+            cmd_rx.long_response    .eq(self.long_response),
+
+            self.cmd_resp           .eq(cmd_rx.cmd_resp),
+        ]
+
         # State machine
 
         m.d.sync += [
             self.done.eq(0),
             cmd_tx.start.eq(0),
+            cmd_rx.start.eq(0),
         ]
 
-        with m.FSM() as fsm:
-            m.d.comb += self.busy.eq(~fsm.ongoing("IDLE"))
+        with m.FSM():
 
             with m.State("IDLE"):
                 with m.If(self.start):
@@ -194,8 +352,28 @@ class CmdUnit(wiring.Component):
 
             with m.State("TX"):
                 with m.If(cmd_tx.done):
-                    m.next = "IDLE"
-                    m.d.sync += self.done.eq(1)
+                    with m.If(self.has_response):
+                        m.next = "RX"
+                        m.d.sync += cmd_rx.start.eq(1)
+                    with m.Elif(self.wait_not_busy):
+                        m.next = "WAIT"
+                    with m.Else():
+                        m.next = "IDLE"
+                        m.d.sync += self.done.eq(1)
+
+            with m.State("RX"):
+                with m.If(cmd_rx.done):
+                    with m.If(self.wait_not_busy):
+                        m.next = "WAIT"
+                    with m.Else():
+                        m.next = "IDLE"
+                        m.d.sync += self.done.eq(1)
+
+            with m.State("WAIT"):
+                with m.If(self.sd_clk_rising):
+                    with m.If(self.sd_dat0_i):
+                        m.next = "IDLE"
+                        m.d.sync += self.done.eq(1)
 
         return m
 
@@ -232,6 +410,7 @@ class SDController(wiring.Component):
             cmd_unit.sd_cmd_i       .eq(self.bus.cmd.i),
             self.bus.cmd.o          .eq(cmd_unit.sd_cmd_o),
             self.bus.cmd.oe         .eq(cmd_unit.sd_cmd_oe),
+            cmd_unit.sd_dat0_i      .eq(self.bus.dat.i[0]),
 
             cmd_unit.sd_clk_rising  .eq(clocker.sd_clk_rising),
             cmd_unit.sd_clk_falling .eq(clocker.sd_clk_falling),
@@ -240,7 +419,9 @@ class SDController(wiring.Component):
         # State machine
 
         counter = Signal(20)
-        step_index = Signal(4)
+        step_index = Signal(8)
+
+        rca = Signal(16)
 
         m.d.sync += cmd_unit.start.eq(0)
 
@@ -278,6 +459,102 @@ class SDController(wiring.Component):
                             cmd_unit.start              .eq(1),
                         ]
 
+                    with m.Case(2):
+                        m.next = "WAIT"
+                        m.d.sync += [
+                            cmd_unit.cmd_index          .eq(55),
+                            cmd_unit.cmd_arg            .eq(0),
+                            cmd_unit.has_response       .eq(1),
+                            cmd_unit.long_response      .eq(0),
+                            cmd_unit.wait_not_busy      .eq(0),
+
+                            cmd_unit.start              .eq(1),
+                        ]
+
+                    with m.Case(3):
+                        m.next = "WAIT"
+                        m.d.sync += [
+                            cmd_unit.cmd_index          .eq(41),
+                            cmd_unit.cmd_arg            .eq(0x40ff8000),
+                            cmd_unit.has_response       .eq(1),
+                            cmd_unit.long_response      .eq(0),
+                            cmd_unit.wait_not_busy      .eq(0),
+
+                            cmd_unit.start              .eq(1),
+                        ]
+
+                    with m.Case(4):
+                        m.next = "WAIT"
+                        m.d.sync += [
+                            cmd_unit.cmd_index          .eq(2),
+                            cmd_unit.cmd_arg            .eq(0),
+                            cmd_unit.has_response       .eq(1),
+                            cmd_unit.long_response      .eq(1),
+                            cmd_unit.wait_not_busy      .eq(0),
+
+                            cmd_unit.start              .eq(1),
+                        ]
+
+                    with m.Case(5):
+                        m.next = "WAIT"
+                        m.d.sync += [
+                            cmd_unit.cmd_index          .eq(3),
+                            cmd_unit.cmd_arg            .eq(0),
+                            cmd_unit.has_response       .eq(1),
+                            cmd_unit.long_response      .eq(0),
+                            cmd_unit.wait_not_busy      .eq(0),
+
+                            cmd_unit.start              .eq(1),
+                        ]
+
+                    with m.Case(6):
+                        m.next = "WAIT"
+                        m.d.sync += [
+                            cmd_unit.cmd_index          .eq(7),
+                            cmd_unit.cmd_arg            .eq(rca << 16),
+                            cmd_unit.has_response       .eq(1),
+                            cmd_unit.long_response      .eq(0),
+                            cmd_unit.wait_not_busy      .eq(1),
+
+                            cmd_unit.start              .eq(1),
+                        ]
+
+                    with m.Case(7):
+                        m.next = "WAIT"
+                        m.d.sync += [
+                            cmd_unit.cmd_index          .eq(55),
+                            cmd_unit.cmd_arg            .eq(rca << 16),
+                            cmd_unit.has_response       .eq(1),
+                            cmd_unit.long_response      .eq(0),
+                            cmd_unit.wait_not_busy      .eq(0),
+
+                            cmd_unit.start              .eq(1),
+                        ]
+
+                    with m.Case(8):
+                        m.next = "WAIT"
+                        m.d.sync += [
+                            cmd_unit.cmd_index          .eq(6),
+                            cmd_unit.cmd_arg            .eq(0x00000002),
+                            cmd_unit.has_response       .eq(1),
+                            cmd_unit.long_response      .eq(0),
+                            cmd_unit.wait_not_busy      .eq(1),
+
+                            cmd_unit.start              .eq(1),
+                        ]
+
+                    with m.Case(9):
+                        m.next = "WAIT"
+                        m.d.sync += [
+                            cmd_unit.cmd_index          .eq(17),
+                            cmd_unit.cmd_arg            .eq(0x00000000),
+                            cmd_unit.has_response       .eq(1),
+                            cmd_unit.long_response      .eq(0),
+                            cmd_unit.wait_not_busy      .eq(0),
+
+                            cmd_unit.start              .eq(1),
+                        ]
+
                     with m.Default():
                         m.next = "DONE"
 
@@ -290,9 +567,18 @@ class SDController(wiring.Component):
                 with m.If(clocker.sd_clk_rising):
                     m.d.sync += counter.eq(counter + 1)
 
-                with m.If(counter == 8):
+                with m.If(counter == 16):
                     m.next = "STEP"
                     m.d.sync += step_index.eq(step_index + 1)
+
+                    with m.Switch(step_index):
+
+                        with m.Case(3):
+                            with m.If(~cmd_unit.cmd_resp[31]):
+                                m.d.sync += step_index.eq(2)
+
+                        with m.Case(5):
+                            m.d.sync += rca.eq(cmd_unit.cmd_resp[16:32])
 
             with m.State("DONE"):
                 pass
