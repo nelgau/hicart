@@ -472,20 +472,25 @@ class TestCmdRx(MultiProcessTestCase):
             sim.add_testbench(control)
 
 
-class TestSDController(MultiProcessTestCase):
+class TestSDSequencer(MultiProcessTestCase):
 
     def test_basic(self):
-        dut = sd.SDController()
+        ctrlr = sd.SDController()
+        dut = sd.SDSequencer(ctrlr=ctrlr)
+
+        m = Module()
+        m.submodules.ctrlr = ctrlr
+        m.submodules.dut = dut
 
         async def testbench(ctx):
-            ctx.set(dut.bus.cmd.i, 1)
+            ctx.set(ctrlr.bus.cmd.i, 1)
 
-            await ctx.tick().repeat(1000)
+            await ctx.tick().repeat(2000)
 
         traces = [
-            dut.bus,
+            ctrlr.bus,
         ]
 
-        with self.simulate(dut, traces=traces) as sim:
+        with self.simulate(m, traces=traces) as sim:
             sim.add_clock(1.0 / 100e6)
             sim.add_testbench(testbench)

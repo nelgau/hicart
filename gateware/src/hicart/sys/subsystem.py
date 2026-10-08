@@ -23,7 +23,7 @@ class SysSubsystem(wiring.Component):
         self.cic = CIC()
 
         self.sd = sd.SDController(divisor=50, startup_delay=1_000_000)
-
+        self.sd_seq = sd.SDSequencer(ctrlr=self.sd)
 
     def elaborate(self, platform):
         m = Module()
@@ -42,6 +42,7 @@ class SysSubsystem(wiring.Component):
         # SD Controller
 
         m.submodules.sd = self.sd
+        m.submodules.sd_seq = self.sd_seq
 
         wiring.connect(m, self.sd.bus, flipped(self.sd_bus))
 

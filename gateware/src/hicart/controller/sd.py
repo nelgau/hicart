@@ -337,11 +337,9 @@ class CmdUnit(wiring.Component):
 
         # State machine
 
-        m.d.sync += [
-            self.done.eq(0),
-            cmd_tx.start.eq(0),
-            cmd_rx.start.eq(0),
-        ]
+        m.d.sync += self.done.eq(0)
+        m.d.sync += cmd_tx.start.eq(0)
+        m.d.sync += cmd_rx.start.eq(0)
 
         with m.FSM():
 
@@ -381,6 +379,18 @@ class CmdUnit(wiring.Component):
 class SDController(wiring.Component):
     bus: Out(SDBusSignature())
 
+    start: In(1)
+    done: Out(1)
+    ready: Out(1)
+
+    cmd_index: In(6)
+    cmd_arg: In(32)
+    cmd_resp: Out(128)
+
+    has_response: In(1)
+    long_response: In(1)
+    wait_not_busy: In(1)
+
     def __init__(self, *, divisor=2, startup_delay=10):
         self._divisor = divisor
         self._startup_delay = startup_delay
@@ -414,171 +424,196 @@ class SDController(wiring.Component):
 
             cmd_unit.sd_clk_rising  .eq(clocker.sd_clk_rising),
             cmd_unit.sd_clk_falling .eq(clocker.sd_clk_falling),
+
+            cmd_unit.cmd_index      .eq(self.cmd_index),
+            cmd_unit.cmd_arg        .eq(self.cmd_arg),
+            self.cmd_resp           .eq(cmd_unit.cmd_resp),
+
+            cmd_unit.has_response   .eq(self.has_response),
+            cmd_unit.long_response  .eq(self.long_response),
+            cmd_unit.wait_not_busy  .eq(self.wait_not_busy),
         ]
 
         # State machine
 
         counter = Signal(20)
-        step_index = Signal(8)
 
+        m.d.sync += self.done.eq(0)
+        m.d.sync += cmd_unit.start.eq(0)
+
+        with m.FSM() as fsm:
+            m.d.comb += self.ready.eq(fsm.ongoing("IDLE"))
+
+            with m.State("INIT"):
+                m.d.sync += counter.eq(counter + 1)
+                with m.If(counter == self._startup_delay):
+                    m.next = "IDLE"
+
+            with m.State("IDLE"):
+                with m.If(self.start):
+                    m.next = "RUN"
+                    m.d.sync += cmd_unit.start.eq(1)
+
+            with m.State("RUN"):
+                with m.If(cmd_unit.done):
+                    m.next = "WAIT"
+                    m.d.sync += counter.eq(0)
+
+            with m.State("WAIT"):
+                with m.If(clocker.sd_clk_rising):
+                    m.d.sync += counter.eq(counter + 1)
+
+                with m.If(counter == 8):
+                    m.next = "IDLE"
+                    m.d.sync += self.done.eq(1)
+
+        return m
+
+
+class SDSequencer(Elaboratable):
+
+    def __init__(self, *, ctrlr):
+        self.ctrlr = ctrlr
+
+    def elaborate(self, platform):
+        m = Module()
+
+        step_index = Signal(8)
         rca = Signal(16)
 
-        m.d.sync += cmd_unit.start.eq(0)
+        # Sequence
+
+        def load_signals():
+            with m.Switch(step_index):
+
+                with m.Case(0):
+                    m.d.sync += [
+                        self.ctrlr.cmd_index        .eq(0),
+                        self.ctrlr.cmd_arg          .eq(0),
+                        self.ctrlr.has_response     .eq(0),
+                        self.ctrlr.long_response    .eq(0),
+                        self.ctrlr.wait_not_busy    .eq(0),
+                    ]
+
+                with m.Case(1):
+                    m.d.sync += [
+                        self.ctrlr.cmd_index        .eq(8),
+                        self.ctrlr.cmd_arg          .eq(0x000001AA),
+                        self.ctrlr.has_response     .eq(1),
+                        self.ctrlr.long_response    .eq(0),
+                        self.ctrlr.wait_not_busy    .eq(0),
+                    ]
+
+                with m.Case(2):
+                    m.d.sync += [
+                        self.ctrlr.cmd_index        .eq(55),
+                        self.ctrlr.cmd_arg          .eq(0),
+                        self.ctrlr.has_response     .eq(1),
+                        self.ctrlr.long_response    .eq(0),
+                        self.ctrlr.wait_not_busy    .eq(0),
+                    ]
+
+                with m.Case(3):
+                    m.d.sync += [
+                        self.ctrlr.cmd_index        .eq(41),
+                        self.ctrlr.cmd_arg          .eq(0x40ff8000),
+                        self.ctrlr.has_response     .eq(1),
+                        self.ctrlr.long_response    .eq(0),
+                        self.ctrlr.wait_not_busy    .eq(0),
+                    ]
+
+                with m.Case(4):
+                    m.d.sync += [
+                        self.ctrlr.cmd_index        .eq(2),
+                        self.ctrlr.cmd_arg          .eq(0),
+                        self.ctrlr.has_response     .eq(1),
+                        self.ctrlr.long_response    .eq(1),
+                        self.ctrlr.wait_not_busy    .eq(0),
+                    ]
+
+                with m.Case(5):
+                    m.d.sync += [
+                        self.ctrlr.cmd_index        .eq(3),
+                        self.ctrlr.cmd_arg          .eq(0),
+                        self.ctrlr.has_response     .eq(1),
+                        self.ctrlr.long_response    .eq(0),
+                        self.ctrlr.wait_not_busy    .eq(0),
+                    ]
+
+                with m.Case(6):
+                    m.d.sync += [
+                        self.ctrlr.cmd_index        .eq(7),
+                        self.ctrlr.cmd_arg          .eq(rca << 16),
+                        self.ctrlr.has_response     .eq(1),
+                        self.ctrlr.long_response    .eq(0),
+                        self.ctrlr.wait_not_busy    .eq(1),
+                    ]
+
+                with m.Case(7):
+                    m.d.sync += [
+                        self.ctrlr.cmd_index        .eq(55),
+                        self.ctrlr.cmd_arg          .eq(rca << 16),
+                        self.ctrlr.has_response     .eq(1),
+                        self.ctrlr.long_response    .eq(0),
+                        self.ctrlr.wait_not_busy    .eq(0),
+                    ]
+
+                with m.Case(8):
+                    m.d.sync += [
+                        self.ctrlr.cmd_index        .eq(6),
+                        self.ctrlr.cmd_arg          .eq(0x00000002),
+                        self.ctrlr.has_response     .eq(1),
+                        self.ctrlr.long_response    .eq(0),
+                        self.ctrlr.wait_not_busy    .eq(1),
+                    ]
+
+                with m.Case(9):
+                    m.d.sync += [
+                        self.ctrlr.cmd_index        .eq(17),
+                        self.ctrlr.cmd_arg          .eq(0x00000000),
+                        self.ctrlr.has_response     .eq(1),
+                        self.ctrlr.long_response    .eq(0),
+                        self.ctrlr.wait_not_busy    .eq(0),
+                    ]
+
+                with m.Default():
+                    m.next = "DONE"
+
+        def process_result():
+            with m.Switch(step_index):
+
+                with m.Case(3):
+                    with m.If(~self.ctrlr.cmd_resp[31]):
+                        m.d.sync += step_index.eq(2)
+
+                with m.Case(5):
+                    m.d.sync += rca.eq(self.ctrlr.cmd_resp[16:32])
+
+        # State machine
 
         with m.FSM():
 
             with m.State("IDLE"):
-                m.d.sync += counter.eq(counter + 1)
-                with m.If(counter == self._startup_delay):
-                    m.next = "STEP"
+                m.next = "LOAD"
 
-            with m.State("STEP"):
-                with m.Switch(step_index):
+            with m.State("LOAD"):
+                m.next = "START"
+                load_signals()
 
-                    with m.Case(0):
-                        m.next = "WAIT"
-                        m.d.sync += [
-                            cmd_unit.cmd_index          .eq(0),
-                            cmd_unit.cmd_arg            .eq(0),
-                            cmd_unit.has_response       .eq(0),
-                            cmd_unit.long_response      .eq(0),
-                            cmd_unit.wait_not_busy      .eq(0),
+            with m.State("START"):
+                m.next = "WAIT_RUN"
+                m.d.sync += self.ctrlr.start.eq(1)
 
-                            cmd_unit.start              .eq(1),
-                        ]
+            with m.State("WAIT_RUN"):
+                with m.If(self.ctrlr.ready):
+                    m.next = "WAIT_DONE"
+                    m.d.sync += self.ctrlr.start.eq(0)
 
-                    with m.Case(1):
-                        m.next = "WAIT"
-                        m.d.sync += [
-                            cmd_unit.cmd_index          .eq(8),
-                            cmd_unit.cmd_arg            .eq(0x000001AA),
-                            cmd_unit.has_response       .eq(1),
-                            cmd_unit.long_response      .eq(0),
-                            cmd_unit.wait_not_busy      .eq(0),
-
-                            cmd_unit.start              .eq(1),
-                        ]
-
-                    with m.Case(2):
-                        m.next = "WAIT"
-                        m.d.sync += [
-                            cmd_unit.cmd_index          .eq(55),
-                            cmd_unit.cmd_arg            .eq(0),
-                            cmd_unit.has_response       .eq(1),
-                            cmd_unit.long_response      .eq(0),
-                            cmd_unit.wait_not_busy      .eq(0),
-
-                            cmd_unit.start              .eq(1),
-                        ]
-
-                    with m.Case(3):
-                        m.next = "WAIT"
-                        m.d.sync += [
-                            cmd_unit.cmd_index          .eq(41),
-                            cmd_unit.cmd_arg            .eq(0x40ff8000),
-                            cmd_unit.has_response       .eq(1),
-                            cmd_unit.long_response      .eq(0),
-                            cmd_unit.wait_not_busy      .eq(0),
-
-                            cmd_unit.start              .eq(1),
-                        ]
-
-                    with m.Case(4):
-                        m.next = "WAIT"
-                        m.d.sync += [
-                            cmd_unit.cmd_index          .eq(2),
-                            cmd_unit.cmd_arg            .eq(0),
-                            cmd_unit.has_response       .eq(1),
-                            cmd_unit.long_response      .eq(1),
-                            cmd_unit.wait_not_busy      .eq(0),
-
-                            cmd_unit.start              .eq(1),
-                        ]
-
-                    with m.Case(5):
-                        m.next = "WAIT"
-                        m.d.sync += [
-                            cmd_unit.cmd_index          .eq(3),
-                            cmd_unit.cmd_arg            .eq(0),
-                            cmd_unit.has_response       .eq(1),
-                            cmd_unit.long_response      .eq(0),
-                            cmd_unit.wait_not_busy      .eq(0),
-
-                            cmd_unit.start              .eq(1),
-                        ]
-
-                    with m.Case(6):
-                        m.next = "WAIT"
-                        m.d.sync += [
-                            cmd_unit.cmd_index          .eq(7),
-                            cmd_unit.cmd_arg            .eq(rca << 16),
-                            cmd_unit.has_response       .eq(1),
-                            cmd_unit.long_response      .eq(0),
-                            cmd_unit.wait_not_busy      .eq(1),
-
-                            cmd_unit.start              .eq(1),
-                        ]
-
-                    with m.Case(7):
-                        m.next = "WAIT"
-                        m.d.sync += [
-                            cmd_unit.cmd_index          .eq(55),
-                            cmd_unit.cmd_arg            .eq(rca << 16),
-                            cmd_unit.has_response       .eq(1),
-                            cmd_unit.long_response      .eq(0),
-                            cmd_unit.wait_not_busy      .eq(0),
-
-                            cmd_unit.start              .eq(1),
-                        ]
-
-                    with m.Case(8):
-                        m.next = "WAIT"
-                        m.d.sync += [
-                            cmd_unit.cmd_index          .eq(6),
-                            cmd_unit.cmd_arg            .eq(0x00000002),
-                            cmd_unit.has_response       .eq(1),
-                            cmd_unit.long_response      .eq(0),
-                            cmd_unit.wait_not_busy      .eq(1),
-
-                            cmd_unit.start              .eq(1),
-                        ]
-
-                    with m.Case(9):
-                        m.next = "WAIT"
-                        m.d.sync += [
-                            cmd_unit.cmd_index          .eq(17),
-                            cmd_unit.cmd_arg            .eq(0x00000000),
-                            cmd_unit.has_response       .eq(1),
-                            cmd_unit.long_response      .eq(0),
-                            cmd_unit.wait_not_busy      .eq(0),
-
-                            cmd_unit.start              .eq(1),
-                        ]
-
-                    with m.Default():
-                        m.next = "DONE"
-
-            with m.State("WAIT"):
-                with m.If(cmd_unit.done):
-                    m.next = "WAIT_CLK"
-                    m.d.sync += counter.eq(0)
-
-            with m.State("WAIT_CLK"):
-                with m.If(clocker.sd_clk_rising):
-                    m.d.sync += counter.eq(counter + 1)
-
-                with m.If(counter == 16):
-                    m.next = "STEP"
+            with m.State("WAIT_DONE"):
+                with m.If(self.ctrlr.done):
+                    m.next = "LOAD"
                     m.d.sync += step_index.eq(step_index + 1)
-
-                    with m.Switch(step_index):
-
-                        with m.Case(3):
-                            with m.If(~cmd_unit.cmd_resp[31]):
-                                m.d.sync += step_index.eq(2)
-
-                        with m.Case(5):
-                            m.d.sync += rca.eq(cmd_unit.cmd_resp[16:32])
+                    process_result()
 
             with m.State("DONE"):
                 pass
