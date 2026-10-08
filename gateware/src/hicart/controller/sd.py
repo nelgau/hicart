@@ -115,6 +115,12 @@ class CmdTx(wiring.Component):
                         m.d.sync += bit_index.eq(0)
                         m.d.sync += byte_index.eq(byte_index + 1)
 
+                        with m.If(byte_index == 5):
+                            m.next = "IDLE"
+                            m.d.sync += self.sd_cmd_oe.eq(0)
+                            m.d.sync += byte_index.eq(0)
+                            m.d.sync += self.done.eq(1)
+
                         with m.Switch(byte_index):
                             with m.Case(0):
                                 m.d.sync += out_shift.eq(self.cmd_arg[24:32])
@@ -126,12 +132,6 @@ class CmdTx(wiring.Component):
                                 m.d.sync += out_shift.eq(self.cmd_arg[0:8])
                             with m.Case(4):
                                 m.d.sync += out_shift.eq(Cat(1, crc7.crc))
-
-                            with m.Case(5):
-                                m.next = "IDLE"
-                                m.d.sync += self.sd_cmd_oe.eq(0)
-                                m.d.sync += byte_index.eq(0)
-                                m.d.sync += self.done.eq(1)
 
                     with m.Else():
                         m.d.sync += out_shift.eq(Cat(0, out_shift[0:7]))
@@ -411,7 +411,7 @@ class SDController(wiring.Component):
             clocker.divisor         .eq(self._divisor),
         ]
 
-        # Command TX
+        # Command unit
 
         cmd_unit = CmdUnit()
         m.submodules.cmd_unit = cmd_unit
