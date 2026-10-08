@@ -66,6 +66,35 @@ class TestSDClocker(MultiProcessTestCase):
 
 class TestCmdTx(MultiProcessTestCase):
 
+    async def _receive_bytes(self, ctx, sd_clk, sd_cmd_o, sd_cmd_oe, num_bytes):
+        bytes = []
+        receiving = False
+        byte_index = 0
+        bit_index = 0
+        byte = 0
+
+        while True:
+            await ctx.posedge(sd_clk)
+            bit = ctx.get(Mux(sd_cmd_oe, sd_cmd_o, 1))
+
+            if not receiving and not bit:
+                receiving = True
+
+            if receiving:
+                byte = (byte << 1) | bit
+                bit_index += 1
+
+            if bit_index == 8:
+                bytes.append(byte)
+                byte_index += 1
+                bit_index = 0
+                byte = 0
+
+            if byte_index == num_bytes:
+                break
+
+        return bytes
+
     def test_cmd8(self):
         clocker = sd.Clocker()
         dut = sd.CmdTx()
@@ -77,7 +106,7 @@ class TestCmdTx(MultiProcessTestCase):
         m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
         m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
 
-        async def testbench(ctx):
+        async def control(ctx):
             ctx.set(clocker.enable, 1)
             ctx.set(clocker.divisor, 2)
 
@@ -88,25 +117,49 @@ class TestCmdTx(MultiProcessTestCase):
             await ctx.tick()
             ctx.set(dut.start, 0)
 
-            # Wait for start bit
-            await ctx.tick().until(dut.sd_cmd_oe & ~dut.sd_cmd_o)
-
-            bytes = []
-            for _ in range(6):
-                byte = 0
-                for _ in range(8):
-                    await ctx.posedge(clocker.sd_clk)
-                    bit = ctx.get(Mux(dut.sd_cmd_oe, dut.sd_cmd_o, 1))
-                    byte = (byte << 1) | bit
-                bytes.append(byte)
-
-            assert bytes == [0x48, 0x00, 0x00, 0x01, 0xaa, 0x87]
-
             await ctx.tick().until(dut.done)
+
+        async def output(ctx):
+            bytes = await self._receive_bytes(ctx, clocker.sd_clk, dut.sd_cmd_o, dut.sd_cmd_oe, 6)
+            assert bytes == [0x48, 0x00, 0x00, 0x01, 0xaa, 0x87]
 
         with self.simulate(m) as sim:
             sim.add_clock(1.0 / 100e6)
-            sim.add_testbench(testbench)
+            sim.add_testbench(control)
+            sim.add_testbench(output)
+
+    def test_cmd8_min_divisor(self):
+        clocker = sd.Clocker()
+        dut = sd.CmdTx()
+
+        m = Module()
+        m.submodules.clocker = clocker
+        m.submodules.dut = dut
+
+        m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
+        m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
+
+        async def control(ctx):
+            ctx.set(clocker.enable, 1)
+            ctx.set(clocker.divisor, 1)
+
+            ctx.set(dut.cmd_index, 8)
+            ctx.set(dut.cmd_arg, 0x000001AA)
+            ctx.set(dut.start, 1)
+
+            await ctx.tick()
+            ctx.set(dut.start, 0)
+
+            await ctx.tick().until(dut.done)
+
+        async def output(ctx):
+            bytes = await self._receive_bytes(ctx, clocker.sd_clk, dut.sd_cmd_o, dut.sd_cmd_oe, 6)
+            assert bytes == [0x48, 0x00, 0x00, 0x01, 0xaa, 0x87]
+
+        with self.simulate(m) as sim:
+            sim.add_clock(1.0 / 100e6)
+            sim.add_testbench(control)
+            sim.add_testbench(output)
 
 
 class TestCmdRx(MultiProcessTestCase):
@@ -174,6 +227,45 @@ class TestCmdRx(MultiProcessTestCase):
         async def control(ctx):
             ctx.set(clocker.enable, 1)
             ctx.set(clocker.divisor, 2)
+
+            ctx.set(dut.long_response, 0)
+            ctx.set(dut.start, 1)
+
+            await ctx.tick()
+            ctx.set(dut.start, 0)
+
+            await ctx.tick().until(dut.done)
+
+            assert ctx.get(dut.cmd_index) == 8
+            assert ctx.get(dut.cmd_resp) == 0x000001aa
+
+            assert ctx.get(dut.dir_err) == 0
+            assert ctx.get(dut.crc_err) == 0
+            assert ctx.get(dut.end_err) == 0
+            assert ctx.get(dut.timeout) == 0
+
+        with self.simulate(m) as sim:
+            sim.add_clock(1.0 / 100e6)
+            sim.add_testbench(card)
+            sim.add_testbench(control)
+
+    def test_short_min_divisor(self):
+        clocker = sd.Clocker()
+        dut = sd.CmdRx()
+
+        m = Module()
+        m.submodules.clocker = clocker
+        m.submodules.dut = dut
+
+        m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
+        m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
+
+        message = [0x08, 0x00, 0x00, 0x01, 0xaa, 0x13]
+        card = self._make_card_bench(dut, clocker, message)
+
+        async def control(ctx):
+            ctx.set(clocker.enable, 1)
+            ctx.set(clocker.divisor, 1)
 
             ctx.set(dut.long_response, 0)
             ctx.set(dut.start, 1)
@@ -540,6 +632,60 @@ class TestDataRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
+            ctx.set(clocker.divisor, 2)
+
+            ctx.set(dut.block_length, num_bytes)
+            ctx.set(dut.block_count, 1)
+            ctx.set(dut.start, 1)
+
+            await ctx.tick()
+            ctx.set(dut.start, 0)
+
+            await ctx.tick().until(dut.done)
+
+            assert ctx.get(dut.crc_err) == 0
+            assert ctx.get(dut.end_err) == 0
+            assert ctx.get(dut.timeout) == 0
+
+        async def stream(ctx):
+            recv_bytes = []
+            for _ in range(num_bytes):
+                payload, = await ctx.tick().sample(dut.source.payload).until(dut.source.valid)
+                recv_bytes.append(payload)
+
+            assert recv_bytes == data_bytes
+
+        with self.simulate(m) as sim:
+            sim.add_clock(1.0 / 100e6)
+            sim.add_testbench(card)
+            sim.add_testbench(control)
+            sim.add_testbench(stream)
+
+    def test_block_min_divisor(self):
+        clocker = sd.Clocker()
+        dut = sd.DatRx()
+
+        m = Module()
+        m.submodules.clocker = clocker
+        m.submodules.dut = dut
+
+        m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
+        m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
+
+        num_bytes = 512
+        data_bytes = [i % 256 for i in range(num_bytes)]
+
+        async def card(ctx):
+            ctx.set(dut.sd_dat_i, 0xf)
+
+            for _ in range(10):
+                await ctx.posedge(clocker.sd_clk)
+
+            frame = self._build_frame(data_bytes)
+            await self._send_frame(ctx, clocker.sd_clk, dut.sd_dat_i, frame)
+
+        async def control(ctx):
+            ctx.set(clocker.enable, 1)
             ctx.set(clocker.divisor, 1)
 
             ctx.set(dut.block_length, num_bytes)
@@ -596,7 +742,7 @@ class TestDataRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 1)
+            ctx.set(clocker.divisor, 2)
 
             ctx.set(dut.block_length, num_bytes)
             ctx.set(dut.block_count, 1)
@@ -643,7 +789,7 @@ class TestDataRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 1)
+            ctx.set(clocker.divisor, 2)
 
             ctx.set(dut.block_length, num_bytes)
             ctx.set(dut.block_count, 1)
@@ -693,7 +839,7 @@ class TestDataRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 1)
+            ctx.set(clocker.divisor, 2)
 
             ctx.set(dut.block_length, num_bytes)
             ctx.set(dut.block_count, num_blocks)
