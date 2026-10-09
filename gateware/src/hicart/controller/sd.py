@@ -1,6 +1,6 @@
 from amaranth import *
 from amaranth.lib import crc, enum, stream, wiring
-from amaranth.lib.wiring import In, Out
+from amaranth.lib.wiring import In, Out, flipped
 
 
 CRC7_SD_CMD  = crc.catalog.CRC7_MMC
@@ -298,11 +298,17 @@ class CmdUnit(wiring.Component):
 
     cmd_index: In(6)
     cmd_arg: In(32)
-    cmd_resp: Out(128)
 
     has_response: In(1)
     long_response: In(1)
     wait_not_busy: In(1)
+
+    cmd_resp: Out(128)
+
+    dir_err: Out(1)
+    crc_err: Out(1)
+    end_err: Out(1)
+    timeout: Out(1)
 
     def elaborate(self, platform):
         m = Module()
@@ -337,6 +343,11 @@ class CmdUnit(wiring.Component):
             cmd_rx.long_response    .eq(self.long_response),
 
             self.cmd_resp           .eq(cmd_rx.cmd_resp),
+
+            self.dir_err            .eq(cmd_rx.dir_err),
+            self.crc_err            .eq(cmd_rx.crc_err),
+            self.end_err            .eq(cmd_rx.end_err),
+            self.timeout            .eq(cmd_rx.timeout),
         ]
 
         # State machine
@@ -389,10 +400,10 @@ class DatRx(wiring.Component):
     sd_clk_rising: In(1)
     sd_clk_falling: In(1)
 
-    block_length: In(10)
-    block_count: In(8)
-
     source: Out(stream.Signature(8, always_ready=True))
+
+    block_count: In(8)
+    block_length: In(10)
 
     crc_err: Out(1)
     end_err: Out(1)
@@ -414,6 +425,10 @@ class DatRx(wiring.Component):
         crc_shifts = [Signal(16, name=f"crc_shift_{i}") for i in range(4)]
 
         timeout_counter = Signal()
+
+        # Test
+
+        # m.d.comb += debug.pmod[3:7].eq(self.sd_dat_i)
 
         # Output
 
@@ -511,8 +526,142 @@ class DatRx(wiring.Component):
         return m
 
 
+class DatTx(wiring.Component):
+    start: In(1)
+    done: Out(1)
+
+    sd_dat_o: Out(4)
+    sd_dat_oe: Out(4)
+
+    sd_clk_rising: In(1)
+    sd_clk_falling: In(1)
+
+    sink: In(stream.Signature(8, always_valid=True))
+
+    block_count: In(8)
+    block_length: In(10)
+
+    def elaborate(self, platform):
+        m = Module()
+
+        # State machine
+
+        m.d.sync += self.done.eq(0)
+
+        with m.FSM():
+
+            with m.State("IDLE"):
+                with m.If(self.start):
+                    m.next = "IDLE"
+                    m.d.sync += self.done.eq(1)
+
+        return m
+
+
+class DatUnit(wiring.Component):
+    start: In(1)
+    done: Out(1)
+
+    sd_dat_i: In(4)
+    sd_dat_o: Out(4)
+    sd_dat_oe: Out(4)
+
+    sd_clk_rising: In(1)
+    sd_clk_falling: In(1)
+
+    source: Out(stream.Signature(8, always_ready=True))
+    sink: In(stream.Signature(8, always_valid=True))
+
+    data_read: In(1)
+    data_write: In(1)
+
+    block_count: In(8)
+    block_length: In(10)
+
+    crc_err: Out(1)
+    end_err: Out(1)
+    timeout: Out(1)
+
+    def elaborate(self, platform):
+        m = Module()
+
+        # TX
+
+        dat_tx = DatTx()
+        m.submodules.dat_tx = dat_tx
+
+        wiring.connect(m, dat_tx.sink, flipped(self.sink))
+
+        m.d.comb += [
+            self.sd_dat_o           .eq(dat_tx.sd_dat_o),
+            self.sd_dat_oe          .eq(dat_tx.sd_dat_oe),
+
+            dat_tx.sd_clk_rising    .eq(self.sd_clk_rising),
+            dat_tx.sd_clk_falling   .eq(self.sd_clk_falling),
+
+            dat_tx.block_count      .eq(self.block_count),
+            dat_tx.block_length     .eq(self.block_length),
+        ]
+
+        # RX
+
+        dat_rx = DatRx()
+        m.submodules.dat_rx = dat_rx
+
+        wiring.connect(m, dat_rx.source, flipped(self.source))
+
+        m.d.comb += [
+            dat_rx.sd_dat_i         .eq(self.sd_dat_i),
+
+            dat_rx.sd_clk_rising    .eq(self.sd_clk_rising),
+            dat_rx.sd_clk_falling   .eq(self.sd_clk_falling),
+
+            dat_rx.block_count      .eq(self.block_count),
+            dat_rx.block_length     .eq(self.block_length),
+
+            self.crc_err            .eq(dat_rx.crc_err),
+            self.end_err            .eq(dat_rx.end_err),
+            self.timeout            .eq(dat_rx.timeout),
+        ]
+
+        # State machine
+
+        m.d.sync += self.done.eq(0)
+        m.d.sync += dat_tx.start.eq(0)
+        m.d.sync += dat_rx.start.eq(0)
+
+        with m.FSM():
+
+            with m.State("IDLE"):
+                with m.If(self.start):
+                    with m.If(self.data_write):
+                        m.next = "TX"
+                        m.d.sync += dat_tx.start.eq(1)
+                    with m.If(self.data_read):
+                        m.next = "RX"
+                        m.d.sync += dat_rx.start.eq(1)
+                    with m.Else():
+                        m.next = "IDLE"
+                        m.d.sync += self.done.eq(1)
+
+            with m.State("TX"):
+                with m.If(dat_tx.done):
+                    m.next = "IDLE"
+                    m.d.sync += self.done.eq(1)
+
+            with m.State("RX"):
+                with m.If(dat_rx.done):
+                    m.next = "IDLE"
+                    m.d.sync += self.done.eq(1)
+
+        return m
+
+
 class SDController(wiring.Component):
     bus: Out(SDBusSignature())
+
+    source: Out(stream.Signature(8, always_ready=True))
+    sink: In(stream.Signature(8, always_valid=True))
 
     start: In(1)
     done: Out(1)
@@ -525,6 +674,12 @@ class SDController(wiring.Component):
     has_response: In(1)
     long_response: In(1)
     wait_not_busy: In(1)
+
+    data_read: In(1)
+    data_write: In(1)
+
+    block_count: In(8)
+    block_length: In(10)
 
     def __init__(self, *, divisor=2, startup_delay=10):
         self._divisor = divisor
@@ -569,12 +724,39 @@ class SDController(wiring.Component):
             cmd_unit.wait_not_busy  .eq(self.wait_not_busy),
         ]
 
+        # Data Unit
+
+        dat_unit = DatUnit()
+        m.submodules.dat_unit = dat_unit
+
+        wiring.connect(m, dat_unit.source, flipped(self.source))
+        wiring.connect(m, dat_unit.sink, flipped(self.sink))
+
+        m.d.comb += [
+            dat_unit.sd_dat_i       .eq(self.bus.dat.i),
+            self.bus.dat.o          .eq(dat_unit.sd_dat_o),
+            self.bus.dat.oe         .eq(dat_unit.sd_dat_oe),
+
+            dat_unit.sd_clk_rising  .eq(clocker.sd_clk_rising),
+            dat_unit.sd_clk_falling .eq(clocker.sd_clk_falling),
+
+            dat_unit.data_read      .eq(self.data_read),
+            dat_unit.data_write     .eq(self.data_write),
+
+            dat_unit.block_count    .eq(self.block_count),
+            dat_unit.block_length   .eq(self.block_length),
+        ]
+
         # State machine
+
+        cmd_finished = Signal()
+        dat_finished = Signal()
 
         counter = Signal(20)
 
         m.d.sync += self.done.eq(0)
         m.d.sync += cmd_unit.start.eq(0)
+        m.d.sync += dat_unit.start.eq(0)
 
         with m.FSM() as fsm:
             m.d.comb += self.ready.eq(fsm.ongoing("IDLE"))
@@ -588,9 +770,18 @@ class SDController(wiring.Component):
                 with m.If(self.start):
                     m.next = "RUN"
                     m.d.sync += cmd_unit.start.eq(1)
+                    m.d.sync += dat_unit.start.eq(1)
+
+                    m.d.sync += cmd_finished.eq(0)
+                    m.d.sync += dat_finished.eq(0)
 
             with m.State("RUN"):
                 with m.If(cmd_unit.done):
+                    m.d.sync += cmd_finished.eq(1)
+                with m.If(dat_unit.done):
+                    m.d.sync += dat_finished.eq(1)
+
+                with m.If(cmd_finished & dat_finished):
                     m.next = "WAIT"
                     m.d.sync += counter.eq(0)
 
@@ -628,6 +819,11 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.has_response     .eq(0),
                         self.ctrlr.long_response    .eq(0),
                         self.ctrlr.wait_not_busy    .eq(0),
+
+                        self.ctrlr.data_read        .eq(0),
+                        self.ctrlr.data_write       .eq(0),
+                        self.ctrlr.block_count      .eq(0),
+                        self.ctrlr.block_length     .eq(0),
                     ]
 
                 with m.Case(1):
@@ -637,6 +833,11 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.has_response     .eq(1),
                         self.ctrlr.long_response    .eq(0),
                         self.ctrlr.wait_not_busy    .eq(0),
+
+                        self.ctrlr.data_read        .eq(0),
+                        self.ctrlr.data_write       .eq(0),
+                        self.ctrlr.block_count      .eq(0),
+                        self.ctrlr.block_length     .eq(0),
                     ]
 
                 with m.Case(2):
@@ -646,6 +847,11 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.has_response     .eq(1),
                         self.ctrlr.long_response    .eq(0),
                         self.ctrlr.wait_not_busy    .eq(0),
+
+                        self.ctrlr.data_read        .eq(0),
+                        self.ctrlr.data_write       .eq(0),
+                        self.ctrlr.block_count      .eq(0),
+                        self.ctrlr.block_length     .eq(0),
                     ]
 
                 with m.Case(3):
@@ -655,6 +861,11 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.has_response     .eq(1),
                         self.ctrlr.long_response    .eq(0),
                         self.ctrlr.wait_not_busy    .eq(0),
+
+                        self.ctrlr.data_read        .eq(0),
+                        self.ctrlr.data_write       .eq(0),
+                        self.ctrlr.block_count      .eq(0),
+                        self.ctrlr.block_length     .eq(0),
                     ]
 
                 with m.Case(4):
@@ -664,6 +875,11 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.has_response     .eq(1),
                         self.ctrlr.long_response    .eq(1),
                         self.ctrlr.wait_not_busy    .eq(0),
+
+                        self.ctrlr.data_read        .eq(0),
+                        self.ctrlr.data_write       .eq(0),
+                        self.ctrlr.block_count      .eq(0),
+                        self.ctrlr.block_length     .eq(0),
                     ]
 
                 with m.Case(5):
@@ -673,6 +889,11 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.has_response     .eq(1),
                         self.ctrlr.long_response    .eq(0),
                         self.ctrlr.wait_not_busy    .eq(0),
+
+                        self.ctrlr.data_read        .eq(0),
+                        self.ctrlr.data_write       .eq(0),
+                        self.ctrlr.block_count      .eq(0),
+                        self.ctrlr.block_length     .eq(0),
                     ]
 
                 with m.Case(6):
@@ -682,6 +903,11 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.has_response     .eq(1),
                         self.ctrlr.long_response    .eq(0),
                         self.ctrlr.wait_not_busy    .eq(1),
+
+                        self.ctrlr.data_read        .eq(0),
+                        self.ctrlr.data_write       .eq(0),
+                        self.ctrlr.block_count      .eq(0),
+                        self.ctrlr.block_length     .eq(0),
                     ]
 
                 with m.Case(7):
@@ -691,6 +917,11 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.has_response     .eq(1),
                         self.ctrlr.long_response    .eq(0),
                         self.ctrlr.wait_not_busy    .eq(0),
+
+                        self.ctrlr.data_read        .eq(0),
+                        self.ctrlr.data_write       .eq(0),
+                        self.ctrlr.block_count      .eq(0),
+                        self.ctrlr.block_length     .eq(0),
                     ]
 
                 with m.Case(8):
@@ -700,6 +931,11 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.has_response     .eq(1),
                         self.ctrlr.long_response    .eq(0),
                         self.ctrlr.wait_not_busy    .eq(1),
+
+                        self.ctrlr.data_read        .eq(0),
+                        self.ctrlr.data_write       .eq(0),
+                        self.ctrlr.block_count      .eq(0),
+                        self.ctrlr.block_length     .eq(0),
                     ]
 
                 with m.Case(9):
@@ -709,6 +945,11 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.has_response     .eq(1),
                         self.ctrlr.long_response    .eq(0),
                         self.ctrlr.wait_not_busy    .eq(0),
+
+                        self.ctrlr.data_read        .eq(1),
+                        self.ctrlr.data_write       .eq(0),
+                        self.ctrlr.block_count      .eq(1),
+                        self.ctrlr.block_length     .eq(512),
                     ]
 
                 with m.Default():

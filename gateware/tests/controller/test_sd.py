@@ -940,7 +940,7 @@ class TestSDSequencer(MultiProcessTestCase):
         async def testbench(ctx):
             ctx.set(ctrlr.bus.cmd.i, 1)
 
-            await ctx.tick().repeat(2000)
+            await ctx.tick().repeat(10000)
 
         traces = [
             ctrlr.bus,
