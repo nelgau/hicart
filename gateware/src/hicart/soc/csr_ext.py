@@ -1,10 +1,11 @@
 from collections import defaultdict
 from amaranth import *
+from amaranth import Module
 from amaranth.lib import enum, wiring
 from amaranth.lib.wiring import In, Out, flipped
 from amaranth.utils import ceil_log2, exact_log2
 
-from amaranth_soc import wishbone
+from amaranth_soc import csr, wishbone
 from amaranth_soc.csr.bus import Signature, Interface, Element
 from amaranth_soc.csr.reg import Register
 from amaranth_soc.memory import MemoryMap
@@ -501,4 +502,25 @@ class WishboneCSRBridge(wiring.Component):
             m.d.sync += cycle.eq(0)
             m.d.sync += wb_bus.ack.eq(0)
 
+        return m
+
+
+class RWExtAction(csr.FieldAction):
+
+    def __init__(self, shape):
+        super().__init__(shape, access="rw", members={
+            "r_data": In(shape),
+            "r_stb":  Out(1),
+            "w_data": Out(shape),
+            "w_stb":  Out(1),
+        })
+
+    def elaborate(self, platform):
+        m = Module()
+        m.d.comb += [
+            self.port.r_data.eq(self.r_data),
+            self.r_stb.eq(self.port.r_stb),
+            self.w_data.eq(self.port.w_data),
+            self.w_stb.eq(self.port.w_stb),
+        ]
         return m
