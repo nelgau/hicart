@@ -688,7 +688,7 @@ class TestDataRx(MultiProcessTestCase):
             ctx.set(clocker.enable, 1)
             ctx.set(clocker.divisor, 2)
 
-            ctx.set(dut.block_length, num_bytes)
+            ctx.set(dut.block_len, num_bytes)
             ctx.set(dut.block_count, 1)
             ctx.set(dut.start, 1)
 
@@ -742,7 +742,7 @@ class TestDataRx(MultiProcessTestCase):
             ctx.set(clocker.enable, 1)
             ctx.set(clocker.divisor, 1)
 
-            ctx.set(dut.block_length, num_bytes)
+            ctx.set(dut.block_len, num_bytes)
             ctx.set(dut.block_count, 1)
             ctx.set(dut.start, 1)
 
@@ -798,7 +798,7 @@ class TestDataRx(MultiProcessTestCase):
             ctx.set(clocker.enable, 1)
             ctx.set(clocker.divisor, 2)
 
-            ctx.set(dut.block_length, num_bytes)
+            ctx.set(dut.block_len, num_bytes)
             ctx.set(dut.block_count, 1)
             ctx.set(dut.start, 1)
 
@@ -845,7 +845,7 @@ class TestDataRx(MultiProcessTestCase):
             ctx.set(clocker.enable, 1)
             ctx.set(clocker.divisor, 2)
 
-            ctx.set(dut.block_length, num_bytes)
+            ctx.set(dut.block_len, num_bytes)
             ctx.set(dut.block_count, 1)
             ctx.set(dut.start, 1)
 
@@ -895,7 +895,7 @@ class TestDataRx(MultiProcessTestCase):
             ctx.set(clocker.enable, 1)
             ctx.set(clocker.divisor, 2)
 
-            ctx.set(dut.block_length, num_bytes)
+            ctx.set(dut.block_len, num_bytes)
             ctx.set(dut.block_count, num_blocks)
             ctx.set(dut.start, 1)
 
