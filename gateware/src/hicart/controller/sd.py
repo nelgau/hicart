@@ -426,10 +426,6 @@ class DatRx(wiring.Component):
 
         timeout_counter = Signal()
 
-        # Test
-
-        # m.d.comb += debug.pmod[3:7].eq(self.sd_dat_i)
-
         # Output
 
         m.d.comb += self.source.payload.eq(in_shift)

@@ -1,5 +1,4 @@
 from amaranth import *
-from amaranth.lib import crc
 from amaranth.sim import *
 
 from hicart.controller import sd
