@@ -705,6 +705,7 @@ class SDController(wiring.Component):
     data_desc: In(DataDesc)
 
     cmd_resp: Out(128)
+    errors: Out(ErrorFlags)
 
     def __init__(self, *, divisor=2, startup_delay=10):
         self._divisor = divisor
@@ -745,7 +746,6 @@ class SDController(wiring.Component):
             cmd_unit.sd_clk_falling .eq(clocker.sd_clk_falling),
 
             cmd_unit.desc           .eq(active_cmd_desc),
-            self.cmd_resp           .eq(cmd_unit.resp),
         ]
 
         # Data Unit
@@ -806,9 +806,22 @@ class SDController(wiring.Component):
 
             with m.State("CMD_WAIT"):
                 with m.If(cmd_unit.done):
-                    m.d.sync += cmd_finished.eq(1)
+                    m.d.sync += [
+                        cmd_finished                .eq(1),
+                        self.cmd_resp               .eq(cmd_unit.resp),
+                        self.errors.cmd_timeout     .eq(cmd_unit.err_timeout),
+                        self.errors.cmd_frame       .eq(cmd_unit.err_frame),
+                        self.errors.cmd_index       .eq(cmd_unit.err_index),
+                        self.errors.cmd_crc         .eq(cmd_unit.err_crc),
+                    ]
+
                 with m.If(dat_unit.done):
-                    m.d.sync += dat_finished.eq(1)
+                    m.d.sync += [
+                        dat_finished                .eq(1),
+                        self.errors.data_timeout    .eq(dat_unit.err_timeout),
+                        self.errors.data_frame      .eq(dat_unit.err_frame),
+                        self.errors.data_crc        .eq(dat_unit.err_crc),
+                    ]
 
                 with m.If(cmd_finished & dat_finished):
                     m.next = "CMD_GAP"
