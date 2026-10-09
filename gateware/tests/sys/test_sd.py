@@ -1,14 +1,14 @@
 from amaranth import *
 from amaranth.sim import *
 
-from hicart.sys.sd import SectorBuffer
+from hicart.sys.sd import SDDataBuffer
 from hicart.utils.sim import MultiProcessTestCase
 
 
 class TestSectorBuffer(MultiProcessTestCase):
 
     def test_basic(self):
-        dut = SectorBuffer(num_sectors=2)
+        dut = SDDataBuffer(num_sectors=2)
 
         async def testbench(ctx):
             ctx.set(dut.stb_bus.addr, 0x2)
@@ -42,7 +42,7 @@ class TestSectorBuffer(MultiProcessTestCase):
             sim.add_testbench(testbench)
 
     def test_top(self):
-        dut = SectorBuffer(num_sectors=2)
+        dut = SDDataBuffer(num_sectors=2)
 
         async def testbench(ctx):
             ctx.set(dut.stb_bus.addr, 0x3FF)
@@ -65,7 +65,7 @@ class TestSectorBuffer(MultiProcessTestCase):
             assert result == 0xaa00
 
     def test_wrap(self):
-        dut = SectorBuffer(num_sectors=2)
+        dut = SDDataBuffer(num_sectors=2)
 
         async def testbench(ctx):
             ctx.set(dut.stb_bus.addr, 0x400)

@@ -17,7 +17,7 @@ class StrobeBusSignature(wiring.Signature):
         })
 
 
-class SectorBuffer(wiring.Component):
+class SDDataBuffer(wiring.Component):
 
     def __init__(self, *, num_sectors=8, host_domain="sync", sys_domain="sync"):
         if num_sectors & (num_sectors - 1) != 0:

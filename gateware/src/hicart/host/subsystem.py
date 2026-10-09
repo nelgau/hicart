@@ -34,11 +34,6 @@ class HostSubsystem(wiring.Component):
         m.submodules.csr_decoder = csr_decoder
         m.submodules.csr_bridge = csr_bridge
 
-        # SRAM
-
-        sram = WishboneSRAM(size=0x1000, data_width=16, granularity=8)
-        m.submodules.sram = sram
-
         # Flash
 
         flash_ctrl = flash.WishboneFlashController(data_width=16, byteorder="big")
@@ -56,7 +51,7 @@ class HostSubsystem(wiring.Component):
         wb_decoder = wishbone.Decoder(addr_width=19, data_width=16, granularity=8)
 
         wb_decoder.add(csr_bridge.wb_bus, addr=0x00000)
-        wb_decoder.add(sram.wb_bus, addr=0xF0000)
+        wb_decoder.add(self.crossing.sd_buffer.wb_bus, addr=0xF0000)
 
         wb_bridge = seqbus.WishboneBridge(wb_decoder.bus)
 
