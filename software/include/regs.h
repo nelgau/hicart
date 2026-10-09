@@ -11,4 +11,7 @@
 #define HANDSHAKE_BUSY      0x1
 #define HANDSHAKE_ERROR     0x2
 
+#define SD_BUFFER_BASE      0x1FFF0000
+#define SD_BUFFER_SECTORS   2
+
 #endif
