@@ -195,7 +195,7 @@ class TestCmdRx(MultiProcessTestCase):
             ctx.set(dut.start, 0)
 
             await ctx.tick().until(dut.done)
-            assert ctx.get(dut.timeout) == 1
+            assert ctx.get(dut.err_timeout) == 1
 
         with self.simulate(m) as sim:
             sim.add_clock(1.0 / 100e6)
@@ -237,10 +237,10 @@ class TestCmdRx(MultiProcessTestCase):
             assert ctx.get(dut.cmd_index) == 8
             assert ctx.get(dut.cmd_resp) == 0x000001aa
 
-            assert ctx.get(dut.dir_err) == 0
-            assert ctx.get(dut.crc_err) == 0
-            assert ctx.get(dut.end_err) == 0
-            assert ctx.get(dut.timeout) == 0
+            assert ctx.get(dut.err_timeout) == 0
+            assert ctx.get(dut.err_dir) == 0
+            assert ctx.get(dut.err_crc) == 0
+            assert ctx.get(dut.err_end) == 0
 
         with self.simulate(m) as sim:
             sim.add_clock(1.0 / 100e6)
@@ -283,10 +283,10 @@ class TestCmdRx(MultiProcessTestCase):
             assert ctx.get(dut.cmd_index) == 8
             assert ctx.get(dut.cmd_resp) == 0x000001aa
 
-            assert ctx.get(dut.dir_err) == 0
-            assert ctx.get(dut.crc_err) == 0
-            assert ctx.get(dut.end_err) == 0
-            assert ctx.get(dut.timeout) == 0
+            assert ctx.get(dut.err_timeout) == 0
+            assert ctx.get(dut.err_dir) == 0
+            assert ctx.get(dut.err_crc) == 0
+            assert ctx.get(dut.err_end) == 0
 
         with self.simulate(m) as sim:
             sim.add_clock(1.0 / 100e6)
@@ -329,10 +329,10 @@ class TestCmdRx(MultiProcessTestCase):
             assert ctx.get(dut.cmd_index) == 8
             assert ctx.get(dut.cmd_resp) == 0x000001aa
 
-            assert ctx.get(dut.dir_err) == 1
-            assert ctx.get(dut.crc_err) == 1
-            assert ctx.get(dut.end_err) == 0
-            assert ctx.get(dut.timeout) == 0
+            assert ctx.get(dut.err_timeout) == 0
+            assert ctx.get(dut.err_dir) == 1
+            assert ctx.get(dut.err_crc) == 1
+            assert ctx.get(dut.err_end) == 0
 
         with self.simulate(m) as sim:
             sim.add_clock(1.0 / 100e6)
@@ -375,10 +375,10 @@ class TestCmdRx(MultiProcessTestCase):
             assert ctx.get(dut.cmd_index) == 8
             assert ctx.get(dut.cmd_resp) == 0x000001aa
 
-            assert ctx.get(dut.dir_err) == 0
-            assert ctx.get(dut.crc_err) == 1
-            assert ctx.get(dut.end_err) == 0
-            assert ctx.get(dut.timeout) == 0
+            assert ctx.get(dut.err_timeout) == 0
+            assert ctx.get(dut.err_dir) == 0
+            assert ctx.get(dut.err_crc) == 1
+            assert ctx.get(dut.err_end) == 0
 
         with self.simulate(m) as sim:
             sim.add_clock(1.0 / 100e6)
@@ -421,10 +421,10 @@ class TestCmdRx(MultiProcessTestCase):
             assert ctx.get(dut.cmd_index) == 8
             assert ctx.get(dut.cmd_resp) == 0x000001aa
 
-            assert ctx.get(dut.dir_err) == 0
-            assert ctx.get(dut.crc_err) == 0
-            assert ctx.get(dut.end_err) == 1
-            assert ctx.get(dut.timeout) == 0
+            assert ctx.get(dut.err_timeout) == 0
+            assert ctx.get(dut.err_dir) == 0
+            assert ctx.get(dut.err_crc) == 0
+            assert ctx.get(dut.err_end) == 1
 
         with self.simulate(m) as sim:
             sim.add_clock(1.0 / 100e6)
@@ -468,10 +468,10 @@ class TestCmdRx(MultiProcessTestCase):
             assert ctx.get(dut.cmd_index) == 0x3f
             assert ctx.get(dut.cmd_resp) == 0x035344535530384780123456780186e7
 
-            assert ctx.get(dut.dir_err) == 0
-            assert ctx.get(dut.crc_err) == 0
-            assert ctx.get(dut.end_err) == 0
-            assert ctx.get(dut.timeout) == 0
+            assert ctx.get(dut.err_timeout) == 0
+            assert ctx.get(dut.err_dir) == 0
+            assert ctx.get(dut.err_crc) == 0
+            assert ctx.get(dut.err_end) == 0
 
         with self.simulate(m) as sim:
             sim.add_clock(1.0 / 100e6)
@@ -515,10 +515,10 @@ class TestCmdRx(MultiProcessTestCase):
             assert ctx.get(dut.cmd_index) == 0x3f
             assert ctx.get(dut.cmd_resp) == 0x035344535530384780123456780186e7
 
-            assert ctx.get(dut.dir_err) == 1
-            assert ctx.get(dut.crc_err) == 0
-            assert ctx.get(dut.end_err) == 0
-            assert ctx.get(dut.timeout) == 0
+            assert ctx.get(dut.err_timeout) == 0
+            assert ctx.get(dut.err_dir) == 1
+            assert ctx.get(dut.err_crc) == 0
+            assert ctx.get(dut.err_end) == 0
 
         with self.simulate(m) as sim:
             sim.add_clock(1.0 / 100e6)
@@ -562,10 +562,10 @@ class TestCmdRx(MultiProcessTestCase):
             assert ctx.get(dut.cmd_index) == 0x3f
             assert ctx.get(dut.cmd_resp) == 0x035344535530384780123456780186f7
 
-            assert ctx.get(dut.dir_err) == 0
-            assert ctx.get(dut.crc_err) == 1
-            assert ctx.get(dut.end_err) == 0
-            assert ctx.get(dut.timeout) == 0
+            assert ctx.get(dut.err_timeout) == 0
+            assert ctx.get(dut.err_dir) == 0
+            assert ctx.get(dut.err_crc) == 1
+            assert ctx.get(dut.err_end) == 0
 
         with self.simulate(m) as sim:
             sim.add_clock(1.0 / 100e6)
@@ -609,10 +609,10 @@ class TestCmdRx(MultiProcessTestCase):
             assert ctx.get(dut.cmd_index) == 0x3f
             assert ctx.get(dut.cmd_resp) == 0x035344535530384780123456780186e6
 
-            assert ctx.get(dut.dir_err) == 0
-            assert ctx.get(dut.crc_err) == 0
-            assert ctx.get(dut.end_err) == 1
-            assert ctx.get(dut.timeout) == 0
+            assert ctx.get(dut.err_timeout) == 0
+            assert ctx.get(dut.err_dir) == 0
+            assert ctx.get(dut.err_crc) == 0
+            assert ctx.get(dut.err_end) == 1
 
         with self.simulate(m) as sim:
             sim.add_clock(1.0 / 100e6)
@@ -697,9 +697,9 @@ class TestDataRx(MultiProcessTestCase):
 
             await ctx.tick().until(dut.done)
 
-            assert ctx.get(dut.crc_err) == 0
-            assert ctx.get(dut.end_err) == 0
-            assert ctx.get(dut.timeout) == 0
+            assert ctx.get(dut.err_timeout) == 0
+            assert ctx.get(dut.err_crc) == 0
+            assert ctx.get(dut.err_end) == 0
 
         async def stream(ctx):
             recv_bytes = []
@@ -751,9 +751,9 @@ class TestDataRx(MultiProcessTestCase):
 
             await ctx.tick().until(dut.done)
 
-            assert ctx.get(dut.crc_err) == 0
-            assert ctx.get(dut.end_err) == 0
-            assert ctx.get(dut.timeout) == 0
+            assert ctx.get(dut.err_timeout) == 0
+            assert ctx.get(dut.err_crc) == 0
+            assert ctx.get(dut.err_end) == 0
 
         async def stream(ctx):
             recv_bytes = []
@@ -807,9 +807,9 @@ class TestDataRx(MultiProcessTestCase):
 
             await ctx.tick().until(dut.done)
 
-            assert ctx.get(dut.crc_err) == 1
-            assert ctx.get(dut.end_err) == 0
-            assert ctx.get(dut.timeout) == 0
+            assert ctx.get(dut.err_timeout) == 0
+            assert ctx.get(dut.err_crc) == 1
+            assert ctx.get(dut.err_end) == 0
 
         with self.simulate(m) as sim:
             sim.add_clock(1.0 / 100e6)
@@ -854,9 +854,9 @@ class TestDataRx(MultiProcessTestCase):
 
             await ctx.tick().until(dut.done)
 
-            assert ctx.get(dut.crc_err) == 0
-            assert ctx.get(dut.end_err) == 1
-            assert ctx.get(dut.timeout) == 0
+            assert ctx.get(dut.err_timeout) == 0
+            assert ctx.get(dut.err_crc) == 0
+            assert ctx.get(dut.err_end) == 1
 
         with self.simulate(m) as sim:
             sim.add_clock(1.0 / 100e6)
@@ -904,9 +904,9 @@ class TestDataRx(MultiProcessTestCase):
 
             await ctx.tick().until(dut.done)
 
-            assert ctx.get(dut.crc_err) == 0
-            assert ctx.get(dut.end_err) == 0
-            assert ctx.get(dut.timeout) == 0
+            assert ctx.get(dut.err_timeout) == 0
+            assert ctx.get(dut.err_crc) == 0
+            assert ctx.get(dut.err_end) == 0
 
         async def stream(ctx):
             recv_blocks = []

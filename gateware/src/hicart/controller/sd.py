@@ -3,6 +3,24 @@ from amaranth.lib import crc, data, enum, stream, wiring
 from amaranth.lib.wiring import In, Out, flipped
 
 
+class SDBusSignature(wiring.Signature):
+    def __init__(self):
+        super().__init__({
+            "clk": Out(1),
+            "cmd": Out(wiring.Signature({
+                "i":    In(1),
+                "o":    Out(1),
+                "oe":   Out(1),
+            })),
+            "dat": Out(wiring.Signature({
+                "i":    In(4),
+                "o":    Out(4),
+                "oe":   Out(4),
+            })),
+            "card_present": In(1),
+        })
+
+
 class Op(enum.Enum, shape=2):
     CMD             = 0
     INIT            = 1
@@ -34,26 +52,14 @@ class DataDesc(data.Struct):
     block_len:      unsigned(10)
 
 
-class SDBusSignature(wiring.Signature):
-    def __init__(self):
-        super().__init__({
-            "clk": Out(1),
-            "cmd": Out(wiring.Signature({
-                "i":    In(1),
-                "o":    Out(1),
-                "oe":   Out(1),
-            })),
-            "dat": Out(wiring.Signature({
-                "i":    In(4),
-                "o":    Out(4),
-                "oe":   Out(4),
-            })),
-            "card_present": In(1),
-        })
-
-
-CRC7_SD_CMD  = crc.catalog.CRC7_MMC
-CRC16_SD_DAT = crc.catalog.CRC16_XMODEM
+class ErrorFlags(data.Struct):
+    cmd_timeout:    1
+    cmd_crc:        1
+    cmd_index:      1
+    cmd_frame:      1
+    data_timeout:   1
+    data_crc:       1
+    data_frame:     1
 
 
 class Clocker(wiring.Component):
@@ -82,15 +88,19 @@ class Clocker(wiring.Component):
         return m
 
 
-class CmdTx(wiring.Component):
-    start: In(1)
-    done: Out(1)
+CRC7_SD_CMD  = crc.catalog.CRC7_MMC
+CRC16_SD_DAT = crc.catalog.CRC16_XMODEM
 
+
+class CmdTx(wiring.Component):
     sd_cmd_o: Out(1)
     sd_cmd_oe: Out(1)
 
     sd_clk_rising: In(1)
     sd_clk_falling: In(1)
+
+    start: In(1)
+    done: Out(1)
 
     cmd_index: In(6)
     cmd_arg: In(32)
@@ -169,23 +179,23 @@ class CmdTx(wiring.Component):
 
 
 class CmdRx(wiring.Component):
-    start: In(1)
-    done: Out(1)
-
     sd_cmd_i: In(1)
 
     sd_clk_rising: In(1)
     sd_clk_falling: In(1)
+
+    start: In(1)
+    done: Out(1)
 
     long_response: In(1)
 
     cmd_index: Out(6)
     cmd_resp: Out(128)
 
-    dir_err: Out(1)
-    crc_err: Out(1)
-    end_err: Out(1)
-    timeout: Out(1)
+    err_timeout: Out(1)
+    err_dir: Out(1)
+    err_crc: Out(1)
+    err_end: Out(1)
 
     def elaborate(self, platform):
         m = Module()
@@ -220,10 +230,10 @@ class CmdRx(wiring.Component):
                     m.d.sync += self.cmd_index.eq(0)
                     m.d.sync += self.cmd_resp.eq(0)
 
-                    m.d.sync += self.dir_err.eq(0)
-                    m.d.sync += self.crc_err.eq(0)
-                    m.d.sync += self.end_err.eq(0)
-                    m.d.sync += self.timeout.eq(0)
+                    m.d.sync += self.err_timeout.eq(0)
+                    m.d.sync += self.err_dir.eq(0)
+                    m.d.sync += self.err_crc.eq(0)
+                    m.d.sync += self.err_end.eq(0)
 
                     m.d.sync += timeout_counter.eq(0)
                     m.d.comb += crc7.start.eq(1)
@@ -234,7 +244,7 @@ class CmdRx(wiring.Component):
                     with m.If(timeout_counter == 63):
                         m.next = "IDLE"
                         m.d.sync += self.done.eq(1)
-                        m.d.sync += self.timeout.eq(1)
+                        m.d.sync += self.err_timeout.eq(1)
 
                     with m.Elif(~self.sd_cmd_i):
                         m.next = "RUN"
@@ -256,7 +266,7 @@ class CmdRx(wiring.Component):
 
                         def finalize_first_byte():
                             with m.If(in_shift[6]):
-                                m.d.sync += self.dir_err.eq(1)
+                                m.d.sync += self.err_dir.eq(1)
 
                         def finalize_last_byte():
                             m.next = "IDLE"
@@ -264,9 +274,9 @@ class CmdRx(wiring.Component):
                             m.d.sync += self.done.eq(1)
 
                             with m.If(in_shift[1:8] != crc7.crc):
-                                m.d.sync += self.crc_err.eq(1)
+                                m.d.sync += self.err_crc.eq(1)
                             with m.If(~in_shift[0]):
-                                m.d.sync += self.end_err.eq(1)
+                                m.d.sync += self.err_end.eq(1)
 
                         def latch_resp_byte(index):
                             segment = slice(index * 8, (index + 1) * 8)
@@ -309,9 +319,6 @@ class CmdRx(wiring.Component):
 
 
 class CmdUnit(wiring.Component):
-    start: In(1)
-    done: Out(1)
-
     sd_cmd_i: In(1)
     sd_cmd_o: Out(1)
     sd_cmd_oe: Out(1)
@@ -320,13 +327,16 @@ class CmdUnit(wiring.Component):
     sd_clk_rising: In(1)
     sd_clk_falling: In(1)
 
+    start: In(1)
+    done: Out(1)
+
     desc: In(CmdDesc)
     resp: Out(128)
 
-    dir_err: Out(1)
-    crc_err: Out(1)
-    end_err: Out(1)
-    timeout: Out(1)
+    err_timeout: Out(1)
+    err_frame: Out(1)
+    err_index: Out(1)
+    err_crc: Out(1)
 
     def elaborate(self, platform):
         m = Module()
@@ -361,11 +371,16 @@ class CmdUnit(wiring.Component):
             cmd_rx.long_response    .eq(self.desc.resp.long),
 
             self.resp               .eq(cmd_rx.cmd_resp),
+        ]
 
-            self.dir_err            .eq(cmd_rx.dir_err),
-            self.crc_err            .eq(cmd_rx.crc_err),
-            self.end_err            .eq(cmd_rx.end_err),
-            self.timeout            .eq(cmd_rx.timeout),
+        # Errors
+
+        m.d.comb += [
+            self.err_timeout        .eq(cmd_rx.err_timeout),
+            self.err_frame          .eq(cmd_rx.err_dir | cmd_rx.err_end),
+            self.err_index          .eq(self.desc.resp.check_index &
+                                        (cmd_rx.cmd_index != self.desc.index)),
+            self.err_crc            .eq(self.desc.resp.check_crc & cmd_rx.err_crc),
         ]
 
         # State machine
@@ -410,22 +425,22 @@ class CmdUnit(wiring.Component):
 
 
 class DatRx(wiring.Component):
-    start: In(1)
-    done: Out(1)
-
     sd_dat_i: In(4)
+
+    source: Out(stream.Signature(8, always_ready=True))
 
     sd_clk_rising: In(1)
     sd_clk_falling: In(1)
 
-    source: Out(stream.Signature(8, always_ready=True))
+    start: In(1)
+    done: Out(1)
 
     block_count: In(16)
     block_len: In(10)
 
-    crc_err: Out(1)
-    end_err: Out(1)
-    timeout: Out(1)
+    err_timeout: Out(1)
+    err_crc: Out(1)
+    err_end: Out(1)
 
     def elaborate(self, platform):
         m = Module()
@@ -475,9 +490,9 @@ class DatRx(wiring.Component):
             with m.State("IDLE"):
                 with m.If(self.start):
                     m.next = "WAIT_START"
-                    m.d.sync += self.crc_err.eq(0)
-                    m.d.sync += self.end_err.eq(0)
-                    m.d.sync += self.timeout.eq(0)
+                    m.d.sync += self.err_timeout.eq(0)
+                    m.d.sync += self.err_crc.eq(0)
+                    m.d.sync += self.err_end.eq(0)
 
                     m.d.sync += block_index.eq(0)
                     m.d.sync += byte_index.eq(0)
@@ -487,7 +502,10 @@ class DatRx(wiring.Component):
 
             with m.State("WAIT_START"):
                 with m.If(self.sd_clk_rising):
+
+
                     # Handle timeout
+
 
                     with m.If(~self.sd_dat_i):
                         m.next = "DATA"
@@ -518,7 +536,7 @@ class DatRx(wiring.Component):
                         m.d.sync += crc_shifts[i].eq(Cat(C(0), crc_shifts[i][:15]))
 
                         with m.If(self.sd_dat_i[i] != crc_shifts[i][15]):
-                            m.d.sync += self.crc_err.eq(1)
+                            m.d.sync += self.err_crc.eq(1)
 
                     with m.If(crc_index == 15):
                         m.next = "END"
@@ -528,7 +546,7 @@ class DatRx(wiring.Component):
                     m.d.sync += block_index.eq(block_index + 1)
 
                     with m.If(~self.sd_dat_i):
-                        m.d.sync += self.end_err.eq(1)
+                        m.d.sync += self.err_end.eq(1)
 
                     with m.If(block_index == self.block_count - 1):
                         m.next = "IDLE"
@@ -541,16 +559,16 @@ class DatRx(wiring.Component):
 
 
 class DatTx(wiring.Component):
-    start: In(1)
-    done: Out(1)
-
     sd_dat_o: Out(4)
     sd_dat_oe: Out(4)
+
+    sink: In(stream.Signature(8, always_valid=True))
 
     sd_clk_rising: In(1)
     sd_clk_falling: In(1)
 
-    sink: In(stream.Signature(8, always_valid=True))
+    start: In(1)
+    done: Out(1)
 
     block_count: In(16)
     block_len: In(10)
@@ -573,24 +591,24 @@ class DatTx(wiring.Component):
 
 
 class DatUnit(wiring.Component):
-    start: In(1)
-    done: Out(1)
-
     sd_dat_i: In(4)
     sd_dat_o: Out(4)
     sd_dat_oe: Out(4)
 
-    sd_clk_rising: In(1)
-    sd_clk_falling: In(1)
-
     source: Out(stream.Signature(8, always_ready=True))
     sink: In(stream.Signature(8, always_valid=True))
 
+    sd_clk_rising: In(1)
+    sd_clk_falling: In(1)
+
+    start: In(1)
+    done: Out(1)
+
     desc: In(DataDesc)
 
-    crc_err: Out(1)
-    end_err: Out(1)
-    timeout: Out(1)
+    err_timeout: Out(1)
+    err_frame: Out(1)
+    err_crc: Out(1)
 
     def elaborate(self, platform):
         m = Module()
@@ -628,10 +646,14 @@ class DatUnit(wiring.Component):
 
             dat_rx.block_count      .eq(self.desc.block_count),
             dat_rx.block_len        .eq(self.desc.block_len),
+        ]
 
-            self.crc_err            .eq(dat_rx.crc_err),
-            self.end_err            .eq(dat_rx.end_err),
-            self.timeout            .eq(dat_rx.timeout),
+        # Errors
+
+        m.d.comb += [
+            self.err_timeout        .eq(dat_rx.err_timeout),
+            self.err_crc            .eq(dat_rx.err_crc),
+            self.err_frame          .eq(dat_rx.err_end),
         ]
 
         # State machine
