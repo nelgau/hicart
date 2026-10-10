@@ -1,7 +1,7 @@
 #ifndef __REGS_H
 #define __REGS_H
 
-#define REG_BASE            0x00006000
+#define REG_BASE            0xC0000000
 #define REG_HANDSHAKE       (REG_BASE + 0x00)
 #define REG_COMMAND         (REG_BASE + 0x04)
 #define REG_ARG1            (REG_BASE + 0x08)

@@ -1,12 +1,11 @@
 from amaranth import *
 from amaranth.lib import cdc, wiring
 from amaranth.lib.wiring import In, Out, flipped
-from amaranth.utils import exact_log2
 
 from hicart.controller import sd
 from hicart.n64.cart import CICSignature, CtlSignature
+from hicart.soc.cpu_block import CpuBlock, CpuBlockConfig
 from hicart.sys.cic import CIC
-from hicart.sys.mcu import MCU
 from hicart.sys.sd import SDBufferWriter
 
 
@@ -20,7 +19,16 @@ class SysSubsystem(wiring.Component):
         self.crossing = crossing
         super().__init__()
 
-        self.mcu = MCU(mailbox_bus=crossing.mailbox.sys_bus)
+        # self.mcu = MCU(mailbox_bus=crossing.mailbox.sys_bus)
+
+        mcu_config = CpuBlockConfig(rom_size=0x1000, ram_size=0x1000)
+        mcu_config.add_csr(crossing.mailbox.sys_bus, name="mailbox", addr=0xC000_0000)
+
+        self.mcu = CpuBlock(mcu_config)
+
+        for ri in self.mcu.memory_map.all_resources():
+            print(ri.path, hex(ri.start), hex(ri.end))
+
         self.cic = CIC()
 
         sd_config = sd.ControllerConfig(clk_freq=40e6)
@@ -34,6 +42,9 @@ class SysSubsystem(wiring.Component):
         # MCU
 
         m.submodules.mcu = self.mcu
+
+        with open("../firmware/mcu/build/mcu.bin", "rb") as f:
+            self.mcu.firmware = f.read()
 
         # CIC
 
