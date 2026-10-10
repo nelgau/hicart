@@ -752,14 +752,16 @@ class SDController(wiring.Component):
     cmd_resp: Out(128)
     errors: Out(ErrorFlags)
 
+    INIT_CLOCKS = 74
+    GAP_CLOCKS = 8
+
     SPEED_FREQS = {
         Speed.INIT:     400_000,
         Speed.DEFAULT:  25_000_000,
     }
 
-    def __init__(self, *, config, startup_delay=10):
+    def __init__(self, *, config):
         self._config = config
-        self._startup_delay = startup_delay
         super().__init__()
 
     @property
@@ -842,7 +844,8 @@ class SDController(wiring.Component):
         cmd_finished = Signal()
         dat_finished = Signal()
 
-        counter = Signal(20)
+        init_counter = Signal(range(self.INIT_CLOCKS + 1))
+        gap_counter = Signal(range(self.GAP_CLOCKS + 1))
 
         m.d.sync += self.done.eq(0)
         m.d.sync += cmd_unit.start.eq(0)
@@ -850,11 +853,6 @@ class SDController(wiring.Component):
 
         with m.FSM() as fsm:
             m.d.comb += self.busy.eq(~fsm.ongoing("IDLE"))
-
-            with m.State("INIT"):
-                m.d.sync += counter.eq(counter + 1)
-                with m.If(counter == self._startup_delay):
-                    m.next = "IDLE"
 
             with m.State("IDLE"):
                 with m.If(self.start):
@@ -871,8 +869,8 @@ class SDController(wiring.Component):
                             m.d.sync += dat_finished.eq(0)
 
                         with m.Case(Op.INIT):
-
-                            pass
+                            m.next = "INIT_WAIT"
+                            m.d.sync += init_counter.eq(0)
 
             with m.State("CMD_WAIT"):
                 with m.If(cmd_unit.done):
@@ -896,15 +894,22 @@ class SDController(wiring.Component):
 
                 with m.If(cmd_finished & dat_finished):
                     m.next = "CMD_GAP"
-                    m.d.sync += counter.eq(0)
+                    m.d.sync += gap_counter.eq(0)
 
             with m.State("CMD_GAP"):
                 with m.If(clocker.sd_clk_rising):
-                    m.d.sync += counter.eq(counter + 1)
+                    m.d.sync += gap_counter.eq(gap_counter + 1)
 
-                with m.If(counter == 8):
+                with m.If(gap_counter == self.GAP_CLOCKS):
                     m.next = "IDLE"
                     m.d.sync += self.done.eq(1)
+
+            with m.State("INIT_WAIT"):
+                with m.If(clocker.sd_clk_rising):
+                    m.d.sync += init_counter.eq(init_counter + 1)
+                    with m.If(init_counter == self.INIT_CLOCKS):
+                        m.next = "IDLE"
+                        m.d.sync += self.done.eq(1)
 
         return m
 
@@ -927,6 +932,8 @@ class SDSequencer(Elaboratable):
 
                 with m.Case(0):
                     m.d.sync += [
+                        self.ctrlr.op                       .eq(Op.INIT),
+
                         self.ctrlr.cmd_desc.index           .eq(0),
                         self.ctrlr.cmd_desc.arg             .eq(0),
                         self.ctrlr.cmd_desc.resp.present    .eq(0),
@@ -940,6 +947,23 @@ class SDSequencer(Elaboratable):
 
                 with m.Case(1):
                     m.d.sync += [
+                        self.ctrlr.op                       .eq(Op.CMD),
+
+                        self.ctrlr.cmd_desc.index           .eq(0),
+                        self.ctrlr.cmd_desc.arg             .eq(0),
+                        self.ctrlr.cmd_desc.resp.present    .eq(0),
+                        self.ctrlr.cmd_desc.resp.long       .eq(0),
+                        self.ctrlr.cmd_desc.resp.wait_busy  .eq(0),
+
+                        self.ctrlr.data_desc.dir            .eq(DataDir.NONE),
+                        self.ctrlr.data_desc.block_count    .eq(0),
+                        self.ctrlr.data_desc.block_len      .eq(0),
+                    ]
+
+                with m.Case(2):
+                    m.d.sync += [
+                        self.ctrlr.op                       .eq(Op.CMD),
+
                         self.ctrlr.cmd_desc.index           .eq(8),
                         self.ctrlr.cmd_desc.arg             .eq(0x000001AA),
                         self.ctrlr.cmd_desc.resp.present    .eq(1),
@@ -951,23 +975,12 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.data_desc.block_len      .eq(0),
                     ]
 
-                with m.Case(2):
-                    m.d.sync += [
-                        self.ctrlr.cmd_desc.index           .eq(55),
-                        self.ctrlr.cmd_desc.arg             .eq(0),
-                        self.ctrlr.cmd_desc.resp.present    .eq(1),
-                        self.ctrlr.cmd_desc.resp.long       .eq(0),
-                        self.ctrlr.cmd_desc.resp.wait_busy  .eq(0),
-
-                        self.ctrlr.data_desc.dir            .eq(DataDir.NONE),
-                        self.ctrlr.data_desc.block_count    .eq(0),
-                        self.ctrlr.data_desc.block_len      .eq(0),
-                    ]
-
                 with m.Case(3):
                     m.d.sync += [
-                        self.ctrlr.cmd_desc.index           .eq(41),
-                        self.ctrlr.cmd_desc.arg             .eq(0x40ff8000),
+                        self.ctrlr.op                       .eq(Op.CMD),
+
+                        self.ctrlr.cmd_desc.index           .eq(55),
+                        self.ctrlr.cmd_desc.arg             .eq(0),
                         self.ctrlr.cmd_desc.resp.present    .eq(1),
                         self.ctrlr.cmd_desc.resp.long       .eq(0),
                         self.ctrlr.cmd_desc.resp.wait_busy  .eq(0),
@@ -979,6 +992,23 @@ class SDSequencer(Elaboratable):
 
                 with m.Case(4):
                     m.d.sync += [
+                        self.ctrlr.op                       .eq(Op.CMD),
+
+                        self.ctrlr.cmd_desc.index           .eq(41),
+                        self.ctrlr.cmd_desc.arg             .eq(0x40ff8000),
+                        self.ctrlr.cmd_desc.resp.present    .eq(1),
+                        self.ctrlr.cmd_desc.resp.long       .eq(0),
+                        self.ctrlr.cmd_desc.resp.wait_busy  .eq(0),
+
+                        self.ctrlr.data_desc.dir            .eq(DataDir.NONE),
+                        self.ctrlr.data_desc.block_count    .eq(0),
+                        self.ctrlr.data_desc.block_len      .eq(0),
+                    ]
+
+                with m.Case(5):
+                    m.d.sync += [
+                        self.ctrlr.op                       .eq(Op.CMD),
+
                         self.ctrlr.cmd_desc.index           .eq(2),
                         self.ctrlr.cmd_desc.arg             .eq(0),
                         self.ctrlr.cmd_desc.resp.present    .eq(1),
@@ -990,8 +1020,10 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.data_desc.block_len      .eq(0),
                     ]
 
-                with m.Case(5):
+                with m.Case(6):
                     m.d.sync += [
+                        self.ctrlr.op                       .eq(Op.CMD),
+
                         self.ctrlr.cmd_desc.index           .eq(3),
                         self.ctrlr.cmd_desc.arg             .eq(0),
                         self.ctrlr.cmd_desc.resp.present    .eq(1),
@@ -1003,8 +1035,10 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.data_desc.block_len      .eq(0),
                     ]
 
-                with m.Case(6):
+                with m.Case(7):
                     m.d.sync += [
+                        self.ctrlr.op                       .eq(Op.CMD),
+
                         self.ctrlr.cmd_desc.index           .eq(7),
                         self.ctrlr.cmd_desc.arg             .eq(rca << 16),
                         self.ctrlr.cmd_desc.resp.present    .eq(1),
@@ -1016,8 +1050,10 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.data_desc.block_len      .eq(0),
                     ]
 
-                with m.Case(7):
+                with m.Case(8):
                     m.d.sync += [
+                        self.ctrlr.op                       .eq(Op.CMD),
+
                         self.ctrlr.cmd_desc.index           .eq(55),
                         self.ctrlr.cmd_desc.arg             .eq(rca << 16),
                         self.ctrlr.cmd_desc.resp.present    .eq(1),
@@ -1029,8 +1065,10 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.data_desc.block_len      .eq(0),
                     ]
 
-                with m.Case(8):
+                with m.Case(9):
                     m.d.sync += [
+                        self.ctrlr.op                       .eq(Op.CMD),
+
                         self.ctrlr.cmd_desc.index           .eq(6),
                         self.ctrlr.cmd_desc.arg             .eq(0x00000002),
                         self.ctrlr.cmd_desc.resp.present    .eq(1),
@@ -1042,8 +1080,10 @@ class SDSequencer(Elaboratable):
                         self.ctrlr.data_desc.block_len      .eq(0),
                     ]
 
-                with m.Case(9):
+                with m.Case(10):
                     m.d.sync += [
+                        self.ctrlr.op                       .eq(Op.CMD),
+
                         self.ctrlr.cmd_desc.index           .eq(17),
                         self.ctrlr.cmd_desc.arg             .eq(0x00000000),
                         self.ctrlr.cmd_desc.resp.present    .eq(1),
@@ -1061,11 +1101,11 @@ class SDSequencer(Elaboratable):
         def process_result():
             with m.Switch(step_index):
 
-                with m.Case(3):
+                with m.Case(4):
                     with m.If(~self.ctrlr.cmd_resp[31]):
-                        m.d.sync += step_index.eq(2)
+                        m.d.sync += step_index.eq(3)
 
-                with m.Case(5):
+                with m.Case(6):
                     m.d.sync += rca.eq(self.ctrlr.cmd_resp[16:32])
 
         # State machine

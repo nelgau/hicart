@@ -24,7 +24,7 @@ class SysSubsystem(wiring.Component):
         self.cic = CIC()
 
         sd_config = sd.SDControllerConfig(clk_freq=40e6)
-        self.sd = sd.SDController(config=sd_config, startup_delay=1_000_000)
+        self.sd = sd.SDController(config=sd_config)
         self.sd_seq = sd.SDSequencer(ctrlr=self.sd)
 
         self.writer = SDBufferWriter(writer_bus=crossing.sd_buffer.writer_bus)
