@@ -530,14 +530,14 @@ class DatRx(wiring.Component):
                     m.d.sync += timeout_counter.eq(0)
 
             with m.State("WAIT_START"):
-                with m.If(self.sd_clk_rising):
-                    m.d.sync += timeout_counter.eq(timeout_counter + 1)
-                    with m.If(timeout_counter == self._timeout):
-                        m.next = "IDLE"
-                        m.d.sync += self.done.eq(1)
-                        m.d.sync += self.err_timeout.eq(1)
+                m.d.sync += timeout_counter.eq(timeout_counter + 1)
+                with m.If(timeout_counter == self._timeout):
+                    m.next = "IDLE"
+                    m.d.sync += self.done.eq(1)
+                    m.d.sync += self.err_timeout.eq(1)
 
-                    with m.Elif(~self.sd_dat_i):
+                with m.Elif(self.sd_clk_rising):
+                    with m.If(~self.sd_dat_i):
                         m.next = "DATA"
                         m.d.sync += timeout_counter.eq(0)
                         m.d.comb += crc_start.eq(1)
