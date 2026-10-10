@@ -761,10 +761,6 @@ class Controller(wiring.Component):
         self._config = config
         super().__init__()
 
-    @property
-    def config(self):
-        return self._config
-
     def elaborate(self, platform):
         m = Module()
 
@@ -775,13 +771,13 @@ class Controller(wiring.Component):
         # Time
 
         def half_period_for_freq(target_freq):
-            return math.ceil(self.config.clk_freq / (2 * target_freq))
+            return math.ceil(self._config.clk_freq / (2 * target_freq))
 
         def cycles_for_seconds(seconds):
-            return math.ceil(seconds * self.config.clk_freq)
+            return math.ceil(seconds * self._config.clk_freq)
 
-        busy_timeout_cycles = cycles_for_seconds(self.config.busy_timeout_s)
-        data_timeout_cycles = cycles_for_seconds(self.config.data_timeout_s)
+        busy_timeout_cycles = cycles_for_seconds(self._config.busy_timeout_s)
+        data_timeout_cycles = cycles_for_seconds(self._config.data_timeout_s)
 
         # Clocker
 
@@ -801,7 +797,7 @@ class Controller(wiring.Component):
 
         # Command unit
 
-        cmd_unit = CmdUnit(cmd_timeout=self.config.cmd_timeout_clks,
+        cmd_unit = CmdUnit(cmd_timeout=self._config.cmd_timeout_clks,
                            busy_timeout=busy_timeout_cycles)
         m.submodules.cmd_unit = cmd_unit
 
@@ -918,20 +914,20 @@ class Peripheral(wiring.Component):
     class ConfigReg(csr.Register, access="rw"):
         def __init__(self):
             super().__init__({
-                "speed":        csr.Field(csr.action.RW,    Speed),
-                "_0":           csr.Field(csr.action.R,     31),
+                "speed":        csr.Field(csr.action.RW,        Speed),
+                "_0":           csr.Field(csr.action.ResR0W0,   31),
             })
 
     class CmdReg(csr.Register, access="rw"):
         def __init__(self):
             super().__init__({
-                "index":        csr.Field(csr.action.RW,    6),
-                "resp_present": csr.Field(csr.action.RW,    1),
-                "resp_long":    csr.Field(csr.action.RW,    1),
-                "wait_busy":    csr.Field(csr.action.RW,    1),
-                "check_index":  csr.Field(csr.action.RW,    1),
-                "check_crc":    csr.Field(csr.action.RW,    1),
-                "_0":           csr.Field(csr.action.R,     21),
+                "index":        csr.Field(csr.action.RW,        6),
+                "resp_present": csr.Field(csr.action.RW,        1),
+                "resp_long":    csr.Field(csr.action.RW,        1),
+                "wait_busy":    csr.Field(csr.action.RW,        1),
+                "check_index":  csr.Field(csr.action.RW,        1),
+                "check_crc":    csr.Field(csr.action.RW,        1),
+                "_0":           csr.Field(csr.action.ResR0W0,   21),
             })
 
     class ArgReg(csr.Register, access="rw"):
@@ -943,40 +939,41 @@ class Peripheral(wiring.Component):
     class DataReg(csr.Register, access="rw"):
         def __init__(self):
             super().__init__({
-                "dir":          csr.Field(csr.action.RW,    DataDir),
-                "block_count":  csr.Field(csr.action.RW,    16),
-                "block_len":    csr.Field(csr.action.RW,    10),
-                "_0":           csr.Field(csr.action.R,     4),
+                "dir":          csr.Field(csr.action.RW,        DataDir),
+                "block_count":  csr.Field(csr.action.RW,        16),
+                "block_len":    csr.Field(csr.action.RW,        10),
+                "_0":           csr.Field(csr.action.ResR0W0,   4),
             })
 
     class GoReg(csr.Register, access="w"):
         def __init__(self):
             super().__init__({
-                "op":           csr.Field(csr.action.W,     Op),
-                "_0":           csr.Field(csr.action.W,     30),
+                "op":           csr.Field(csr.action.W,         Op),
+                "_0":           csr.Field(csr.action.ResR0W0,   30),
             })
 
     class StatusReg(csr.Register, access="r"):
         def __init__(self):
             super().__init__({
-                "busy":         csr.Field(csr.action.R,     1),
-                "done":         csr.Field(csr.action.R,     1),
-                "card_present": csr.Field(csr.action.R,     1),
-                "cmd_timeout":  csr.Field(csr.action.R,     1),
-                "cmd_frame":    csr.Field(csr.action.R,     1),
-                "cmd_index":    csr.Field(csr.action.R,     1),
-                "cmd_crc":      csr.Field(csr.action.R,     1),
-                "data_timeout": csr.Field(csr.action.R,     1),
-                "data_frame":   csr.Field(csr.action.R,     1),
-                "data_crc":     csr.Field(csr.action.R,     1),
-                "busy_timeout": csr.Field(csr.action.R,     1),
-                "_0":           csr.Field(csr.action.R,     21),
+                "busy":         csr.Field(csr.action.R,         1),
+                "done":         csr.Field(csr.action.R,         1),
+                "card_present": csr.Field(csr.action.R,         1),
+                "_0":           csr.Field(csr.action.ResR0W0,   5),
+                "cmd_timeout":  csr.Field(csr.action.R,         1),
+                "cmd_frame":    csr.Field(csr.action.R,         1),
+                "cmd_index":    csr.Field(csr.action.R,         1),
+                "cmd_crc":      csr.Field(csr.action.R,         1),
+                "data_timeout": csr.Field(csr.action.R,         1),
+                "data_frame":   csr.Field(csr.action.R,         1),
+                "data_crc":     csr.Field(csr.action.R,         1),
+                "busy_timeout": csr.Field(csr.action.R,         1),
+                "_1":           csr.Field(csr.action.ResR0W0,   16),
             })
 
     class RespReg(csr.Register, access="r"):
         def __init__(self):
             super().__init__({
-                "value":        csr.Field(csr.action.R,     32),
+                "value":        csr.Field(csr.action.R,         32),
             })
 
     def __init__(self, *, config):
@@ -1002,10 +999,6 @@ class Peripheral(wiring.Component):
         super().__init__()
         self.csr_bus.memory_map = self._csr_bridge.bus.memory_map
 
-    @property
-    def config(self):
-        return self._config
-
     def elaborate(self, platform):
         m = Module()
 
@@ -1016,10 +1009,66 @@ class Peripheral(wiring.Component):
         wiring.connect(m, self._controller.source, flipped(self.source))
         wiring.connect(m, self._csr_bridge.bus, flipped(self.csr_bus))
 
+        # State machine
+
+        accept = self._go_reg.f.op.w_stb & ~self._controller.busy
+
+        m.d.comb += self._controller.start.eq(accept)
+        m.d.comb += self._controller.op.eq(self._go_reg.f.op.w_data)
+
+        sticky_done = Signal()
+
+        with m.If(self._controller.done):
+            m.d.sync += sticky_done.eq(1)
+        with m.If(accept):
+            m.d.sync += sticky_done.eq(0)
+
+        # Connections
+
+        m.d.comb += [
+            # Config
+            self._controller.speed                      .eq(self._config_reg.f.speed.data),
+
+            # Cmd
+            self._controller.cmd_desc.index             .eq(self._cmd_reg.f.index.data),
+            self._controller.cmd_desc.resp.present      .eq(self._cmd_reg.f.resp_present.data),
+            self._controller.cmd_desc.resp.long         .eq(self._cmd_reg.f.resp_long.data),
+            self._controller.cmd_desc.resp.wait_busy    .eq(self._cmd_reg.f.wait_busy.data),
+            self._controller.cmd_desc.resp.check_index  .eq(self._cmd_reg.f.check_index.data),
+            self._controller.cmd_desc.resp.check_crc    .eq(self._cmd_reg.f.check_crc.data),
+
+            # Arg
+            self._controller.cmd_desc.arg               .eq(self._arg_reg.f.value.data),
+
+            # Data
+            self._controller.data_desc.dir              .eq(self._data_reg.f.dir.data),
+            self._controller.data_desc.block_count      .eq(self._data_reg.f.block_count.data),
+            self._controller.data_desc.block_len        .eq(self._data_reg.f.block_len.data),
+
+            # Status
+            self._status_reg.f.busy.r_data              .eq(self._controller.busy),
+            self._status_reg.f.done.r_data              .eq(sticky_done),
+            self._status_reg.f.card_present.r_data      .eq(self.sd_bus.card_present),
+            self._status_reg.f.cmd_timeout.r_data       .eq(self._controller.errors.cmd_timeout),
+            self._status_reg.f.cmd_frame.r_data         .eq(self._controller.errors.cmd_frame),
+            self._status_reg.f.cmd_index.r_data         .eq(self._controller.errors.cmd_index),
+            self._status_reg.f.cmd_crc.r_data           .eq(self._controller.errors.cmd_crc),
+            self._status_reg.f.data_timeout.r_data      .eq(self._controller.errors.data_timeout),
+            self._status_reg.f.data_frame.r_data        .eq(self._controller.errors.data_frame),
+            self._status_reg.f.data_crc.r_data          .eq(self._controller.errors.data_crc),
+            self._status_reg.f.busy_timeout.r_data      .eq(self._controller.errors.busy_timeout),
+
+            # Resp (0, 1, 2, 3)
+            self._resp0_reg.f.value.r_data              .eq(self._controller.cmd_resp[0:32]),
+            self._resp1_reg.f.value.r_data              .eq(self._controller.cmd_resp[32:64]),
+            self._resp2_reg.f.value.r_data              .eq(self._controller.cmd_resp[64:96]),
+            self._resp3_reg.f.value.r_data              .eq(self._controller.cmd_resp[96:128]),
+        ]
+
         # Sequencer
 
-        seq = Sequencer(ctrlr=self._controller)
-        m.submodules.seq = seq
+        # seq = Sequencer(ctrlr=self._controller)
+        # m.submodules.seq = seq
 
         return m
 
