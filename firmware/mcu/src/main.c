@@ -4,11 +4,12 @@
 
 int main(void)
 {
-    sd_card_init();
-    sd_card_read(0);
-    sd_card_read(1);
+    sd_init();
+    sd_read(0, 2);
+    sd_read(2, 2);
 
     while(1) {
         cmd_process();
+        sd_process();
     }
 }
