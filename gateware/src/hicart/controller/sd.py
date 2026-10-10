@@ -4,6 +4,9 @@ import math
 from amaranth import *
 from amaranth.lib import crc, data, enum, stream, wiring
 from amaranth.lib.wiring import In, Out, flipped
+from amaranth_soc import csr
+
+from hicart.soc import csr_ext
 
 
 class BusSignature(wiring.Signature):
@@ -33,9 +36,9 @@ class Op(enum.Enum, shape=2):
     INIT            = 1
 
 class DataDir(enum.Enum, shape=2):
-    NONE            = 1
-    READ            = 2
-    WRITE           = 3
+    NONE            = 0
+    READ            = 1
+    WRITE           = 2
 
 class RespFlags(data.Struct):
     present:        1
@@ -56,12 +59,12 @@ class DataDesc(data.Struct):
 
 class ErrorFlags(data.Struct):
     cmd_timeout:    1
-    cmd_crc:        1
-    cmd_index:      1
     cmd_frame:      1
+    cmd_index:      1
+    cmd_crc:        1
     data_timeout:   1
-    data_crc:       1
     data_frame:     1
+    data_crc:       1
     busy_timeout:   1
 
 
@@ -903,6 +906,120 @@ class Controller(wiring.Component):
                     with m.If(init_counter == self.INIT_CLOCKS):
                         m.next = "IDLE"
                         m.d.sync += self.done.eq(1)
+
+        return m
+
+
+class Peripheral(wiring.Component):
+    sd_bus: Out(BusSignature())
+    source: Out(stream.Signature(8, always_ready=True))
+    csr_bus: In(csr.Signature(addr_width=8, data_width=8))
+
+    class ConfigReg(csr.Register, access="rw"):
+        def __init__(self):
+            super().__init__({
+                "speed":        csr.Field(csr.action.RW,    Speed),
+                "_0":           csr.Field(csr.action.R,     31),
+            })
+
+    class CmdReg(csr.Register, access="rw"):
+        def __init__(self):
+            super().__init__({
+                "index":        csr.Field(csr.action.RW,    6),
+                "resp_present": csr.Field(csr.action.RW,    1),
+                "resp_long":    csr.Field(csr.action.RW,    1),
+                "wait_busy":    csr.Field(csr.action.RW,    1),
+                "check_index":  csr.Field(csr.action.RW,    1),
+                "check_crc":    csr.Field(csr.action.RW,    1),
+                "_0":           csr.Field(csr.action.R,     21),
+            })
+
+    class ArgReg(csr.Register, access="rw"):
+        def __init__(self):
+            super().__init__({
+                "value":        csr.Field(csr.action.RW,    32),
+            })
+
+    class DataReg(csr.Register, access="rw"):
+        def __init__(self):
+            super().__init__({
+                "dir":          csr.Field(csr.action.RW,    DataDir),
+                "block_count":  csr.Field(csr.action.RW,    16),
+                "block_len":    csr.Field(csr.action.RW,    10),
+                "_0":           csr.Field(csr.action.R,     4),
+            })
+
+    class GoReg(csr.Register, access="w"):
+        def __init__(self):
+            super().__init__({
+                "op":           csr.Field(csr.action.W,     Op),
+                "_0":           csr.Field(csr.action.W,     30),
+            })
+
+    class StatusReg(csr.Register, access="r"):
+        def __init__(self):
+            super().__init__({
+                "busy":         csr.Field(csr.action.R,     1),
+                "done":         csr.Field(csr.action.R,     1),
+                "card_present": csr.Field(csr.action.R,     1),
+                "cmd_timeout":  csr.Field(csr.action.R,     1),
+                "cmd_frame":    csr.Field(csr.action.R,     1),
+                "cmd_index":    csr.Field(csr.action.R,     1),
+                "cmd_crc":      csr.Field(csr.action.R,     1),
+                "data_timeout": csr.Field(csr.action.R,     1),
+                "data_frame":   csr.Field(csr.action.R,     1),
+                "data_crc":     csr.Field(csr.action.R,     1),
+                "busy_timeout": csr.Field(csr.action.R,     1),
+                "_0":           csr.Field(csr.action.R,     21),
+            })
+
+    class RespReg(csr.Register, access="r"):
+        def __init__(self):
+            super().__init__({
+                "value":        csr.Field(csr.action.R,     32),
+            })
+
+    def __init__(self, *, config):
+        self._controller = Controller(config=config)
+
+        regs = csr.Builder(addr_width=8, data_width=8)
+
+        self._config_reg    = regs.add("Config",    self.ConfigReg())
+        self._cmd_reg       = regs.add("Cmd",       self.CmdReg())
+        self._arg_reg       = regs.add("Arg",       self.ArgReg())
+        self._data_reg      = regs.add("Data",      self.DataReg())
+
+        self._go_reg        = regs.add("Go",        self.GoReg())
+        self._status_reg    = regs.add("Status",    self.StatusReg())
+
+        self._resp0_reg     = regs.add("Resp0",     self.RespReg())
+        self._resp1_reg     = regs.add("Resp1",     self.RespReg())
+        self._resp2_reg     = regs.add("Resp2",     self.RespReg())
+        self._resp3_reg     = regs.add("Resp3",     self.RespReg())
+
+        self._csr_bridge = csr_ext.Bridge(regs.as_memory_map(), byteorder="little")
+
+        super().__init__()
+        self.csr_bus.memory_map = self._csr_bridge.bus.memory_map
+
+    @property
+    def config(self):
+        return self._config
+
+    def elaborate(self, platform):
+        m = Module()
+
+        m.submodules.controller = self._controller
+        m.submodules.csr_bridge = self._csr_bridge
+
+        wiring.connect(m, self._controller.bus, flipped(self.sd_bus))
+        wiring.connect(m, self._controller.source, flipped(self.source))
+        wiring.connect(m, self._csr_bridge.bus, flipped(self.csr_bus))
+
+        # Sequencer
+
+        seq = Sequencer(ctrlr=self._controller)
+        m.submodules.seq = seq
 
         return m
 

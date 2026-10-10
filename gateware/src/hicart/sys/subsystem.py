@@ -24,8 +24,7 @@ class SysSubsystem(wiring.Component):
         self.cic = CIC()
 
         sd_config = sd.ControllerConfig(clk_freq=40e6)
-        self.sd = sd.Controller(config=sd_config)
-        self.sd_seq = sd.Sequencer(ctrlr=self.sd)
+        self.sd_periph = sd.Peripheral(config=sd_config)
 
         self.writer = SDBufferWriter(writer_bus=crossing.sd_buffer.writer_bus)
 
@@ -45,13 +44,12 @@ class SysSubsystem(wiring.Component):
 
         # SD Controller
 
-        m.submodules.sd = self.sd
-        m.submodules.sd_seq = self.sd_seq
+        m.submodules.sd_periph = self.sd_periph
         m.submodules.writer = self.writer
 
-        wiring.connect(m, self.sd.bus, flipped(self.sd_bus))
+        wiring.connect(m, self.sd_periph.sd_bus, flipped(self.sd_bus))
 
-        wiring.connect(m, self.sd.source, self.writer.sink)
+        wiring.connect(m, self.sd_periph.source, self.writer.sink)
         wiring.connect(m, self.writer.writer_bus, self.crossing.sd_buffer.writer_bus)
 
         return m
