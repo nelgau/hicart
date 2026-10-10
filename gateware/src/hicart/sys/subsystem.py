@@ -18,13 +18,13 @@ class SysSubsystem(wiring.Component):
 
     def __init__(self, *, crossing):
         self.crossing = crossing
-
         super().__init__()
 
         self.mcu = MCU(mailbox_bus=crossing.mailbox.sys_bus)
         self.cic = CIC()
 
-        self.sd = sd.SDController(divisor=50, startup_delay=1_000_000)
+        sd_config = sd.SDControllerConfig(clk_freq=40e6)
+        self.sd = sd.SDController(config=sd_config, startup_delay=1_000_000)
         self.sd_seq = sd.SDSequencer(ctrlr=self.sd)
 
         self.writer = SDBufferWriter(writer_bus=crossing.sd_buffer.writer_bus)

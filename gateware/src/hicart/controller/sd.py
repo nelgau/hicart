@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+import math
+
 from amaranth import *
 from amaranth.lib import crc, data, enum, stream, wiring
 from amaranth.lib.wiring import In, Out, flipped
@@ -21,16 +24,18 @@ class SDBusSignature(wiring.Signature):
         })
 
 
+class Speed(enum.Enum, shape=1):
+    INIT            = 0     # <= 400 KHz
+    DEFAULT         = 1     # <= 25 MHz
+
 class Op(enum.Enum, shape=2):
     CMD             = 0
     INIT            = 1
-
 
 class DataDir(enum.Enum, shape=2):
     NONE            = 1
     READ            = 2
     WRITE           = 3
-
 
 class RespFlags(data.Struct):
     present:        1
@@ -39,18 +44,15 @@ class RespFlags(data.Struct):
     check_index:    1
     check_crc:      1
 
-
 class CmdDesc(data.Struct):
     index:          unsigned(6)
     arg:            unsigned(32)
     resp:           RespFlags
 
-
 class DataDesc(data.Struct):
     dir:            DataDir
     block_count:    unsigned(16)
     block_len:      unsigned(10)
-
 
 class ErrorFlags(data.Struct):
     cmd_timeout:    1
@@ -60,11 +62,12 @@ class ErrorFlags(data.Struct):
     data_timeout:   1
     data_crc:       1
     data_frame:     1
+    busy_timeout:   1
 
 
 class Clocker(wiring.Component):
     enable: In(1)
-    divisor: In(10)
+    half_period: In(10)
 
     sd_clk: Out(1)
     sd_clk_rising: Out(1)
@@ -78,7 +81,7 @@ class Clocker(wiring.Component):
         with m.If(self.enable):
             with m.If(counter <= 1):
                 m.d.sync += self.sd_clk.eq(~self.sd_clk)
-                m.d.sync += counter.eq(self.divisor)
+                m.d.sync += counter.eq(self.half_period)
 
                 m.d.comb += self.sd_clk_rising.eq(~self.sd_clk)
                 m.d.comb += self.sd_clk_falling.eq(self.sd_clk)
@@ -109,9 +112,6 @@ class CmdTx(wiring.Component):
         m = Module()
 
         out_shift = Signal(8, init=0xFF)
-
-        byte_index = Signal(range(6))
-        bit_index = Signal(range(8))
         bit_shifted = Signal()
 
         # Output
@@ -127,6 +127,9 @@ class CmdTx(wiring.Component):
         m.d.comb += crc7.valid.eq(bit_shifted)
 
         # State machine
+
+        byte_index = Signal(range(6))
+        bit_index = Signal(range(8))
 
         m.d.sync += self.done.eq(0)
         m.d.sync += bit_shifted.eq(0)
@@ -197,17 +200,16 @@ class CmdRx(wiring.Component):
     err_crc: Out(1)
     err_end: Out(1)
 
+    def __init__(self, *, timeout):
+        self._timeout = timeout
+        super().__init__()
+
     def elaborate(self, platform):
         m = Module()
 
         in_shift = Signal(8)
-
-        byte_index = Signal(range(17))
-        bit_index = Signal(range(8))
         bit_shifted = Signal()
         crc_digesting = Signal()
-
-        timeout_counter = Signal(range(64))
 
         # CRC
 
@@ -218,6 +220,11 @@ class CmdRx(wiring.Component):
         m.d.comb += crc7.valid.eq(crc_digesting & bit_shifted)
 
         # State machine
+
+        byte_index = Signal(range(17))
+        bit_index = Signal(range(8))
+
+        timeout_counter = Signal(range(self._timeout + 1))
 
         m.d.sync += self.done.eq(0)
         m.d.sync += bit_shifted.eq(0)
@@ -241,7 +248,7 @@ class CmdRx(wiring.Component):
             with m.State("WAIT_START"):
                 with m.If(self.sd_clk_rising):
                     m.d.sync += timeout_counter.eq(timeout_counter + 1)
-                    with m.If(timeout_counter == 63):
+                    with m.If(timeout_counter == self._timeout):
                         m.next = "IDLE"
                         m.d.sync += self.done.eq(1)
                         m.d.sync += self.err_timeout.eq(1)
@@ -333,10 +340,16 @@ class CmdUnit(wiring.Component):
     desc: In(CmdDesc)
     resp: Out(128)
 
-    err_timeout: Out(1)
+    err_cmd_timeout: Out(1)
+    err_busy_timeout: Out(1)
     err_frame: Out(1)
     err_index: Out(1)
     err_crc: Out(1)
+
+    def __init__(self, *, cmd_timeout, busy_timeout):
+        self._cmd_timeout = cmd_timeout
+        self._busy_timeout = busy_timeout
+        super().__init__()
 
     def elaborate(self, platform):
         m = Module()
@@ -359,7 +372,7 @@ class CmdUnit(wiring.Component):
 
         # RX
 
-        cmd_rx = CmdRx()
+        cmd_rx = CmdRx(timeout=self._cmd_timeout)
         m.submodules.cmd_rx = cmd_rx
 
         m.d.comb += [
@@ -375,8 +388,11 @@ class CmdUnit(wiring.Component):
 
         # Errors
 
+        busy_timeout = Signal()
+
         m.d.comb += [
-            self.err_timeout        .eq(cmd_rx.err_timeout),
+            self.err_cmd_timeout    .eq(cmd_rx.err_timeout),
+            self.err_busy_timeout   .eq(busy_timeout),
             self.err_frame          .eq(cmd_rx.err_dir | cmd_rx.err_end),
             self.err_index          .eq(self.desc.resp.check_index &
                                         (cmd_rx.cmd_index != self.desc.index)),
@@ -384,6 +400,8 @@ class CmdUnit(wiring.Component):
         ]
 
         # State machine
+
+        timeout_counter = Signal(range(self._busy_timeout + 1))
 
         m.d.sync += self.done.eq(0)
         m.d.sync += cmd_tx.start.eq(0)
@@ -395,6 +413,7 @@ class CmdUnit(wiring.Component):
                 with m.If(self.start):
                     m.next = "TX"
                     m.d.sync += cmd_tx.start.eq(1)
+                    m.d.sync += busy_timeout.eq(0)
 
             with m.State("TX"):
                 with m.If(cmd_tx.done):
@@ -416,10 +435,15 @@ class CmdUnit(wiring.Component):
                         m.d.sync += self.done.eq(1)
 
             with m.State("WAIT_BUSY"):
-                with m.If(self.sd_clk_rising):
-                    with m.If(self.sd_dat0_i):
-                        m.next = "IDLE"
-                        m.d.sync += self.done.eq(1)
+                m.d.sync += timeout_counter.eq(timeout_counter + 1)
+                with m.If(timeout_counter == self._busy_timeout):
+                    m.next = "IDLE"
+                    m.d.sync += self.done.eq(1)
+                    m.d.sync += busy_timeout.eq(1)
+
+                with m.Elif(self.sd_dat0_i):
+                    m.next = "IDLE"
+                    m.d.sync += self.done.eq(1)
 
         return m
 
@@ -442,22 +466,19 @@ class DatRx(wiring.Component):
     err_crc: Out(1)
     err_end: Out(1)
 
+    def __init__(self, *, timeout):
+        self._timeout = timeout
+        super().__init__()
+
     def elaborate(self, platform):
         m = Module()
 
         in_shift = Signal(8)
 
-        block_index = Signal(16)
-        byte_index = Signal(10)
-        nibble_index = Signal(range(2))
-
         crc_start = Signal()
         crc_digest = Signal()
         crc_finalize = Signal()
-        crc_index = Signal(range(16))
         crc_shifts = [Signal(16, name=f"crc_shift_{i}") for i in range(4)]
-
-        timeout_counter = Signal()
 
         # Output
 
@@ -481,6 +502,13 @@ class DatRx(wiring.Component):
 
         # State machine
 
+        block_index = Signal(16)
+        byte_index = Signal(10)
+        nibble_index = Signal(range(2))
+        crc_index = Signal(range(16))
+
+        timeout_counter = Signal(range(self._timeout + 1))
+
         m.d.sync += self.done.eq(0)
         m.d.sync += self.source.valid.eq(0)
         m.d.sync += crc_finalize.eq(0)
@@ -502,12 +530,13 @@ class DatRx(wiring.Component):
 
             with m.State("WAIT_START"):
                 with m.If(self.sd_clk_rising):
+                    m.d.sync += timeout_counter.eq(timeout_counter + 1)
+                    with m.If(timeout_counter == self._timeout):
+                        m.next = "IDLE"
+                        m.d.sync += self.done.eq(1)
+                        m.d.sync += self.err_timeout.eq(1)
 
-
-                    # Handle timeout
-
-
-                    with m.If(~self.sd_dat_i):
+                    with m.Elif(~self.sd_dat_i):
                         m.next = "DATA"
                         m.d.sync += timeout_counter.eq(0)
                         m.d.comb += crc_start.eq(1)
@@ -610,6 +639,10 @@ class DatUnit(wiring.Component):
     err_frame: Out(1)
     err_crc: Out(1)
 
+    def __init__(self, *, data_timeout):
+        self._data_timeout = data_timeout
+        super().__init__()
+
     def elaborate(self, platform):
         m = Module()
 
@@ -633,7 +666,7 @@ class DatUnit(wiring.Component):
 
         # RX
 
-        dat_rx = DatRx()
+        dat_rx = DatRx(timeout=self._data_timeout)
         m.submodules.dat_rx = dat_rx
 
         wiring.connect(m, dat_rx.source, flipped(self.source))
@@ -690,6 +723,15 @@ class DatUnit(wiring.Component):
         return m
 
 
+@dataclass(frozen=True)
+class SDControllerConfig:
+    clk_freq:           float
+    input_latency:      int     = 0
+    cmd_timeout_clks:   int     = 64
+    data_timeout_s:     float   = 0.25
+    busy_timeout_s:     float   = 0.5
+
+
 class SDController(wiring.Component):
     bus: Out(SDBusSignature())
 
@@ -700,6 +742,8 @@ class SDController(wiring.Component):
     done: Out(1)
     busy: Out(1)
 
+    speed: In(Speed)
+
     op: In(Op)
     cmd_desc: In(CmdDesc)
     data_desc: In(DataDesc)
@@ -707,10 +751,19 @@ class SDController(wiring.Component):
     cmd_resp: Out(128)
     errors: Out(ErrorFlags)
 
-    def __init__(self, *, divisor=2, startup_delay=10):
-        self._divisor = divisor
+    SPEED_FREQS = {
+        Speed.INIT:     400_000,
+        Speed.DEFAULT:  25_000_000,
+    }
+
+    def __init__(self, *, config, startup_delay=10):
+        self._config = config
         self._startup_delay = startup_delay
         super().__init__()
+
+    @property
+    def config(self):
+        return self._config
 
     def elaborate(self, platform):
         m = Module()
@@ -719,21 +772,37 @@ class SDController(wiring.Component):
         active_cmd_desc = Signal(CmdDesc)
         active_data_desc = Signal(DataDesc)
 
+        # Time
+
+        def half_period_for_freq(target_freq):
+            return math.ceil(self.config.clk_freq / (2 * target_freq))
+
+        def cycles_for_seconds(seconds):
+            return math.ceil(seconds * self.config.clk_freq)
+
+        busy_timeout_cycles = cycles_for_seconds(self.config.busy_timeout_s)
+        data_timeout_cycles = cycles_for_seconds(self.config.data_timeout_s)
+
         # Clocker
 
         clocker = Clocker()
         m.submodules.clocker = clocker
 
+        with m.Switch(self.speed):
+            for value, freq in self.SPEED_FREQS.items():
+                with m.Case(value):
+                    hp_constant = half_period_for_freq(freq)
+                    m.d.comb += clocker.half_period.eq(hp_constant)
+
         m.d.comb += [
             self.bus.clk            .eq(clocker.sd_clk),
-
             clocker.enable          .eq(1),
-            clocker.divisor         .eq(self._divisor),
         ]
 
         # Command unit
 
-        cmd_unit = CmdUnit()
+        cmd_unit = CmdUnit(cmd_timeout=self.config.cmd_timeout_clks,
+                           busy_timeout=busy_timeout_cycles)
         m.submodules.cmd_unit = cmd_unit
 
         m.d.comb += [
@@ -750,7 +819,7 @@ class SDController(wiring.Component):
 
         # Data Unit
 
-        dat_unit = DatUnit()
+        dat_unit = DatUnit(data_timeout=data_timeout_cycles)
         m.submodules.dat_unit = dat_unit
 
         wiring.connect(m, dat_unit.source, flipped(self.source))
@@ -809,10 +878,11 @@ class SDController(wiring.Component):
                     m.d.sync += [
                         cmd_finished                .eq(1),
                         self.cmd_resp               .eq(cmd_unit.resp),
-                        self.errors.cmd_timeout     .eq(cmd_unit.err_timeout),
+                        self.errors.cmd_timeout     .eq(cmd_unit.err_cmd_timeout),
                         self.errors.cmd_frame       .eq(cmd_unit.err_frame),
                         self.errors.cmd_index       .eq(cmd_unit.err_index),
                         self.errors.cmd_crc         .eq(cmd_unit.err_crc),
+                        self.errors.busy_timeout    .eq(cmd_unit.err_busy_timeout),
                     ]
 
                 with m.If(dat_unit.done):

@@ -22,7 +22,7 @@ class TestSDClocker(MultiProcessTestCase):
             assert ctx.get(dut.sd_clk_falling) == 0
 
             ctx.set(dut.enable, 1)
-            ctx.set(dut.divisor, 5)
+            ctx.set(dut.half_period, 5)
 
             assert ctx.get(dut.sd_clk) == 0
             assert ctx.get(dut.sd_clk_rising) == 1
@@ -107,7 +107,7 @@ class TestCmdTx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 2)
+            ctx.set(clocker.half_period, 2)
 
             ctx.set(dut.cmd_index, 8)
             ctx.set(dut.cmd_arg, 0x000001AA)
@@ -127,7 +127,7 @@ class TestCmdTx(MultiProcessTestCase):
             sim.add_testbench(control)
             sim.add_testbench(output)
 
-    def test_cmd8_min_divisor(self):
+    def test_cmd8_min_half_period(self):
         clocker = sd.Clocker()
         dut = sd.CmdTx()
 
@@ -140,7 +140,7 @@ class TestCmdTx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 1)
+            ctx.set(clocker.half_period, 1)
 
             ctx.set(dut.cmd_index, 8)
             ctx.set(dut.cmd_arg, 0x000001AA)
@@ -175,7 +175,7 @@ class TestCmdRx(MultiProcessTestCase):
 
     def test_timeout(self):
         clocker = sd.Clocker()
-        dut = sd.CmdRx()
+        dut = sd.CmdRx(timeout=64)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -187,7 +187,7 @@ class TestCmdRx(MultiProcessTestCase):
         async def testbench(ctx):
             ctx.set(dut.sd_cmd_i, 1)
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 2)
+            ctx.set(clocker.half_period, 2)
 
             ctx.set(dut.start, 1)
 
@@ -203,7 +203,7 @@ class TestCmdRx(MultiProcessTestCase):
 
     def test_short(self):
         clocker = sd.Clocker()
-        dut = sd.CmdRx()
+        dut = sd.CmdRx(timeout=64)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -224,7 +224,7 @@ class TestCmdRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 2)
+            ctx.set(clocker.half_period, 2)
 
             ctx.set(dut.long_response, 0)
             ctx.set(dut.start, 1)
@@ -247,9 +247,9 @@ class TestCmdRx(MultiProcessTestCase):
             sim.add_testbench(card)
             sim.add_testbench(control)
 
-    def test_short_min_divisor(self):
+    def test_short_min_half_period(self):
         clocker = sd.Clocker()
-        dut = sd.CmdRx()
+        dut = sd.CmdRx(timeout=64)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -270,7 +270,7 @@ class TestCmdRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 1)
+            ctx.set(clocker.half_period, 1)
 
             ctx.set(dut.long_response, 0)
             ctx.set(dut.start, 1)
@@ -295,7 +295,7 @@ class TestCmdRx(MultiProcessTestCase):
 
     def test_short_dir_err(self):
         clocker = sd.Clocker()
-        dut = sd.CmdRx()
+        dut = sd.CmdRx(timeout=64)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -316,7 +316,7 @@ class TestCmdRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 2)
+            ctx.set(clocker.half_period, 2)
 
             ctx.set(dut.long_response, 0)
             ctx.set(dut.start, 1)
@@ -341,7 +341,7 @@ class TestCmdRx(MultiProcessTestCase):
 
     def test_short_crc_err(self):
         clocker = sd.Clocker()
-        dut = sd.CmdRx()
+        dut = sd.CmdRx(timeout=64)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -362,7 +362,7 @@ class TestCmdRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 2)
+            ctx.set(clocker.half_period, 2)
 
             ctx.set(dut.long_response, 0)
             ctx.set(dut.start, 1)
@@ -387,7 +387,7 @@ class TestCmdRx(MultiProcessTestCase):
 
     def test_short_end_err(self):
         clocker = sd.Clocker()
-        dut = sd.CmdRx()
+        dut = sd.CmdRx(timeout=64)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -408,7 +408,7 @@ class TestCmdRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 2)
+            ctx.set(clocker.half_period, 2)
 
             ctx.set(dut.long_response, 0)
             ctx.set(dut.start, 1)
@@ -433,7 +433,7 @@ class TestCmdRx(MultiProcessTestCase):
 
     def test_long(self):
         clocker = sd.Clocker()
-        dut = sd.CmdRx()
+        dut = sd.CmdRx(timeout=64)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -455,7 +455,7 @@ class TestCmdRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 2)
+            ctx.set(clocker.half_period, 2)
 
             ctx.set(dut.long_response, 1)
             ctx.set(dut.start, 1)
@@ -480,7 +480,7 @@ class TestCmdRx(MultiProcessTestCase):
 
     def test_long_dir_err(self):
         clocker = sd.Clocker()
-        dut = sd.CmdRx()
+        dut = sd.CmdRx(timeout=64)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -502,7 +502,7 @@ class TestCmdRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 2)
+            ctx.set(clocker.half_period, 2)
 
             ctx.set(dut.long_response, 1)
             ctx.set(dut.start, 1)
@@ -527,7 +527,7 @@ class TestCmdRx(MultiProcessTestCase):
 
     def test_long_crc_err(self):
         clocker = sd.Clocker()
-        dut = sd.CmdRx()
+        dut = sd.CmdRx(timeout=64)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -549,7 +549,7 @@ class TestCmdRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 2)
+            ctx.set(clocker.half_period, 2)
 
             ctx.set(dut.long_response, 1)
             ctx.set(dut.start, 1)
@@ -574,7 +574,7 @@ class TestCmdRx(MultiProcessTestCase):
 
     def test_long_end_err(self):
         clocker = sd.Clocker()
-        dut = sd.CmdRx()
+        dut = sd.CmdRx(timeout=64)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -596,7 +596,7 @@ class TestCmdRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 2)
+            ctx.set(clocker.half_period, 2)
 
             ctx.set(dut.long_response, 1)
             ctx.set(dut.start, 1)
@@ -661,9 +661,42 @@ class TestDataRx(MultiProcessTestCase):
         await ctx.negedge(sd_clk)
         ctx.set(sd_dat_i, 0xf)
 
+    def test_timeout(self):
+        clocker = sd.Clocker()
+        dut = sd.DatRx(timeout=1_000)
+
+        m = Module()
+        m.submodules.clocker = clocker
+        m.submodules.dut = dut
+
+        m.d.comb += dut.sd_clk_rising.eq(clocker.sd_clk_rising)
+        m.d.comb += dut.sd_clk_falling.eq(clocker.sd_clk_falling)
+
+        async def control(ctx):
+            ctx.set(dut.sd_dat_i, 0xf)
+            ctx.set(clocker.enable, 1)
+            ctx.set(clocker.half_period, 2)
+
+            ctx.set(dut.block_len, 512)
+            ctx.set(dut.block_count, 1)
+            ctx.set(dut.start, 1)
+
+            await ctx.tick()
+            ctx.set(dut.start, 0)
+
+            await ctx.tick().until(dut.done)
+
+            assert ctx.get(dut.err_timeout) == 1
+            assert ctx.get(dut.err_crc) == 0
+            assert ctx.get(dut.err_end) == 0
+
+        with self.simulate(m) as sim:
+            sim.add_clock(1.0 / 100e6)
+            sim.add_testbench(control)
+
     def test_block(self):
         clocker = sd.Clocker()
-        dut = sd.DatRx()
+        dut = sd.DatRx(timeout=1_000)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -686,7 +719,7 @@ class TestDataRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 2)
+            ctx.set(clocker.half_period, 2)
 
             ctx.set(dut.block_len, num_bytes)
             ctx.set(dut.block_count, 1)
@@ -715,9 +748,9 @@ class TestDataRx(MultiProcessTestCase):
             sim.add_testbench(control)
             sim.add_testbench(stream)
 
-    def test_block_min_divisor(self):
+    def test_block_min_half_period(self):
         clocker = sd.Clocker()
-        dut = sd.DatRx()
+        dut = sd.DatRx(timeout=1_000)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -740,7 +773,7 @@ class TestDataRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 1)
+            ctx.set(clocker.half_period, 1)
 
             ctx.set(dut.block_len, num_bytes)
             ctx.set(dut.block_count, 1)
@@ -771,7 +804,7 @@ class TestDataRx(MultiProcessTestCase):
 
     def test_block_crc_err(self):
         clocker = sd.Clocker()
-        dut = sd.DatRx()
+        dut = sd.DatRx(timeout=1_000)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -796,7 +829,7 @@ class TestDataRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 2)
+            ctx.set(clocker.half_period, 2)
 
             ctx.set(dut.block_len, num_bytes)
             ctx.set(dut.block_count, 1)
@@ -818,7 +851,7 @@ class TestDataRx(MultiProcessTestCase):
 
     def test_block_end_err(self):
         clocker = sd.Clocker()
-        dut = sd.DatRx()
+        dut = sd.DatRx(timeout=1_000)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -843,7 +876,7 @@ class TestDataRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 2)
+            ctx.set(clocker.half_period, 2)
 
             ctx.set(dut.block_len, num_bytes)
             ctx.set(dut.block_count, 1)
@@ -865,7 +898,7 @@ class TestDataRx(MultiProcessTestCase):
 
     def test_multi_block(self):
         clocker = sd.Clocker()
-        dut = sd.DatRx()
+        dut = sd.DatRx(timeout=1_000)
 
         m = Module()
         m.submodules.clocker = clocker
@@ -893,7 +926,7 @@ class TestDataRx(MultiProcessTestCase):
 
         async def control(ctx):
             ctx.set(clocker.enable, 1)
-            ctx.set(clocker.divisor, 2)
+            ctx.set(clocker.half_period, 2)
 
             ctx.set(dut.block_len, num_bytes)
             ctx.set(dut.block_count, num_blocks)
@@ -929,7 +962,8 @@ class TestDataRx(MultiProcessTestCase):
 class TestSDSequencer(MultiProcessTestCase):
 
     def test_basic(self):
-        ctrlr = sd.SDController()
+        config = sd.SDControllerConfig(clk_freq=40e6)
+        ctrlr = sd.SDController(config=config)
         dut = sd.SDSequencer(ctrlr=ctrlr)
 
         m = Module()
