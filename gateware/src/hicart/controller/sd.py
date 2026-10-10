@@ -592,8 +592,6 @@ class DatTx(wiring.Component):
     sd_dat_o: Out(4)
     sd_dat_oe: Out(4)
 
-    sink: In(stream.Signature(8, always_valid=True))
-
     sd_clk_rising: In(1)
     sd_clk_falling: In(1)
 
@@ -626,7 +624,6 @@ class DatUnit(wiring.Component):
     sd_dat_oe: Out(4)
 
     source: Out(stream.Signature(8, always_ready=True))
-    sink: In(stream.Signature(8, always_valid=True))
 
     sd_clk_rising: In(1)
     sd_clk_falling: In(1)
@@ -651,8 +648,6 @@ class DatUnit(wiring.Component):
 
         dat_tx = DatTx()
         m.submodules.dat_tx = dat_tx
-
-        wiring.connect(m, dat_tx.sink, flipped(self.sink))
 
         m.d.comb += [
             self.sd_dat_o           .eq(dat_tx.sd_dat_o),
@@ -737,7 +732,6 @@ class Controller(wiring.Component):
     bus: Out(BusSignature())
 
     source: Out(stream.Signature(8, always_ready=True))
-    sink: In(stream.Signature(8, always_valid=True))
 
     start: In(1)
     done: Out(1)
@@ -826,7 +820,6 @@ class Controller(wiring.Component):
         m.submodules.dat_unit = dat_unit
 
         wiring.connect(m, dat_unit.source, flipped(self.source))
-        wiring.connect(m, dat_unit.sink, flipped(self.sink))
 
         m.d.comb += [
             dat_unit.sd_dat_i       .eq(self.bus.dat.i),
