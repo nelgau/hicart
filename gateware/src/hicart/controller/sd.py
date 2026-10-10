@@ -413,6 +413,7 @@ class CmdUnit(wiring.Component):
                 with m.If(self.start):
                     m.next = "TX"
                     m.d.sync += cmd_tx.start.eq(1)
+                    m.d.sync += timeout_counter.eq(0)
                     m.d.sync += busy_timeout.eq(0)
 
             with m.State("TX"):
