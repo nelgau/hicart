@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <libdragon.h>
+#include "cmd.h"
 #include "soak.h"
-
 #include "regs.h"
 
 int main(void)
@@ -12,6 +12,23 @@ int main(void)
     console_set_debug(true);
 
     // run_soak();
+
+    uint32_t result = 0;
+
+    if (cmd_send(CMD_SD_STATUS, 0, 0, &result)) {
+        printf("sd_status failed: %08lx\n", result);
+    }
+    printf("sd_status success: %08lx\n", result);
+
+    if (cmd_send(CMD_SD_INIT, 0, 0, &result)) {
+        printf("sd_init failed: %08lx\n", result);
+    }
+    printf("sd_init success: %08lx\n", result);
+
+    if (cmd_send(CMD_SD_READ, 0, 2, &result)) {
+        printf("sd_read failed: %08lx\n", result);
+    }
+    printf("sd_read success: %08lx\n", result);
 
     char buf[512];
 

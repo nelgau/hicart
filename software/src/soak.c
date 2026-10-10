@@ -30,9 +30,10 @@ void run_soak(void) {
     while(1) {
         uint32_t arg1 = fastrand();
         uint32_t arg2 = fastrand();
-
         uint32_t expected = (arg1 ^ rotl(arg2, 11)) + 1;
-        uint32_t result = cmd_send(CMD_PING, arg1, arg2);
+        uint32_t result;
+
+        cmd_send(CMD_PING, arg1, arg2, &result);
 
         if (result != expected) {
             if (n_error == 0) {

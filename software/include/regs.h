@@ -8,9 +8,6 @@
 #define REG_ARG2            (REG_BASE + 0x0C)
 #define REG_RESULT          (REG_BASE + 0x10)
 
-#define HANDSHAKE_BUSY      0x1
-#define HANDSHAKE_ERROR     0x2
-
 #define SD_BUFFER_BASE      0x1FFF0000
 #define SD_BUFFER_SECTORS   2
 

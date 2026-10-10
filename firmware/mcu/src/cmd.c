@@ -4,14 +4,14 @@
 #include "regs.h"
 #include "sd.h"
 
-#define HANDSHAKE_SUCCESS   0x0
-#define HANDSHAKE_PENDING   0x1
-#define HANDSHAKE_ERROR     0x2
+#define HANDSHAKE_SUCCESS   (0x0)
+#define HANDSHAKE_PENDING   (0x1)
+#define HANDSHAKE_ERROR     (0x2)
 
-#define CMD_PING            0x0
-#define CMD_SD_STATUS       0x1
-#define CMD_SD_INIT         0x2
-#define CMD_SD_READ         0x3
+#define CMD_PING            (0x0)
+#define CMD_SD_STATUS       (0x1)
+#define CMD_SD_INIT         (0x2)
+#define CMD_SD_READ         (0x3)
 
 static inline uint32_t rotl(uint32_t x, unsigned n) {
     return (x << n) | (x >> (32 - n));
