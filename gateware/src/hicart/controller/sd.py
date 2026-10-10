@@ -981,18 +981,18 @@ class Peripheral(wiring.Component):
 
         regs = csr.Builder(addr_width=8, data_width=8)
 
-        self._config_reg    = regs.add("Config",    self.ConfigReg())
-        self._cmd_reg       = regs.add("Cmd",       self.CmdReg())
-        self._arg_reg       = regs.add("Arg",       self.ArgReg())
-        self._data_reg      = regs.add("Data",      self.DataReg())
+        self._config_reg    = regs.add("config",    self.ConfigReg())
+        self._cmd_reg       = regs.add("cmd",       self.CmdReg())
+        self._arg_reg       = regs.add("arg",       self.ArgReg())
+        self._data_reg      = regs.add("data",      self.DataReg())
 
-        self._go_reg        = regs.add("Go",        self.GoReg())
-        self._status_reg    = regs.add("Status",    self.StatusReg())
+        self._go_reg        = regs.add("go",        self.GoReg())
+        self._status_reg    = regs.add("status",    self.StatusReg())
 
-        self._resp0_reg     = regs.add("Resp0",     self.RespReg())
-        self._resp1_reg     = regs.add("Resp1",     self.RespReg())
-        self._resp2_reg     = regs.add("Resp2",     self.RespReg())
-        self._resp3_reg     = regs.add("Resp3",     self.RespReg())
+        self._resp0_reg     = regs.add("resp0",     self.RespReg())
+        self._resp1_reg     = regs.add("resp1",     self.RespReg())
+        self._resp2_reg     = regs.add("resp2",     self.RespReg())
+        self._resp3_reg     = regs.add("resp3",     self.RespReg())
 
         self._csr_bridge = csr_ext.Bridge(regs.as_memory_map(), byteorder="little")
 

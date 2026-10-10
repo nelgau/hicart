@@ -26,9 +26,6 @@ class SysSubsystem(wiring.Component):
 
         self.mcu = CpuBlock(mcu_config)
 
-        for ri in self.mcu.memory_map.all_resources():
-            print(ri.path, hex(ri.start), hex(ri.end))
-
         self.cic = CIC()
 
         sd_config = sd.ControllerConfig(clk_freq=40e6)

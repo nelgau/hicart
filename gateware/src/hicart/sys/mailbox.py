@@ -47,21 +47,21 @@ class CommandMailbox(wiring.Component):
 
         host_regs = csr.Builder(addr_width=8, data_width=8)
 
-        self._host_handshake_reg    = host_regs.add("Handshake",    self.HostHandshake(32))
-        self._host_command_reg      = host_regs.add("Command",      self.ValueRW(32))
-        self._host_arg1_reg         = host_regs.add("Arg1",         self.ValueRW(32))
-        self._host_arg2_reg         = host_regs.add("Arg2",         self.ValueRW(32))
-        self._host_result_reg       = host_regs.add("Result",       self.ValueR(32))
+        self._host_handshake_reg    = host_regs.add("handshake",    self.HostHandshake(32))
+        self._host_command_reg      = host_regs.add("command",      self.ValueRW(32))
+        self._host_arg1_reg         = host_regs.add("arg1",         self.ValueRW(32))
+        self._host_arg2_reg         = host_regs.add("arg2",         self.ValueRW(32))
+        self._host_result_reg       = host_regs.add("result",       self.ValueR(32))
 
         # Sys
 
         sys_regs = csr.Builder(addr_width=8, data_width=8)
 
-        self._sys_handshake_reg     = sys_regs.add("Handshake",     self.SysHandshake(32))
-        self._sys_command_reg       = sys_regs.add("Command",       self.ValueR(32))
-        self._sys_arg1_reg          = sys_regs.add("Arg1",          self.ValueR(32))
-        self._sys_arg2_reg          = sys_regs.add("Arg2",          self.ValueR(32))
-        self._sys_result_reg        = sys_regs.add("Result",        self.ValueRW(32))
+        self._sys_handshake_reg     = sys_regs.add("handshake",     self.SysHandshake(32))
+        self._sys_command_reg       = sys_regs.add("command",       self.ValueR(32))
+        self._sys_arg1_reg          = sys_regs.add("arg1",          self.ValueR(32))
+        self._sys_arg2_reg          = sys_regs.add("arg2",          self.ValueR(32))
+        self._sys_result_reg        = sys_regs.add("result",        self.ValueRW(32))
 
         # Bridges
 
