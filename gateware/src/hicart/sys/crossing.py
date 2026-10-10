@@ -1,7 +1,7 @@
 from amaranth import *
 
 from hicart.sys.mailbox import CommandMailbox
-from hicart.sys.sd import SDBuffer
+from hicart.sys.sd_buffer import SDBuffer
 
 
 class Crossing(Elaboratable):

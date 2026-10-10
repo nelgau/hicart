@@ -1065,11 +1065,6 @@ class Peripheral(wiring.Component):
             self._resp3_reg.f.value.r_data              .eq(self._controller.cmd_resp[96:128]),
         ]
 
-        # Sequencer
-
-        # seq = Sequencer(ctrlr=self._controller)
-        # m.submodules.seq = seq
-
         return m
 
 

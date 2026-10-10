@@ -98,7 +98,7 @@ class CpuBlock(Elaboratable):
 
             csr_bridge = csr_ext.WishboneCSRBridge(csr_decoder.bus, data_width=32, byteorder="little")
 
-            self._decoder.add(csr_bridge.wb_bus, name=window.name, addr=window.addr)
+            self._decoder.add(csr_bridge.wb_bus, name=("csr", window.name), addr=window.addr)
 
             self._csr_decoders.append(csr_decoder)
             self._csr_bridges.append(csr_bridge)

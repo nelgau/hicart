@@ -2,7 +2,7 @@ from amaranth import *
 from amaranth.sim import *
 
 from hicart.soc import csr_ext
-from hicart.sys.sd import SDBuffer, SDBufferWriter
+from hicart.sys.sd_buffer import SDBuffer, SDBufferWriter
 from hicart.utils.sim import MultiProcessTestCase
 
 

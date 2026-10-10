@@ -5,8 +5,8 @@ from amaranth.lib.wiring import In, Out, flipped
 from hicart.controller import sd
 from hicart.n64.cart import CICSignature, CtlSignature
 from hicart.soc.cpu_block import CpuBlock, CpuBlockConfig
+from hicart.sys.sd_buffer import SDBufferWriter
 from hicart.sys.cic import CIC
-from hicart.sys.sd import SDBufferWriter
 
 
 class SysSubsystem(wiring.Component):
@@ -19,29 +19,27 @@ class SysSubsystem(wiring.Component):
         self.crossing = crossing
         super().__init__()
 
-        # self.mcu = MCU(mailbox_bus=crossing.mailbox.sys_bus)
-
-        mcu_config = CpuBlockConfig(rom_size=0x1000, ram_size=0x1000)
-        mcu_config.add_csr(crossing.mailbox.sys_bus, name="mailbox", addr=0xC000_0000)
-
-        self.mcu = CpuBlock(mcu_config)
+        # CIC
 
         self.cic = CIC()
 
+        # SD
+
         sd_config = sd.ControllerConfig(clk_freq=40e6)
         self.sd_periph = sd.Peripheral(config=sd_config)
-
-        self.writer = SDBufferWriter(writer_bus=crossing.sd_buffer.writer_bus)
-
-    def elaborate(self, platform):
-        m = Module()
+        self.sd_writer = SDBufferWriter(writer_bus=crossing.sd_buffer.writer_bus)
 
         # MCU
 
-        m.submodules.mcu = self.mcu
+        mcu_config = CpuBlockConfig(rom_size=0x1000, ram_size=0x1000)
+        mcu_config.add_csr(crossing.mailbox.sys_bus, name="mailbox", addr=0xC000_0000)
+        mcu_config.add_csr(self.sd_periph.csr_bus, name="sd", addr=0xC000_0100)
+        mcu_config.add_csr(self.sd_writer.csr_bus, name="sd_writer", addr=0xC000_0200)
 
-        with open("../firmware/mcu/build/mcu.bin", "rb") as f:
-            self.mcu.firmware = f.read()
+        self.mcu = CpuBlock(mcu_config)
+
+    def elaborate(self, platform):
+        m = Module()
 
         # CIC
 
@@ -53,11 +51,18 @@ class SysSubsystem(wiring.Component):
         # SD Controller
 
         m.submodules.sd_periph = self.sd_periph
-        m.submodules.writer = self.writer
+        m.submodules.sd_writer = self.sd_writer
 
         wiring.connect(m, self.sd_periph.sd_bus, flipped(self.sd_bus))
 
-        wiring.connect(m, self.sd_periph.source, self.writer.sink)
-        wiring.connect(m, self.writer.writer_bus, self.crossing.sd_buffer.writer_bus)
+        wiring.connect(m, self.sd_periph.source, self.sd_writer.sink)
+        wiring.connect(m, self.sd_writer.writer_bus, self.crossing.sd_buffer.writer_bus)
+
+        # MCU
+
+        m.submodules.mcu = self.mcu
+
+        with open("../firmware/mcu/build/mcu.bin", "rb") as f:
+            self.mcu.firmware = f.read()
 
         return m

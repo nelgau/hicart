@@ -114,7 +114,7 @@ class SDBufferWriter(wiring.Component):
         self._addr_width = writer_bus.signature.addr_width
 
         regs = csr.Builder(addr_width=8, data_width=8)
-        self._address_reg = regs.add("Address", self.Address(self._addr_width))
+        self._address_reg = regs.add("address", self.Address(self._addr_width))
         self._csr_bridge = csr_ext.Bridge(regs.as_memory_map(), byteorder="little")
 
         super().__init__({
