@@ -14,7 +14,7 @@ class SysSubsystem(wiring.Component):
     cart_cic: Out(CICSignature)
     cart_ctl: Out(CtlSignature)
 
-    sd_bus: Out(sd.SDBusSignature())
+    sd_bus: Out(sd.BusSignature())
 
     def __init__(self, *, crossing):
         self.crossing = crossing
@@ -23,9 +23,9 @@ class SysSubsystem(wiring.Component):
         self.mcu = MCU(mailbox_bus=crossing.mailbox.sys_bus)
         self.cic = CIC()
 
-        sd_config = sd.SDControllerConfig(clk_freq=40e6)
-        self.sd = sd.SDController(config=sd_config)
-        self.sd_seq = sd.SDSequencer(ctrlr=self.sd)
+        sd_config = sd.ControllerConfig(clk_freq=40e6)
+        self.sd = sd.Controller(config=sd_config)
+        self.sd_seq = sd.Sequencer(ctrlr=self.sd)
 
         self.writer = SDBufferWriter(writer_bus=crossing.sd_buffer.writer_bus)
 

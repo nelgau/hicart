@@ -130,7 +130,7 @@ class FlashIO(wiring.Component):
 
 
 class SDCardIO(wiring.Component):
-    bus: In(sd.SDBusSignature())
+    bus: In(sd.BusSignature())
 
     def elaborate(self, platform):
         m = Module()

@@ -962,9 +962,9 @@ class TestDataRx(MultiProcessTestCase):
 class TestSDSequencer(MultiProcessTestCase):
 
     def test_basic(self):
-        config = sd.SDControllerConfig(clk_freq=40e6)
-        ctrlr = sd.SDController(config=config)
-        dut = sd.SDSequencer(ctrlr=ctrlr)
+        config = sd.ControllerConfig(clk_freq=40e6)
+        ctrlr = sd.Controller(config=config)
+        dut = sd.Sequencer(ctrlr=ctrlr)
 
         m = Module()
         m.submodules.ctrlr = ctrlr

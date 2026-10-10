@@ -6,7 +6,7 @@ from amaranth.lib import crc, data, enum, stream, wiring
 from amaranth.lib.wiring import In, Out, flipped
 
 
-class SDBusSignature(wiring.Signature):
+class BusSignature(wiring.Signature):
     def __init__(self):
         super().__init__({
             "clk": Out(1),
@@ -725,7 +725,7 @@ class DatUnit(wiring.Component):
 
 
 @dataclass(frozen=True)
-class SDControllerConfig:
+class ControllerConfig:
     clk_freq:           float
     input_latency:      int     = 0
     cmd_timeout_clks:   int     = 64
@@ -733,8 +733,8 @@ class SDControllerConfig:
     busy_timeout_s:     float   = 0.5
 
 
-class SDController(wiring.Component):
-    bus: Out(SDBusSignature())
+class Controller(wiring.Component):
+    bus: Out(BusSignature())
 
     source: Out(stream.Signature(8, always_ready=True))
     sink: In(stream.Signature(8, always_valid=True))
@@ -914,7 +914,7 @@ class SDController(wiring.Component):
         return m
 
 
-class SDSequencer(Elaboratable):
+class Sequencer(Elaboratable):
 
     def __init__(self, *, ctrlr):
         self.ctrlr = ctrlr
