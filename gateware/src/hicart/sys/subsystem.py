@@ -6,7 +6,7 @@ from hicart.controller import sd
 from hicart.n64.cart import CICSignature, CtlSignature
 from hicart.soc.cpu_block import CpuBlock, CpuBlockConfig
 from hicart.sys.sd_buffer import SDBufferWriter
-from hicart.sys.cic import CIC
+from hicart.n64.cic import CIC
 
 
 class SysSubsystem(wiring.Component):
