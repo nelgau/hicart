@@ -29,6 +29,8 @@ class CIC(wiring.Component):
     def elaborate(self, platform):
         m = Module()
 
+        # GPIO
+
         m.submodules.gpio = self.gpio
 
         m.d.comb += [
