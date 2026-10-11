@@ -101,7 +101,7 @@ unsigned char _6105Mem[32];
 /* Read a bit synchronized by DCLK */
 unsigned char ReadBit(void)
 {
-    volatile unsigned long *gpio_input  = (void *)0x00006001;
+    volatile unsigned long *gpio_input  = (void *)0xC0000001;
 
     unsigned char res;
 
@@ -120,9 +120,9 @@ unsigned char ReadBit(void)
 /* Write a bit synchronized by DCLK */
 void WriteBit(unsigned char b)
 {
-    volatile unsigned long *gpio_mode   = (void *)0x00006000;
-    volatile unsigned long *gpio_input  = (void *)0x00006001;
-    volatile unsigned long *gpio_output = (void *)0x00006002;
+    volatile unsigned long *gpio_mode   = (void *)0xC0000000;
+    volatile unsigned long *gpio_input  = (void *)0xC0000001;
+    volatile unsigned long *gpio_output = (void *)0xC0000002;
 
     // wait for DCLK to go low
     while (*gpio_input & 0x1) { }

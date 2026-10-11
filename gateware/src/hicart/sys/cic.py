@@ -1,90 +1,35 @@
 from enum import IntEnum
-import struct
 
 from amaranth import *
 from amaranth.lib import wiring
 from amaranth.lib.wiring import In, Out
-from amaranth_soc import csr
 from amaranth_soc import gpio
-from amaranth_soc.csr.wishbone import WishboneCSRBridge
-from amaranth_soc import wishbone
-from amaranth_soc.wishbone.sram import WishboneSRAM
-from minerva.core import Minerva
 
-from hicart.n64.cart import CICSignature, CtlSignature
+from hicart.n64.cart import CICSignature
+from hicart.soc.cpu_block import CpuBlock, CpuBlockConfig
 
 
 class CIC(wiring.Component):
     bus: Out(CICSignature)
     reset: In(1)
 
-    class Constants:
-        RESET_ADDR = 0x00000000
-        CSR_ADDR = 0x00006000
-
-        ROM_ADDR = 0x00000000
-        ROM_SIZE = 0x1000
-
-        RAM_ADDR = 0x00004000
-        RAM_SIZE = 0x1000
-
     def __init__(self):
         super().__init__()
 
-        self.cpu = Minerva(reset_address=self.Constants.RESET_ADDR)
-
-        self.arbiter = wishbone.Arbiter(addr_width=30, data_width=32, granularity=8, features={"cti", "bte"})
-        self.decoder = wishbone.Decoder(addr_width=30, data_width=32, granularity=8, features={"cti", "bte"})
-
-        self.arbiter.add(self.cpu.ibus)
-        self.arbiter.add(self.cpu.dbus)
-
-        # ROM
-
-        self.rom = WishboneSRAM(size=self.Constants.ROM_SIZE, data_width=32, granularity=8, writable=False)
-
-        # RAM
-
-        self.ram = WishboneSRAM(size=self.Constants.RAM_SIZE, data_width=32, granularity=8)
-
-        # CSR
-
-        self.csr_decoder = csr.Decoder(addr_width=8, data_width=8)
-
         self.gpio = gpio.Peripheral(pin_count=2, addr_width=8, data_width=8, input_stages=2)
-        self.csr_decoder.add(self.gpio.bus, name="gpio")
 
-        self.csr_bridge = WishboneCSRBridge(self.csr_decoder.bus, data_width=32)
+        mcu_config = CpuBlockConfig(rom_size=0x1000, ram_size=0x1000)
+        mcu_config.add_csr(self.gpio.bus, name="gpio", addr=0xC000_0000)
 
-        # Decoder
+        self.mcu = CpuBlock(mcu_config)
 
-        self.decoder.add(self.rom.wb_bus, addr=self.Constants.ROM_ADDR, name="rom")
-        self.decoder.add(self.ram.wb_bus, addr=self.Constants.RAM_ADDR, name="ram")
-        self.decoder.add(self.csr_bridge.wb_bus, addr=self.Constants.CSR_ADDR, name="csr")
-
-        # Firmware
-
-        with open("../firmware/cic/build/cic.bin", "rb") as f:
-            rom_bytes = f.read()
-            rom_data = [x[0] for x in struct.iter_unpack("<L", rom_bytes)]
-
-        self.rom.init = rom_data
+        for ri in self.mcu.memory_map.all_resources():
+            print(ri.path, hex(ri.start), hex(ri.end))
 
     def elaborate(self, platform):
         m = Module()
 
-        m.submodules.cpu     = self.cpu
-        m.submodules.arbiter = self.arbiter
-        m.submodules.decoder = self.decoder
-
-        m.submodules.rom     = self.rom
-        m.submodules.ram     = self.ram
-
-        m.submodules.csr_bridge     = self.csr_bridge
-        m.submodules.csr_decoder    = self.csr_decoder
-        m.submodules.gpio           = self.gpio
-
-        wiring.connect(m, self.arbiter.bus, self.decoder.bus)
+        m.submodules.gpio = self.gpio
 
         m.d.comb += [
             self.gpio.pins[0].i .eq( self.bus.dclk          ),
@@ -92,6 +37,13 @@ class CIC(wiring.Component):
             self.bus.data.o     .eq( self.gpio.pins[1].o    ),
             self.bus.data.oe    .eq( self.gpio.pins[1].oe   ),
         ]
+
+        # MCU
+
+        m.submodules.mcu = self.mcu
+
+        with open("../firmware/cic/build/cic.bin", "rb") as f:
+            self.mcu.firmware = f.read()
 
         m = ResetInserter(self.reset)(m)
 

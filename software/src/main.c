@@ -15,7 +15,7 @@ int main(void)
 
     sdhi_init();
 
-    // run_soak();
+    run_soak();
 
     FILE *f = fopen("sdhi:/example.txt", "r");
     if (!f) {
