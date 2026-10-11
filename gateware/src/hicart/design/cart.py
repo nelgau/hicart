@@ -65,6 +65,9 @@ class Top(Elaboratable):
             debug.pmod[2].eq( card_io.bus.cmd.o          ),
             debug.pmod[3].eq( card_io.bus.cmd.oe         ),
             debug.pmod[4].eq( card_io.bus.dat.i[0]       ),
+            debug.pmod[5].eq( card_io.bus.dat.i[1]       ),
+            debug.pmod[6].eq( card_io.bus.dat.i[2]       ),
+            debug.pmod[7].eq( card_io.bus.dat.i[3]       ),
         ]
 
         return m

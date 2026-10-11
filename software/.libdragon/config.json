@@ -1,5 +1,5 @@
 {
-  "imageName": "ghcr.io/dragonminded/libdragon:latest",
+  "imageName": "libdragon-ffmpeg",
   "vendorDirectory": "libdragon",
   "vendorStrategy": "manual"
 }

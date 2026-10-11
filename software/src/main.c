@@ -1,29 +1,34 @@
 #include <stdio.h>
-#include <errno.h>
 #include <libdragon.h>
-#include "cmd.h"
-#include "soak.h"
-#include "regs.h"
 #include "sdhi.h"
+#include "soak.h"
+
+// Maximum target audio frequency.
+//
+// Needs to be 48 kHz if Opus audio compression is used.
+// In this example, we are using VADPCM audio compression
+// which means we can use the real frequency of the audio track.
+#define AUDIO_HZ 32000.0f
 
 int main(void)
 {
-    console_init();
-
+    debug_init_emulog();
     debug_init_usblog();
-    console_set_debug(true);
 
     sdhi_init();
 
-    run_soak();
+	dfs_init(DFS_DEFAULT_LOCATION);
+	rdpq_init();
+	yuv_init();
+	joypad_init();
 
-    FILE *f = fopen("sdhi:/example.txt", "r");
-    if (!f) {
-        printf("open failed %s\n", strerror(errno));
-    } else {
-        char buf[128] = {0};
-        fread(buf, 1, sizeof(buf) - 1, f);
-        printf("%s\n", buf);
-        fclose(f);
-    }
+	audio_init(AUDIO_HZ, 4);
+	mixer_init(8);
+
+	video_register_codec(&mpeg1_codec);
+	video_register_codec(&h264_codec);
+
+	fmv_play("sdhi:/2013-06-21.huXPjbKqlra.m1v", &(fmv_parms_t) {
+		.loop = true
+	});
 }
