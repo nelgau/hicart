@@ -28,7 +28,9 @@ int main(void)
 	video_register_codec(&mpeg1_codec);
 	video_register_codec(&h264_codec);
 
-	fmv_play("sdhi:/2013-06-21.huXPjbKqlra.m1v", &(fmv_parms_t) {
-		.loop = true
-	});
+    while (1) {
+        fmv_play("sdhi:/2013-06-21.huXPjbKqlra.m1v", &(fmv_parms_t) {
+
+        });
+    }
 }
