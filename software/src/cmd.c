@@ -8,7 +8,8 @@
 bool cmd_send(uint32_t id, uint32_t arg1, uint32_t arg2, uint32_t *result) {
     io_write(REG_ARG1, arg1);
     io_write(REG_ARG2, arg2);
-    // Starts operation
+
+    // Starts the operation
     io_write(REG_COMMAND, id);
 
     uint32_t handshake;
@@ -16,6 +17,9 @@ bool cmd_send(uint32_t id, uint32_t arg1, uint32_t arg2, uint32_t *result) {
         handshake = io_read(REG_HANDSHAKE);
     } while (handshake & HANDSHAKE_BUSY);
 
-    *result = io_read(REG_RESULT);
+    if (result) {
+        *result = io_read(REG_RESULT);
+    }
+
     return (handshake & HANDSHAKE_ERROR);
 }
