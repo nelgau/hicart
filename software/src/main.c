@@ -95,7 +95,7 @@ void hi_video_play(const char *video_fn, bool loop)
 
         mixer_try_play();
 
-		if (vsync && mixer_ch_playing(0)) {
+		if (mixer_ch_playing(0)) {
 			// Decide what to do next based on the sync controller
 			double master_time_sec = mixer_ch_get_pos(0) / (double)audio->wave.frequency;
 			video_sync_action_t a = video_sync_step(vsync, master_time_sec, frame_idx);
@@ -116,15 +116,9 @@ void hi_video_play(const char *video_fn, bool loop)
 			if (loop) {
 				frame_idx = 0;
 				video_rewind(video);
-
-				if (audio) {
-					mixer_ch_stop(0);
-					mixer_ch_play(0, &audio->wave);
-				}
-
-				if (vsync) {
-					video_sync_reset(vsync, frame_idx);
-				}
+				mixer_ch_stop(0);
+				mixer_ch_play(0, &audio->wave);
+				video_sync_reset(vsync, frame_idx);
 				continue;
 			} else {
 				break;
