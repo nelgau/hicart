@@ -22,6 +22,10 @@ build:
 program: build
 	ecpprog -d s:0x0403:0x6010:FT5YLSVU -I B -o 8M $(OUT_Z64)
 
+.PHONY: run
+run: program
+	$(MAKE) -C .. n64-up
+
 .PHONY: emulate
 emulate: build
 	../scripts/run_in_ares.sh $(OUT_Z64)
