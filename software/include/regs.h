@@ -9,6 +9,6 @@
 #define REG_RESULT          (REG_BASE + 0x10)
 
 #define SD_BUFFER_BASE      0x1FFF0000
-#define SD_BUFFER_SECTORS   16
+#define SD_BUFFER_SECTORS   64
 
 #endif

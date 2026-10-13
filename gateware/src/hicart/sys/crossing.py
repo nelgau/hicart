@@ -12,7 +12,7 @@ class Crossing(Elaboratable):
         self.mailbox = CommandMailbox(host_domain=host_domain,
                                       sys_domain=sys_domain)
 
-        self.sd_buffer = SDBuffer(num_sectors=16,
+        self.sd_buffer = SDBuffer(num_sectors=64,
                                   host_domain=host_domain,
                                   sys_domain=sys_domain)
 
