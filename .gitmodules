@@ -1,6 +1,6 @@
 [submodule "libdragon"]
 	path = software/libdragon
-	url = github.com:DragonMinded/libdragon
+	url = git@github.com:nelgau/libdragon.git
 	branch = preview
 [submodule "hardware/lib/nelgau-kicad-lib"]
 	path = hardware/lib/nelgau-kicad-lib
