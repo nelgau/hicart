@@ -95,7 +95,7 @@ class SDBuffer(wiring.Component):
         m.d.comb += writer_write_port.data.eq(self.writer_bus.w_data.replicate(en_width))
 
         en_index = self.writer_bus.addr[:granularity_bits]
-        m.d.comb += writer_write_port.en.word_select(en_index, 1).eq(1)
+        m.d.comb += writer_write_port.en.word_select(en_index, 1).eq(self.writer_bus.w_stb)
 
         return m
 
