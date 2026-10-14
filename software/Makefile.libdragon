@@ -33,6 +33,6 @@ $(BUILD_DIR)/hicart.dfs: $(DFS_FILES)
 $(BUILD_DIR)/hicart.elf: $(OBJS)
 
 filesystem/%.mp1: $(SRC_VIDEO_DIR)/%.mp4
-	$(N64_VIDEOCONV) -o filesystem --codec mpeg1 --quality 70 --quick --seek 5 "$<"
+	$(N64_VIDEOCONV) -o filesystem --codec mpeg1 -w 224 --quality 70 --quick --seek 5 "$<"
 
 -include $(wildcard $(BUILD_DIR)/*.d)
